@@ -1,0 +1,20 @@
+version: 2
+
+sources:
+  - name: dbt_artifacts
+    database: "{{ var('dbt_artifacts_database') }}"
+    schema: "{{ var('dbt_artifacts_schema') }}"
+    tables:
+      - name: artifacts
+        identifier: "{{ var('dbt_artifacts_table') }}"
+        description: |
+          The source table containing loaded dbt artifacts. All of the artifacts must be loaded into this table. See the README for more info.
+        columns:
+          - name: data
+            description: A variant type object containing all the artifact's data.
+          - name: generated_at
+            description: Timestamp for when the artifact was generated.
+          - name: path
+            description: The path of the artifact in the external stage.
+          - name: artifact_type
+            description: The type of the artifact, e.g. manifest.json
