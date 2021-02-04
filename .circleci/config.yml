@@ -1,0 +1,46 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.6.3-stretch
+      - image: circleci/postgres:9.6.5-alpine-ram
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          key: deps1-{{ .Branch }}
+
+      - run:
+          name: "Setup dbt"
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+
+            pip install --upgrade pip setuptools
+            pip install dbt --upgrade
+
+            mkdir -p ~/.dbt
+            cp integration_tests/ci/sample.profiles.yml ~/.dbt/profiles.yml
+
+      - run:
+          name: "Run Tests - Snowflake"
+          command: |
+            . venv/bin/activate
+            echo `pwd`
+            cd integration_tests
+            dbt --warn-error deps --target snowflake
+            dbt --warn-error run-operation create_artifact_resources --target snowflake
+            dbt --warn-error seed --target snowflake --full-refresh
+            dbt --warn-error run-operation upload_dbt_artifacts --target snowflake
+            dbt --warn-error run --target snowflake
+            dbt --warn-error run-operation upload_dbt_artifacts --target snowflake
+            dbt --warn-error test --target snowflake
+            dbt --warn-error run-operation upload_dbt_artifacts --target snowflake
+
+
+      - save_cache:
+          key: deps1-{{ .Branch }}
+          paths:
+            - "venv"
