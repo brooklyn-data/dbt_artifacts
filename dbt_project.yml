@@ -3,6 +3,6 @@ version: '0.1.0'
 config-version: 2
 
 vars:
-  dbt_artifacts_database: "{{ database }}"
+  dbt_artifacts_database: analytics # "{{ database }}" does not work when used in sources
   dbt_artifacts_schema: dbt_artifacts
   dbt_artifacts_table: artifacts
