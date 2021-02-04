@@ -1,3 +1,8 @@
 name: 'dbt_artifacts'
 version: '0.1.0'
 config-version: 2
+
+vars:
+  dbt_artifacts_database: "{{ database }}"
+  dbt_artifacts_schema: dbt_artifacts
+  dbt_artifacts_table: artifacts
