@@ -1,5 +1,6 @@
-{% macro upload_dbt_artifacts() %}
-{% for file in ['manifest', 'run_results'] %}
+{% macro upload_dbt_artifacts(filenames) %}
+
+{% for file in filenames %}
 
     {% set src_dbt_artifacts = source('dbt_artifacts', 'artifacts') %}
 

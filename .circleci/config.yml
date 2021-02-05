@@ -33,11 +33,13 @@ jobs:
             dbt --warn-error deps --target snowflake
             dbt --warn-error run-operation create_artifact_resources --target snowflake
             dbt --warn-error seed --target snowflake --full-refresh
-            dbt --warn-error run-operation upload_dbt_artifacts --target snowflake
+            dbt --warn-error run-operation upload_dbt_artifacts --args '{filenames: [manifest, run_results]}' --target snowflake
             dbt --warn-error run --target snowflake
-            dbt --warn-error run-operation upload_dbt_artifacts --target snowflake
+            dbt --warn-error run-operation upload_dbt_artifacts --args '{filenames: [manifest, run_results]}' --target snowflake
             dbt --warn-error test --target snowflake
-            dbt --warn-error run-operation upload_dbt_artifacts --target snowflake
+            dbt --warn-error run-operation upload_dbt_artifacts --args '{filenames: [run_results]}' --target snowflake
+            dbt --warn-error docs generate
+            dbt --warn-error run-operation upload_dbt_artifacts --args '{filenames: [catalog]}' --target snowflake
 
 
       - save_cache:
