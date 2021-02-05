@@ -1,15 +1,16 @@
 {% macro create_artifact_resources() %}
-{% set create_schema_query %}
-create schema if not exists {{ var('dbt_artifacts_database') }}.{{ var('dbt_artifacts_schema') }}
-{% endset %}
+
+{% set src_dbt_artifacts = source('dbt_artifacts', 'artifacts') %}
+
+{{ create_schema( src_dbt_artifacts ) }}
 
 {% set create_stage_query %}
-create stage if not exists {{ var('dbt_artifacts_database') }}.{{ var('dbt_artifacts_schema') }}.artifacts_load
+create stage if not exists {{ src_dbt_artifacts }}
 file_format = ( type =  json );
 {% endset %}
 
 {% set create_table_query %}
-create table if not exists {{ var('dbt_artifacts_database') }}.{{ var('dbt_artifacts_schema') }}.{{ var('dbt_artifacts_table') }} (
+create table if not exists {{ src_dbt_artifacts }} (
     data variant,
     generated_at timestamp,
     path string,
@@ -18,8 +19,6 @@ create table if not exists {{ var('dbt_artifacts_database') }}.{{ var('dbt_artif
 
 {% endset %}
 
-{% do log("Creating Schema: " ~ create_schema_query, info=True) %}
-{% do run_query(create_schema_query) %}
 
 {% do log("Creating Stage: " ~ create_stage_query, info=True) %}
 {% do run_query(create_stage_query) %}
