@@ -168,7 +168,7 @@ search_path (node_ids, total_time) as (
 
 ),
 
-longest_path_minutes as (
+longest_path_node_ids as (
 
     select
         -- Remove any empty strings from the beginning of the array that were introduced in search_path to prevent infinite recursion
@@ -176,12 +176,32 @@ longest_path_minutes as (
             when get(node_ids, 0) = ''
             then array_slice(node_ids, 1, -1)
             else node_ids
-        end as node_ids,
-        total_time/60 as total_minutes
+        end as node_ids
     from search_path
     order by total_time desc
     limit 1
 
+),
+
+flattened as (
+
+    select
+        value as node_id,
+        index
+    from longest_path_node_ids,
+    lateral flatten (input => node_ids)
+
+),
+
+longest_path_with_times as (
+
+    select
+        flattened.node_id::string as node_id,
+        flattened.index,
+        latest_executions.execution_time/60 as execution_minutes
+    from flattened
+    left join latest_executions on flattened.node_id = latest_executions.node_id
+
 )
 
-select * from longest_path_minutes
+select * from longest_path_with_times
