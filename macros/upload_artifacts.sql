@@ -28,7 +28,7 @@
                 $1 as data,
                 $1:metadata:generated_at::timestamp_ntz as generated_at,
                 metadata$filename as path,
-                regexp_substr(metadata$filename, '([a-z_]+.json)$') as artifact_type
+                regexp_substr(metadata$filename, '([a-z_]+.json)') as artifact_type
                 from  @{{ src_dbt_artifacts }}
             )
             file_format=(type='JSON')
