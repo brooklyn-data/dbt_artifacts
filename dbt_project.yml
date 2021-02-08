@@ -1,3 +1,4 @@
 name: 'dbt_artifacts'
 version: '0.1.0'
 config-version: 2
+require-dbt-version: ">=0.19.0"
