@@ -29,7 +29,8 @@ fields as (
         coalesce(data:args:full_refresh, 'false')::boolean as was_full_refresh,
         result.value:unique_id::string as node_id,
         result.value:status::string as status,
-        result.value:execution_time::float as execution_time,
+        -- Incremental models have a null execution_time, so coalesce to 0 for calculations
+        coalesce(result.value:execution_time::float, 0) as execution_time,
         result.value:adapter_response:rows_affected::int as rows_affected
     from dbt_run,
     lateral flatten(input => data:results) as result

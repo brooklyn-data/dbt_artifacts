@@ -1,6 +1,46 @@
 version: 2
 
 models:
+  - name: fct_dbt__critical_path
+    description: A table of all models and executions times that make up the critical path of a full, incremental run.
+    columns:
+    - name: node_id
+      description: Primary key.
+      tests:
+        - unique
+        - not_null
+    - name: index
+      description: The index of the model in the critical path. Starts at 0.
+    - name: execution_minutes
+      description: The duration of time in minutes for the model to run.
+    - name: model_materialization
+
+  - name: fct_dbt__latest_full_model_executions
+    description: A list of all models and executions times that make up the critical path of a full, incremental run.
+    columns:
+    - name: node_id
+      description: Primary key.
+      tests:
+        - unique
+        - not_null
+    - name: artifact_generated_at
+      description: Timestamp of when the source artifact was generated.
+    - name: command_invocation_id
+      description: Foreign key to fct_dbt_run_results. The id of the command which resulted in the source artifact's generation.
+    - name: execution_time
+      description: The duration of time in seconds for the model to run.
+    - name: model_execution_id
+      description: A surrogate key of command_invocation_id and node_id.
+    - name: model_materialization
+    - name: model_schema
+    - name: name
+      description: The model name.
+    - name: rows_affected
+      description: The number of rows affected by the model's execution. Always 1 for non-incremental executions.
+    - name: status
+      description: Success/fail status of the model's execution.
+    - name: was_full_refresh
+      description: Boolean value for whether this model was executed with a --full-refresh flag.
 
   - name: fct_dbt__model_executions
     description: All historic dbt model executions.
@@ -15,13 +55,13 @@ models:
     - name: model_schema
       description: The schema containing the model.
     - name: was_full_refresh
-      description: Was this model executed with a --full-refresh flag?
+      description: Boolean value for whether this model was executed with a --full-refresh flag.
     - name: model_materialization
       description: The configured materialization of the model.
     - name: execution_time
-      description: How long did the model take to run?
+      description: The duration of time in seconds for the model to run.
     - name: status
-      description: success/fail status of the model's execution.
+      description: Success/fail status of the model's execution.
     - name: command_invocation_id
       description: Foreign key to fct_dbt_run_results. The id of the command which resulted in the source artifact's generation.
     - name: artifact_generated_at
