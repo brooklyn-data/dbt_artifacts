@@ -170,12 +170,13 @@ search_path (node_ids, total_time) as (
 ),
 
 longest_path_node_ids as (
+    -- Find the path with the longest total time
 
     select
         -- Remove any empty strings from the beginning of the array that were introduced in search_path to prevent infinite recursion
         case
             when get(node_ids, 0) = ''
-            -- Ensure we capture keep the last element of the array
+            -- Ensure we keep the last element of the array by using array_size for the last index
             then array_slice(node_ids, 1, array_size(node_ids))
             else node_ids
         end as node_ids,
@@ -187,6 +188,7 @@ longest_path_node_ids as (
 ),
 
 flattened as (
+    -- Flatten the array of node_ids and keep the index
 
     select
         value as node_id,
@@ -197,6 +199,7 @@ flattened as (
 ),
 
 longest_path_with_times as (
+    -- Join the indidivual model execution times back in along with the materializations
 
     select
         flattened.node_id::string as node_id,
