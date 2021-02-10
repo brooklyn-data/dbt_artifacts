@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: dbt_artifacts
+    overrides: dbt_artifacts
+    freshness:
+      error_after: {count: 24, period: hour}
+    loaded_at_field: current_timestamp
