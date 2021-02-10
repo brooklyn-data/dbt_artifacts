@@ -13,6 +13,7 @@ latest_executions as (
 ),
 
 latest_id as (
+    -- Find the latest full, incremental execution
 
     select
         any_value(command_invocation_id) as command_invocation_id
@@ -21,6 +22,7 @@ latest_id as (
 ),
 
 latest_models as (
+    -- Get the latest set of models for the above execution
 
     select
         models.node_id,
@@ -32,7 +34,7 @@ latest_models as (
 ),
 
 node_dependencies as (
-    -- Create a row for each model and model dependency, including those where there are no dependencies.
+    -- Create a row for each model and dependency (could be another model, or source)
 
     select
         latest_models.node_id,
@@ -153,6 +155,7 @@ all_needed_dependencies as (
 ),
 
 search_path (node_ids, total_time) as (
+    -- Create an array of node_ids and total_time for every possible path through the DAG
 
     select
         array_construct(depends_on_node_id, node_id),
@@ -174,9 +177,11 @@ longest_path_node_ids as (
         -- Remove any empty strings from the beginning of the array that were introduced in search_path to prevent infinite recursion
         case
             when get(node_ids, 0) = ''
-            then array_slice(node_ids, 1, -1)
+            -- Ensure we capture keep the last element of the array
+            then array_slice(node_ids, 1, array_size(node_ids))
             else node_ids
-        end as node_ids
+        end as node_ids,
+        total_time
     from search_path
     order by total_time desc
     limit 1
