@@ -26,7 +26,8 @@ latest_models as (
 
     select
         models.node_id,
-        models.depends_on_nodes
+        models.depends_on_nodes,
+        models.model_materialization
     from latest_id
     left join models on latest_id.command_invocation_id = models.command_invocation_id
 
@@ -56,43 +57,6 @@ node_dependencies_deduped as (
 
 ),
 
-count_model_dependencies as (
-    -- Count the number of dependencies a model has to other models
-
-    select
-        node_dependencies_deduped.node_id,
-        count(
-            case when depends_on_node_type = 'model' then 1 end
-        ) over (
-            partition by node_id
-        ) as num_model_dependencies
-    from node_dependencies_deduped
-
-),
-
-no_model_dependencies_deduped as (
-    -- Find models which depend on no other models (root models)
-
-    select
-        node_id
-    from count_model_dependencies
-    where num_model_dependencies = 0
-    group by node_id
-
-),
-
-no_model_dependencies_with_execution_time as (
-    -- Models which have no dependencies enriched with execution time
-
-    select
-        no_model_dependencies_deduped.node_id,
-        latest_executions.execution_time,
-        null as depends_on_node_id
-    from no_model_dependencies_deduped
-    left join latest_executions on no_model_dependencies_deduped.node_id = latest_executions.node_id
-
-),
-
 model_dependencies_with_execution_time as (
     -- Model dependencies enriched with execution time
 
@@ -106,7 +70,33 @@ model_dependencies_with_execution_time as (
 
 ),
 
+models_with_at_least_one_model_dependency as (
+    -- Return a list of model nodes which have at least one model dependency
+
+    select distinct
+        node_id
+    from node_dependencies
+    where depends_on_node_type = 'model'
+
+),
+
+models_with_no_model_dependencies_with_execution_time as (
+    -- Models which have no dependencies enriched with execution time
+    -- These are models at the base of the tree
+
+    select
+        latest_models.node_id,
+        latest_executions.execution_time
+    from latest_models
+    left join models_with_at_least_one_model_dependency
+        on latest_models.node_id = models_with_at_least_one_model_dependency.node_id
+    left join latest_executions on latest_models.node_id = latest_executions.node_id
+    where models_with_at_least_one_model_dependency.node_id is null
+
+),
+
 models_with_dependent_models as (
+    -- Get a list of all the models which have dependent models
 
     select distinct depends_on_node_id as node_id
     from node_dependencies_deduped
@@ -114,6 +104,8 @@ models_with_dependent_models as (
 ),
 
 models_with_no_dependent_models as (
+    -- Models which have no dependents
+    -- These are models at the tips of the tree
 
     select
         latest_models.node_id
@@ -124,9 +116,10 @@ models_with_no_dependent_models as (
 
 ),
 
--- We have to coalesce the execution time to 0 for the case of ephemeral models
-
 anchor as (
+    -- The anchor of a recursive CTE is the initial query
+    -- The anchor in this case is models which have no dependents, the tips of the tree
+    -- The dependencies for these models are joined in to build out the paths during recursion
 
     select
         models_with_no_dependent_models.node_id,
@@ -139,23 +132,28 @@ anchor as (
 ),
 
 all_needed_dependencies as (
+    -- Union all the base models with all other dependencies
+    -- Use an empty string for depends_on_node_id to avoid NULL result in a non-nullable column error
+    -- Nothing will join onto the empty string depends_on_node_id, ending the recursion at the base.
 
     select
         node_id,
-        coalesce(execution_time, 0) as execution_time,
-        coalesce(depends_on_node_id, '') as depends_on_node_id
-    from no_model_dependencies_with_execution_time
+        execution_time,
+        '' as depends_on_node_id
+    from models_with_no_model_dependencies_with_execution_time
     union
     select
         node_id,
-        coalesce(execution_time, 0) as execution_time,
-        coalesce(depends_on_node_id, '') as depends_on_node_id
+        execution_time,
+        depends_on_node_id as depends_on_node_id
     from model_dependencies_with_execution_time
 
 ),
 
 search_path (node_ids, total_time) as (
-    -- Create an array of node_ids and total_time for every possible path through the DAG
+    -- The recursive part
+    -- This CTE creates an array of node_ids and total_time for every possible path through the DAG
+    -- Starting with the tips of the tree, work backwards through every path until there's a '' depends_on_node_id
 
     select
         array_construct(depends_on_node_id, node_id),
@@ -203,9 +201,11 @@ longest_path_with_times as (
     select
         flattened.node_id::string as node_id,
         flattened.index,
-        latest_executions.execution_time/60 as execution_minutes
+        latest_executions.execution_time/60 as execution_minutes,
+        latest_models.model_materialization
     from flattened
     left join latest_executions on flattened.node_id = latest_executions.node_id
+    left join latest_models on flattened.node_id = latest_models.node_id
 
 )
 

@@ -29,6 +29,24 @@ joined as (
     from latest_full
     left join model_executions on model_executions.command_invocation_id = latest_full.command_invocation_id
 
+),
+
+fields as (
+
+    select
+        artifact_generated_at,
+        command_invocation_id,
+        execution_time,
+        model_execution_id,
+        model_materialization,
+        model_schema,
+        name,
+        node_id,
+        rows_affected,
+        status,
+        was_full_refresh
+    from joined
+
 )
 
-select * from joined
+select * from fields
