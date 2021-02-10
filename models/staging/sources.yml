@@ -2,11 +2,11 @@ version: 2
 
 sources:
   - name: dbt_artifacts
-    database: "{{ var('dbt_artifacts_database') }}"
-    schema: "{{ var('dbt_artifacts_schema') }}"
+    database: "{{ var('dbt_artifacts_database', target.database) }}"
+    schema: "{{ var('dbt_artifacts_schema', 'dbt_artifacts') }}"
     tables:
       - name: artifacts
-        identifier: "{{ var('dbt_artifacts_table') }}"
+        identifier: "{{ var('dbt_artifacts_table', 'artifacts') }}"
         description: |
           The source table containing loaded dbt artifacts. All of the artifacts must be loaded into this table. See the README for more info.
         columns:

@@ -1,40 +1,17 @@
 # Tails.com's dbt Artifacts Package
+This package builds `fct_dbt_model_executions` and `fct_dbt_run_results` tables from dbt artifacts loaded into a table. It is compatible with Snowflake only. The models are based off of the [v1 schema](https://docs.getdbt.com/reference/artifacts/dbt-artifacts/#notes) introduced in dbt 0.19.0.
+## Installation
 
-This package builds `fct_dbt_model_executions` and `fct_dbt_run_results` tables from dbt artifacts loaded into a table. It is compatible with Snowflake only. The models are based off of the v1 schema introduced in dbt 0.19.0: https://docs.getdbt.com/reference/artifacts/dbt-artifacts/#notes
+1. Add this package to your `packages.yml` following [these instructions](https://docs.getdbt.com/docs/building-a-dbt-project/package-management/)
 
-## Generating the source table
+2. Configure the following variables in your `dbt_project.yml`:
 
-This package requires that the source data already exists in a table in Snowflake. How you achieve that will depend on your implementation.
-
-The author recommends generating the source table using the following query to copy from an external stage (in a snowpipe):
-
-```
-copy into ${snowflake_table.dbt_artifacts.database}.${snowflake_table.dbt_artifacts.schema}.${snowflake_table.dbt_artifacts.name}
-from (
-    select
-    $1 as data,
-    $1:metadata:generated_at::timestamp_tz as generated_at,
-    metadata$filename as path,
-    regexp_substr(metadata$filename, '([a-z_]+.json)$') as artifact_type
-    from @${snowflake_stage.dbt_artifacts.database}.${snowflake_stage.dbt_artifacts.schema}.${snowflake_stage.dbt_artifacts.name}
-)
-file_format = (type = 'JSON')
-```
-
-Where the external stage's prefix is a destination for all dbt artifacts.
-
-## Usage
-
-Add the package to your `packages.yml` following the instructions at https://docs.getdbt.com/docs/building-a-dbt-project/package-management/
-
-Configure the required variables in your `dbt_project.yml`:
-
-```
+```yml
 vars:
   dbt_artifacts:
-    dbt_artifacts_database: your_db
-    dbt_artifacts_schema: your_schema
-    dbt_artifacts_table: your_table
+    dbt_artifacts_database: your_db # optional, default is your target database
+    dbt_artifacts_schema: your_schema # optional, default is 'dbt_artifacts'
+    dbt_artifacts_table: your_table # optional, default is 'artifacts'
 
 models:
   ...
@@ -47,13 +24,56 @@ models:
 
 ```
 
-Run `dbt deps` and then run the package specifically to test with `dbt run -m dbt_artifacts`.
+3. Run `dbt deps`.
 
-The two fct_ tables are both [incremental](https://docs.getdbt.com/docs/building-a-dbt-project/building-models/configuring-incremental-models/).
+## Generating the source table
+This package requires that the source data exists in a table in Snowflake.
 
-## Resources:
-- Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
-- Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
-- Join the [chat](http://slack.getdbt.com/) on Slack for live discussions and support
-- Find [dbt events](https://events.getdbt.com) near you
-- Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
+### Option 1: Loading local files
+Snowflake makes it possible to load local files into your warehouse. We've included a number of macros to assist with this. This method can be used by both dbt Cloud users, and users of other orchestration tools.
+
+1. To initially create these tables, execute `dbt run-operation create_artifact_resources` ([source](macros/create_artifact_resources.sql)). This will create a stage and a table named `{{ target.database }}.dbt_artifacts.artifacts` — you can override this name using the variables listed in the Installation section, above.
+
+2. Add [operations](https://docs.getdbt.com/docs/building-a-dbt-project/hooks-operations/#operations) to your production run to load files into your table, via the `upload_artifacts` macro ([source](macros/upload_artifacts.sql)). You'll need to specify which files to upload through use of the `--args` flag. Here's an example setup.
+```txt
+$ dbt  seed
+$ dbt  run-operation upload_dbt_artifacts --args '{filenames: [manifest, run_results]}'
+
+$ dbt  run 
+$ dbt  run-operation upload_dbt_artifacts --args '{filenames: [manifest, run_results]}'
+
+$ dbt  test 
+$ dbt  run-operation upload_dbt_artifacts --args '{filenames: [run_results]}' 
+
+$ dbt  source snapshot-freshness
+$ dbt  run-operation upload_dbt_artifacts --args '{filenames: [sources]}'
+
+$ dbt  docs generate
+$ dbt  run-operation upload_dbt_artifacts --args '{filenames: [catalog]}'
+```
+
+### Option 2: Loading cloud-storage files
+
+If you are using an orchestrator, you might instead upload these files to cloud storage — the method to do this will depend on your orchestrator. Then, link the cloud storage destination to a Snowflake external stage, and use a snowpipe to copy these files into the source table:
+
+```sql
+copy into ${snowflake_table.dbt_artifacts.database}.${snowflake_table.dbt_artifacts.schema}.${snowflake_table.dbt_artifacts.name}
+from (
+    select
+    $1 as data,
+    $1:metadata:generated_at::timestamp_tz as generated_at,
+    metadata$filename as path,
+    regexp_substr(metadata$filename, '([a-z_]+.json)$') as artifact_type
+    from @${snowflake_stage.dbt_artifacts.database}.${snowflake_stage.dbt_artifacts.schema}.${snowflake_stage.dbt_artifacts.name}
+)
+file_format = (type = 'JSON')
+```
+
+
+## Usage 
+The models will be picked up on your next `dbt run` command. You can also run the package specifically with `dbt run -m dbt_artifacts`.
+
+## Additional acknowledgement
+The macros in this package have been adapted from code shared by [Kevin Chan](https://github.com/KevinC-wk) and [Jonathan Talmi](https://github.com/jtalmi) of [Snaptravel](snaptravel.com).
+
+Thank you for sharing your work with the community!

@@ -33,9 +33,11 @@ fields as (
         target,
         was_full_refresh
 
+        {% if env_keys %}
         {% for key in env_keys %}
         ,env:{{ key }} as env_{{ key }}
         {% endfor %}
+        {% endif %}
     from incremental_run_results
 
 )
