@@ -1,5 +1,17 @@
 # Tails.com's dbt Artifacts Package
-This package builds `fct_dbt_model_executions` and `fct_dbt_run_results` tables from dbt artifacts loaded into a table. It is compatible with Snowflake only. The models are based off of the [v1 schema](https://docs.getdbt.com/reference/artifacts/dbt-artifacts/#notes) introduced in dbt 0.19.0.
+This package builds a mart of tables from dbt artifacts loaded into a table. It is compatible with Snowflake only. The models are based off of the [v1 schema](https://docs.getdbt.com/reference/artifacts/dbt-artifacts/#notes) introduced in dbt 0.19.0.
+
+Models included:
+
+- `fct_dbt_model_executions`
+- `fct_dbt_run_results`
+- `fct_dbt__latest_full_model_executions`
+- `fct_dbt__critical_path`
+
+These are all pretty self explanatory with the exception of critical path. This model determines the slowest route through your DAG, which provides you with the information needed to make a targeted effort to reducing `dbt run` times. For example:
+
+![Critical Path](critical_path.png)
+
 ## Installation
 
 1. Add this package to your `packages.yml` following [these instructions](https://docs.getdbt.com/docs/building-a-dbt-project/package-management/)
@@ -17,10 +29,8 @@ models:
   ...
   dbt_artifacts:
     +schema: your_destination_schema
-    +materialized: table
     staging:
       +schema: your_destination_schema
-      +materialized: view # The staging tables cannot be ephemeral
 
 ```
 
@@ -39,11 +49,11 @@ Snowflake makes it possible to load local files into your warehouse. We've inclu
 $ dbt  seed
 $ dbt  run-operation upload_dbt_artifacts --args '{filenames: [manifest, run_results]}'
 
-$ dbt  run 
+$ dbt  run
 $ dbt  run-operation upload_dbt_artifacts --args '{filenames: [manifest, run_results]}'
 
-$ dbt  test 
-$ dbt  run-operation upload_dbt_artifacts --args '{filenames: [run_results]}' 
+$ dbt  test
+$ dbt  run-operation upload_dbt_artifacts --args '{filenames: [run_results]}'
 
 $ dbt  source snapshot-freshness
 $ dbt  run-operation upload_dbt_artifacts --args '{filenames: [sources]}'
@@ -70,7 +80,7 @@ file_format = (type = 'JSON')
 ```
 
 
-## Usage 
+## Usage
 The models will be picked up on your next `dbt run` command. You can also run the package specifically with `dbt run -m dbt_artifacts`.
 
 ## Additional acknowledgement
