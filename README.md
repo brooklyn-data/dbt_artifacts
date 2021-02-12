@@ -8,7 +8,7 @@ Models included:
 - `fct_dbt__latest_full_model_executions`
 - `fct_dbt__critical_path`
 
-These are all pretty self explanatory with the exception of critical path. This model determines the slowest route through your DAG, which provides you with the information needed to make a targeted effort to reducing `dbt run` times. For example:
+The critical path model determines the slowest route through your DAG, which provides you with the information needed to make a targeted effort to reducing `dbt run` times. For example:
 
 ![Critical Path](critical_path.png)
 
@@ -33,6 +33,7 @@ models:
       +schema: your_destination_schema
 
 ```
+Note that the model materializations are defined in this package's `dbt_project.yml`, so do not set them in your project.
 
 3. Run `dbt deps`.
 
