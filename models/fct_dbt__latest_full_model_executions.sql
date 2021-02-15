@@ -36,12 +36,15 @@ fields as (
     select
         artifact_generated_at,
         command_invocation_id,
-        execution_time,
+        compile_started_at,
+        sql_completed_at,
+        total_node_runtime,
         model_execution_id,
         model_materialization,
         model_schema,
         name,
         node_id,
+        thread_id,
         rows_affected,
         status,
         was_full_refresh
