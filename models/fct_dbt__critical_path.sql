@@ -57,12 +57,12 @@ node_dependencies_deduped as (
 
 ),
 
-model_dependencies_with_execution_time as (
+model_dependencies_with_total_node_runtime as (
     -- Model dependencies enriched with execution time
 
     select distinct
         node_dependencies_deduped.node_id,
-        latest_executions.execution_time,
+        latest_executions.total_node_runtime,
         depends_on_node_id
     from node_dependencies_deduped
     left join latest_executions on node_dependencies_deduped.node_id = latest_executions.node_id
@@ -80,13 +80,13 @@ models_with_at_least_one_model_dependency as (
 
 ),
 
-models_with_no_model_dependencies_with_execution_time as (
+models_with_no_model_dependencies_with_total_node_runtime as (
     -- Models which have no dependencies enriched with execution time
     -- These are models at the base of the tree
 
     select
         latest_models.node_id,
-        latest_executions.execution_time
+        latest_executions.total_node_runtime
     from latest_models
     left join models_with_at_least_one_model_dependency
         on latest_models.node_id = models_with_at_least_one_model_dependency.node_id
@@ -124,7 +124,7 @@ anchor as (
     select
         models_with_no_dependent_models.node_id,
         coalesce(node_dependencies_deduped.depends_on_node_id, '') as depends_on_node_id,
-        coalesce(latest_executions.execution_time, 0) as execution_time
+        coalesce(latest_executions.total_node_runtime, 0) as total_node_runtime
     from models_with_no_dependent_models
     left join node_dependencies_deduped on models_with_no_dependent_models.node_id = node_dependencies_deduped.node_id
     left join latest_executions on models_with_no_dependent_models.node_id = latest_executions.node_id
@@ -138,15 +138,15 @@ all_needed_dependencies as (
 
     select
         node_id,
-        execution_time,
+        total_node_runtime,
         '' as depends_on_node_id
-    from models_with_no_model_dependencies_with_execution_time
+    from models_with_no_model_dependencies_with_total_node_runtime
     union
     select
         node_id,
-        execution_time,
+        total_node_runtime,
         depends_on_node_id as depends_on_node_id
-    from model_dependencies_with_execution_time
+    from model_dependencies_with_total_node_runtime
 
 ),
 
@@ -157,12 +157,12 @@ search_path (node_ids, total_time) as (
 
     select
         array_construct(depends_on_node_id, node_id),
-        execution_time
+        total_node_runtime
     from anchor
     union all
     select
         array_cat(to_array(all_needed_dependencies.depends_on_node_id), search_path.node_ids) as node_ids,
-        all_needed_dependencies.execution_time + search_path.total_time
+        all_needed_dependencies.total_node_runtime + search_path.total_time
     from search_path
     left join all_needed_dependencies
     where get(search_path.node_ids, 0) = all_needed_dependencies.node_id
@@ -204,7 +204,7 @@ longest_path_with_times as (
     select
         flattened.node_id::string as node_id,
         flattened.index,
-        latest_executions.execution_time/60 as execution_minutes,
+        latest_executions.total_node_runtime/60 as execution_minutes,
         latest_models.model_materialization
     from flattened
     left join latest_executions on flattened.node_id = latest_executions.node_id

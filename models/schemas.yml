@@ -16,7 +16,7 @@ models:
     - name: model_materialization
 
   - name: fct_dbt__latest_full_model_executions
-    description: A list of all models and executions times that make up the critical path of a full, incremental run.
+    description: A list of all models and executions times from the most recent, incremental run.
     columns:
     - name: node_id
       description: Primary key.
@@ -27,8 +27,12 @@ models:
       description: Timestamp of when the source artifact was generated.
     - name: command_invocation_id
       description: Foreign key to fct_dbt_run_results. The id of the command which resulted in the source artifact's generation.
-    - name: execution_time
-      description: The duration of time in seconds for the model to run.
+    - name: compile_started_at
+      description: Timestamp of when a model starts to be compiled.
+    - name: query_completed_ats
+      description: Timestamp of when a model's SQL is completed
+    - name: total_node_runtime
+      description: The duration of time in seconds for the model to run. Note that this is _not_ equal to the delta between `compile_started_at` and `query_completed_at` since it includes extra tasks performed by dbt.
     - name: model_execution_id
       description: A surrogate key of command_invocation_id and node_id.
     - name: model_materialization
@@ -58,8 +62,12 @@ models:
       description: Boolean value for whether this model was executed with a --full-refresh flag.
     - name: model_materialization
       description: The configured materialization of the model.
-    - name: execution_time
-      description: The duration of time in seconds for the model to run.
+    - name: compile_started_at
+      description: Timestamp of when a model starts to be compiled.
+    - name: query_completed_at
+      description: Timestamp of when a model's SQL is completed
+    - name: total_node_runtime
+      description: The duration of time in seconds for the model to run. Note that this is _not_ equal to the delta between `compile_started_at` and `query_completed_at` since it includes extra tasks performed by dbt.
     - name: status
       description: Success/fail status of the model's execution.
     - name: command_invocation_id
