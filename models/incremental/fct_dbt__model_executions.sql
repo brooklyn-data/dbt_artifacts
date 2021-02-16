@@ -52,7 +52,7 @@ fields as (
         thread_id,
         status,
         compile_started_at,
-        sql_completed_at,
+        query_completed_at,
         total_node_runtime,
         rows_affected,
         model_materialization,

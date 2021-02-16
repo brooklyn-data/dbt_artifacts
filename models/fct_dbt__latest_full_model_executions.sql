@@ -37,7 +37,7 @@ fields as (
         artifact_generated_at,
         command_invocation_id,
         compile_started_at,
-        sql_completed_at,
+        query_completed_at,
         total_node_runtime,
         model_execution_id,
         model_materialization,

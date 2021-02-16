@@ -29,10 +29,10 @@ models:
       description: Foreign key to fct_dbt_run_results. The id of the command which resulted in the source artifact's generation.
     - name: compile_started_at
       description: Timestamp of when a model starts to be compiled.
-    - name: sql_completed_at
+    - name: query_completed_ats
       description: Timestamp of when a model's SQL is completed
     - name: total_node_runtime
-      description: The duration of time in seconds for the model to run. Note that this is _not_ equal to the delta between `compile_started_at` and `sql_completed_at` since it includes extra tasks performed by dbt.
+      description: The duration of time in seconds for the model to run. Note that this is _not_ equal to the delta between `compile_started_at` and `query_completed_at` since it includes extra tasks performed by dbt.
     - name: model_execution_id
       description: A surrogate key of command_invocation_id and node_id.
     - name: model_materialization
@@ -64,10 +64,10 @@ models:
       description: The configured materialization of the model.
     - name: compile_started_at
       description: Timestamp of when a model starts to be compiled.
-    - name: sql_completed_at
+    - name: query_completed_at
       description: Timestamp of when a model's SQL is completed
     - name: total_node_runtime
-      description: The duration of time in seconds for the model to run. Note that this is _not_ equal to the delta between `compile_started_at` and `sql_completed_at` since it includes extra tasks performed by dbt.
+      description: The duration of time in seconds for the model to run. Note that this is _not_ equal to the delta between `compile_started_at` and `query_completed_at` since it includes extra tasks performed by dbt.
     - name: status
       description: Success/fail status of the model's execution.
     - name: command_invocation_id
