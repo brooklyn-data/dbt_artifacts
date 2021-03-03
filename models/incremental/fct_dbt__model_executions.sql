@@ -3,14 +3,14 @@
 with models as (
 
     select *
-    from {{ ref('stg_dbt__models') }}
+    from {{ ref('dim_dbt__models') }}
 
 ),
 
 model_executions as (
 
     select *
-    from {{ ref('stg_dbt__model_executions') }}
+    from {{ ref('int_dbt__model_executions') }}
 
 ),
 
