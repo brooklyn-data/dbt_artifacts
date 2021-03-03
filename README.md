@@ -3,10 +3,11 @@ This package builds a mart of tables from dbt artifacts loaded into a table. It 
 
 Models included:
 
-- `fct_dbt_model_executions`
-- `fct_dbt_run_results`
+- `dim_dbt__models`
+- `fct_dbt__model_executions`
 - `fct_dbt__latest_full_model_executions`
 - `fct_dbt__critical_path`
+- `fct_dbt_run_results`
 
 The critical path model determines the slowest route through your DAG, which provides you with the information needed to make a targeted effort to reducing `dbt run` times. For example:
 
