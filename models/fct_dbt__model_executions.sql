@@ -3,40 +3,28 @@
 with models as (
 
     select *
-    from {{ ref('stg_dbt__models') }}
+    from {{ ref('dim_dbt__models') }}
 
 ),
 
 model_executions as (
 
     select *
-    from {{ ref('stg_dbt__model_executions') }}
-
-),
-
-model_executions_incremental as (
-
-    select *
-    from model_executions
-
-    {% if is_incremental() %}
-    -- this filter will only be applied on an incremental run
-    where artifact_generated_at > (select max(artifact_generated_at) from {{ this }})
-    {% endif %}
+    from {{ ref('int_dbt__model_executions') }}
 
 ),
 
 model_executions_with_materialization as (
 
     select
-        model_executions_incremental.*,
+        model_executions.*,
         models.model_materialization,
         models.model_schema,
         models.name
-    from model_executions_incremental
+    from model_executions
     left join models on (
-        model_executions_incremental.command_invocation_id = models.command_invocation_id
-        and model_executions_incremental.node_id = models.node_id
+        model_executions.command_invocation_id = models.command_invocation_id
+        and model_executions.node_id = models.node_id
     )
 
 ),
