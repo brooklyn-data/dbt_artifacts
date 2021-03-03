@@ -37,4 +37,4 @@ fields as (
 
 )
 
-select * from model_executions_incremental
+select * from fields
