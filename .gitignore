@@ -2,3 +2,8 @@
 target/
 dbt_modules/
 logs/
+
+.vscode
+Pipfile
+Pipfile.lock
+dbt_project.yml.dev
