@@ -16,7 +16,7 @@ manifests as (
 flatten as (
 
     select
-        data:metadata:invocation_id::string as command_invocation_id,
+        command_invocation_id,
         generated_at as artifact_generated_at,
         node.key as node_id,
         node.value:name::string as name,

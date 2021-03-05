@@ -3,7 +3,6 @@ target/
 dbt_modules/
 logs/
 
-.vscode
+.vscode/
 Pipfile
 Pipfile.lock
-dbt_project.yml.dev

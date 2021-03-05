@@ -16,7 +16,7 @@ manifests as (
 flatten as (
 
     select
-        data:metadata:invocation_id::string as command_invocation_id,
+        command_invocation_id,
         generated_at as artifact_generated_at,
         node.key as node_id,
         node.value:database::string as model_database,
@@ -36,7 +36,7 @@ flatten as (
 surrogate_key as (
 
     select
-        {{ dbt_utils.surrogate_key(['command_invocation_id', 'checksum']) }} as manifest_model_id,
+        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as manifest_model_id,
         command_invocation_id,
         artifact_generated_at,
         node_id,

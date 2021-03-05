@@ -8,12 +8,38 @@ with base as (
 fields as (
 
     select
-        data,
+        data:metadata:invocation_id::string as command_invocation_id,
         generated_at,
         path,
-        artifact_type
+        artifact_type,
+        data
     from base
+
+),
+
+duduped as (
+
+    select
+        *,
+        row_number() over (
+            partition by command_invocation_id, artifact_type
+            order by generated_at desc
+        ) as index
+    from fields
+    qualify index = 1
+
+),
+
+artifacts as (
+
+    select
+        command_invocation_id,
+        generated_at,
+        path,
+        artifact_type,
+        data
+    from duduped
 
 )
 
-select * from fields
+select * from artifacts
