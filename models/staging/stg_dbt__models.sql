@@ -16,11 +16,12 @@ manifests as (
 flatten as (
 
     select
-        data:metadata:invocation_id::string as command_invocation_id,
+        command_invocation_id,
         generated_at as artifact_generated_at,
         node.key as node_id,
-        node.value:name::string as name,
+        node.value:database::string as model_database,
         node.value:schema::string as model_schema,
+        node.value:name::string as name,
         to_array(node.value:depends_on:nodes) as depends_on_nodes,
         node.value:package_name::string as package_name,
         node.value:path::string as model_path,
@@ -35,12 +36,13 @@ flatten as (
 surrogate_key as (
 
     select
-        {{ dbt_utils.surrogate_key(['command_invocation_id', 'checksum']) }} as manifest_model_id,
+        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as manifest_model_id,
         command_invocation_id,
         artifact_generated_at,
         node_id,
-        name,
+        model_database,
         model_schema,
+        name,
         depends_on_nodes,
         package_name,
         model_path,
