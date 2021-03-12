@@ -11,7 +11,7 @@ Models included:
 
 The critical path model determines the slowest route through your DAG, which provides you with the information needed to make a targeted effort to reducing `dbt run` times. For example:
 
-![Critical Path](critical_path.png)
+![Critical Path](https://github.com/tailsdotcom/dbt_artifacts/raw/main/critical_path.png)
 
 ## Installation
 
