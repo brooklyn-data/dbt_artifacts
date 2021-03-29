@@ -29,7 +29,7 @@ models:
       description: Foreign key to fct_dbt_run_results. The id of the command which resulted in the source artifact's generation.
     - name: compile_started_at
       description: Timestamp of when a model starts to be compiled.
-    - name: query_completed_ats
+    - name: query_completed_at
       description: Timestamp of when a model's SQL is completed
     - name: total_node_runtime
       description: The duration of time in seconds for the model to run. Note that this is _not_ equal to the delta between `compile_started_at` and `query_completed_at` since it includes extra tasks performed by dbt.
