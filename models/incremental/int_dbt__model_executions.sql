@@ -30,7 +30,7 @@ fields as (
         thread_id,
         status,
         compile_started_at,
-        query_completed_at,
+        compile_completed_at,
         total_node_runtime,
         rows_affected
     from model_executions_incremental

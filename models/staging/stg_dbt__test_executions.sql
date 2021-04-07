@@ -13,11 +13,11 @@ run_results as (
 
 ),
 
-dbt_run as (
+dbt_test as (
 
     select *
     from run_results
-    where data:args:which = 'run'
+    where data:args:which = 'test'
 
 ),
 
@@ -26,7 +26,6 @@ fields as (
     select
         data:metadata:invocation_id::string as command_invocation_id,
         generated_at as artifact_generated_at,
-        coalesce(data:args:full_refresh, 'false')::boolean as was_full_refresh,
         result.value:unique_id::string as node_id,
         split(result.value:thread_id::string, '-')[1]::integer as thread_id,
         result.value:status::string as status,
@@ -35,14 +34,13 @@ fields as (
         result.value:timing[0]:started_at::timestamp_ntz as compile_started_at,
 
         -- The second item in the timing array is `execute`.
-        result.value:timing[1]:completed_at::timestamp_ntz as compile_completed_at,
-        
+        result.value:timing[1]:completed_at::timestamp_ntz as compiled_completed_at,
+
         -- Confusingly, this does not match the delta of the above two timestamps.
         -- should we calculate it instead?
-        coalesce(result.value:execution_time::float, 0) as total_node_runtime,
-        
-        result.value:adapter_response:rows_affected::int as rows_affected
-    from dbt_run,
+        coalesce(result.value:execution_time::float, 0) as total_node_runtime
+
+    from dbt_test,
     lateral flatten(input => data:results) as result
 
 ),
@@ -50,17 +48,16 @@ fields as (
 surrogate_key as (
 
     select
-        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as model_execution_id,
+        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as test_execution_id,
         command_invocation_id,
         artifact_generated_at,
-        was_full_refresh,
         node_id,
         thread_id,
         status,
         compile_started_at,
         query_completed_at,
-        total_node_runtime,
-        rows_affected
+        total_node_runtime
+
     from fields
 
 )
