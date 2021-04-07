@@ -34,7 +34,7 @@ fields as (
         result.value:timing[0]:started_at::timestamp_ntz as compile_started_at,
 
         -- The second item in the timing array is `execute`.
-        result.value:timing[1]:completed_at::timestamp_ntz as compiled_completed_at,
+        result.value:timing[1]:completed_at::timestamp_ntz as compile_completed_at,
 
         -- Confusingly, this does not match the delta of the above two timestamps.
         -- should we calculate it instead?
@@ -55,7 +55,7 @@ surrogate_key as (
         thread_id,
         status,
         compile_started_at,
-        query_completed_at,
+        compile_completed_at,
         total_node_runtime
 
     from fields
