@@ -53,4 +53,4 @@ surrogate_key as (
 
 )
 
-select * from fields
+select * from surrogate_key

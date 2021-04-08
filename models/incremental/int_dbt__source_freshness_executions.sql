@@ -25,14 +25,14 @@ fields as (
         source_freshness_id,
         command_invocation_id,
         artifact_generated_at,
-        was_full_refresh,
         node_id,
-        thread_id,
-        status,
-        compile_started_at,
-        compile_completed_at,
-        total_node_runtime,
-        rows_affected
+        project_name,
+        source_name,
+        table_name,
+        freshness_status,
+        max_loaded_at,
+        freshness_checked_at,
+        max_loaded_at_time_ago_in_s
     from source_freshness_executions_incremental
 
 )
