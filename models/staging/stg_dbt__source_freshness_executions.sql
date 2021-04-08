@@ -37,7 +37,7 @@ fields as (
 surrogate_key as (
 
     select
-        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as source_freshness_execution_id,
+        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as source_freshness_id,
         command_invocation_id,
         artifact_generated_at,
         node_id,
