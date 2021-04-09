@@ -44,18 +44,17 @@ source_freshness_executions_with_materialization as (
 fields as (
 
     select
-        source_freshness_execution_id,
+         source_freshness_id,
         command_invocation_id,
         artifact_generated_at,
         node_id,
-        thread_id,
-        status,
-        compile_started_at,
-        compile_completed_at,
-        total_node_runtime,
-        model_materialization,
-        model_schema,
-        name
+        project_name,
+        source_name,
+        table_name,
+        freshness_status,
+        max_loaded_at,
+        freshness_checked_at,
+        max_loaded_at_time_ago_in_s
     from source_freshness_executions_incremental
 
 )

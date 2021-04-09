@@ -35,29 +35,15 @@ model_executions_with_materialization as (
         models.name
     from model_executions_incremental
     left join models on (
-        model_executions_incremental.command_invocation_id = models.command_invocation_id
-        and model_executions_incremental.node_id = models.node_id
-    )
+        models.command_invocation_id = model_executions_incremental.command_invocation_id 
+        and models.node_id = model_executions_incremental.node_id)
+    
 
 ),
 
 fields as (
 
-    select
-        model_execution_id,
-        command_invocation_id,
-        artifact_generated_at,
-        was_full_refresh,
-        node_id,
-        thread_id,
-        status,
-        compile_started_at,
-        compile_completed_at,
-        total_node_runtime,
-        rows_affected,
-        model_materialization,
-        model_schema,
-        name
+    select * 
     from model_executions_with_materialization
 
 )

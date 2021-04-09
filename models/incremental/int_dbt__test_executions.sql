@@ -31,6 +31,7 @@ fields as (
         compile_started_at,
         compile_completed_at,
         total_node_runtime
+        
     from test_executions_incremental
 )
 
