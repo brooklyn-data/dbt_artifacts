@@ -1,7 +1,7 @@
 with base as (
 
     select *
-    from {{ ref('stg_dbt__artifacts') }}
+    from {{ ref('stg_dbt_artifacts') }}
 
 ),
 

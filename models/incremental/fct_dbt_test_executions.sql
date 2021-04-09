@@ -3,14 +3,14 @@
 with models as (
 
     select *
-    from {{ ref('dim_dbt__models') }}
+    from {{ ref('dim_dbt_models') }}
 
 ),
 
 test_executions as (
 
     select *
-    from {{ ref('int_dbt__test_executions') }}
+    from {{ ref('int_dbt_test_executions') }}
 
 ),
 
@@ -39,25 +39,6 @@ test_executions_with_materialization as (
         and test_executions_incremental.node_id = models.node_id
     )
 
-),
-
-fields as (
-
-    select
-        test_execution_id,
-        command_invocation_id,
-        artifact_generated_at,
-        node_id,
-        thread_id,
-        status,
-        compile_started_at,
-        compile_completed_at,
-        total_node_runtime,
-        model_materialization,
-        model_schema,
-        name
-    from test_executions_with_materialization
-
 )
 
-select * from fields
+select * from test_executions_with_materialization

@@ -3,14 +3,14 @@
 with models as (
 
     select *
-    from {{ ref('dim_dbt__models') }}
+    from {{ ref('dim_dbt_models') }}
 
 ),
 
 model_executions as (
 
     select *
-    from {{ ref('int_dbt__model_executions') }}
+    from {{ ref('int_dbt_model_executions') }}
 
 ),
 
@@ -39,13 +39,6 @@ model_executions_with_materialization as (
         and models.node_id = model_executions_incremental.node_id)
     
 
-),
-
-fields as (
-
-    select * 
-    from model_executions_with_materialization
-
 )
 
-select * from fields
+select * from model_executions_with_materialization

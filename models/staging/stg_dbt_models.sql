@@ -1,7 +1,7 @@
 with base as (
 
     select *
-    from {{ ref('stg_dbt__artifacts') }}
+    from {{ ref('stg_dbt_artifacts') }}
 
 ),
 
@@ -37,17 +37,7 @@ surrogate_key as (
 
     select
         {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as manifest_model_id,
-        command_invocation_id,
-        artifact_generated_at,
-        node_id,
-        model_database,
-        model_schema,
-        name,
-        depends_on_nodes,
-        package_name,
-        model_path,
-        checksum,
-        model_materialization
+        flatten.*
     from flatten
 
 )

@@ -1,14 +1,14 @@
 with models as (
 
     select *
-    from {{ ref('stg_dbt__models') }}
+    from {{ ref('stg_dbt_models') }}
 
 ),
 
 latest_executions as (
 
     select *
-    from {{ ref('fct_dbt__latest_full_model_executions') }}
+    from {{ ref('fct_dbt_latest_full_model_executions') }}
 
 ),
 

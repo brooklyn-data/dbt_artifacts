@@ -2,7 +2,7 @@
 
 with run_results as (
     select *
-    from {{ ref('stg_dbt__run_results') }}
+    from {{ ref('stg_dbt_run_results') }}
 ),
 
 

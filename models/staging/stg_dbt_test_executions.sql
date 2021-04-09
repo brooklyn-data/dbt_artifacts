@@ -1,7 +1,7 @@
 with base as (
 
     select *
-    from {{ ref('stg_dbt__artifacts') }}
+    from {{ ref('stg_dbt_artifacts') }}
 
 ),
 
@@ -49,15 +49,7 @@ surrogate_key as (
 
     select
         {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as test_execution_id,
-        command_invocation_id,
-        artifact_generated_at,
-        node_id,
-        thread_id,
-        status,
-        compile_started_at,
-        compile_completed_at,
-        total_node_runtime
-
+        fields.*
     from fields
 
 )

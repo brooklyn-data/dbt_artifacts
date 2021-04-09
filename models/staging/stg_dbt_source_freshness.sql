@@ -1,7 +1,7 @@
 with base as (
 
     select *
-    from {{ ref('stg_dbt__artifacts') }}
+    from {{ ref('stg_dbt_artifacts') }}
 
 ),
 
@@ -38,16 +38,7 @@ surrogate_key as (
 
     select
         {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as source_freshness_id,
-        command_invocation_id,
-        artifact_generated_at,
-        node_id,
-        project_name,
-        source_name,
-        table_name,
-        freshness_status,
-        max_loaded_at,
-        freshness_checked_at,
-        max_loaded_at_time_ago_in_s
+        fields.*
 
     from fields
 

@@ -3,7 +3,7 @@
 with run_results as (
 
     select *
-    from {{ ref('int_dbt__run_results') }}
+    from {{ ref('int_dbt_run_results') }}
 
 ),
 
