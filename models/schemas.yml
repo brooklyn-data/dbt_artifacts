@@ -180,7 +180,7 @@ models:
     - name: dbt_cloud_job_name
       description: dbt job name defined by the data team, which corresponds to dbt_cloud_job_id.
 
-  - name: dim_dbt_models
+  - name: int_dbt_models
     description: All dbt model metadata from every manifest.json.
     columns:
       - name: manifest_model_id
@@ -206,7 +206,7 @@ models:
         description: Unique identifier for the model. If a model is unchanged between separate executions this will remain the same.
       - name: model_materialization
 
-  - name: dim_dbt_sources
+  - name: int_dbt_sources
     description: All dbt source metadata from every manifest.json.
     columns:
       - name: manifest_source_id

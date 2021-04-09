@@ -3,7 +3,7 @@
 with models as (
 
     select *
-    from {{ ref('dim_dbt_models') }}
+    from {{ ref('int_dbt_models') }}
 
 ),
 
