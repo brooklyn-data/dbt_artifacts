@@ -1,4 +1,8 @@
-{{ config( materialized='incremental', unique_key='manifest_source_id' ) }}
+{{ config( 
+    materialized='incremental', 
+    unique_key='manifest_source_id' 
+    ) 
+}}
 
 with dbt_sources as (
 
@@ -8,8 +12,7 @@ with dbt_sources as (
 
 dbt_sources_incremental as (
 
-    select *
-    from dbt_sources
+    select * from dbt_sources
 
     {% if is_incremental() %}
     -- this filter will only be applied on an incremental run

@@ -1,14 +1,12 @@
 with models as (
 
-    select *
-    from {{ ref('stg_dbt_models') }}
+    select * from {{ ref('stg_dbt_models') }}
 
 ),
 
 latest_executions as (
 
-    select *
-    from {{ ref('fct_dbt_latest_full_model_executions') }}
+    select * from {{ ref('fct_dbt_latest_full_model_executions') }}
 
 ),
 
@@ -29,7 +27,8 @@ latest_models as (
         models.depends_on_nodes,
         models.model_materialization
     from latest_id
-    left join models on latest_id.command_invocation_id = models.command_invocation_id
+    left join models 
+        on latest_id.command_invocation_id = models.command_invocation_id
 
 
 ),
@@ -65,7 +64,8 @@ model_dependencies_with_total_node_runtime as (
         latest_executions.total_node_runtime,
         depends_on_node_id
     from node_dependencies_deduped
-    left join latest_executions on node_dependencies_deduped.node_id = latest_executions.node_id
+    left join latest_executions 
+        on node_dependencies_deduped.node_id = latest_executions.node_id
     where depends_on_node_type = 'model'
 
 ),
@@ -90,7 +90,8 @@ models_with_no_model_dependencies_with_total_node_runtime as (
     from latest_models
     left join models_with_at_least_one_model_dependency
         on latest_models.node_id = models_with_at_least_one_model_dependency.node_id
-    left join latest_executions on latest_models.node_id = latest_executions.node_id
+    left join latest_executions 
+        on latest_models.node_id = latest_executions.node_id
     where models_with_at_least_one_model_dependency.node_id is null
 
 ),
@@ -111,7 +112,7 @@ models_with_no_dependent_models as (
         latest_models.node_id
     from latest_models
     left join models_with_dependent_models
-    on latest_models.node_id = models_with_dependent_models.node_id
+        on latest_models.node_id = models_with_dependent_models.node_id
     where models_with_dependent_models.node_id is null
 
 ),
@@ -126,8 +127,10 @@ anchor as (
         coalesce(node_dependencies_deduped.depends_on_node_id, '') as depends_on_node_id,
         coalesce(latest_executions.total_node_runtime, 0) as total_node_runtime
     from models_with_no_dependent_models
-    left join node_dependencies_deduped on models_with_no_dependent_models.node_id = node_dependencies_deduped.node_id
-    left join latest_executions on models_with_no_dependent_models.node_id = latest_executions.node_id
+    left join node_dependencies_deduped 
+        on models_with_no_dependent_models.node_id = node_dependencies_deduped.node_id
+    left join latest_executions 
+        on models_with_no_dependent_models.node_id = latest_executions.node_id
 
 ),
 
@@ -207,8 +210,10 @@ longest_path_with_times as (
         latest_executions.total_node_runtime/60 as execution_minutes,
         latest_models.model_materialization
     from flattened
-    left join latest_executions on flattened.node_id = latest_executions.node_id
-    left join latest_models on flattened.node_id = latest_models.node_id
+    left join latest_executions 
+        on flattened.node_id = latest_executions.node_id
+    left join latest_models 
+        on flattened.node_id = latest_models.node_id
 
 )
 

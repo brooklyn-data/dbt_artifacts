@@ -1,15 +1,13 @@
 with base as (
 
-    select *
-    from {{ ref('stg_dbt_artifacts') }}
+    select * from {{ ref('stg_dbt_artifacts') }}
 
 ),
 
 
 sources as (
 
-    select *
-    from base
+    select * from base
     where artifact_type = 'sources.json'
 
 ),
@@ -28,7 +26,6 @@ fields as (
         result.value:max_loaded_at::timestamp_ntz as max_loaded_at,
         result.value:snapshotted_at::timestamp_ntz as freshness_checked_at,
         result.value:max_loaded_at_time_ago_in_s::decimal as max_loaded_at_time_ago_in_s
-
     from sources,
     lateral flatten(input => data:results) as result
 
@@ -38,7 +35,7 @@ surrogate_key as (
 
     select
         {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as source_freshness_id,
-        fields.*
+        *
 
     from fields
 

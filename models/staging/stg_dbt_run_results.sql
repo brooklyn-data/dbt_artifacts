@@ -1,22 +1,19 @@
 with base as (
 
-    select *
-    from {{ ref('stg_dbt_artifacts') }}
+    select * from {{ ref('stg_dbt_artifacts') }}
 
 ),
 
 run_results as (
 
-    select *
-    from base
+    select * from base
     where artifact_type = 'run_results.json'
 
 ),
 
 dbt_run as (
 
-    select *
-    from run_results
+    select * from run_results
     where data:args:which = 'run'
 
 ),
@@ -41,7 +38,6 @@ fields as (
         data:metadata:env.DBT_CLOUD_RUN_REASON_CATEGORY::string as dbt_cloud_run_reason_cat,
         data:metadata:env.DBT_CLOUD_PR_ID::string as dbt_cloud_pr_id,
         data:metadata:env.DBT_CLOUD_GIT_SHA::string as dbt_cloud_git_sha
-
     from dbt_run
 
 )

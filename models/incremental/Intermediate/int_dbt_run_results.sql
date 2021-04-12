@@ -1,8 +1,11 @@
-{{ config( materialized='incremental', unique_key='command_invocation_id' ) }}
+{{ config( 
+    materialized='incremental', 
+    unique_key='command_invocation_id' 
+    ) 
+}}
 
 with run_results as (
-    select *
-    from {{ ref('stg_dbt_run_results') }}
+    select * from {{ ref('stg_dbt_run_results') }}
 ),
 
 
@@ -16,7 +19,7 @@ fields as (
             when dbt_cloud_job_id = '5969'
                 then 'refresh pipes'
             when dbt_cloud_job_id = '6128'
-                then 'bi hourly run, exclude optimove'
+                then 'bi hourly run'
             when dbt_cloud_job_id = '11534'
                 then 'inventory and toolio daily run'
             when dbt_cloud_job_id = '14409'
@@ -34,7 +37,7 @@ fields as (
             when dbt_cloud_job_id = '6228'
                 then 'weekly full refresh'
             when dbt_cloud_job_id = '6979'
-                then 'full daily run, optimove test'
+                then 'full daily run'
             else null
         end as dbt_cloud_job_name
 

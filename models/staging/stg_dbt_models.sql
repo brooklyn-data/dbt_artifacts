@@ -1,14 +1,12 @@
 with base as (
 
-    select *
-    from {{ ref('stg_dbt_artifacts') }}
+    select * from {{ ref('stg_dbt_artifacts') }}
 
 ),
 
 manifests as (
 
-    select *
-    from base
+    select * from base
     where artifact_type = 'manifest.json'
 
 ),

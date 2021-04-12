@@ -1,22 +1,19 @@
 with base as (
 
-    select *
-    from {{ ref('stg_dbt_artifacts') }}
+    select * from {{ ref('stg_dbt_artifacts') }}
 
 ),
 
 run_results as (
 
-    select *
-    from base
+    select * from base
     where artifact_type = 'run_results.json'
 
 ),
 
 dbt_test as (
 
-    select *
-    from run_results
+    select * from run_results
     where data:args:which = 'test'
 
 ),
@@ -49,7 +46,7 @@ surrogate_key as (
 
     select
         {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as test_execution_id,
-        fields.*
+        *
     from fields
 
 )

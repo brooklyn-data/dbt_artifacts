@@ -1,14 +1,12 @@
 with base as (
 
-    select *
-    from {{ ref('stg_dbt_artifacts') }}
+    select * from {{ ref('stg_dbt_artifacts') }}
 
 ),
 
 manifests as (
 
-    select *
-    from base
+    select * from base
     where artifact_type = 'manifest.json'
 
 ),
@@ -37,7 +35,7 @@ surrogate_key as (
 
     select
         {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as manifest_test_id,
-        flatten.*
+        *
     from flatten
 
 )
