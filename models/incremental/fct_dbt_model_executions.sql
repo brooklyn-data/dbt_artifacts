@@ -2,7 +2,11 @@
 
 with models as (
 
-    select *
+    select distinct
+    node_id,
+    model_materialization,
+    model_schema,
+    name
     from {{ ref('int_dbt_models') }}
 
 ),
