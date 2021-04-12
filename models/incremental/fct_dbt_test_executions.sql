@@ -1,9 +1,9 @@
 {{ config( materialized='incremental', unique_key='test_execution_id' ) }}
 
-with models as (
+with tests as (
 
     select *
-    from {{ ref('int_dbt_models') }}
+    from {{ ref('int_dbt_tests') }}
 
 ),
 
@@ -30,13 +30,10 @@ test_executions_with_materialization as (
 
     select
         test_executions_incremental.*,
-        models.model_materialization,
-        models.model_schema,
-        models.name
+        tests.test_name
     from test_executions_incremental
-    left join models on (
-        test_executions_incremental.command_invocation_id = models.command_invocation_id
-        and test_executions_incremental.node_id = models.node_id
+    left join tests on (
+        test_executions_incremental.node_id = tests.node_id
     )
 
 )

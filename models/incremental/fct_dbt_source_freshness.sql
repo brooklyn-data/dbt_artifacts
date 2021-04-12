@@ -35,8 +35,7 @@ source_freshness_executions_with_materialization as (
         models.name
     from source_freshness_executions_incremental
     left join models on (
-        source_freshness_executions_incremental.command_invocation_id = models.command_invocation_id
-        and source_freshness_executions_incremental.node_id = models.node_id
+        source_freshness_executions_incremental.node_id = models.node_id
     )
 
 )
