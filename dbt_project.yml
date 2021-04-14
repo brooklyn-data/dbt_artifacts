@@ -5,7 +5,7 @@ require-dbt-version: ">=0.19.0"
 
 models:
   dbt_artifacts:
-    +schema: default_dbt_artifacts_schema
+    +schema: dbt_artifacts_pkg
     +materialized: table
     incremental:
       +materialized: incremental
@@ -13,3 +13,7 @@ models:
       +materialized: view # The staging tables cannot be ephemeral
 
 profile: mack_weldon_snowflake
+
+on-run-end: 
+  - "{{ grant_select_on_schemas (schemas, 'reporter') }}"
+  - "{{ grant_select_on_schemas (schemas, 'transformer') }}"
