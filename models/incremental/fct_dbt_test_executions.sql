@@ -29,7 +29,8 @@ test_executions_with_materialization as (
 
     select
         test_executions_incremental.*,
-        tests.test_name
+        tests.test_name,
+        tests.test_type
     from test_executions_incremental
     left join tests 
         on test_executions_incremental.node_id = tests.node_id
