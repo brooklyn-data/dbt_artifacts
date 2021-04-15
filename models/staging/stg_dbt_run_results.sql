@@ -22,7 +22,7 @@ fields as (
 
     select
         generated_at as artifact_generated_at,
-        data:metadata:invocation_id::string as command_invocation_id,
+        command_invocation_id,
         data:metadata:dbt_version::string as dbt_version,
         data:metadata:env as env,
         data:elapsed_time::float as elapsed_time,

@@ -16,7 +16,7 @@ sources as (
 fields as (
 
     select
-        data:metadata:invocation_id::string as command_invocation_id,
+        command_invocation_id,
         generated_at as artifact_generated_at,
         result.value:unique_id::string as node_id,
         split(node_id, '.')[1]::string as project_name,
