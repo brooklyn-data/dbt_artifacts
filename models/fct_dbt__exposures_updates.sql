@@ -8,7 +8,8 @@ exposures_record as (
 
     select * from {{ ref('dim_dbt__exposures') }}
 
-)
+),
+
 
 model_updates as (
 
@@ -48,9 +49,9 @@ exposures_updates as (
         e.package_name,
         e.output_feeds,
         latest_update as feed_latest_update
-    from exposures e
+    from exposures_latest e
     left join model_updates m
-    on m.node_id = e.output_feeds
+      on m.node_id = e.output_feeds
 
 )
 
