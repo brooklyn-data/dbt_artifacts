@@ -13,10 +13,5 @@ macro-paths: ["macros"]
 target-path: "target"
 clean-targets: ["target", "dbt_modules"]
 
-quoting:
-  identifier: false
-  schema: false
-
 seeds:
-  artifacts_integration_tests:
-    +quote_columns: false
+  +quote_columns: false
