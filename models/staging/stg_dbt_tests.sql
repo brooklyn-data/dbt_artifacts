@@ -1,14 +1,12 @@
 with base as (
 
-    select *
-    from {{ ref('stg_dbt__artifacts') }}
+    select * from {{ ref('stg_dbt_artifacts') }}
 
 ),
 
 manifests as (
 
-    select *
-    from base
+    select * from base
     where artifact_type = 'manifest.json'
 
 ),
@@ -21,7 +19,7 @@ flatten as (
         node.key as node_id,
         node.value:database::string as model_database,
         node.value:schema::string as model_schema,
-        node.value:name::string as name,
+        node.value:name::string as test_name,
         to_array(node.value:depends_on:nodes) as depends_on_nodes,
         node.value:package_name::string as package_name,
         node.value:path::string as model_path,
@@ -29,25 +27,15 @@ flatten as (
         node.value:config.materialized::string as model_materialization
     from manifests,
     lateral flatten(input => data:nodes) as node
-    where node.value:resource_type = 'model'
+    where node.value:resource_type = 'test'
 
 ),
 
 surrogate_key as (
 
     select
-        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as manifest_model_id,
-        command_invocation_id,
-        artifact_generated_at,
-        node_id,
-        model_database,
-        model_schema,
-        name,
-        depends_on_nodes,
-        package_name,
-        model_path,
-        checksum,
-        model_materialization
+        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as manifest_test_id,
+        *
     from flatten
 
 )

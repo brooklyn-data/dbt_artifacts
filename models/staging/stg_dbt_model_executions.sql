@@ -1,22 +1,19 @@
 with base as (
 
-    select *
-    from {{ ref('stg_dbt__artifacts') }}
+    select * from {{ ref('stg_dbt_artifacts') }}
 
 ),
 
 run_results as (
 
-    select *
-    from base
+    select * from base
     where artifact_type = 'run_results.json'
 
 ),
 
 dbt_run as (
 
-    select *
-    from run_results
+    select * from run_results
     where data:args:which = 'run'
 
 ),
@@ -34,8 +31,8 @@ fields as (
         -- The first item in the timing array is the model-level `compile`
         result.value:timing[0]:started_at::timestamp_ntz as compile_started_at,
 
-        -- The second item in the timing array is `execute`.
-        result.value:timing[1]:completed_at::timestamp_ntz as query_completed_at,
+        -- The second item in the timing array is `execute` - renamed to `compile_completed_at` to make it easier to understand
+        result.value:timing[1]:completed_at::timestamp_ntz as compile_completed_at,
         
         -- Confusingly, this does not match the delta of the above two timestamps.
         -- should we calculate it instead?
@@ -51,16 +48,7 @@ surrogate_key as (
 
     select
         {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as model_execution_id,
-        command_invocation_id,
-        artifact_generated_at,
-        was_full_refresh,
-        node_id,
-        thread_id,
-        status,
-        compile_started_at,
-        query_completed_at,
-        total_node_runtime,
-        rows_affected
+        fields.*
     from fields
 
 )

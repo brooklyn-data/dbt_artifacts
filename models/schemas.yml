@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: fct_dbt__critical_path
+  - name: fct_dbt_critical_path
     description: A table of models and executions times that make up the critical path of a full, incremental run.
     columns:
     - name: node_id
@@ -15,7 +15,7 @@ models:
       description: The duration of time in minutes for the model to run.
     - name: model_materialization
 
-  - name: fct_dbt__latest_full_model_executions
+  - name: fct_dbt_latest_full_model_executions
     description: A list of all models and executions times from the most recent, incremental run.
     columns:
     - name: node_id
@@ -46,7 +46,7 @@ models:
     - name: was_full_refresh
       description: Boolean value for whether this model was executed with a --full-refresh flag.
 
-  - name: fct_dbt__model_executions
+  - name: fct_dbt_model_executions
     description: All historic dbt model executions.
     columns:
     - name: model_execution_id
@@ -64,7 +64,7 @@ models:
       description: The configured materialization of the model.
     - name: compile_started_at
       description: Timestamp of when a model starts to be compiled.
-    - name: query_completed_at
+    - name: compile_completed_at
       description: Timestamp of when a model's SQL is completed
     - name: total_node_runtime
       description: The duration of time in seconds for the model to run. Note that this is _not_ equal to the delta between `compile_started_at` and `query_completed_at` since it includes extra tasks performed by dbt.
@@ -79,7 +79,69 @@ models:
     - name: rows_affected
       description: The number of rows affected by the model's execution. Always 1 for non-incremental executions.
 
-  - name: fct_dbt__run_results
+  - name: fct_dbt_test_executions
+    description: All historic dbt test executions.
+    columns:
+    - name: test_execution_id
+      description: Primary key.
+      tests:
+        - unique
+        - not_null
+    - name: name
+      description: The name of the model.
+    - name: model_schema
+      description: The schema containing the model.
+    - name: model_materialization
+      description: The configured materialization of the model.
+    - name: compile_started_at
+      description: Timestamp of when a model starts to be compiled.
+    - name: compile_completed_at
+      description: Timestamp of when a model's SQL is completed
+    - name: total_node_runtime
+      description: The duration of time in seconds for the model to run. Note that this is _not_ equal to the delta between `compile_started_at` and `query_completed_at` since it includes extra tasks performed by dbt.
+    - name: command_invocation_id
+      description: Foreign key to fct_dbt_run_results. The id of the command which resulted in the source artifact's generation.
+    - name: artifact_generated_at
+      description: Timestamp of when the source artifact was generated.
+    - name: node_id
+      description: Unique id for the node, in the form of model.[package_name].[model_name]
+
+  - name: fct_dbt_source_freshness
+    description: All historic dbt source freshness executions.
+    columns:
+    - name: source_freshness_id
+      description: Primary key.
+      tests:
+        - unique
+        - not_null
+    - name: name
+      description: The name of the model.
+    - name: model_schema
+      description: The schema containing the model.
+    - name: model_materialization
+      description: The configured materialization of the model.
+    - name: project_name
+      description: The dbt project name.
+    - name: source_name
+      description: The data source name.
+    - name: table_name
+      description: The data source table name.
+    - name: freshness_state
+      description: Freshness state of the data - pass, fail or warn.
+    - name: max_loaded_at
+      description: Timestamp of when a model was last updated.
+    - name: freshness_checked_at
+      description: Timestamp of when a model's freshness was last checked.
+    - name: max_loaded_at_time_s
+      description: The duration of the time since the models freshness was last checked, in seconds.
+    - name: command_invocation_id
+      description: Foreign key to fct_dbt_run_results. The id of the command which resulted in the source artifact's generation.
+    - name: artifact_generated_at
+      description: Timestamp of when the source artifact was generated.
+    - name: node_id
+      description: Unique id for the node, in the form of model.[package_name].[model_name]
+
+  - name: fct_dbt_run_results
     description: Metadata for dbt run commands.
     columns:
     - name: command_invocation_id
@@ -101,10 +163,24 @@ models:
       description: The configured target for the command.
     - name: was_full_refresh
       description: Was the run executed with a --full-refresh flag?
-    - name: env_*
-      description: Columns for the environment variables set when the command was executed.
+    - name: dbt_cloud_job_id
+      description: Job ID variable set when the command was executed.
+    - name: dbt_cloud_project_id
+      description: Project ID variable set when the command was executed.
+    - name: dbt_cloud_run_id
+      description: Run ID variable set when the command was executed.
+    - name: dbt_cloud_run_reason
+      description: Run reason variable set when the command was executied.
+    - name: dbt_cloud_run_reason_category
+      description: Run reason category variable set when the command was executed.
+    - name: dbt_cloud_pr_id
+      description: PR ID variable set when the command was executed (PR runs only).
+    - name: dbt_cloud_git_sha
+      description: Git SHA variable set when the command was executed (PR runs only).
+    - name: dbt_cloud_job_name
+      description: dbt job name defined by the data team, which corresponds to dbt_cloud_job_id.
 
-  - name: dim_dbt__models
+  - name: int_dbt_models
     description: All dbt model metadata from every manifest.json.
     columns:
       - name: manifest_model_id
@@ -130,7 +206,7 @@ models:
         description: Unique identifier for the model. If a model is unchanged between separate executions this will remain the same.
       - name: model_materialization
 
-  - name: dim_dbt__sources
+  - name: int_dbt_sources
     description: All dbt source metadata from every manifest.json.
     columns:
       - name: manifest_source_id
