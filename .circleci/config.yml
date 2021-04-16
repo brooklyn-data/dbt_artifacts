@@ -17,19 +17,16 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
-
             pip install --upgrade pip setuptools
             pip install dbt --upgrade
-
-            mkdir -p ~/.dbt
-            cp integration_tests/ci/sample.profiles.yml ~/.dbt/profiles.yml
 
       - run:
           name: "Run Tests - Snowflake"
           command: |
             . venv/bin/activate
             cd integration_tests
-            echo `pwd`
+            export DBT_PROFILES_DIR=/home/circleci/project/integration_tests
+            echo $DBT_PROFILES_DIR
             dbt --warn-error deps --target snowflake
             dbt --warn-error run-operation create_artifact_resources --target snowflake
             dbt --warn-error seed --target snowflake --full-refresh
