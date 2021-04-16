@@ -11,9 +11,11 @@ data-paths: ["data"]
 macro-paths: ["macros"]
 
 target-path: "target"
-clean-targets:
-- "target"
-- "dbt_modules"
+clean-targets: ["target", "dbt_modules"]
+
+quoting:
+  identifier: false
+  schema: false
 
 seeds:
   +quote_columns: false
