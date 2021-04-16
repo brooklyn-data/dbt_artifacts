@@ -17,32 +17,28 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
-
             pip install --upgrade pip setuptools
             pip install dbt --upgrade
-
-            mkdir -p ~/.dbt
-            cp integration_tests/ci/sample.profiles.yml ~/.dbt/profiles.yml
 
       - run:
           name: "Run Tests - Snowflake"
           command: |
             . venv/bin/activate
-            echo `pwd`
             cd integration_tests
-            dbt --warn-error deps --target snowflake
-            dbt --warn-error run-operation create_artifact_resources --target snowflake
-            dbt --warn-error seed --target snowflake --full-refresh
-            dbt --warn-error run-operation upload_dbt_artifacts --args '{filenames: [manifest, run_results]}' --target snowflake
-            dbt --warn-error run --target snowflake
-            dbt --warn-error run-operation upload_dbt_artifacts --args '{filenames: [manifest, run_results]}' --target snowflake
-            dbt --warn-error test --target snowflake
-            dbt --warn-error run-operation upload_dbt_artifacts --args '{filenames: [run_results]}' --target snowflake
-            dbt --warn-error source snapshot-freshness --target snowflake
-            dbt --warn-error run-operation upload_dbt_artifacts --args '{filenames: [sources]}' --target snowflake
-            dbt --warn-error docs generate --target snowflake
-            dbt --warn-error run-operation upload_dbt_artifacts --args '{filenames: [catalog]}' --target snowflake
-
+            export DBT_PROFILES_DIR=/home/circleci/project/integration_tests
+            echo $DBT_PROFILES_DIR
+            dbt deps
+            dbt run-operation create_artifact_resources
+            dbt seed --full-refresh
+            dbt run-operation upload_dbt_artifacts --args '{filenames: [manifest, run_results]}'
+            dbt run
+            dbt run-operation upload_dbt_artifacts --args '{filenames: [manifest, run_results]}'
+            dbt test
+            dbt run-operation upload_dbt_artifacts --args '{filenames: [run_results]}'
+            dbt source snapshot-freshness
+            dbt run-operation upload_dbt_artifacts --args '{filenames: [sources]}'
+            dbt docs generate
+            dbt run-operation upload_dbt_artifacts --args '{filenames: [catalog]}'
 
       - save_cache:
           key: deps1-{{ .Branch }}

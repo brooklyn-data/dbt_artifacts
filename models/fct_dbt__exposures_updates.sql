@@ -10,6 +10,7 @@ exposures_record as (
 
 ),
 
+
 model_updates as (
 
     select 
@@ -50,7 +51,7 @@ exposures_updates as (
         latest_update as feed_latest_update
     from exposures_latest e
     left join model_updates m
-    on m.node_id = e.output_feeds
+      on m.node_id = e.output_feeds
 
 )
 
