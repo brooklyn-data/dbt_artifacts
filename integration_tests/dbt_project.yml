@@ -18,4 +18,5 @@ quoting:
   schema: false
 
 seeds:
-  +quote_columns: false
+  artifacts_integration_tests:
+    +quote_columns: false
