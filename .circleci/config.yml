@@ -28,8 +28,8 @@ jobs:
           name: "Run Tests - Snowflake"
           command: |
             . venv/bin/activate
-            echo `pwd`
             cd integration_tests
+            echo `pwd`
             dbt --warn-error deps --target snowflake
             dbt --warn-error run-operation create_artifact_resources --target snowflake
             dbt --warn-error seed --target snowflake --full-refresh
@@ -42,7 +42,6 @@ jobs:
             dbt --warn-error run-operation upload_dbt_artifacts --args '{filenames: [sources]}' --target snowflake
             dbt --warn-error docs generate --target snowflake
             dbt --warn-error run-operation upload_dbt_artifacts --args '{filenames: [catalog]}' --target snowflake
-
 
       - save_cache:
           key: deps1-{{ .Branch }}
