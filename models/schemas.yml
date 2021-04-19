@@ -8,6 +8,7 @@ models:
       description: Primary key.
       tests:
         - unique
+          severity: warn
         - not_null
     - name: index
       description: The index of the model in the critical path. Starts at 0.
@@ -22,6 +23,7 @@ models:
       description: Primary key.
       tests:
         - unique
+          severity: warn
         - not_null
     - name: artifact_generated_at
       description: Timestamp of when the source artifact was generated.
@@ -53,6 +55,7 @@ models:
       description: Primary key.
       tests:
         - unique
+          severity: warn
         - not_null
     - name: name
       description: The name of the model.
@@ -187,6 +190,7 @@ models:
         description: Primary key generated from the command_invocation_id and checksum.
         tests:
           - unique
+            severity: warn
           - not_null
       - name: command_invocation_id
         description: The id of the command which resulted in the source artifact's generation.
@@ -213,6 +217,7 @@ models:
         description: Primary key generated from the command_invocation_id and checksum.
         tests:
           - unique
+            severity: warn
           - not_null
       - name: command_invocation_id
         description: The id of the command which resulted in the source artifact's generation.
