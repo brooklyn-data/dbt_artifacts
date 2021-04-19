@@ -89,6 +89,7 @@ models:
       description: Primary key.
       tests:
         - unique
+          severity: warn
         - not_null
     - name: name
       description: The name of the model.
@@ -116,6 +117,7 @@ models:
       description: Primary key.
       tests:
         - unique
+          severity: warn
         - not_null
     - name: name
       description: The name of the model.
@@ -151,6 +153,7 @@ models:
       description: The id of the command which resulted in the source artifact's generation.
       tests:
         - unique
+          severity: warn
         - not_null
     - name: artifact_generated_at
       description: Timestamp of when the source artifact was generated.
