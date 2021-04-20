@@ -18,7 +18,7 @@ models:
   - name: fct_dbt_latest_full_model_executions
     description: A list of all models and executions times from the most recent, incremental run.
     columns:
-    - name: node_id
+    - name: latest_model_id
       description: Primary key.
       tests:
         - unique
@@ -49,7 +49,7 @@ models:
   - name: fct_dbt_model_executions
     description: All historic dbt model executions.
     columns:
-    - name: model_execution_id
+    - name: model_id
       description: Primary key.
       tests:
         - unique
@@ -82,7 +82,7 @@ models:
   - name: fct_dbt_test_executions
     description: All historic dbt test executions.
     columns:
-    - name: test_execution_id
+    - name: test_id
       description: Primary key.
       tests:
         - unique
