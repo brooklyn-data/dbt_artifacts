@@ -11,5 +11,3 @@ models:
       +materialized: incremental
     staging:
       +materialized: view # The staging tables cannot be ephemeral
-
-profile: mack_weldon_snowflake
