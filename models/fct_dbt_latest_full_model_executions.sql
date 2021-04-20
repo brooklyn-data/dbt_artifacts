@@ -22,7 +22,8 @@ latest_full as (
 
 joined as (
 
-    select
+    select 
+        {{ dbt_utils.surrogate_key(['model_executions.command_invocation_id', 'model_executions.node_id', 'model_executions.model_schema']) }} as latest_model_id,
         model_executions.*
     from latest_full
     left join model_executions 

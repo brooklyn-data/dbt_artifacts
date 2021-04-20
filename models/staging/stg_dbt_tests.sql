@@ -34,7 +34,7 @@ flatten as (
 surrogate_key as (
 
     select
-        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as manifest_test_id,
+        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id', 'model_schema']) }} as manifest_test_id,
         *
     from flatten
 

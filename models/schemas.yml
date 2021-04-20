@@ -8,7 +8,7 @@ models:
       description: Primary key.
       tests:
         - unique
-          severity: warn
+          severity:warn
         - not_null
     - name: index
       description: The index of the model in the critical path. Starts at 0.
@@ -19,11 +19,11 @@ models:
   - name: fct_dbt_latest_full_model_executions
     description: A list of all models and executions times from the most recent, incremental run.
     columns:
-    - name: node_id
+    - name: latest_model_id
       description: Primary key.
       tests:
         - unique
-          severity: warn
+          severity:warn
         - not_null
     - name: artifact_generated_at
       description: Timestamp of when the source artifact was generated.
@@ -51,11 +51,11 @@ models:
   - name: fct_dbt_model_executions
     description: All historic dbt model executions.
     columns:
-    - name: model_execution_id
+    - name: model_id
       description: Primary key.
       tests:
         - unique
-          severity: warn
+          severity:warn
         - not_null
     - name: name
       description: The name of the model.
@@ -85,11 +85,11 @@ models:
   - name: fct_dbt_test_executions
     description: All historic dbt test executions.
     columns:
-    - name: test_execution_id
+    - name: test_id
       description: Primary key.
       tests:
         - unique
-          severity: warn
+          severity:warn
         - not_null
     - name: name
       description: The name of the model.
@@ -117,7 +117,7 @@ models:
       description: Primary key.
       tests:
         - unique
-          severity: warn
+          severity:warn
         - not_null
     - name: name
       description: The name of the model.
@@ -153,7 +153,7 @@ models:
       description: The id of the command which resulted in the source artifact's generation.
       tests:
         - unique
-          severity: warn
+          severity:warn
         - not_null
     - name: artifact_generated_at
       description: Timestamp of when the source artifact was generated.
@@ -193,7 +193,7 @@ models:
         description: Primary key generated from the command_invocation_id and checksum.
         tests:
           - unique
-            severity: warn
+            severity:warn
           - not_null
       - name: command_invocation_id
         description: The id of the command which resulted in the source artifact's generation.
@@ -220,7 +220,7 @@ models:
         description: Primary key generated from the command_invocation_id and checksum.
         tests:
           - unique
-            severity: warn
+            severity:warn
           - not_null
       - name: command_invocation_id
         description: The id of the command which resulted in the source artifact's generation.
