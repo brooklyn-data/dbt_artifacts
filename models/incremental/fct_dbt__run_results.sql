@@ -34,7 +34,7 @@ fields as (
         was_full_refresh
 
         {% if env_keys %}
-        {% for key in sorted(env_keys) %}
+        {% for key in env_keys|sort %}
         ,env:{{ key }} as env_{{ key }}
         {% endfor %}
         {% endif %}
