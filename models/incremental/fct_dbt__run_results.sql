@@ -34,7 +34,8 @@ fields as (
         was_full_refresh
 
         {% if env_keys %}
-        {% for key in env_keys %}
+        -- Environment keys are sorted for determinism.
+        {% for key in env_keys|sort %}
         ,env:{{ key }} as env_{{ key }}
         {% endfor %}
         {% endif %}

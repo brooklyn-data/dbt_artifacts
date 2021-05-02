@@ -27,6 +27,8 @@ env_keys as (
         distinct(env.key)
     from dbt_run,
     lateral flatten(input => data:metadata:env) as env
+    -- Sort results to ensure things are deterministic
+    order by 1
 
 )
 
