@@ -21,7 +21,8 @@ models:
     - name: latest_model_id
       description: Primary key.
       tests:
-        - unique
+        - unique:
+            severity: warn
         - not_null
     - name: artifact_generated_at
       description: Timestamp of when the source artifact was generated.
@@ -52,7 +53,8 @@ models:
     - name: model_id
       description: Primary key.
       tests:
-        - unique
+        - unique:
+            severity: warn
         - not_null
     - name: name
       description: The name of the model.
