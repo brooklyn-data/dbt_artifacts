@@ -1,6 +1,6 @@
 {{ config( materialized='incremental', unique_key='command_invocation_id' ) }}
 
-{% set env_keys = dbt_utils.get_column_values(table=ref('stg_dbt__run_results_env_keys'), column='key') %}
+{% set env_keys = dbt_utils.get_column_values(table=ref('stg_dbt__run_results_env_keys'), column='key', default=[]) %}
 
 with run_results as (
 
