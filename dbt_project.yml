@@ -5,7 +5,8 @@ require-dbt-version: ">=0.19.0"
 
 models:
   dbt_artifacts:
-    +schema: default_dbt_artifacts_schema
+    # No schema override is defined here, but we recommend that you
+    # override the schema for specific projects.
     +materialized: table
     incremental:
       +materialized: incremental
