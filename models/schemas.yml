@@ -130,9 +130,10 @@ models:
     description: All dbt exposures metadata from every manifest.json.
     columns:
       - name: manifest_model_id
-        description: Primary key generated from the command_invocation_id and checksum.
+        description: |
+          Primary key generated from the command_invocation_id and checksum. Note,
+          this is not unique for a given exposure.
         tests:
-          - unique
           - not_null
       - name: command_invocation_id
         description: The id of the command which resulted in the source artifact's generation.
@@ -149,9 +150,13 @@ models:
       - name: maturity
         description: User-defined name of the exposure.
       - name: output_feeds
-        description: Unique id for each feed of an exposure, in the form of model.[package_name].[model_name]
+        description: Models exposed in the exposure, in the form of model.[package_name].[model_name]
       - name: package_name
         description: Source package in which each feed of an exposure was defined.
+    tests:
+      - unique:
+          # Test that the combination of manifest_mode_id and exposed_model_name is unique
+          column_name: "manifest_model_id || '-' || output_feeds"
 
   - name: dim_dbt__models
     description: All dbt model metadata from every manifest.json.
