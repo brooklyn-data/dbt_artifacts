@@ -24,7 +24,8 @@ dbt_run as (
 fields as (
 
     select
-        data:metadata:invocation_id::string as command_invocation_id,
+        command_invocation_id,
+        dbt_cloud_run_id,
         generated_at as artifact_generated_at,
         coalesce(data:args:full_refresh, 'false')::boolean as was_full_refresh,
         result.value:unique_id::string as node_id,
@@ -36,11 +37,11 @@ fields as (
 
         -- The second item in the timing array is `execute`.
         result.value:timing[1]:completed_at::timestamp_ntz as query_completed_at,
-        
+
         -- Confusingly, this does not match the delta of the above two timestamps.
         -- should we calculate it instead?
         coalesce(result.value:execution_time::float, 0) as total_node_runtime,
-        
+
         result.value:adapter_response:rows_affected::int as rows_affected
     from dbt_run,
     lateral flatten(input => data:results) as result
@@ -52,6 +53,7 @@ surrogate_key as (
     select
         {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as model_execution_id,
         command_invocation_id,
+        dbt_cloud_run_id,
         artifact_generated_at,
         was_full_refresh,
         node_id,
