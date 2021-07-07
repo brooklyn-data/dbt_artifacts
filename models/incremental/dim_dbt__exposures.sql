@@ -1,8 +1,8 @@
-{{ 
+{{
   config(
-    materialized='incremental', 
+    materialized='incremental',
     unique_key='manifest_model_id'
-    ) 
+    )
 }}
 
 with dbt_models as (
@@ -25,9 +25,10 @@ dbt_models_incremental as (
 
 fields as (
 
-     select 
+     select
         t.manifest_model_id,
         t.command_invocation_id,
+        t.dbt_cloud_run_id,
         t.artifact_generated_at,
         t.node_id,
         t.name,
@@ -36,8 +37,8 @@ fields as (
         t.maturity,
         f.value::string as output_feeds,
         t.package_name
-    from dbt_models_incremental t,
-    lateral flatten(input => depends_on_nodes) f
+    from dbt_models_incremental as t,
+    lateral flatten(input => depends_on_nodes) as f
 
 )
 
