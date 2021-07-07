@@ -9,6 +9,7 @@ fields as (
 
     select
         data:metadata:invocation_id::string as command_invocation_id,
+        data:metadata:env:DBT_CLOUD_RUN_ID::int as dbt_cloud_run_id,
         generated_at,
         path,
         artifact_type,
@@ -17,7 +18,7 @@ fields as (
 
 ),
 
-duduped as (
+deduped as (
 
     select
         *,
@@ -34,11 +35,12 @@ artifacts as (
 
     select
         command_invocation_id,
+        dbt_cloud_run_id,
         generated_at,
         path,
         artifact_type,
         data
-    from duduped
+    from deduped
 
 )
 

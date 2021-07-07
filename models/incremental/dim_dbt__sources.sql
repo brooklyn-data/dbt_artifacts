@@ -23,6 +23,7 @@ fields as (
     select
         manifest_source_id,
         command_invocation_id,
+        dbt_cloud_run_id,
         artifact_generated_at,
         node_id,
         name,
