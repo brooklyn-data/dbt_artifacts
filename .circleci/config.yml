@@ -31,6 +31,7 @@ jobs:
             dbt run-operation create_artifact_resources
             dbt seed --full-refresh
             dbt run-operation upload_dbt_artifacts --args '{filenames: [manifest, run_results]}'
+            dbt run --full-refresh
             dbt run
             dbt run-operation upload_dbt_artifacts --args '{filenames: [manifest, run_results]}'
             dbt test
