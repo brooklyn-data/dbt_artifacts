@@ -1,3 +1,5 @@
+profile: mack_weldon_snowflake
+
 name: 'dbt_artifacts'
 version: '0.1.0'
 config-version: 2
