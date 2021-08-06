@@ -9,7 +9,6 @@ with tests as (
         test_name,
         test_type,
         model_schema,
-        depends_on_nodes,
         model_path
      from {{ ref('int_dbt_tests') }}
 
@@ -40,7 +39,6 @@ test_executions_with_materialization as (
         tests.test_name,
         tests.test_type,
         tests.model_schema,
-        tests.depends_on_nodes,
         tests.model_path
 
     from test_executions_incremental

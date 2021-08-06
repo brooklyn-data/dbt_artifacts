@@ -20,7 +20,6 @@ flatten as (
         node.value:database::string as model_database,
         node.value:schema::string as model_schema,
         node.value:name::string as test_name,
-        to_array(node.value:depends_on:nodes) as depends_on_nodes,
         node.value:package_name::string as package_name,
         node.value:path::string as model_path,
         node.value:checksum.checksum::string as checksum,
