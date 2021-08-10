@@ -14,7 +14,7 @@
     {% set file = filename ~ '.json' %}
 
     {% set put_query %}
-        put file://target/{{ file }} @{{ src_dbt_artifacts }} auto_compress=true;
+        put file://{{ var("target_path", "target") }}/{{ file }} @{{ src_dbt_artifacts }} auto_compress=true;
     {% endset %}
 
     {% do log("Uploading " ~ file ~ " to Stage: " ~ put_query, info=True) %}

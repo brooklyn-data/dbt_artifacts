@@ -25,6 +25,7 @@ vars:
     dbt_artifacts_database: your_db # optional, default is your target database
     dbt_artifacts_schema: your_schema # optional, default is 'dbt_artifacts'
     dbt_artifacts_table: your_table # optional, default is 'artifacts'
+    target_path: your_dbt_target_path # optional, default is 'target'
 
 models:
   ...
@@ -46,7 +47,7 @@ Snowflake makes it possible to load local files into your warehouse. We've inclu
 
 1. To initially create these tables, execute `dbt run-operation create_artifact_resources` ([source](macros/create_artifact_resources.sql)). This will create a stage and a table named `{{ target.database }}.dbt_artifacts.artifacts` — you can override this name using the variables listed in the Installation section, above.
 
-2. Add [operations](https://docs.getdbt.com/docs/building-a-dbt-project/hooks-operations/#operations) to your production run to load files into your table, via the `upload_artifacts` macro ([source](macros/upload_artifacts.sql)). You'll need to specify which files to upload through use of the `--args` flag. Here's an example setup.
+2. Add [operations](https://docs.getdbt.com/docs/building-a-dbt-project/hooks-operations/#operations) to your production run to load files into your table, via the `upload_artifacts` macro ([source](macros/upload_artifacts.sql)). You'll need to specify which files to upload through use of the `--args` flag. If these files aren't generated to the default `target` directory, you'll need to configure their location with `target_path`. Here's an example setup.
 ```txt
 $ dbt  seed
 $ dbt  run-operation upload_dbt_artifacts --args '{filenames: [manifest, run_results]}'
