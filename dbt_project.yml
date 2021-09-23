@@ -10,10 +10,4 @@ models:
     incremental:
       +materialized: incremental
     staging:
-      +materialized: view # The staging tables cannot be ephemeral
-
-profile: mack_weldon_snowflake
-
-on-run-end: 
-  - "{{ grant_select_on_schemas (schemas, 'reporter') }}"
-  - "{{ grant_select_on_schemas (schemas, 'transformer') }}"
+      +materialized: view

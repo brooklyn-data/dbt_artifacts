@@ -20,7 +20,6 @@ flatten as (
         node.value:database::string as model_database,
         node.value:schema::string as model_schema,
         node.value:name::string as test_name,
-        to_array(node.value:depends_on:nodes) as depends_on_nodes,
         node.value:package_name::string as package_name,
         node.value:path::string as model_path,
         node.value:checksum.checksum::string as checksum,
@@ -34,7 +33,7 @@ flatten as (
 surrogate_key as (
 
     select
-        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as manifest_test_id,
+        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id', 'model_schema']) }} as manifest_test_id,
         *
     from flatten
 

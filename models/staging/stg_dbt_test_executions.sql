@@ -21,7 +21,7 @@ dbt_test as (
 fields as (
 
     select
-        data:metadata:invocation_id::string as command_invocation_id,
+        command_invocation_id,
         generated_at as artifact_generated_at,
         result.value:unique_id::string as node_id,
         split(result.value:thread_id::string, '-')[1]::integer as thread_id,

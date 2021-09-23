@@ -6,7 +6,25 @@
 
 with dbt_tests as (
 
-    select * from {{ ref('stg_dbt_tests') }}
+    select 
+    *,
+    case
+        when test_name like 'unique_%'
+            then 'unique'
+        when test_name like 'not_null_%'
+            then 'not null'
+        when test_name like 'relationships_%'
+            then 'relationship'
+        when test_name like 'dbt_utils%'
+            then 'dbt utils unique combination of columns'
+        when test_name like 'string_comma_count%'
+            then 'string comma count'
+        when test_name like 'devens%'
+            then 'devens inv freshness'
+        when test_name like 'lap%'
+            then 'lap inv freshness'
+    end as test_type
+    from {{ ref('stg_dbt_tests') }}
 
 ),
 

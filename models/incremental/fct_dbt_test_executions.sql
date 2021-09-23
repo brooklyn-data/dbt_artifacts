@@ -7,7 +7,15 @@
 
 with tests as (
 
-    select * from {{ ref('int_dbt_tests') }}
+    select distinct
+
+        node_id,
+        test_name,
+        test_type,
+        model_schema,
+        model_path
+
+     from {{ ref('int_dbt_tests') }}
 
 ),
 
@@ -35,8 +43,18 @@ test_executions_with_materialization as (
 
     select
 
+        {{ dbt_utils.surrogate_key([
+                'command_invocation_id',
+                'tests.node_id',
+                'tests.model_schema'])
+            }} as test_id,
+
         test_executions_incremental.*,
-        tests.test_name
+
+        tests.test_name,
+        tests.test_type,
+        tests.model_schema,
+        tests.model_path
 
     from test_executions_incremental
     left join tests

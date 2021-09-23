@@ -25,7 +25,7 @@ duduped as (
             order by generated_at desc
         ) as index
     from fields
-    qualify index = 1
+    qualify index = 1 -- qualify filters down the result of the window function in this cte to select only those with the index 1
 
 ),
 

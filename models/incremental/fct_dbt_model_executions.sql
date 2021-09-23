@@ -35,6 +35,7 @@ model_executions_incremental as (
 model_executions_with_materialization as (
 
     select
+        {{ dbt_utils.surrogate_key(['command_invocation_id', 'models.node_id', 'models.model_schema']) }} as model_id,
         model_executions_incremental.*,
         models.model_materialization,
         models.model_schema,
