@@ -1,7 +1,8 @@
-{{ config( 
-    materialized='incremental', 
-    unique_key='manifest_source_id' 
-    ) 
+{{
+    config(
+        materialized = 'incremental',
+        unique_key = 'manifest_source_id'
+    )
 }}
 
 with dbt_sources as (
@@ -16,7 +17,10 @@ dbt_sources_incremental as (
 
     {% if is_incremental() %}
     -- this filter will only be applied on an incremental run
-    where artifact_generated_at > (select max(artifact_generated_at) from {{ this }})
+        where artifact_generated_at > (
+            select max(artifact_generated_at)
+            from {{ this }}
+        )
     {% endif %}
 
 )

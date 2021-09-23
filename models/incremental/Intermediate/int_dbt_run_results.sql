@@ -1,11 +1,14 @@
-{{ config( 
-    materialized='incremental', 
-    unique_key='command_invocation_id' 
-    ) 
+{{
+    config(
+        materialized = 'incremental',
+        unique_key = 'command_invocation_id'
+    )
 }}
 
 with run_results as (
+
     select * from {{ ref('stg_dbt_run_results') }}
+
 ),
 
 
@@ -15,7 +18,7 @@ fields as (
 
         run_results.*,
         -- matches our dbt job names to their job ids
-        case 
+        case
             when dbt_cloud_job_id = '5969'
                 then 'refresh pipes'
             when dbt_cloud_job_id = '6128'

@@ -14,6 +14,7 @@ manifests as (
 flatten as (
 
     select
+
         command_invocation_id,
         generated_at as artifact_generated_at,
         node.key as node_id,
@@ -23,6 +24,7 @@ flatten as (
         node.value:package_name::string as package_name,
         node.value:relation_name::string as relation_name,
         node.value:path::string as source_path
+
     from manifests,
     lateral flatten(input => data:sources) as node
     where node.value:resource_type = 'source'
@@ -32,8 +34,14 @@ flatten as (
 surrogate_key as (
 
     select
-        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as manifest_source_id,
+
+        {{ dbt_utils.surrogate_key([
+                'command_invocation_id',
+                'node_id'])
+            }} as manifest_source_id,
+
         *
+        
     from flatten
 
 )

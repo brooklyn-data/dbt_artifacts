@@ -7,8 +7,9 @@ sources:
     tables:
       - name: artifacts
         identifier: "{{ var('dbt_artifacts_table', 'artifacts') }}"
-        description: |
-          The source table containing loaded dbt artifacts. All of the artifacts must be loaded into this table. See the README for more info.
+        description: >
+          The source table containing loaded dbt artifacts. All of the artifacts
+          must be loaded into this table. See the README for more info.
         columns:
           - name: data
             description: A variant type object containing all the artifact's data.

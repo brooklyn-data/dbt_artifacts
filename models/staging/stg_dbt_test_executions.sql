@@ -21,6 +21,7 @@ dbt_test as (
 fields as (
 
     select
+
         command_invocation_id,
         generated_at as artifact_generated_at,
         result.value:unique_id::string as node_id,
@@ -45,8 +46,14 @@ fields as (
 surrogate_key as (
 
     select
-        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as test_execution_id,
+
+        {{ dbt_utils.surrogate_key([
+                'command_invocation_id',
+                'node_id'])
+            }} as test_execution_id,
+
         *
+        
     from fields
 
 )
