@@ -13,9 +13,9 @@ with tests as (
         test_name,
         test_type,
         model_schema,
-        model_path
+        replace(model_path, 'bespoke_tests/', '') as model_path
 
-     from {{ ref('int_dbt_tests') }}
+    from {{ ref('int_dbt_tests') }}
 
 ),
 
