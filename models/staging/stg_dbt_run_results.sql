@@ -21,6 +21,7 @@ dbt_run as (
 fields as (
 
     select
+
         generated_at as artifact_generated_at,
         command_invocation_id,
         data:metadata:dbt_version::string as dbt_version,
@@ -30,7 +31,8 @@ fields as (
         coalesce(data:args:full_refresh, 'false')::boolean as was_full_refresh,
         data:args:models as selected_models,
         data:args:target::string as target,
-    -- parse dbt enviornment values and cast as string to remove quotations
+
+        -- parse dbt enviornment values and cast as string to remove quotations
         data:metadata:env.DBT_CLOUD_JOB_ID::string as dbt_cloud_job_id,
         data:metadata:env.DBT_CLOUD_PROJECT_ID::string as dbt_cloud_project_id,
         data:metadata:env.DBT_CLOUD_RUN_ID::string as dbt_cloud_run_id,
@@ -38,6 +40,7 @@ fields as (
         data:metadata:env.DBT_CLOUD_RUN_REASON_CATEGORY::string as dbt_cloud_run_reason_cat,
         data:metadata:env.DBT_CLOUD_PR_ID::string as dbt_cloud_pr_id,
         data:metadata:env.DBT_CLOUD_GIT_SHA::string as dbt_cloud_git_sha
+        
     from dbt_run
 
 )
