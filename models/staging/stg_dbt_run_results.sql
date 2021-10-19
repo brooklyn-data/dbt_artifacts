@@ -24,6 +24,7 @@ fields as (
 
         generated_at as artifact_generated_at,
         command_invocation_id,
+        dbt_cloud_run_id,
         data:metadata:dbt_version::string as dbt_version,
         data:metadata:env as env,
         data:elapsed_time::float as elapsed_time,
@@ -40,7 +41,7 @@ fields as (
         data:metadata:env.DBT_CLOUD_RUN_REASON_CATEGORY::string as dbt_cloud_run_reason_cat,
         data:metadata:env.DBT_CLOUD_PR_ID::string as dbt_cloud_pr_id,
         data:metadata:env.DBT_CLOUD_GIT_SHA::string as dbt_cloud_git_sha
-        
+
     from dbt_run
 
 )

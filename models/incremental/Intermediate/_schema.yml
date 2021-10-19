@@ -1,0 +1,63 @@
+version: 2
+
+models:
+  - name: int_dbt_models
+    description: All dbt model metadata from every manifest.json.
+    columns:
+      - name: manifest_model_id
+        description: >
+          Primary key generated from the command_invocation_id and checksum.
+        tests:
+          - unique
+          - not_null
+      - name: command_invocation_id
+        description: >
+          The id of the command which resulted in the source artifact's generation.
+      - name: artifact_generated_at
+        description: Timestamp of when the source artifact was generated.
+      - name: node_id
+        description: >
+          Unique id for the node, in the form of model.[package_name].[model_name]
+      - name: name
+        description: The model name.
+      - name: model_schema
+      - name: depends_on_nodes
+        description: List of node ids the model depends on.
+      - name: package_name
+      - name: model_path
+        description: Filepath of the model.
+      - name: checksum
+        description: >
+          Unique identifier for the model. If a model is unchanged between
+          separate executions this will remain the same.
+      - name: model_materialization
+
+  - name: int_dbt_sources
+    description: All dbt source metadata from every manifest.json.
+    columns:
+      - name: manifest_source_id
+        description: >
+          Primary key generated from the command_invocation_id and checksum.
+        tests:
+          - unique
+          - not_null
+      - name: command_invocation_id
+        description: >
+          The id of the command which resulted in the source artifact's
+          generation.
+      - name: artifact_generated_at
+        description: Timestamp of when the source artifact was generated.
+      - name: node_id
+        description: >
+          Unique id for the node, in the form of model.[package_name].[model_name]
+      - name: name
+        description: The source node name.
+      - name: source_name
+        description: The name of the source.
+      - name: source_schema
+      - name: package_name
+        description: Package source is defined in.
+      - name: relation_name
+        description: Name of the database entity this source resolved to.
+      - name: source_path
+        description: Filepath of the source.

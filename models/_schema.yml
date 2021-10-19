@@ -1,0 +1,84 @@
+version: 2
+
+models:
+  - name: fct_dbt_critical_path
+    description: >
+      A table of models and executions times that make up the critical path of
+      a full, incremental run.
+    columns:
+      - name: node_id
+        description: Primary key.
+        tests:
+          - unique
+          - not_null
+      - name: index
+        description: The index of the model in the critical path. Starts at 0.
+      - name: execution_minutes
+        description: The duration of time in minutes for the model to run.
+      - name: model_materialization
+
+  - name: fct_dbt_exposures_updates
+    description: A table of exposures and models feeding them. Latest update time for each models is provided.
+    columns:
+      - name: latest_generation
+        description: Timestamp of when the source artifact was generated.
+      - name: node_id
+        description: Unique id for the node, in the form of exposure.[package_name].[exposure_name]
+      - name: name
+        description: User-defined name of the exposure.
+      - name: type
+        description: User-defined type of the exposure.
+      - name: owner
+        description: User-defined owner of the exposure.
+      - name: maturity
+        description: User-defined name of the exposure.
+      - name: package_name
+        description: Source package in which each feed of an exposure was defined.
+      - name: output_feeds
+        description: Unique id for each feed of an exposure, in the form of model.[package_name].[model_name]
+      - name: feed_latest_update
+        description: Timestamp of the latest update of each feed of an exposure.
+
+  - name: fct_dbt_latest_full_model_executions
+    description: >
+      A list of all models and executions times from the most recent,
+      incremental run.
+    columns:
+      - name: latest_model_id
+        description: Primary key.
+        tests:
+          - unique:
+              severity: warn
+          - not_null
+      - name: artifact_generated_at
+        description: Timestamp of when the source artifact was generated.
+      - name: command_invocation_id
+        description: >
+          Foreign key to fct_dbt_run_results. The id of the command which resulted
+          in the source artifact's generation.
+      - name: compile_started_at
+        description: Timestamp of when a model starts to be compiled.
+      - name: query_completed_at
+        description: Timestamp of when a model's SQL is completed
+      - name: total_node_runtime
+        description: >
+          The duration of time in seconds for the model to run. Note that this is
+          _not_ equal to the delta between `compile_started_at` and
+          `query_completed_at` since it includes extra tasks performed by dbt.
+      - name: model_execution_id
+        description: A surrogate key of command_invocation_id and node_id.
+      - name: model_materialization
+      - name: model_schema
+      - name: name
+        description: The model name.
+      - name: rows_affected
+        description: >
+          The number of rows affected by the model's execution.
+          Always 1 for non-incremental executions.
+      - name: status
+        description: Success/fail status of the model's execution.
+      - name: was_full_refresh
+        description: >
+          Boolean value for whether this model was executed with a
+          --full-refresh flag.
+

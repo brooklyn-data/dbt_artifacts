@@ -22,7 +22,8 @@ fields as (
 
     select
 
-        data:metadata:invocation_id::string as command_invocation_id,
+        command_invocation_id,
+        dbt_cloud_run_id,
         generated_at as artifact_generated_at,
         coalesce(data:args:full_refresh, 'false')::boolean as was_full_refresh,
         result.value:unique_id::string as node_id,
@@ -54,7 +55,7 @@ surrogate_key as (
                 'command_invocation_id',
                 'node_id'])
             }} as model_execution_id,
-            
+
         fields.*
 
     from fields

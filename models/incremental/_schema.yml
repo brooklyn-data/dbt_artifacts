@@ -1,0 +1,195 @@
+version: 2
+
+models:
+  - name: fct_dbt_exposures
+    description: All dbt exposures metadata from every manifest.json.
+    columns:
+      - name: manifest_model_id
+        description: |
+          Primary key generated from the command_invocation_id and checksum. Note,
+          this is not unique for a given exposure.
+        tests:
+          - not_null
+      - name: command_invocation_id
+        description: The id of the command which resulted in the source artifact's generation.
+      - name: artifact_generated_at
+        description: Timestamp of when the source artifact was generated.
+      - name: node_id
+        description: Unique id for the node, in the form of exposure.[package_name].[exposure_name]
+      - name: name
+        description: User-defined name of the exposure.
+      - name: type
+        description: User-defined type of the exposure.
+      - name: owner
+        description: User-defined owner of the exposure.
+      - name: maturity
+        description: User-defined name of the exposure.
+      - name: output_feeds
+        description: Models exposed in the exposure, in the form of model.[package_name].[model_name]
+      - name: package_name
+        description: Source package in which each feed of an exposure was defined.
+    tests:
+      - unique:
+          # Test that the combination of manifest_mode_id and exposed_model_name is unique
+          column_name: "manifest_model_id || '-' || output_feeds"
+
+  - name: fct_dbt_model_executions
+    description: All historic dbt model executions.
+    columns:
+      - name: model_id
+        description: Primary key.
+        tests:
+          - unique:
+              severity: warn
+          - not_null
+      - name: name
+        description: The name of the model.
+      - name: model_schema
+        description: The schema containing the model.
+      - name: was_full_refresh
+        description: >
+          Boolean value for whether this model was executed with a
+          --full-refresh flag.
+      - name: model_materialization
+        description: The configured materialization of the model.
+      - name: compile_started_at
+        description: Timestamp of when a model starts to be compiled.
+      - name: compile_completed_at
+        description: Timestamp of when a model's SQL is completed
+      - name: total_node_runtime
+        description: >
+          The duration of time in seconds for the model to run. Note that this is
+          _not_ equal to the delta between `compile_started_at` and
+          `query_completed_at` since it includes extra tasks performed by dbt.
+      - name: status
+        description: Success/fail status of the model's execution.
+      - name: command_invocation_id
+        description: >
+          Foreign key to fct_dbt_run_results. The id of the command which resulted
+          in the source artifact's generation.
+      - name: artifact_generated_at
+        description: Timestamp of when the source artifact was generated.
+      - name: node_id
+        description: >
+          Unique id for the node, in the form of model.[package_name].[model_name]
+      - name: rows_affected
+        description: >
+          The number of rows affected by the model's execution. Always 1 for
+          non-incremental executions.
+
+  - name: fct_dbt_run_results
+    description: Metadata for dbt run commands.
+    columns:
+    - name: command_invocation_id
+      description: >
+        The id of the command which resulted in the source artifact's generation.
+      tests:
+        - unique
+        - not_null
+    - name: artifact_generated_at
+      description: Timestamp of when the source artifact was generated.
+    - name: dbt_version
+      description: The version of dbt used to generate the source artifact.
+    - name: elapsed_time
+      description: The total run time of the command.
+    - name: execution_command
+      description: The actual command used.
+    - name: selected_models
+      description: A list of model selectors used in the command.
+    - name: target
+      description: The configured target for the command.
+    - name: was_full_refresh
+      description: Was the run executed with a --full-refresh flag?
+    - name: dbt_cloud_job_id
+      description: Job ID variable set when the command was executed.
+    - name: dbt_cloud_project_id
+      description: Project ID variable set when the command was executed.
+    - name: dbt_cloud_run_id
+      description: Run ID variable set when the command was executed.
+    - name: dbt_cloud_run_reason
+      description: Run reason variable set when the command was executied.
+    - name: dbt_cloud_run_reason_category
+      description: Run reason category variable set when the command was executed.
+    - name: dbt_cloud_pr_id
+      description: >
+        PR ID variable set when the command was executed (PR runs only).
+    - name: dbt_cloud_git_sha
+      description: >
+        Git SHA variable set when the command was executed (PR runs only).
+    - name: dbt_cloud_job_name
+      description: >
+        dbt job name defined by the data team, which corresponds to
+        dbt_cloud_job_id.
+
+  - name: fct_dbt_source_freshness
+    description: All historic dbt source freshness executions.
+    columns:
+    - name: source_freshness_id
+      description: Primary key.
+      tests:
+        - unique
+        - not_null
+    - name: name
+      description: The name of the model.
+    - name: model_schema
+      description: The schema containing the model.
+    - name: model_materialization
+      description: The configured materialization of the model.
+    - name: project_name
+      description: The dbt project name.
+    - name: source_name
+      description: The data source name.
+    - name: table_name
+      description: The data source table name.
+    - name: freshness_state
+      description: Freshness state of the data - pass, fail or warn.
+    - name: max_loaded_at
+      description: Timestamp of when a model was last updated.
+    - name: freshness_checked_at
+      description: Timestamp of when a model's freshness was last checked.
+    - name: max_loaded_at_time_s
+      description: >
+        The duration of the time since the models freshness was last checked,
+        in seconds.
+    - name: command_invocation_id
+      description: >
+        Foreign key to fct_dbt_run_results. The id of the command which resulted
+        in the source artifact's generation.
+    - name: artifact_generated_at
+      description: Timestamp of when the source artifact was generated.
+    - name: node_id
+      description: >
+        Unique id for the node, in the form of model.[package_name].[model_name]
+
+  - name: fct_dbt_test_executions
+    description: All historic dbt test executions.
+    columns:
+      - name: test_id
+        description: Primary key.
+        tests:
+          - unique
+          - not_null
+      - name: name
+        description: The name of the model.
+      - name: model_schema
+        description: The schema containing the model.
+      - name: model_materialization
+        description: The configured materialization of the model.
+      - name: compile_started_at
+        description: Timestamp of when a model starts to be compiled.
+      - name: compile_completed_at
+        description: Timestamp of when a model's SQL is completed
+      - name: total_node_runtime
+        description: >
+          The duration of time in seconds for the model to run. Note that this
+          is _not_ equal to the delta between `compile_started_at` and
+          `query_completed_at` since it includes extra tasks performed by dbt.
+      - name: command_invocation_id
+        description: >
+          Foreign key to fct_dbt_run_results. The id of the command which resulted
+          in the source artifact's generation.
+      - name: artifact_generated_at
+        description: Timestamp of when the source artifact was generated.
+      - name: node_id
+        description: >
+          Unique id for the node, in the form of model.[package_name].[model_name]

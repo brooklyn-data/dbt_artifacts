@@ -56,8 +56,9 @@ model_executions_with_materialization as (
 
     from model_executions_incremental
     left join models
-        on models.node_id = model_executions_incremental.node_id
-
+        on (model_executions_incremental.command_invocation_id = models.command_invocation_id
+            or model_executions_incremental.dbt_cloud_run_id = models.dbt_cloud_run_id)
+        and model_executions_incremental.node_id = models.node_id
 
 )
 

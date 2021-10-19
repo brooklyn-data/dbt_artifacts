@@ -16,6 +16,7 @@ flatten as (
     select
 
         command_invocation_id,
+        dbt_cloud_run_id,
         generated_at as artifact_generated_at,
         node.key as node_id,
         node.value:database::string as model_database,
@@ -36,7 +37,7 @@ flatten as (
 surrogate_key as (
 
     select
-    
+
         {{ dbt_utils.surrogate_key([
                 'command_invocation_id',
                 'node_id',
