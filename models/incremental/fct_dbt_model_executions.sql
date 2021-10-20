@@ -10,6 +10,8 @@ with models as (
     select distinct
 
         node_id,
+        command_invocation_id,
+        dbt_cloud_run_id,
         model_materialization,
         model_schema,
         name

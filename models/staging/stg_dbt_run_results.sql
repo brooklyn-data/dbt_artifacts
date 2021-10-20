@@ -34,9 +34,9 @@ fields as (
         data:args:target::string as target,
 
         -- parse dbt environment values and cast as string to remove quotations
-        data:metadata:env.DBT_CLOUD_JOB_ID::string as dbt_cloud_job_id
+        data:metadata:env.DBT_CLOUD_JOB_ID::string as dbt_cloud_job_id,
+        data:metadata:env.DBT_CLOUD_PROJECT_ID::string as dbt_cloud_project_id
         {# ,
-        data:metadata:env.DBT_CLOUD_PROJECT_ID::string as dbt_cloud_project_id,
         data:metadata:env.DBT_CLOUD_RUN_ID::string as dbt_cloud_run_id,
         data:metadata:env.DBT_CLOUD_RUN_REASON::string as dbt_cloud_run_reason,
         data:metadata:env.DBT_CLOUD_RUN_REASON_CATEGORY::string as dbt_cloud_run_reason_cat,
