@@ -1,6 +1,6 @@
 with base as (
 
-    select * from {{ ref('stg_dbt__artifacts') }}
+    select * from {{ ref('stg_dbt_artifacts') }}
 
 ),
 
@@ -41,7 +41,7 @@ surrogate_key as (
                 'command_invocation_id',
                 'node_id'])
             }} as manifest_model_id,
-            
+
         command_invocation_id,
         dbt_cloud_run_id,
         artifact_generated_at,
