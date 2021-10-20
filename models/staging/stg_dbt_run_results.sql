@@ -31,11 +31,11 @@ fields as (
         data:args:which::string as execution_command,
         coalesce(data:args:full_refresh, 'false')::boolean as was_full_refresh,
         data:args:models as selected_models,
-        data:args:target::string as target
-        {# ,
+        data:args:target::string as target,
 
         -- parse dbt environment values and cast as string to remove quotations
-        data:metadata:env.DBT_CLOUD_JOB_ID::string as dbt_cloud_job_id,
+        data:metadata:env.DBT_CLOUD_JOB_ID::string as dbt_cloud_job_id
+        {# ,
         data:metadata:env.DBT_CLOUD_PROJECT_ID::string as dbt_cloud_project_id,
         data:metadata:env.DBT_CLOUD_RUN_ID::string as dbt_cloud_run_id,
         data:metadata:env.DBT_CLOUD_RUN_REASON::string as dbt_cloud_run_reason,
