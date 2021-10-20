@@ -22,7 +22,8 @@ fields as (
 
     select
 
-        data:metadata:invocation_id::string as command_invocation_id,
+        command_invocation_id,
+        dbt_cloud_run_id,
         generated_at as artifact_generated_at,
         coalesce(data:args:full_refresh, 'false')::boolean as was_full_refresh,
         result.value:unique_id::string as node_id,
@@ -32,7 +33,8 @@ fields as (
         -- The first item in the timing array is the model-level `compile`
         result.value:timing[0]:started_at::timestamp_ntz as compile_started_at,
 
-        -- The second item in the timing array is `execute` - renamed to `compile_completed_at` to make it easier to understand
+        -- The second item in the timing array is `execute`
+        -- renamed to `compile_completed_at` to make it easier to understand
         result.value:timing[1]:completed_at::timestamp_ntz as compile_completed_at,
 
         -- Confusingly, this does not match the delta of the above two timestamps.
@@ -54,7 +56,7 @@ surrogate_key as (
                 'command_invocation_id',
                 'node_id'])
             }} as model_execution_id,
-            
+
         fields.*
 
     from fields

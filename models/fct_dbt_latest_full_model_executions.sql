@@ -35,7 +35,8 @@ joined as (
     from latest_full
     left join model_executions
         on model_executions.command_invocation_id = latest_full.command_invocation_id
-
+        or model_executions.dbt_cloud_run_id = latest_full.dbt_cloud_run_id
+        
 )
 
 select * from joined

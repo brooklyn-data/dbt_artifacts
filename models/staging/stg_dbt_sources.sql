@@ -16,6 +16,7 @@ flatten as (
     select
 
         command_invocation_id,
+        dbt_cloud_run_id,
         generated_at as artifact_generated_at,
         node.key as node_id,
         node.value:name::string as name,
@@ -41,7 +42,7 @@ surrogate_key as (
             }} as manifest_source_id,
 
         *
-        
+
     from flatten
 
 )

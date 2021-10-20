@@ -10,6 +10,8 @@ with models as (
     select distinct
 
         node_id,
+        command_invocation_id,
+        dbt_cloud_run_id,
         model_materialization,
         model_schema,
         name
@@ -43,7 +45,7 @@ model_executions_with_materialization as (
     select
 
         {{ dbt_utils.surrogate_key([
-                'command_invocation_id',
+                'models.command_invocation_id',
                 'models.node_id',
                 'models.model_schema'])
             }} as model_id,
@@ -56,8 +58,9 @@ model_executions_with_materialization as (
 
     from model_executions_incremental
     left join models
-        on models.node_id = model_executions_incremental.node_id
-
+        on (model_executions_incremental.command_invocation_id = models.command_invocation_id
+            or model_executions_incremental.dbt_cloud_run_id = models.dbt_cloud_run_id)
+        and model_executions_incremental.node_id = models.node_id
 
 )
 

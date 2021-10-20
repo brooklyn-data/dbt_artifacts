@@ -23,6 +23,7 @@ fields as (
     select
 
         command_invocation_id,
+        dbt_cloud_run_id,
         generated_at as artifact_generated_at,
         result.value:unique_id::string as node_id,
         split(result.value:thread_id::string, '-')[1]::integer as thread_id,
@@ -53,7 +54,7 @@ surrogate_key as (
             }} as test_execution_id,
 
         *
-        
+
     from fields
 
 )
