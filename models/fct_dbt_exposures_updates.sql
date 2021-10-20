@@ -10,7 +10,6 @@ exposures_record as (
 
 ),
 
-
 model_updates as (
 
     select
