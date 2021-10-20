@@ -45,7 +45,7 @@ model_executions_with_materialization as (
     select
 
         {{ dbt_utils.surrogate_key([
-                'command_invocation_id',
+                'models.command_invocation_id',
                 'models.node_id',
                 'models.model_schema'])
             }} as model_id,
