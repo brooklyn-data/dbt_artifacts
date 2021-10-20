@@ -60,7 +60,7 @@ models:
         description: >
           The duration of time in seconds for the model to run. Note that this is
           _not_ equal to the delta between `compile_started_at` and
-          `query_completed_at` since it includes extra tasks performed by dbt.
+          `compile_completed_at` since it includes extra tasks performed by dbt.
       - name: status
         description: Success/fail status of the model's execution.
       - name: command_invocation_id
@@ -183,7 +183,7 @@ models:
         description: >
           The duration of time in seconds for the model to run. Note that this
           is _not_ equal to the delta between `compile_started_at` and
-          `query_completed_at` since it includes extra tasks performed by dbt.
+          `compile_completed_at` since it includes extra tasks performed by dbt.
       - name: command_invocation_id
         description: >
           Foreign key to fct_dbt_run_results. The id of the command which resulted

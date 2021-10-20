@@ -15,7 +15,7 @@ model_updates as (
 
     select
 
-        max(query_completed_at) as latest_update,
+        max(compile_completed_at) as latest_update,
         node_id
 
     from model_executions
