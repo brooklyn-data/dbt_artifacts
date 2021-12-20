@@ -1,4 +1,4 @@
-# Tails.com's dbt Artifacts Package
+# dbt Artifacts Package
 This package builds a mart of tables from dbt artifacts loaded into a table. It is compatible with Snowflake only. The models are based off of the [v1 schema](https://docs.getdbt.com/reference/artifacts/dbt-artifacts/#notes) introduced in dbt 0.19.0.
 
 Models included:
@@ -85,7 +85,9 @@ file_format = (type = 'JSON')
 ## Usage
 The models will be picked up on your next `dbt run` command. You can also run the package specifically with `dbt run -m dbt_artifacts`.
 
-## Additional acknowledgement
+## Acknowledgements
+Thank you to [Tails.com](https://tails.com/gb/careers/) for initial development and maintenance of this package. On 2021/12/20, the repository was transferred from the Tails.com GitHub organization to Brooklyn Data Co.
+
 The macros in this package have been adapted from code shared by [Kevin Chan](https://github.com/KevinC-wk) and [Jonathan Talmi](https://github.com/jtalmi) of [Snaptravel](snaptravel.com).
 
 Thank you for sharing your work with the community!
