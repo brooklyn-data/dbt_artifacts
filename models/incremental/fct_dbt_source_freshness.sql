@@ -44,7 +44,7 @@ source_freshness_executions_with_materialization as (
     select
 
         source_freshness_incremental.*,
-        
+
         sources.source_schema,
         sources.source_path,
         sources.relation_name
