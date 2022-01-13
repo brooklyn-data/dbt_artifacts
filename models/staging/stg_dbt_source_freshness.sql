@@ -42,7 +42,7 @@ surrogate_key as (
                 'command_invocation_id',
                 'node_id'])
             }} as source_freshness_id,
-            
+
         *
 
     from fields

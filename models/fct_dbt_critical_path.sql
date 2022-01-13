@@ -35,7 +35,7 @@ latest_models as (
     left join models
         on latest_id.command_invocation_id = models.command_invocation_id
         or latest_id.dbt_cloud_run_id = models.dbt_cloud_run_id
-        
+
 ),
 
 node_dependencies as (

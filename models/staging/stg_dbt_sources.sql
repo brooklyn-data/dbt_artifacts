@@ -23,8 +23,14 @@ flatten as (
         node.value:source_name::string as source_name,
         node.value:schema::string as source_schema,
         node.value:package_name::string as package_name,
-        node.value:relation_name::string as relation_name,
-        node.value:path::string as source_path
+        node.value:relation_name::string as relation_name_prep,
+        node.value:path::string as source_path,
+
+        case
+            when relation_name_prep = 'funnel.FUNNEL__L0J2C68CVI_UUBY4HI7.FUNNEL_FB_GRANULAR'
+                then 'funnel.FUNNEL__L0J2C68CVI_UUBY4HI7.FUNNEL'
+            else relation_name_prep
+        end as relation_name
 
     from manifests,
     lateral flatten(input => data:sources) as node
