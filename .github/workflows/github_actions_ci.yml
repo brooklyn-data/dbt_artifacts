@@ -1,7 +1,12 @@
 name: dbt_artifacts_ci
 
 # triggers for the workflow
-on: [push, pull_request]
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
 
 # environment variables
 env:
