@@ -1,7 +1,7 @@
 name: 'dbt_artifacts'
 version: '0.1.0'
 config-version: 2
-require-dbt-version: ">=0.21.1"
+require-dbt-version: "<2.0.0"
 
 models:
   dbt_artifacts:
