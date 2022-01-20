@@ -24,7 +24,7 @@ flatten as (
         node.value:package_name::string as package_name,
         node.value:path::string as model_path_prep,
         node.value:checksum.checksum::string as checksum,
-        node.value:config.materialized::string as model_materialization
+        node.value:config.materialized::string as model_materialization,
 
          case
             when model_path_prep ilike '%bespoke_tests/%'

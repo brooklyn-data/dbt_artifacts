@@ -13,7 +13,6 @@ with tests as (
         test_name,
         test_type,
         model_schema,
-        model_path
         case
             when model_path ilike '%bespoke_tests/%'
                 then replace(model_path, 'bespoke_tests/', '')
