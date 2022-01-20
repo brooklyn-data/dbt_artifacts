@@ -13,7 +13,16 @@ with tests as (
         test_name,
         test_type,
         model_schema,
-        replace(model_path, 'bespoke_tests/', '') as model_path
+        model_path
+        case
+            when model_path ilike '%bespoke_tests/%'
+                then replace(model_path, 'bespoke_tests/', '')
+            when model_path ilike '%schema_test/%'
+                then replace(model_path, 'schema_test/', '')
+            when model_path ilike 'data_test/%'
+                then replace(model_path, 'data_test/', '')
+            else model_path
+        end as model_path
 
     from {{ ref('int_dbt_tests') }}
 
