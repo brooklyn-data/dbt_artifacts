@@ -1,7 +1,6 @@
 name: 'dbt_artifacts'
 version: '0.1.0'
 config-version: 2
-profile: mack_weldon_snowflake
 require-dbt-version: "<2.0.0"
 
 models:
