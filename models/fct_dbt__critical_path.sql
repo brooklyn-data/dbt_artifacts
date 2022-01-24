@@ -165,7 +165,7 @@ search_path (node_ids, total_time) as (
     union all
     select
         array_cat(to_array(all_needed_dependencies.depends_on_node_id), search_path.node_ids) as node_ids,
-        all_needed_dependencies.total_node_runtime + search_path.total_time
+        coalesce(all_needed_dependencies.total_node_runtime, 0) + search_path.total_time
     from search_path
     left join all_needed_dependencies
     where get(search_path.node_ids, 0) = all_needed_dependencies.node_id
