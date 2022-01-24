@@ -68,7 +68,8 @@ model_dependencies_with_total_node_runtime as (
         latest_executions.total_node_runtime,
         depends_on_node_id
     from node_dependencies_deduped
-    left join latest_executions on node_dependencies_deduped.node_id = latest_executions.node_id
+    -- Inner join to accomodate runs which exclude some models
+    inner join latest_executions on node_dependencies_deduped.node_id = latest_executions.node_id
     where depends_on_node_type = 'model'
 
 ),
