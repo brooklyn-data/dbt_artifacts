@@ -22,9 +22,12 @@ flatten as (
         node.value:schema::string as model_schema,
         node.value:name::string as test_name,
         node.value:package_name::string as package_name,
-        node.value:path::string as model_path,
+        node.value:path::string as model_path_prep,
         node.value:checksum.checksum::string as checksum,
-        node.value:config.materialized::string as model_materialization
+        node.value:config.materialized::string as model_materialization,
+
+        replace(replace(replace(model_path_prep, 'bespoke_tests/', ''),
+            'schema_test/', ''), 'data_test/', '') as model_path
 
     from manifests,
     lateral flatten(input => data:nodes) as node
