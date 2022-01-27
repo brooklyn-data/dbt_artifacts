@@ -23,8 +23,8 @@ env:
 jobs:
   ci_workflow:
     runs-on: ubuntu-latest
-    environment:
-      name: Approve Integration Tests
+#     environment:
+#       name: Approve Integration Tests
 
     steps:
       - name: Checkout
