@@ -14,7 +14,7 @@ model_executions_incremental as (
 
     {% if is_incremental() %}
     -- this filter will only be applied on an incremental run
-    where artifact_generated_at > (select max(artifact_generated_at) from {{ this }})
+    where artifact_generated_at > (select ifnull(max(artifact_generated_at), '1970-01-01 00:00:00 +0000') from {{ this }})
     {% endif %}
 
 ),
