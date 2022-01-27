@@ -217,3 +217,4 @@ longest_path_with_times as (
 )
 
 select * from longest_path_with_times
+
