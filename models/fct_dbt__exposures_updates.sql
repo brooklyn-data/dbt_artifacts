@@ -33,7 +33,7 @@ exposures_latest as (
         package_name,
         output_feeds
     from exposures_record
-    where artifact_generated_at = (select ifnull(max(artifact_generated_at), '1970-01-01 00:00:00 +0000') from exposures_record)
+    where artifact_generated_at = (select max(artifact_generated_at) from exposures_record)
 
 ),
 
