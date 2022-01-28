@@ -67,7 +67,9 @@ jobs:
       - name: Lint dbt models
         if: steps.get_files_to_lint.outputs.lintees != ''
         shell: bash -l {0}
-        run: sqlfluff lint --format github-annotation --annotation-level failure --nofail ${{ steps.get_files_to_lint.outputs.lintees }} > annotations.json
+        run: |
+          sqlfluff lint --format github-annotation --annotation-level failure --nofail ${{ steps.get_files_to_lint.outputs.lintees }} > annotations.json
+          sed -i '/^\[/!d' annotations.json # see https://github.com/sqlfluff/sqlfluff/issues/2244
 
       - name: Annotate
         uses: yuzutech/annotations-action@v0.3.0
