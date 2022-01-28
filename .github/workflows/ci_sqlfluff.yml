@@ -1,5 +1,5 @@
 # Adapted from https://github.com/sqlfluff/sqlfluff-github-actions/tree/main/menu_of_workflows/surfline
-name: SQLFluff lint dbt models
+name: CI SQLFluff lint dbt models
 
 on:
   workflow_dispatch:

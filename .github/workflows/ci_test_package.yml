@@ -1,4 +1,4 @@
-name: dbt_artifacts_ci
+name: CI test package
 
 on:
   workflow_dispatch:
@@ -17,7 +17,7 @@ env:
   SNOWFLAKE_TEST_WAREHOUSE: ${{ secrets.SNOWFLAKE_TEST_WAREHOUSE }}
 
 jobs:
-  ci_workflow:
+  ci-workflow:
     runs-on: ubuntu-latest
     environment:
       name: Approve Integration Tests

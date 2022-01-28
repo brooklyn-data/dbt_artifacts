@@ -1,4 +1,4 @@
-name: dbt_artifacts_ci
+name: Main branch test package
 
 # triggers for the workflow
 on:
@@ -18,7 +18,7 @@ env:
   SNOWFLAKE_TEST_WAREHOUSE: ${{ secrets.SNOWFLAKE_TEST_WAREHOUSE }}
 
 jobs:
-  ci_workflow:
+  ci-workflow:
     runs-on: ubuntu-latest
 
     steps:
