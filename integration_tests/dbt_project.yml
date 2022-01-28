@@ -2,7 +2,7 @@ name: 'artifacts_integration_tests'
 version: '1.0'
 config-version: 2
 
-profile: 'dbt_artifacts_integration_tests'
+profile: 'dbt_artifacts'
 
 model-paths: ["models"]
 analysis-paths: ["analysis"]
