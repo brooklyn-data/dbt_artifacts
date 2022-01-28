@@ -52,3 +52,4 @@ surrogate_key as (
 )
 
 select * from surrogate_key
+
