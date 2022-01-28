@@ -1,4 +1,2 @@
 packages:
   - local: ../
-  - package: dbt-labs/dbt_utils
-    version: [">=0.6.0", "<0.9.0"]

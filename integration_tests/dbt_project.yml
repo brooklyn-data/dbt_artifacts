@@ -13,5 +13,9 @@ macro-paths: ["macros"]
 target-path: "target"
 clean-targets: ["target", "dbt_modules"]
 
+models:
+    +persist_docs:
+      relation: true
+      columns: true
 seeds:
   +quote_columns: false

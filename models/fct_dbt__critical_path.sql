@@ -45,7 +45,7 @@ node_dependencies as (
         node.value::string as depends_on_node_id,
         regexp_substr(node.value::string, '^([a-z]+)') as depends_on_node_type
     from latest_models,
-    lateral flatten(input => latest_models.depends_on_nodes) as node
+        lateral flatten(input => latest_models.depends_on_nodes) as node
 
 ),
 
@@ -66,19 +66,18 @@ model_dependencies_with_total_node_runtime as (
     select distinct
         node_dependencies_deduped.node_id,
         latest_executions.total_node_runtime,
-        depends_on_node_id
+        node_dependencies_deduped.depends_on_node_id
     from node_dependencies_deduped
     -- Inner join to accomodate runs which exclude some models
     inner join latest_executions on node_dependencies_deduped.node_id = latest_executions.node_id
-    where depends_on_node_type = 'model'
+    where node_dependencies_deduped.depends_on_node_type = 'model'
 
 ),
 
 models_with_at_least_one_model_dependency as (
     -- Return a list of model nodes which have at least one model dependency
 
-    select distinct
-        node_id
+    select distinct node_id
     from node_dependencies
     where depends_on_node_type = 'model'
 
@@ -111,11 +110,10 @@ models_with_no_dependent_models as (
     -- Models which have no dependents
     -- These are models at the tips of the tree
 
-    select
-        latest_models.node_id
+    select latest_models.node_id
     from latest_models
     left join models_with_dependent_models
-    on latest_models.node_id = models_with_dependent_models.node_id
+        on latest_models.node_id = models_with_dependent_models.node_id
     where models_with_dependent_models.node_id is null
 
 ),
@@ -154,7 +152,10 @@ all_needed_dependencies as (
 
 ),
 
-search_path (node_ids, total_time) as (
+search_path (node_ids, total_time
+)
+
+as (
     -- The recursive part
     -- This CTE creates an array of node_ids and total_time for every possible path through the DAG
     -- Starting with the tips of the tree, work backwards through every path until there's a '' depends_on_node_id
@@ -180,8 +181,8 @@ longest_path_node_ids as (
         -- Remove any empty strings from the beginning of the array that were introduced in search_path to prevent infinite recursion
         case
             when get(node_ids, 0) = ''
-            -- Ensure we keep the last element of the array by using array_size for the last index
-            then array_slice(node_ids, 1, array_size(node_ids))
+                -- Ensure we keep the last element of the array by using array_size for the last index
+                then array_slice(node_ids, 1, array_size(node_ids))
             else node_ids
         end as node_ids,
         total_time
@@ -198,7 +199,7 @@ flattened as (
         value as node_id,
         index
     from longest_path_node_ids,
-    lateral flatten (input => node_ids)
+        lateral flatten(input => node_ids)
 
 ),
 
@@ -208,7 +209,7 @@ longest_path_with_times as (
     select
         flattened.node_id::string as node_id,
         flattened.index,
-        latest_executions.total_node_runtime/60 as execution_minutes,
+        latest_executions.total_node_runtime / 60 as execution_minutes,
         latest_models.model_materialization
     from flattened
     left join latest_executions on flattened.node_id = latest_executions.node_id

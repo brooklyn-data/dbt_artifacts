@@ -16,7 +16,7 @@ latest_full as (
 
     select *
     from run_results
-    where selected_models is null and was_full_refresh = false
+    where execution_command = 'run' and selected_models is null and was_full_refresh = false
     order by artifact_generated_at desc
     limit 1
 

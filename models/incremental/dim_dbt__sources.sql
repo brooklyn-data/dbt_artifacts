@@ -12,8 +12,8 @@ dbt_sources_incremental as (
     from dbt_sources
 
     {% if is_incremental() %}
-    -- this filter will only be applied on an incremental run
-    where artifact_generated_at > (select max(artifact_generated_at) from {{ this }})
+        -- this filter will only be applied on an incremental run
+        where artifact_generated_at > (select max(artifact_generated_at) from {{ this }})
     {% endif %}
 
 ),

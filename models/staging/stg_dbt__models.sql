@@ -16,9 +16,9 @@ manifests as (
 flatten as (
 
     select
-        command_invocation_id,
-        dbt_cloud_run_id,
-        generated_at as artifact_generated_at,
+        manifests.command_invocation_id,
+        manifests.dbt_cloud_run_id,
+        manifests.generated_at as artifact_generated_at,
         node.key as node_id,
         node.value:database::string as model_database,
         node.value:schema::string as model_schema,
@@ -29,7 +29,7 @@ flatten as (
         node.value:checksum.checksum::string as checksum,
         node.value:config.materialized::string as model_materialization
     from manifests,
-    lateral flatten(input => data:nodes) as node
+        lateral flatten(input => data:nodes) as node
     where node.value:resource_type = 'model'
 
 ),

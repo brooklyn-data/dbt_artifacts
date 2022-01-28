@@ -13,7 +13,7 @@ exposures_record as (
 
 model_updates as (
 
-    select 
+    select
         max(query_completed_at) as latest_update,
         node_id
     from model_executions
@@ -39,19 +39,19 @@ exposures_latest as (
 
 exposures_updates as (
 
-    select 
-        e.latest_generation,
-        e.node_id,
-        e.name, 
-        e.type,
-        e.owner,
-        e.maturity,
-        e.package_name,
-        e.output_feeds,
-        latest_update as feed_latest_update
-    from exposures_latest e
-    left join model_updates m
-      on m.node_id = e.output_feeds
+    select
+        exposures_latest.latest_generation,
+        exposures_latest.node_id,
+        exposures_latest.name,
+        exposures_latest.type,
+        exposures_latest.owner,
+        exposures_latest.maturity,
+        exposures_latest.package_name,
+        exposures_latest.output_feeds,
+        model_updates.latest_update as feed_latest_update
+    from exposures_latest
+    left join model_updates
+        on exposures_latest.output_feeds = model_updates.node_id
 
 )
 

@@ -17,15 +17,15 @@ dbt_exposures_incremental as (
     from dbt_exposures
 
     {% if is_incremental() %}
-    -- this filter will only be applied on an incremental run
-    where artifact_generated_at > (select max(artifact_generated_at) from {{ this }})
+        -- this filter will only be applied on an incremental run
+        where artifact_generated_at > (select max(artifact_generated_at) from {{ this }})
     {% endif %}
 
 ),
 
 fields as (
 
-     select
+    select
         t.manifest_exposure_id,
         t.command_invocation_id,
         t.dbt_cloud_run_id,
@@ -38,7 +38,7 @@ fields as (
         f.value::string as output_feeds,
         t.package_name
     from dbt_exposures_incremental as t,
-    lateral flatten(input => depends_on_nodes) as f
+        lateral flatten(input => depends_on_nodes) as f
 
 )
 

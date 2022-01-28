@@ -23,10 +23,9 @@ dbt_run as (
 
 env_keys as (
 
-    select
-        distinct(env.key)
+    select distinct env.key
     from dbt_run,
-    lateral flatten(input => data:metadata:env) as env
+        lateral flatten(input => data:metadata:env) as env
     -- Sort results to ensure things are deterministic
     order by 1
 

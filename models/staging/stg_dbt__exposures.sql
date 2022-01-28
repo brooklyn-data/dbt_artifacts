@@ -16,9 +16,9 @@ manifests as (
 flatten as (
 
     select
-        command_invocation_id,
-        dbt_cloud_run_id,
-        generated_at as artifact_generated_at,
+        manifests.command_invocation_id,
+        manifests.dbt_cloud_run_id,
+        manifests.generated_at as artifact_generated_at,
         node.key as node_id,
         node.value:name::string as name,
         to_array(node.value:depends_on:nodes) as depends_on_nodes,
@@ -28,7 +28,7 @@ flatten as (
         node.value:maturity::string as maturity,
         node.value:package_name::string as package_name
     from manifests,
-    lateral flatten(input => data:exposures) as node
+        lateral flatten(input => data:exposures) as node
 
 ),
 
