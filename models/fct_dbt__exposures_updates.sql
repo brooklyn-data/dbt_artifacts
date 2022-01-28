@@ -40,7 +40,7 @@ exposures_latest as (
 exposures_updates as (
 
     select
-        exposures_latest.latest_generation,
+        EXPOSURES_LATEST.latest_generation b,
         exposures_latest.node_id,
         exposures_latest.name,
         exposures_latest.type,
