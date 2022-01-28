@@ -87,7 +87,6 @@ from (
 file_format = (type = 'JSON')
 ```
 
-
 ## Usage
 The models will be picked up on your next `dbt run` command. You can also run the package specifically with `dbt run -m dbt_artifacts`.
 
@@ -97,3 +96,44 @@ Thank you to [Tails.com](https://tails.com/gb/careers/) for initial development 
 The macros in this package have been adapted from code shared by [Kevin Chan](https://github.com/KevinC-wk) and [Jonathan Talmi](https://github.com/jtalmi) of [Snaptravel](snaptravel.com).
 
 Thank you for sharing your work with the community!
+
+## Contributing
+
+### SQLFluff
+
+We use SQLFluff to keep SQL style consistent. A GitHub action automatically tests pull requests and adds annotations where there are failures. SQLFluff can also be run locally with `tox`. To install tox, we recommend using `pipx`.
+
+Install pipx:
+```bash
+pip install pipx
+pipx ensurepath
+```
+
+Install tox:
+```bash
+pipx install tox
+```
+
+Lint all models in the /models directory:
+```bash
+tox
+```
+
+Fix all models in the /models directory:
+```bash
+tox -e fix_all
+```
+
+Lint (or subsitute lint to fix) a specific model:
+```bash
+tox -e lint -- models/path/to/model.sql
+```
+
+Lint (or subsitute lint to fix) a specific directory:
+```bash
+tox -e lint -- models/path/to/directory
+```
+
+#### Rules
+
+Enforced rules are defined within `tox.ini`. To view the full list of available rules and their configuration, see the [SQLFluff documentation](https://docs.sqlfluff.com/en/stable/rules.html).
