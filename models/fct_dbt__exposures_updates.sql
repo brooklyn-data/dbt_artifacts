@@ -56,3 +56,4 @@ exposures_updates as (
 )
 
 select * from exposures_updates
+
