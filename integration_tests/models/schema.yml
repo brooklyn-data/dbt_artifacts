@@ -1,9 +1,0 @@
-version: 2
-
-models:
-  - name: my_model
-    columns:
-      - name: my_column
-        tests:
-          - unique
-          - not_null
