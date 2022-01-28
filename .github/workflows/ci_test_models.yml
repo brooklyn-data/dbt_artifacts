@@ -1,15 +1,14 @@
 name: dbt_artifacts_ci
 
-# triggers for the workflow
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
+  # all PRs, important to note that `pull_request_target` workflows
+  # will run in the context of the target branch of a PR
+  pull_request_target:
 
-# environment variables
 env:
-  # These should be configured in the GitHub -> secrets section of your repository
+  # These are configured in GitHub secrets
+  DBT_PROFILES_DIR: /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/integration_tests
   SNOWFLAKE_TEST_ACCOUNT: ${{ secrets.SNOWFLAKE_TEST_ACCOUNT }}
   SNOWFLAKE_TEST_USER: ${{ secrets.SNOWFLAKE_TEST_USER }}
   SNOWFLAKE_TEST_PASSWORD: ${{ secrets.SNOWFLAKE_TEST_PASSWORD }}
@@ -20,6 +19,8 @@ env:
 jobs:
   ci_workflow:
     runs-on: ubuntu-latest
+    environment:
+      name: Approve Integration Tests
 
     steps:
       - name: Checkout
@@ -41,7 +42,6 @@ jobs:
         run: |
           . venv/bin/activate
           cd ./integration_tests
-          export DBT_PROFILES_DIR=/home/runner/work/dbt_artifacts/dbt_artifacts/integration_tests
           echo $DBT_PROFILES_DIR
           dbt deps
           dbt run-operation create_artifact_resources

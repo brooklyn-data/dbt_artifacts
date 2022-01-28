@@ -2,6 +2,7 @@ name: 'dbt_artifacts'
 version: '0.6.0'
 config-version: 2
 require-dbt-version: ">=0.20.0"
+profile: "dbt_artifacts"
 
 models:
   dbt_artifacts:

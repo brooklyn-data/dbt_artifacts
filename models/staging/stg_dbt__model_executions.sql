@@ -24,10 +24,10 @@ dbt_run as (
 fields as (
 
     select
-        command_invocation_id,
-        dbt_cloud_run_id,
-        generated_at as artifact_generated_at,
-        coalesce(data:args:full_refresh, 'false')::boolean as was_full_refresh,
+        dbt_run.command_invocation_id,
+        dbt_run.dbt_cloud_run_id,
+        dbt_run.generated_at as artifact_generated_at,
+        coalesce(dbt_run.data:args:full_refresh, 'false')::boolean as was_full_refresh,
         result.value:unique_id::string as node_id,
         split(result.value:thread_id::string, '-')[1]::integer as thread_id,
         result.value:status::string as status,
@@ -44,7 +44,7 @@ fields as (
 
         result.value:adapter_response:rows_affected::int as rows_affected
     from dbt_run,
-    lateral flatten(input => data:results) as result
+        lateral flatten(input => data:results) as result
 
 ),
 

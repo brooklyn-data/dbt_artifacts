@@ -1,0 +1,74 @@
+# Adapted from https://github.com/sqlfluff/sqlfluff-github-actions/tree/main/menu_of_workflows/surfline
+name: SQLFluff lint dbt models
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+env:
+  # These are configured in GitHub secrets
+  DBT_PROFILES_DIR: /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/integration_tests
+  SNOWFLAKE_TEST_ACCOUNT: ${{ secrets.SNOWFLAKE_TEST_ACCOUNT }}
+  SNOWFLAKE_TEST_USER: ${{ secrets.SNOWFLAKE_TEST_USER }}
+  SNOWFLAKE_TEST_PASSWORD: ${{ secrets.SNOWFLAKE_TEST_PASSWORD }}
+  SNOWFLAKE_TEST_ROLE: ${{ secrets.SNOWFLAKE_TEST_ROLE }}
+  SNOWFLAKE_TEST_DATABASE: ${{ secrets.SNOWFLAKE_TEST_DATABASE }}
+  SNOWFLAKE_TEST_WAREHOUSE: ${{ secrets.SNOWFLAKE_TEST_WAREHOUSE }}
+
+jobs:
+  sqlfluff-lint-models:
+    name: Lint dbt models using SQLFluff
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v2
+
+      - name: Install Python packages
+        run: python -m pip install dbt-snowflake~=1.0.0 sqlfluff-templater-dbt
+
+      - name: Test database connection
+        run: dbt debug
+
+      - name: Install dbt packages
+        run: dbt deps
+
+      - name: Get changed files
+        id: get_file_changes
+        uses: trilom/file-changes-action@v1.2.4
+        with:
+          output: ' '
+
+      - name: Get new and changed .sql files in /models to lint
+        id: get_files_to_lint
+        shell: bash -l {0}
+        run: |
+          # Set the command in the $() brackets as an output to use in later steps
+          echo "::set-output name=lintees::$(
+          # Issue where grep regular expressions don't work as expected on the
+          # Github Actions shell, check dbt/models/ folder
+          echo \
+          $(echo ${{ steps.get_file_changes.outputs.files_modified }} |
+          tr -s ' ' '\n' |
+          grep -E '^models.*[.]sql$' |
+          tr -s '\n' ' ') \
+          $(echo ${{ steps.get_file_changes.outputs.files_added }} |
+          tr -s ' ' '\n' |
+          grep -E '^models.*[.]sql$' |
+          tr -s '\n' ' ')
+          )"
+
+      - name: Lint dbt models
+        if: steps.get_files_to_lint.outputs.lintees != ''
+        shell: bash -l {0}
+        run: sqlfluff lint --format github-annotation --annotation-level failure --nofail ${{ steps.get_files_to_lint.outputs.lintees }} > annotations.json
+
+      - name: Annotate
+        uses: yuzutech/annotations-action@v0.3.0
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          title: "SQLFluff Lint"
+          input: "./annotations.json"
+

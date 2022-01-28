@@ -16,9 +16,9 @@ manifests as (
 flatten as (
 
     select
-        command_invocation_id,
-        dbt_cloud_run_id,
-        generated_at as artifact_generated_at,
+        manifests.command_invocation_id,
+        manifests.dbt_cloud_run_id,
+        manifests.generated_at as artifact_generated_at,
         node.key as node_id,
         node.value:name::string as name,
         node.value:source_name::string as source_name,
@@ -27,7 +27,7 @@ flatten as (
         node.value:relation_name::string as relation_name,
         node.value:path::string as source_path
     from manifests,
-    lateral flatten(input => data:sources) as node
+        lateral flatten(input => data:sources) as node
     where node.value:resource_type = 'source'
 
 ),
