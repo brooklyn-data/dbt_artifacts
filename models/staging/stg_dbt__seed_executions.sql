@@ -17,7 +17,7 @@ dbt_run as (
 
     select *
     from run_results
-    where data:args:which = 'test'
+    where data:args:which = 'seed'
 
 ),
 
@@ -33,7 +33,7 @@ fields as (
         result.value:status::string as status,
         result.value:message::string as message,
 
-        -- The first item in the timing array is the test-level `compile`
+        -- The first item in the timing array is the seed-level `compile`
         result.value:timing[0]:started_at::timestamp_ntz as compile_started_at,
 
         -- The second item in the timing array is `execute`.
@@ -52,7 +52,7 @@ fields as (
 surrogate_key as (
 
     select
-        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as test_execution_id,
+        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as seed_execution_id,
         command_invocation_id,
         dbt_cloud_run_id,
         artifact_generated_at,

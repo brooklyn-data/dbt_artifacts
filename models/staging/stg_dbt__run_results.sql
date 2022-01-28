@@ -17,7 +17,7 @@ dbt_run as (
 
     select *
     from run_results
-    where data:args:which = 'run'
+    where data:args:which in ('run', 'seed', 'snapshot', 'test')
 
 ),
 

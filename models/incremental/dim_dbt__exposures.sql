@@ -1,20 +1,20 @@
 {{
   config(
     materialized='incremental',
-    unique_key='manifest_model_id'
+    unique_key='manifest_exposure_id'
     )
 }}
 
-with dbt_models as (
+with dbt_exposures as (
 
     select * from {{ ref('stg_dbt__exposures') }}
 
 ),
 
-dbt_models_incremental as (
+dbt_exposures_incremental as (
 
     select *
-    from dbt_models
+    from dbt_exposures
 
     {% if is_incremental() %}
     -- this filter will only be applied on an incremental run
@@ -26,7 +26,7 @@ dbt_models_incremental as (
 fields as (
 
      select
-        t.manifest_model_id,
+        t.manifest_exposure_id,
         t.command_invocation_id,
         t.dbt_cloud_run_id,
         t.artifact_generated_at,
@@ -37,7 +37,7 @@ fields as (
         t.maturity,
         f.value::string as output_feeds,
         t.package_name
-    from dbt_models_incremental as t,
+    from dbt_exposures_incremental as t,
     lateral flatten(input => depends_on_nodes) as f
 
 )

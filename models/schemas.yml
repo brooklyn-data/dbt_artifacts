@@ -129,7 +129,7 @@ models:
   - name: dim_dbt__exposures
     description: All dbt exposures metadata from every manifest.json.
     columns:
-      - name: manifest_model_id
+      - name: manifest_exposure_id
         description: |
           Primary key generated from the command_invocation_id and checksum. Note,
           this is not unique for a given exposure.
@@ -156,7 +156,7 @@ models:
     tests:
       - unique:
           # Test that the combination of manifest_mode_id and exposed_model_name is unique
-          column_name: "manifest_model_id || '-' || output_feeds"
+          column_name: "manifest_exposure_id || '-' || output_feeds"
 
   - name: dim_dbt__models
     description: All dbt model metadata from every manifest.json.
