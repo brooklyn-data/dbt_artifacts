@@ -26,6 +26,7 @@ fields as (
         model_execution_id,
         command_invocation_id,
         dbt_cloud_run_id,
+        artifact_run_id,
         artifact_generated_at,
         was_full_refresh,
         node_id,

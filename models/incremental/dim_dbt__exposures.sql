@@ -25,8 +25,7 @@ dbt_exposures_incremental as (
     -- Inner join with run results to enforce consistency and avoid race conditions.
     -- https://github.com/brooklyn-data/dbt_artifacts/issues/75
     inner join run_results on
-        dbt_exposures.command_invocation_id = run_results.command_invocation_id
-        or dbt_exposures.dbt_cloud_run_id = run_results.dbt_cloud_run_id
+        dbt_exposures.artifact_run_id = run_results.artifact_run_id
 
     {% if is_incremental() %}
         -- this filter will only be applied on an incremental run
@@ -41,6 +40,7 @@ fields as (
         t.manifest_exposure_id,
         t.command_invocation_id,
         t.dbt_cloud_run_id,
+        t.artifact_run_id,
         t.artifact_generated_at,
         t.node_id,
         t.name,

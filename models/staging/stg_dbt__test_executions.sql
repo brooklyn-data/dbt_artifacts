@@ -26,6 +26,7 @@ fields as (
     select
         dbt_run.command_invocation_id,
         dbt_run.dbt_cloud_run_id,
+        dbt_run.artifact_run_id,
         dbt_run.generated_at as artifact_generated_at,
         coalesce(dbt_run.data:args:full_refresh, 'false')::boolean as was_full_refresh,
         result.value:unique_id::string as node_id,
@@ -55,6 +56,7 @@ surrogate_key as (
         {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as test_execution_id,
         command_invocation_id,
         dbt_cloud_run_id,
+        artifact_run_id,
         artifact_generated_at,
         was_full_refresh,
         node_id,

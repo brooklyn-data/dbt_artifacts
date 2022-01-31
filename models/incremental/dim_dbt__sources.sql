@@ -20,8 +20,7 @@ dbt_sources_incremental as (
     -- Inner join with run results to enforce consistency and avoid race conditions.
     -- https://github.com/brooklyn-data/dbt_artifacts/issues/75
     inner join run_results on
-        dbt_sources.command_invocation_id = run_results.command_invocation_id
-        or dbt_sources.dbt_cloud_run_id = run_results.dbt_cloud_run_id
+        dbt_sources.artifact_run_id = run_results.artifact_run_id
 
     {% if is_incremental() %}
         -- this filter will only be applied on an incremental run
@@ -36,6 +35,7 @@ fields as (
         manifest_source_id,
         command_invocation_id,
         dbt_cloud_run_id,
+        artifact_run_id,
         artifact_generated_at,
         node_id,
         name,

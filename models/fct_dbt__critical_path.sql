@@ -16,8 +16,7 @@ latest_id as (
     -- Find the latest full, incremental execution
 
     select
-        any_value(command_invocation_id) as command_invocation_id,
-        any_value(dbt_cloud_run_id) as dbt_cloud_run_id
+        any_value(artifact_run_id) as artifact_run_id
     from latest_executions
 
 ),
@@ -31,8 +30,7 @@ latest_models as (
         models.model_materialization
     from latest_id
     left join models on
-        latest_id.command_invocation_id = models.command_invocation_id
-        or latest_id.dbt_cloud_run_id = models.dbt_cloud_run_id
+        latest_id.artifact_run_id = models.artifact_run_id
 
 
 ),
