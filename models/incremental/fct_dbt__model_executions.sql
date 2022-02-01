@@ -14,14 +14,26 @@ model_executions as (
 
 ),
 
-model_executions_incremental as (
+run_results as (
 
     select *
+    from {{ ref('fct_dbt__run_results') }}
+
+),
+
+model_executions_incremental as (
+
+    select model_executions.*
     from model_executions
+    -- Inner join with run results to enforce consistency and avoid race conditions.
+    -- https://github.com/brooklyn-data/dbt_artifacts/issues/75
+    inner join run_results on
+        model_executions.command_invocation_id = run_results.command_invocation_id
+        or model_executions.dbt_cloud_run_id = run_results.dbt_cloud_run_id
 
     {% if is_incremental() %}
         -- this filter will only be applied on an incremental run
-        where artifact_generated_at > (select max(artifact_generated_at) from {{ this }})
+        where model_executions.artifact_generated_at > (select max(artifact_generated_at) from {{ this }})
     {% endif %}
 
 ),

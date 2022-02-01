@@ -14,14 +14,26 @@ snapshot_executions as (
 
 ),
 
-snapshot_executions_incremental as (
+run_results as (
 
     select *
+    from {{ ref('fct_dbt__run_results') }}
+
+),
+
+snapshot_executions_incremental as (
+
+    select snapshot_executions.*
     from snapshot_executions
+    -- Inner join with run results to enforce consistency and avoid race conditions.
+    -- https://github.com/brooklyn-data/dbt_artifacts/issues/75
+    inner join run_results on
+        snapshot_executions.command_invocation_id = run_results.command_invocation_id
+        or snapshot_executions.dbt_cloud_run_id = run_results.dbt_cloud_run_id
 
     {% if is_incremental() %}
         -- this filter will only be applied on an incremental run
-        where artifact_generated_at > (select max(artifact_generated_at) from {{ this }})
+        where snapshot_executions.artifact_generated_at > (select max(artifact_generated_at) from {{ this }})
     {% endif %}
 
 ),

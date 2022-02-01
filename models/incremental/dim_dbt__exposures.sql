@@ -11,14 +11,26 @@ with dbt_exposures as (
 
 ),
 
-dbt_exposures_incremental as (
+run_results as (
 
     select *
+    from {{ ref('fct_dbt__run_results') }}
+
+),
+
+dbt_exposures_incremental as (
+
+    select dbt_exposures.*
     from dbt_exposures
+    -- Inner join with run results to enforce consistency and avoid race conditions.
+    -- https://github.com/brooklyn-data/dbt_artifacts/issues/75
+    inner join run_results on
+        dbt_exposures.command_invocation_id = run_results.command_invocation_id
+        or dbt_exposures.dbt_cloud_run_id = run_results.dbt_cloud_run_id
 
     {% if is_incremental() %}
         -- this filter will only be applied on an incremental run
-        where artifact_generated_at > (select max(artifact_generated_at) from {{ this }})
+        where dbt_exposures.artifact_generated_at > (select max(artifact_generated_at) from {{ this }})
     {% endif %}
 
 ),

@@ -102,7 +102,13 @@ models:
       description: The number of rows affected by the model's execution. Always 1 for non-incremental executions.
 
   - name: fct_dbt__run_results
-    description: Metadata for dbt run commands.
+    description: Metadata for dbt run commands. This model is also the point of reference for others
+      in the build process to enforce consistency. Most other models depend on this one to dictate which
+      results have been received. By having this model upstream of the others it is forced to go first
+      and therefore anything picked up by it, can then safely be assumed to exist in the downstream models.
+      Anything which arrives after the materialisation of this model is prevented from appearing in the others
+      using an inner join within the definition of all of them to prevent them showing any facts which
+      arrive during a rebuild.
     columns:
     - name: command_invocation_id
       description: The id of the command which resulted in the source artifact's generation.
