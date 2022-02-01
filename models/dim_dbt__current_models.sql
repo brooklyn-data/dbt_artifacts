@@ -23,7 +23,8 @@ model_executions as (
 latest_compile as (
 
     select
-        command_invocation_id, dbt_cloud_run_id
+        command_invocation_id,
+        dbt_cloud_run_id
     from run_results
     where execution_command = 'run'
     order by artifact_generated_at desc
