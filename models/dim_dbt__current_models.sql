@@ -58,7 +58,7 @@ latest_model_runs as (
     inner join model_executions
         on latest_models.node_id = model_executions.node_id
     -- Only successful runs
-    where status = 'success'
+    where model_executions.status = 'success'
 
 ),
 
