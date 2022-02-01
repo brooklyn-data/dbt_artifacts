@@ -22,7 +22,8 @@ model_executions as (
 -- Get the most recent comile run
 latest_compile as (
 
-    select command_invocation_id, dbt_cloud_run_id
+    select
+        command_invocation_id, dbt_cloud_run_id
     from run_results
     where execution_command = 'run'
     order by artifact_generated_at desc
@@ -38,7 +39,7 @@ latest_models as (
     -- In a local deploy, the command id is sufficient, but not in cloud - that requires the cloud run id to achieve a match.
     inner join latest_compile
         on models.command_invocation_id = latest_compile.command_invocation_id
-        or models.dbt_cloud_run_id = latest_compile.dbt_cloud_run_id
+            or models.dbt_cloud_run_id = latest_compile.dbt_cloud_run_id
 
 ),
 
@@ -59,7 +60,7 @@ latest_model_runs as (
     inner join model_executions
         on latest_models.node_id = model_executions.node_id
     -- Only successful runs
-    where status = 'success'
+    where model_executions.status = 'success'
 
 ),
 
