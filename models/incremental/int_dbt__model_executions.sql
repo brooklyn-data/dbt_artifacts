@@ -11,7 +11,7 @@ model_executions_incremental as (
 
     select *
     from model_executions
-    -- NOTE: Consitency check for this model is done in the fact table not here. See: fct_dbt__model_executions.
+    -- NOTE: Consistency check for this model is done in the fact table not here. See: fct_dbt__model_executions.
 
     {% if is_incremental() %}
         -- this filter will only be applied on an incremental run
