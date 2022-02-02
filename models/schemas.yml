@@ -218,7 +218,7 @@ models:
 
   - name: dim_dbt__current_models
     description: A subset of the models found in `dim_models`, which were present in the manifest of the most recent run. This
-      represents the models which are current live in the dbt project.
+      represents the models which are currently live in the dbt project.
     columns:
       - name: manifest_model_id
         description: Primary key generated from the command_invocation_id and checksum.
