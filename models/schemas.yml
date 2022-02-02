@@ -215,3 +215,42 @@ models:
         description: Name of the database entity this source resolved to.
       - name: source_path
         description: Filepath of the source.
+
+  - name: dim_dbt__current_models
+    description: A subset of the models found in `dim_models`, which were present in the manifest of the most recent run. This
+      represents the models which are currently live in the dbt project.
+    columns:
+      - name: manifest_model_id
+        description: Primary key generated from the command_invocation_id and checksum.
+        tests:
+          - unique
+          - not_null
+      - name: command_invocation_id
+        description: The id of the command which resulted in the source artifact's generation.
+      - name: artifact_generated_at
+        description: Timestamp of when the source artifact was generated.
+      - name: node_id
+        description: Unique id for the node, in the form of model.[package_name].[model_name]
+      - name: name
+        description: The model name.
+      - name: model_schema
+      - name: depends_on_nodes
+        description: List of node ids the model depends on.
+      - name: package_name
+      - name: model_path
+        description: Filepath of the model.
+      - name: checksum
+        description: Unique identifier for the model. If a model is unchanged between separate executions this will remain the same.
+      - name: model_materialization
+      - name: last_incremental_run_completed_at
+        description: The completion time from the last time this model was run during an increment run.
+      - name: last_incremental_run_total_runtime
+        description: The total runtime from the last time this model was run during an increment run.
+      - name: last_incremental_run_rows_affected
+        description: The number of rows affected from the last time this model was run during an increment run.
+      - name: last_full_run_completed_at
+        description: The completion time from the last time this model was run during a full refresh.
+      - name: last_full_run_total_runtime
+        description: The total runtime from the last time this model was run during a full refresh.
+      - name: last_full_run_rows_affected
+        description: The number of rows affected from the last time this model was run during a full refresh.
