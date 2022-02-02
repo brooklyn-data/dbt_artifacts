@@ -7,6 +7,7 @@ Models included:
 - `dim_dbt__seeds`
 - `dim_dbt__snapshots`
 - `dim_dbt__tests`
+- `dim_dbt__current_models`
 - `fct_dbt__critical_path`
 - `fct_dbt__latest_full_model_executions`
 - `fct_dbt__model_executions`
