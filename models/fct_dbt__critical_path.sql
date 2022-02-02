@@ -15,8 +15,7 @@ latest_executions as (
 latest_id as (
     -- Find the latest full, incremental execution
 
-    select
-        any_value(artifact_run_id) as artifact_run_id
+    select any_value(artifact_run_id) as artifact_run_id
     from latest_executions
 
 ),
