@@ -27,6 +27,7 @@ fields as (
         artifact_generated_at,
         command_invocation_id,
         dbt_cloud_run_id,
+        artifact_run_id,
         dbt_version,
         elapsed_time,
         execution_command,
