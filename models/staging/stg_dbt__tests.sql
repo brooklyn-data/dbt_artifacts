@@ -5,6 +5,13 @@ with base as (
 
 ),
 
+base_v2 as (
+
+    select *
+    from {{ source('dbt_artifacts', 'dbt_run_manifest_nodes') }}
+
+),
+
 manifests as (
 
     select *
@@ -15,6 +22,7 @@ manifests as (
 
 flatten as (
 
+    -- V1
     select
         manifests.command_invocation_id,
         manifests.dbt_cloud_run_id,
@@ -28,6 +36,22 @@ flatten as (
     from manifests,
         lateral flatten(input => data:nodes) as node
     where node.value:resource_type = 'test'
+
+    union all
+
+    -- V2
+    select
+        command_invocation_id,
+        dbt_cloud_run_id,
+        artifact_run_id,
+        artifact_generated_at,
+        node_id,
+        name,
+        depends_on_nodes,
+        package_name,
+        model_path as test_path
+    from base_v2
+    where resource_type = 'test'
 
 ),
 
