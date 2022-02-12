@@ -32,6 +32,11 @@ vars:
     dbt_artifacts_database: your_db # optional, default is your target database
     dbt_artifacts_schema: your_schema # optional, default is 'dbt_artifacts'
     dbt_artifacts_table: your_table # optional, default is 'artifacts'
+    dbt_artifacts_results_table: your_table # optional, default is 'dbt_run_results'
+    dbt_artifacts_result_nodes_table: your_table # optional, default is 'dbt_run_result_nodes'
+    dbt_artifacts_manifest_nodes_table: your_table # optional, default is 'dbt_run_manifest_nodes'
+    dbt_artifacts_manifest_sources_table: your_table # optional, default is 'dbt_run_manifest_sources'
+    dbt_artifacts_manifest_exposures_table: your_table # optional, default is 'dbt_run_manifest_exposures'
 
 models:
   ...
@@ -46,32 +51,57 @@ Note that the model materializations are defined in this package's `dbt_project.
 3. Run `dbt deps`.
 
 ## Generating the source table
-This package requires that the source data exists in a table in Snowflake.
+This package requires that the source data exists in Snowflake. There are two supported ways of doing this:
+- The _V2_ way of doing this which flattens the uploaded files on load. This supports files over
+  16MB (the limit of a variant field in snowflake) and also makes rebuilds of the materialised
+  models much faster because the JSON unpacking is done once on load. The downside of this approach
+  is that the upload is much heavier and more complex, as such we only directly support the
+  _"local file"_ method. Loading via cloud storage is also _possible_ but we recommend users
+  copy the method used in `upload_artifacts_v2.sql` to create their own approach.
+- The _V1_ or _legacy_ option, which uploads the files unprocessed. This affords much more flexibility
+  in their use, but the is subject to field size limits and higher compute loads to reprocess the
+  large JSON payloads in future. This may be appropriate for more custom setups or for small projects
+  but for large projects which aren't extending the functionality of the package significantly, we
+  recommend the _V2_ method.
 
-### Option 1: Loading local files
+### Option 1: Loading local files [V1 & V2]
 Snowflake makes it possible to load local files into your warehouse. We've included a number of macros to assist with this. This method can be used by both dbt Cloud users, and users of other orchestration tools.
 
-1. To initially create these tables, execute `dbt run-operation create_artifact_resources` ([source](macros/create_artifact_resources.sql)). This will create a stage and a table named `{{ target.database }}.dbt_artifacts.artifacts` — you can override this name using the variables listed in the Installation section, above.
+1. To initially create these tables, execute `dbt run-operation create_artifact_resources`
+   ([source](macros/create_artifact_resources.sql)). This will create a stage and a set of tables in
+   the `{{ target.database }}.dbt_artifacts` schema — you can override the database, schema and table
+   names using the variables listed in the Installation section, above.
 
-2. Add [operations](https://docs.getdbt.com/docs/building-a-dbt-project/hooks-operations/#operations) to your production run to load files into your table, via the `upload_artifacts` macro ([source](macros/upload_artifacts.sql)). You'll need to specify which files to upload through use of the `--args` flag. Here's an example setup.
-```txt
-$ dbt  seed
-$ dbt  run-operation upload_dbt_artifacts --args '{filenames: [manifest, run_results]}'
+2. Add [operations](https://docs.getdbt.com/docs/building-a-dbt-project/hooks-operations/#operations)
+   to your production run to load files into your table.
+   
+   **V2 Macro**: Use the `upload_artifacts_v2` macro ([source](macros/upload_artifacts.sql)). You only
+   need to run the macro after `run`, `test`, `seed` or `build` operations.
+   ```txt
+   $ dbt  run
+   $ dbt  run-operation upload_dbt_artifacts_v2
+   ```
 
-$ dbt  run
-$ dbt  run-operation upload_dbt_artifacts --args '{filenames: [manifest, run_results]}'
+   **V1 Macro**: Use the `upload_artifacts` macro ([source](macros/upload_artifacts.sql)). You'll need
+   to specify which files to upload through use of the `--args` flag. Here's an example setup.
+   ```txt
+   $ dbt  seed
+   $ dbt  run-operation upload_dbt_artifacts --args '{filenames: [manifest, run_results]}'
 
-$ dbt  test
-$ dbt  run-operation upload_dbt_artifacts --args '{filenames: [run_results]}'
+   $ dbt  run
+   $ dbt  run-operation upload_dbt_artifacts --args '{filenames: [manifest, run_results]}'
 
-$ dbt  source snapshot-freshness
-$ dbt  run-operation upload_dbt_artifacts --args '{filenames: [sources]}'
+   $ dbt  test
+   $ dbt  run-operation upload_dbt_artifacts --args '{filenames: [run_results]}'
 
-$ dbt  docs generate
-$ dbt  run-operation upload_dbt_artifacts --args '{filenames: [catalog]}'
-```
+   $ dbt  source snapshot-freshness
+   $ dbt  run-operation upload_dbt_artifacts --args '{filenames: [sources]}'
 
-### Option 2: Loading cloud-storage files
+   $ dbt  docs generate
+   $ dbt  run-operation upload_dbt_artifacts --args '{filenames: [catalog]}'
+   ```
+
+### Option 2: Loading cloud-storage files [V1 only]
 
 If you are using an orchestrator, you might instead upload these files to cloud storage — the method to do this will depend on your orchestrator. Then, link the cloud storage destination to a Snowflake external stage, and use a snowpipe to copy these files into the source table:
 
