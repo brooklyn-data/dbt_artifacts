@@ -13,7 +13,7 @@ manifests as (
 
 ),
 
-flatten as (
+flattened as (
 
     select
         manifests.command_invocation_id,
@@ -82,7 +82,7 @@ flatten as (
         null as exposure_type,
         null as exposure_owner,
         null as exposure_maturity,
-        node.value:source_name::string as source_name,
+        source.value:source_name::string as source_name,
         source.value:package_name::string as package_name,
         source.value:relation_name::string as relation_name,
         source.value:path::string as node_path,
@@ -111,12 +111,13 @@ surrogate_key as (
         exposure_type,
         exposure_owner,
         exposure_maturity,
+        source_name,
         package_name,
         relation_name,
         node_path,
         checksum,
         materialization
-    from flatten
+    from flattened
 
 )
 

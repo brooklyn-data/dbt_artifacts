@@ -14,7 +14,7 @@ dbt_models_incremental as (
 
     {% if is_incremental() %}
         -- this filter will only be applied on an incremental run
-        where coalesce(artifact_generated_at > (select max(artifact_generated_at) from {{ this }}), true)
+        and coalesce(artifact_generated_at > (select max(artifact_generated_at) from {{ this }}), true)
     {% endif %}
 
 ),

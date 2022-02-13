@@ -14,7 +14,7 @@ dbt_tests_incremental as (
 
     {% if is_incremental() %}
         -- this filter will only be applied on an incremental run
-        where artifact_generated_at > (select max(artifact_generated_at) from {{ this }})
+        and artifact_generated_at > (select max(artifact_generated_at) from {{ this }})
     {% endif %}
 
 ),
@@ -31,7 +31,7 @@ fields as (
         name,
         depends_on_nodes,
         package_name,
-        test_path
+        node_path as test_path
     from dbt_tests_incremental
 
 )

@@ -16,13 +16,13 @@ node_executions as (
 
 seed_executions_incremental as (
 
-    select node_executions.*
+    select *
     from node_executions
     where resource_type = 'seed'
 
     {% if is_incremental() %}
         -- this filter will only be applied on an incremental run
-        where artifact_generated_at > (select max(artifact_generated_at) from {{ this }})
+        and artifact_generated_at > (select max(artifact_generated_at) from {{ this }})
     {% endif %}
 
 ),
@@ -46,7 +46,7 @@ seed_executions_with_materialization as (
 fields as (
 
     select
-        seed_execution_id,
+        node_execution_id as seed_execution_id,
         command_invocation_id,
         dbt_cloud_run_id,
         artifact_run_id,

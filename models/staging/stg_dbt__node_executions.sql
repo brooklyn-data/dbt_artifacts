@@ -27,7 +27,7 @@ fields as (
         run_results.dbt_cloud_run_id,
         run_results.artifact_run_id,
         run_results.generated_at as artifact_generated_at,
-        run_results.data:args:which::string as execution_command
+        run_results.data:args:which::string as execution_command,
         coalesce(run_results.data:args:full_refresh, 'false')::boolean as was_full_refresh,
         result.value:unique_id::string as node_id,
         split(result.value:thread_id::string, '-')[1]::integer as thread_id,
