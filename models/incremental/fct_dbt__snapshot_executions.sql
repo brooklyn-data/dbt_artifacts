@@ -7,32 +7,22 @@ with snapshots as (
 
 ),
 
-snapshot_executions as (
+node_executions as (
 
     select *
-    from {{ ref('stg_dbt__snapshot_executions') }}
-
-),
-
-run_results as (
-
-    select *
-    from {{ ref('fct_dbt__run_results') }}
+    from {{ ref('stg_dbt__node_executions') }}
 
 ),
 
 snapshot_executions_incremental as (
 
-    select snapshot_executions.*
-    from snapshot_executions
-    -- Inner join with run results to enforce consistency and avoid race conditions.
-    -- https://github.com/brooklyn-data/dbt_artifacts/issues/75
-    inner join run_results on
-        snapshot_executions.artifact_run_id = run_results.artifact_run_id
+    select node_executions.*
+    from node_executions
+    where resource_type = 'snapshot'
 
     {% if is_incremental() %}
         -- this filter will only be applied on an incremental run
-        where snapshot_executions.artifact_generated_at > (select max(artifact_generated_at) from {{ this }})
+        where artifact_generated_at > (select max(artifact_generated_at) from {{ this }})
     {% endif %}
 
 ),
@@ -56,7 +46,7 @@ snapshot_executions_with_materialization as (
 fields as (
 
     select
-        snapshot_execution_id,
+        manifest_node_id as snapshot_execution_id,
         command_invocation_id,
         dbt_cloud_run_id,
         artifact_run_id,

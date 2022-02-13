@@ -1,30 +1,20 @@
 {{ config( materialized='incremental', unique_key='manifest_model_id' ) }}
 
-with dbt_models as (
+with dbt_nodes as (
 
-    select * from {{ ref('stg_dbt__models') }}
-
-),
-
-run_results as (
-
-    select *
-    from {{ ref('fct_dbt__run_results') }}
+    select * from {{ ref('stg_dbt__nodes') }}
 
 ),
 
 dbt_models_incremental as (
 
-    select dbt_models.*
-    from dbt_models
-    -- Inner join with run results to enforce consistency and avoid race conditions.
-    -- https://github.com/brooklyn-data/dbt_artifacts/issues/75
-    inner join run_results on
-        dbt_models.artifact_run_id = run_results.artifact_run_id
+    select *
+    from dbt_nodes
+    where resource_type = 'model'
 
     {% if is_incremental() %}
         -- this filter will only be applied on an incremental run
-        where coalesce(dbt_models.artifact_generated_at > (select max(artifact_generated_at) from {{ this }}), true)
+        where coalesce(artifact_generated_at > (select max(artifact_generated_at) from {{ this }}), true)
     {% endif %}
 
 ),
@@ -32,20 +22,20 @@ dbt_models_incremental as (
 fields as (
 
     select
-        manifest_model_id,
+        manifest_node_id as manifest_model_id,
         command_invocation_id,
         dbt_cloud_run_id,
         artifact_run_id,
         artifact_generated_at,
         node_id,
-        model_database,
-        model_schema,
+        node_database as model_database,
+        node_schema as model_schema,
         name,
         depends_on_nodes,
         package_name,
-        model_path,
+        node_path as model_path,
         checksum,
-        model_materialization
+        materialization as model_materialization
     from dbt_models_incremental
 
 )

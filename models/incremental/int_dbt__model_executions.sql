@@ -1,17 +1,17 @@
 {{ config( materialized='incremental', unique_key='model_execution_id' ) }}
 
-with model_executions as (
+with node_executions as (
 
     select *
-    from {{ ref('stg_dbt__model_executions') }}
+    from {{ ref('stg_dbt__node_executions') }}
 
 ),
 
 model_executions_incremental as (
 
     select *
-    from model_executions
-    -- NOTE: Consistency check for this model is done in the fact table not here. See: fct_dbt__model_executions.
+    from node_executions
+    where resource_type = 'model'
 
     {% if is_incremental() %}
         -- this filter will only be applied on an incremental run
@@ -23,7 +23,7 @@ model_executions_incremental as (
 fields as (
 
     select
-        model_execution_id,
+        node_execution_id as model_execution_id,
         command_invocation_id,
         dbt_cloud_run_id,
         artifact_run_id,
