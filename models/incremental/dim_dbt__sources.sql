@@ -12,10 +12,10 @@ dbt_sources_incremental as (
     from dbt_nodes
     where resource_type = 'source'
 
-    {% if is_incremental() %}
-        -- this filter will only be applied on an incremental run
-        and artifact_generated_at > (select max(artifact_generated_at) from {{ this }})
-    {% endif %}
+        {% if is_incremental() %}
+            -- this filter will only be applied on an incremental run
+            and artifact_generated_at > (select max(artifact_generated_at) from {{ this }})
+        {% endif %}
 
 ),
 

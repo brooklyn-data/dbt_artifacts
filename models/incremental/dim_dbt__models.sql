@@ -12,10 +12,10 @@ dbt_models_incremental as (
     from dbt_nodes
     where resource_type = 'model'
 
-    {% if is_incremental() %}
-        -- this filter will only be applied on an incremental run
-        and coalesce(artifact_generated_at > (select max(artifact_generated_at) from {{ this }}), true)
-    {% endif %}
+        {% if is_incremental() %}
+            -- this filter will only be applied on an incremental run
+            and coalesce(artifact_generated_at > (select max(artifact_generated_at) from {{ this }}), true)
+        {% endif %}
 
 ),
 

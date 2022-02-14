@@ -38,7 +38,7 @@ flattened as (
         node.value:config.materialized::string as materialization
     from manifests,
         lateral flatten(input => data:nodes) as node
-    
+
     union all
 
     select
@@ -64,7 +64,7 @@ flattened as (
         null as materialization
     from manifests,
         lateral flatten(input => data:exposures) as exposure
-    
+
     union all
 
     select

@@ -20,10 +20,10 @@ snapshot_executions_incremental as (
     from node_executions
     where resource_type = 'snapshot'
 
-    {% if is_incremental() %}
-        -- this filter will only be applied on an incremental run
-        and artifact_generated_at > (select max(artifact_generated_at) from {{ this }})
-    {% endif %}
+        {% if is_incremental() %}
+            -- this filter will only be applied on an incremental run
+            and artifact_generated_at > (select max(artifact_generated_at) from {{ this }})
+        {% endif %}
 
 ),
 
