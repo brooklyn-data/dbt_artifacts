@@ -14,6 +14,11 @@ snapshot-paths: ["snapshots"]
 target-path: "target"
 clean-targets: ["target", "dbt_modules"]
 
+vars:
+  dbt_artifacts:
+    dbt_artifacts_database: "{{ env_var('SNOWFLAKE_TEST_DATABASE') }}"
+    dbt_artifacts_schema: "dbt_artifacts_test_commit_{{ env_var('GITHUB_SHA') }}"
+
 models:
     +persist_docs:
       relation: true
