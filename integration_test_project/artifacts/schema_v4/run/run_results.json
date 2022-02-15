@@ -1,0 +1,801 @@
+{
+    "metadata": {
+        "dbt_schema_version": "https://schemas.getdbt.com/dbt/run-results/v4.json",
+        "dbt_version": "1.0.0",
+        "generated_at": "2022-02-14T13:02:15.726419Z",
+        "invocation_id": "ffa0ad0c-8b22-4ddf-9810-9de691424a1d",
+        "env": {}
+    },
+    "results": [
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:00:14.597083Z",
+                    "completed_at": "2022-02-14T13:00:14.605124Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:00:14.605511Z",
+                    "completed_at": "2022-02-14T13:00:20.711768Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 6.564259767532349,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.artifacts_integration_tests.incremental"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:00:21.163719Z",
+                    "completed_at": "2022-02-14T13:00:21.167767Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:00:21.173988Z",
+                    "completed_at": "2022-02-14T13:00:23.174633Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 2.420732259750366,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.artifacts_integration_tests.non_incremental"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:00:23.586816Z",
+                    "completed_at": "2022-02-14T13:00:23.591170Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:00:23.591566Z",
+                    "completed_at": "2022-02-14T13:00:25.109684Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 1.933786153793335,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.stg_dbt__artifacts"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:00:25.523422Z",
+                    "completed_at": "2022-02-14T13:00:25.529276Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:00:25.529673Z",
+                    "completed_at": "2022-02-14T13:00:45.908199Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 20.741601705551147,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.stg_dbt__exposures"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:00:46.267316Z",
+                    "completed_at": "2022-02-14T13:00:46.282927Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:00:46.291690Z",
+                    "completed_at": "2022-02-14T13:00:48.143140Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 2.2387638092041016,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.stg_dbt__model_executions"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:00:48.508419Z",
+                    "completed_at": "2022-02-14T13:00:48.514564Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:00:48.514976Z",
+                    "completed_at": "2022-02-14T13:00:50.086133Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 1.9415171146392822,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.stg_dbt__models"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:00:50.451038Z",
+                    "completed_at": "2022-02-14T13:00:50.454936Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:00:50.455236Z",
+                    "completed_at": "2022-02-14T13:00:52.264927Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 2.195175886154175,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.stg_dbt__run_results"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:00:52.648585Z",
+                    "completed_at": "2022-02-14T13:00:52.652650Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:00:52.653036Z",
+                    "completed_at": "2022-02-14T13:00:54.123485Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 1.8531138896942139,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.stg_dbt__run_results_env_keys"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:00:54.503392Z",
+                    "completed_at": "2022-02-14T13:00:54.509347Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:00:54.509743Z",
+                    "completed_at": "2022-02-14T13:00:56.294627Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 2.27803111076355,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.stg_dbt__seed_executions"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:00:56.783397Z",
+                    "completed_at": "2022-02-14T13:00:56.791554Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:00:56.792016Z",
+                    "completed_at": "2022-02-14T13:00:58.588025Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 2.2037808895111084,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.stg_dbt__seeds"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:00:58.989389Z",
+                    "completed_at": "2022-02-14T13:00:58.995463Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:00:58.995845Z",
+                    "completed_at": "2022-02-14T13:01:00.599025Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 1.9949820041656494,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.stg_dbt__snapshot_executions"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:01:00.987713Z",
+                    "completed_at": "2022-02-14T13:01:00.993830Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:01:00.994217Z",
+                    "completed_at": "2022-02-14T13:01:02.472925Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 1.8498399257659912,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.stg_dbt__snapshots"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:01:02.839906Z",
+                    "completed_at": "2022-02-14T13:01:02.847462Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:01:02.847899Z",
+                    "completed_at": "2022-02-14T13:01:04.412623Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 1.9522690773010254,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.stg_dbt__sources"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:01:04.794527Z",
+                    "completed_at": "2022-02-14T13:01:04.800064Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:01:04.800454Z",
+                    "completed_at": "2022-02-14T13:01:06.278832Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 1.8953368663787842,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.stg_dbt__test_executions"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:01:06.691429Z",
+                    "completed_at": "2022-02-14T13:01:06.696741Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:01:06.697212Z",
+                    "completed_at": "2022-02-14T13:01:08.308191Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 2.124574899673462,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.stg_dbt__tests"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:01:08.818333Z",
+                    "completed_at": "2022-02-14T13:01:08.826227Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:01:08.826731Z",
+                    "completed_at": "2022-02-14T13:01:12.626482Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 4.1829469203948975,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.int_dbt__model_executions"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:01:13.003477Z",
+                    "completed_at": "2022-02-14T13:01:14.286350Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:01:14.286830Z",
+                    "completed_at": "2022-02-14T13:01:17.618000Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 5.0042150020599365,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.fct_dbt__run_results"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:01:18.010940Z",
+                    "completed_at": "2022-02-14T13:01:18.018540Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:01:18.018994Z",
+                    "completed_at": "2022-02-14T13:01:22.334606Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 4.729243993759155,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.dim_dbt__exposures"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:01:22.741874Z",
+                    "completed_at": "2022-02-14T13:01:22.747982Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:01:22.748447Z",
+                    "completed_at": "2022-02-14T13:01:27.180303Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 4.823778867721558,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.dim_dbt__models"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:01:27.568027Z",
+                    "completed_at": "2022-02-14T13:01:27.574172Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:01:27.574565Z",
+                    "completed_at": "2022-02-14T13:01:31.020944Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 3.9328362941741943,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.dim_dbt__seeds"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:01:31.503030Z",
+                    "completed_at": "2022-02-14T13:01:31.507991Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:01:31.508268Z",
+                    "completed_at": "2022-02-14T13:01:35.026574Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 3.9187440872192383,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.dim_dbt__snapshots"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:01:35.424196Z",
+                    "completed_at": "2022-02-14T13:01:35.430546Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:01:35.430939Z",
+                    "completed_at": "2022-02-14T13:01:39.224417Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 4.195300102233887,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.dim_dbt__sources"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:01:39.620826Z",
+                    "completed_at": "2022-02-14T13:01:39.625458Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:01:39.625775Z",
+                    "completed_at": "2022-02-14T13:01:42.841914Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 3.5906448364257812,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.dim_dbt__tests"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:01:43.213844Z",
+                    "completed_at": "2022-02-14T13:01:43.220414Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:01:43.220825Z",
+                    "completed_at": "2022-02-14T13:01:47.726092Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 5.328763008117676,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.fct_dbt__test_executions"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:01:48.543865Z",
+                    "completed_at": "2022-02-14T13:01:48.550443Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:01:48.550803Z",
+                    "completed_at": "2022-02-14T13:01:53.316890Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 5.139446020126343,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.fct_dbt__model_executions"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:01:53.685940Z",
+                    "completed_at": "2022-02-14T13:01:53.692566Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:01:53.693027Z",
+                    "completed_at": "2022-02-14T13:01:57.806787Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 4.497574090957642,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.fct_dbt__seed_executions"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:01:58.764652Z",
+                    "completed_at": "2022-02-14T13:01:58.772791Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:01:58.773302Z",
+                    "completed_at": "2022-02-14T13:02:02.267260Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 3.883533000946045,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.fct_dbt__snapshot_executions"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:02:02.650168Z",
+                    "completed_at": "2022-02-14T13:02:02.655291Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:02:02.655708Z",
+                    "completed_at": "2022-02-14T13:02:05.078845Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 2.7920031547546387,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.dim_dbt__current_models"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:02:05.444332Z",
+                    "completed_at": "2022-02-14T13:02:05.449889Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:02:05.450303Z",
+                    "completed_at": "2022-02-14T13:02:07.802631Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 2.915356159210205,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.fct_dbt__exposures_updates"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:02:08.361842Z",
+                    "completed_at": "2022-02-14T13:02:08.366510Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:02:08.366918Z",
+                    "completed_at": "2022-02-14T13:02:11.207592Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 3.2082679271698,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.fct_dbt__latest_full_model_executions"
+        },
+        {
+            "status": "success",
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:02:11.571466Z",
+                    "completed_at": "2022-02-14T13:02:11.575895Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:02:11.576253Z",
+                    "completed_at": "2022-02-14T13:02:15.338313Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 4.1513659954071045,
+            "adapter_response": {
+                "_message": "SUCCESS 1",
+                "code": "SUCCESS",
+                "rows_affected": 1
+            },
+            "message": "SUCCESS 1",
+            "failures": null,
+            "unique_id": "model.dbt_artifacts.fct_dbt__critical_path"
+        }
+    ],
+    "elapsed_time": 125.93402290344238,
+    "args": {
+        "write_json": true,
+        "use_colors": true,
+        "printer_width": 80,
+        "version_check": true,
+        "partial_parse": true,
+        "static_parser": true,
+        "profiles_dir": ".dbt",
+        "send_anonymous_usage_stats": true,
+        "event_buffer_size": 100000,
+        "which": "run",
+        "rpc_method": "run",
+        "indirect_selection": "eager"
+    }
+}
