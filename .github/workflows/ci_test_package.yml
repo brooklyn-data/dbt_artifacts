@@ -15,6 +15,7 @@ env:
   SNOWFLAKE_TEST_ROLE: ${{ secrets.SNOWFLAKE_TEST_ROLE }}
   SNOWFLAKE_TEST_DATABASE: ${{ secrets.SNOWFLAKE_TEST_DATABASE }}
   SNOWFLAKE_TEST_WAREHOUSE: ${{ secrets.SNOWFLAKE_TEST_WAREHOUSE }}
+  GITHUB_SHA: ${{ github.sha}}
 
 jobs:
   ci-workflow:
@@ -33,28 +34,8 @@ jobs:
           python-version: '3.8.x'
           architecture: 'x64'
 
-      - name: Setup dbt
-        run: |
-          python3 -m venv venv
-          . venv/bin/activate
-          pip install --upgrade pip setuptools
-          pip install dbt-snowflake --upgrade
+      - name: Install tox
+        run: python3 -m pip install tox
 
-      - name: Run Tests - Snowflake
-        run: |
-          . venv/bin/activate
-          cd ./integration_tests
-          echo $DBT_PROFILES_DIR
-          dbt deps
-          dbt run-operation create_artifact_resources
-          dbt seed --full-refresh
-          dbt run-operation upload_dbt_artifacts --args '{filenames: [manifest, run_results]}'
-          dbt run --full-refresh
-          dbt run
-          dbt run-operation upload_dbt_artifacts --args '{filenames: [manifest, run_results]}'
-          dbt test
-          dbt run-operation upload_dbt_artifacts --args '{filenames: [run_results]}'
-          dbt source snapshot-freshness
-          dbt run-operation upload_dbt_artifacts --args '{filenames: [sources]}'
-          dbt docs generate
-          dbt run-operation upload_dbt_artifacts --args '{filenames: [catalog]}'
+      - name: Run Tests
+        run: tox -e integration

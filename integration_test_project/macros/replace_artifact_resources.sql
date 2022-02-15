@@ -1,16 +1,16 @@
-{% macro create_artifact_resources() %}
+{% macro create_or_replace_artifact_resources() %}
 
 {% set src_dbt_artifacts = source('dbt_artifacts', 'artifacts') %}
 
 {{ create_schema(src_dbt_artifacts) }}
 
 {% set create_stage_query %}
-create stage if not exists {{ src_dbt_artifacts }}
+create or replace stage {{ src_dbt_artifacts }}
 file_format = (type = json);
 {% endset %}
 
 {% set create_table_query %}
-create table if not exists {{ src_dbt_artifacts }} (
+create or replace table {{ src_dbt_artifacts }} (
     data variant,
     generated_at timestamp,
     path string,

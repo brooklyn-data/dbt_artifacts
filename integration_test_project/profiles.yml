@@ -17,5 +17,5 @@ dbt_artifacts:
       role: "{{ env_var('SNOWFLAKE_TEST_ROLE') }}"
       database: "{{ env_var('SNOWFLAKE_TEST_DATABASE') }}"
       warehouse: "{{ env_var('SNOWFLAKE_TEST_WAREHOUSE') }}"
-      schema: dbt_artifacts_integration_tests_snowflake
+      schema: dbt_artifacts_test_commit_"{{ env_var('GITHUB_SHA') }}"
       threads: 1
