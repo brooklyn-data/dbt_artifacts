@@ -130,6 +130,25 @@ Thank you for sharing your work with the community!
 
 ## Contributing
 
+### Tests
+
+Install pipx:
+```bash
+pip install pipx
+pipx ensurepath
+```
+
+Install tox:
+```bash
+pipx install tox
+```
+
+Create a dbt profile named `dbt_artifacts` which dbt can use to test the package. From this directory, run:
+
+```
+tox -e integration
+```
+
 ### SQLFluff
 
 We use SQLFluff to keep SQL style consistent. A GitHub action automatically tests pull requests and adds annotations where there are failures. SQLFluff can also be run locally with `tox`. To install tox, we recommend using `pipx`.

@@ -9,13 +9,14 @@ analysis-paths: ["analysis"]
 test-paths: ["tests"]
 seed-paths: ["data"]
 macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
 
 target-path: "target"
 clean-targets: ["target", "dbt_modules"]
 
 models:
-    +persist_docs:
-      relation: true
-      columns: true
+  +persist_docs:
+    relation: true
+    columns: true
 seeds:
   +quote_columns: false

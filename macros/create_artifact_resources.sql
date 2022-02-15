@@ -9,11 +9,11 @@
 {% set src_manifest_sources = source('dbt_artifacts', 'dbt_run_manifest_sources') %}
 {% set src_manifest_exposures = source('dbt_artifacts', 'dbt_run_manifest_exposures') %}
 
-{{ create_schema( src_dbt_artifacts ) }}
+{{ create_schema(src_dbt_artifacts) }}
 
 {% set create_stage_query %}
 create stage if not exists {{ src_dbt_artifacts }}
-file_format = ( type =  json );
+file_format = (type = json);
 {% endset %}
 
 {% set create_new_stage_query %}

@@ -1,0 +1,45 @@
+{
+    "metadata": {
+        "dbt_schema_version": "https://schemas.getdbt.com/dbt/sources/v3.json",
+        "dbt_version": "1.0.0",
+        "generated_at": "2022-02-14T13:14:24.787728Z",
+        "invocation_id": "4f3b61a0-df9a-4204-bcaa-968cbbfb2a44",
+        "env": {}
+    },
+    "results": [
+        {
+            "unique_id": "source.dbt_artifacts.dbt_artifacts.artifacts",
+            "max_loaded_at": "2022-02-14T13:14:23.803000+00:00",
+            "snapshotted_at": "2022-02-14T13:14:23.803000+00:00",
+            "max_loaded_at_time_ago_in_s": 0.0,
+            "status": "pass",
+            "criteria": {
+                "warn_after": {
+                    "count": null,
+                    "period": null
+                },
+                "error_after": {
+                    "count": 24,
+                    "period": "hour"
+                },
+                "filter": null
+            },
+            "adapter_response": {},
+            "timing": [
+                {
+                    "name": "compile",
+                    "started_at": "2022-02-14T13:14:22.815275Z",
+                    "completed_at": "2022-02-14T13:14:22.815280Z"
+                },
+                {
+                    "name": "execute",
+                    "started_at": "2022-02-14T13:14:22.815545Z",
+                    "completed_at": "2022-02-14T13:14:24.784986Z"
+                }
+            ],
+            "thread_id": "Thread-1",
+            "execution_time": 1.971242904663086
+        }
+    ],
+    "elapsed_time": 5.132533073425293
+}
