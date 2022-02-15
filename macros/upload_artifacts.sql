@@ -1,4 +1,4 @@
-{% macro upload_dbt_artifacts(filenames) %}
+{% macro upload_dbt_artifacts(filenames, prefix='target/') %}
 
 {% set src_dbt_artifacts = source('dbt_artifacts', 'artifacts') %}
 
@@ -14,7 +14,7 @@
     {% set file = filename ~ '.json' %}
 
     {% set put_query %}
-        put file://target/{{ file }} @{{ src_dbt_artifacts }} auto_compress=true;
+        put file://{{ prefix }}{{ file }} @{{ src_dbt_artifacts }} auto_compress=true;
     {% endset %}
 
     {% do log("Uploading " ~ file ~ " to Stage: " ~ put_query, info=True) %}
@@ -45,4 +45,3 @@
 {% do run_query(remove_query) %}
 
 {% endmacro %}
-
