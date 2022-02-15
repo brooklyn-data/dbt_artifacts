@@ -73,8 +73,7 @@ surrogate_key as (
     -- and visa versa.
     inner join base_nodes on (
         fields.artifact_run_id = base_nodes.artifact_run_id
-        and fields.node_id = base_nodes.node_id
-    )
+        and fields.node_id = base_nodes.node_id)
 
 )
 
