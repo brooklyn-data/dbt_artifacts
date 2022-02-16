@@ -12,6 +12,13 @@ base_nodes as (
 
 ),
 
+base_v2 as (
+
+    select *
+    from {{ source('dbt_artifacts', 'dbt_run_result_nodes') }}
+
+),
+
 run_results as (
 
     select *
@@ -22,7 +29,15 @@ run_results as (
 
 fields as (
 
+    -- V1 uploads
     {{ flatten_results("run_results") }}
+
+    union all
+
+    -- V2 uploads
+    -- NB: We can safely select * because we know the schemas are the same
+    -- as they're made by the same macro.
+    select * from base_v2
 
 ),
 

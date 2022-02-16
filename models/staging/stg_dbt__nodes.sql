@@ -5,6 +5,13 @@ with base as (
 
 ),
 
+base_v2 as (
+
+    select *
+    from {{ source('dbt_artifacts', 'dbt_run_manifest_nodes') }}
+
+),
+
 manifests as (
 
     select *
@@ -15,7 +22,15 @@ manifests as (
 
 flattened as (
 
+    -- V1 uploads
     {{ flatten_manifest("manifests") }}
+    
+    union all
+
+    -- V2 uploads
+    -- NB: We can safely select * because we know the schemas are the same
+    -- as they're made by the same macro.
+    select * from base_v2
 
 ),
 

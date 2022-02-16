@@ -5,6 +5,13 @@ with base as (
 
 ),
 
+base_v2 as (
+
+    select *
+    from {{ source('dbt_artifacts', 'dbt_run_results') }}
+
+),
+
 run_results as (
 
     select *
@@ -23,6 +30,7 @@ dbt_run as (
 
 fields as (
 
+    -- V1
     select
         generated_at as artifact_generated_at,
         command_invocation_id,
@@ -36,6 +44,23 @@ fields as (
         data:args:models as selected_models,
         data:args:target::string as target
     from dbt_run
+
+    union all
+
+    -- V2
+    select
+        artifact_generated_at,
+        command_invocation_id,
+        dbt_cloud_run_id,
+        artifact_run_id,
+        dbt_version,
+        env,
+        elapsed_time,
+        execution_command,
+        was_full_refresh,
+        selected_models,
+        target
+    from base_v2
 
 )
 
