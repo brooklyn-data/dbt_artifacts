@@ -22,7 +22,7 @@
                 run_results.$1:metadata as metadata,
                 run_results.$1:args as args,
                 run_results.$1:elapsed_time::float as elapsed_time
-            from  @{{ artifact_stage }} as run_results
+            from @{{ artifact_stage }} as run_results
 
         )
         
@@ -58,7 +58,7 @@
                 metadata:env:DBT_CLOUD_RUN_ID::int as dbt_cloud_run_id,
                 {{ make_artifact_run_id() }} as artifact_run_id,
                 metadata:generated_at::timestamp_tz as generated_at
-            from  @{{ artifact_stage }} as run_results
+            from @{{ artifact_stage }} as run_results
 
         )
 
@@ -79,7 +79,7 @@
                 {{ make_artifact_run_id() }} as artifact_run_id,
                 metadata:generated_at::timestamp_tz as generated_at,
                 manifests.$1 as data
-            from  @{{ artifact_stage }} as manifests
+            from @{{ artifact_stage }} as manifests
 
         )
 
