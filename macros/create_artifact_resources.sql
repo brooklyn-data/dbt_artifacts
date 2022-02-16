@@ -9,17 +9,17 @@
 
 {{ create_schema(src_dbt_artifacts) }}
 
-{% set create_stage_query %}
+{% set create_v1_stage_query %}
 create stage if not exists {{ src_dbt_artifacts }}
 file_format = (type = json);
 {% endset %}
 
-{% set create_new_stage_query %}
+{% set create_v2_stage_query %}
 create stage if not exists {{ artifact_stage }}
 file_format = (type = json);
 {% endset %}
 
-{% set create_table_query %}
+{% set create_v1_table_query %}
 create table if not exists {{ src_dbt_artifacts }} (
     data variant,
     generated_at timestamp,
@@ -28,7 +28,7 @@ create table if not exists {{ src_dbt_artifacts }} (
 );
 {% endset %}
 
-{% set create_results_query %}
+{% set create_v2_results_query %}
 create table if not exists {{ src_results }} (
     command_invocation_id string,
     dbt_cloud_run_id int,
@@ -46,7 +46,7 @@ create table if not exists {{ src_results }} (
 );
 {% endset %}
 
-{% set create_result_nodes_table_query %}
+{% set create_v2_result_nodes_table_query %}
 create table if not exists {{ src_result_nodes }} (
     command_invocation_id string,
     dbt_cloud_run_id int,
@@ -66,7 +66,7 @@ create table if not exists {{ src_result_nodes }} (
 );
 {% endset %}
 
-{% set create_manifest_nodes_table_query %}
+{% set create_v2_manifest_nodes_table_query %}
 create table if not exists {{ src_manifest_nodes }} (
     command_invocation_id string,
     dbt_cloud_run_id int,
@@ -92,22 +92,22 @@ create table if not exists {{ src_manifest_nodes }} (
 );
 {% endset %}
 
-{% do log("Creating Old Stage: " ~ create_stage_query, info=True) %}
-{% do run_query(create_stage_query) %}
+{% do log("Creating V1 Stage: " ~ create_v1_stage_query, info=True) %}
+{% do run_query(create_v1_stage_query) %}
 
-{% do log("Creating New Stage: " ~ create_new_stage_query, info=True) %}
-{% do run_query(create_new_stage_query) %}
+{% do log("Creating V2 Stage: " ~ create_v2_stage_query, info=True) %}
+{% do run_query(create_v2_stage_query) %}
 
-{% do log("Creating Table: " ~ create_table_query, info=True) %}
-{% do run_query(create_table_query) %}
+{% do log("Creating V1 Table: " ~ create_v1_table_query, info=True) %}
+{% do run_query(create_v1_table_query) %}
 
-{% do log("Creating Results Table: " ~ create_results_query, info=True) %}
-{% do run_query(create_results_query) %}
+{% do log("Creating V2 Results Table: " ~ create_v2_results_query, info=True) %}
+{% do run_query(create_v2_results_query) %}
 
-{% do log("Creating Result Nodes Table: " ~ create_result_nodes_table_query, info=True) %}
-{% do run_query(create_result_nodes_table_query) %}
+{% do log("Creating V2 Result Nodes Table: " ~ create_v2_result_nodes_table_query, info=True) %}
+{% do run_query(create_v2_result_nodes_table_query) %}
 
-{% do log("Creating Manifest Nodes Table: " ~ create_manifest_nodes_table_query, info=True) %}
-{% do run_query(create_manifest_nodes_table_query) %}
+{% do log("Creating V2 Manifest Nodes Table: " ~ create_v2_manifest_nodes_table_query, info=True) %}
+{% do run_query(create_v2_manifest_nodes_table_query) %}
 
 {% endmacro %}
