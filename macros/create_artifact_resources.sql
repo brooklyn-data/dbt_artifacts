@@ -47,7 +47,7 @@ create table if not exists {{ src_results }} (
 {% endset %}
 
 {% set create_v2_result_nodes_table_query %}
-create table if not exists {{ src_result_nodes }} (
+create table if not exists {{ src_results_nodes }} (
     command_invocation_id string,
     dbt_cloud_run_id int,
     artifact_run_id string,
