@@ -28,6 +28,7 @@
         
         select
             metadata:invocation_id::string as command_invocation_id,
+            -- NOTE: DBT_CLOUD_RUN_ID is case sensitive here 
             metadata:env:DBT_CLOUD_RUN_ID::int as dbt_cloud_run_id,
             {{ make_artifact_run_id() }} as artifact_run_id,
             metadata:generated_at::timestamp_tz as artifact_generated_at,
@@ -54,6 +55,7 @@
                 run_results.$1:metadata as metadata,
                 run_results.$1 as data,
                 metadata:invocation_id::string as command_invocation_id,
+                -- NOTE: DBT_CLOUD_RUN_ID is case sensitive here 
                 metadata:env:DBT_CLOUD_RUN_ID::int as dbt_cloud_run_id,
                 {{ make_artifact_run_id() }} as artifact_run_id,
                 metadata:generated_at::timestamp_tz as generated_at
@@ -75,6 +77,7 @@
             select
                 manifests.$1:metadata as metadata,
                 metadata:invocation_id::string as command_invocation_id,
+                -- NOTE: DBT_CLOUD_RUN_ID is case sensitive here 
                 metadata:env:DBT_CLOUD_RUN_ID::int as dbt_cloud_run_id,
                 {{ make_artifact_run_id() }} as artifact_run_id,
                 metadata:generated_at::timestamp_tz as generated_at,
