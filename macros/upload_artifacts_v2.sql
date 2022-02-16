@@ -29,7 +29,7 @@
         select
             metadata:invocation_id::string as command_invocation_id,
             metadata:env:DBT_CLOUD_RUN_ID::int as dbt_cloud_run_id,
-            sha2_hex(coalesce(dbt_cloud_run_id::string, command_invocation_id::string), 256) as artifact_run_id,
+            {{ make_artifact_run_id() }} as artifact_run_id,
             metadata:generated_at::timestamp_ntz as artifact_generated_at,
             metadata:dbt_version::string as dbt_version,
             metadata:env as env,
@@ -55,7 +55,7 @@
                 run_results.$1 as data,
                 metadata:invocation_id::string as command_invocation_id,
                 metadata:env:DBT_CLOUD_RUN_ID::int as dbt_cloud_run_id,
-                sha2_hex(coalesce(dbt_cloud_run_id::string, command_invocation_id::string), 256) as artifact_run_id,
+                {{ make_artifact_run_id() }} as artifact_run_id,
                 metadata:generated_at::timestamp_ntz as generated_at
             from  @{{ artifact_stage }} as run_results
 
@@ -76,7 +76,7 @@
                 manifests.$1:metadata as metadata,
                 metadata:invocation_id::string as command_invocation_id,
                 metadata:env:DBT_CLOUD_RUN_ID::int as dbt_cloud_run_id,
-                sha2_hex(coalesce(dbt_cloud_run_id::string, command_invocation_id::string), 256) as artifact_run_id,
+                {{ make_artifact_run_id() }} as artifact_run_id,
                 metadata:generated_at::timestamp_ntz as generated_at,
                 manifests.$1 as data
             from  @{{ artifact_stage }} as manifests
