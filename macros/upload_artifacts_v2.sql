@@ -14,7 +14,7 @@
 {% endset %}
 
 {% set results_query %}
-    begin;
+
     insert into {{ src_results }}
         with raw_data as (
 
@@ -42,11 +42,10 @@
             metadata,
             args
         from raw_data;
-    commit;
+
 {% endset %}
 
 {% set result_nodes_query %}
-    begin;
 
     insert into {{ src_result_nodes }}
         with raw_data as (
@@ -65,11 +64,9 @@
 
         {{ flatten_results("raw_data") }};
 
-    commit;
 {% endset %}
 
 {% set manifest_nodes_query %}
-    begin;
 
     insert into {{ src_manifest_nodes }}
         with raw_data as (
@@ -88,7 +85,6 @@
 
         {{ flatten_manifest("raw_data") }};
 
-    commit;
 {% endset %}
 
 {% do log("Clearing existing files from Stage: " ~ remove_query, info=True) %}
