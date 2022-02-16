@@ -15,7 +15,7 @@ base_nodes as (
 base_v2 as (
 
     select *
-    from {{ source('dbt_artifacts', 'dbt_run_result_nodes') }}
+    from {{ source('dbt_artifacts', 'dbt_run_results_nodes') }}
 
 ),
 
