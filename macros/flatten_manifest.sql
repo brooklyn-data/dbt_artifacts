@@ -22,9 +22,9 @@
         node.value:checksum.checksum::string as checksum,
         node.value:config.materialized::string as materialization,
         -- Include the raw JSON for future proofing.
-        node as node_json
-    from {{ manifest_cte_name }},
-        lateral flatten(input => data:nodes) as node
+        node.value as node_json
+    from {{ manifest_cte_name }} as manifests,
+        lateral flatten(input => manifests.data:nodes) as node
 
     union all
 
@@ -50,9 +50,9 @@
         null as checksum,
         null as materialization,
         -- Include the raw JSON for future proofing.
-        node as node_json
-    from {{ manifest_cte_name }},
-        lateral flatten(input => data:exposures) as exposure
+        exposure.value as node_json
+    from {{ manifest_cte_name }} as manifests,
+        lateral flatten(input => manifests.data:exposures) as exposure
 
     union all
 
@@ -78,8 +78,8 @@
         null as checksum,
         null as materialization,
         -- Include the raw JSON for future proofing.
-        node as node_json
-    from {{ manifest_cte_name }},
-        lateral flatten(input => data:sources) as source
+        source.value as node_json
+    from {{ manifest_cte_name }} as manifests,
+        lateral flatten(input => manifests.data:sources) as source
 
 {% endmacro %}

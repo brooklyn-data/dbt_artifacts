@@ -25,8 +25,8 @@
         result.value:adapter_response:rows_affected::int as rows_affected,
 
         -- Include the raw JSON for future proofing.
-        result as result_json
-    from {{ results_cte_name }},
-        lateral flatten(input => data:results) as result
+        result.value as result_json
+    from {{ results_cte_name }} as run_results,
+        lateral flatten(input => run_results.data:results) as result
 
 {% endmacro %}

@@ -37,6 +37,8 @@ create table if not exists {{ src_results }} (
     dbt_version string,
     env variant,
     elapsed_time double,
+    execution_command string,
+    was_full_refresh boolean,
     selected_models variant,
     target string,
     metadata variant,

@@ -83,7 +83,7 @@
 
         )
 
-        {{ flatten_manifest("manifests") }};
+        {{ flatten_manifest("raw_data") }};
 
     commit;
 {% endset %}

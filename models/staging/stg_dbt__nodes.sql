@@ -24,7 +24,7 @@ flattened as (
 
     -- V1 uploads
     {{ flatten_manifest("manifests") }}
-    
+
     union all
 
     -- V2 uploads
