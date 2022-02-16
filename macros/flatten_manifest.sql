@@ -20,7 +20,9 @@
         null as relation_name,
         node.value:path::string as node_path,
         node.value:checksum.checksum::string as checksum,
-        node.value:config.materialized::string as materialization
+        node.value:config.materialized::string as materialization,
+        -- Include the raw JSON for future proofing.
+        node as node_json
     from {{ manifest_cte_name }},
         lateral flatten(input => data:nodes) as node
 
@@ -46,7 +48,9 @@
         null as relation_name,
         null as node_path,
         null as checksum,
-        null as materialization
+        null as materialization,
+        -- Include the raw JSON for future proofing.
+        node as node_json
     from {{ manifest_cte_name }},
         lateral flatten(input => data:exposures) as exposure
 
@@ -72,7 +76,9 @@
         source.value:relation_name::string as relation_name,
         source.value:path::string as node_path,
         null as checksum,
-        null as materialization
+        null as materialization,
+        -- Include the raw JSON for future proofing.
+        node as node_json
     from {{ manifest_cte_name }},
         lateral flatten(input => data:sources) as source
 

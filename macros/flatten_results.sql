@@ -22,7 +22,10 @@
         -- should we calculate it instead?
         coalesce(result.value:execution_time::float, 0) as total_node_runtime,
 
-        result.value:adapter_response:rows_affected::int as rows_affected
+        result.value:adapter_response:rows_affected::int as rows_affected,
+
+        -- Include the raw JSON for future proofing.
+        result as result_json
     from {{ results_cte_name }},
         lateral flatten(input => data:results) as result
 
