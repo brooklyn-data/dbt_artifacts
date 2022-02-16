@@ -7,33 +7,23 @@ with seeds as (
 
 ),
 
-seed_executions as (
+node_executions as (
 
     select *
-    from {{ ref('stg_dbt__seed_executions') }}
-
-),
-
-run_results as (
-
-    select *
-    from {{ ref('fct_dbt__run_results') }}
+    from {{ ref('stg_dbt__node_executions') }}
 
 ),
 
 seed_executions_incremental as (
 
-    select seed_executions.*
-    from seed_executions
-    -- Inner join with run results to enforce consistency and avoid race conditions.
-    -- https://github.com/brooklyn-data/dbt_artifacts/issues/75
-    inner join run_results on
-        seed_executions.artifact_run_id = run_results.artifact_run_id
+    select *
+    from node_executions
+    where resource_type = 'seed'
 
-    {% if is_incremental() %}
-        -- this filter will only be applied on an incremental run
-        where seed_executions.artifact_generated_at > (select max(artifact_generated_at) from {{ this }})
-    {% endif %}
+        {% if is_incremental() %}
+            -- this filter will only be applied on an incremental run
+            and artifact_generated_at > (select max(artifact_generated_at) from {{ this }})
+        {% endif %}
 
 ),
 
@@ -56,7 +46,7 @@ seed_executions_with_materialization as (
 fields as (
 
     select
-        seed_execution_id,
+        node_execution_id as seed_execution_id,
         command_invocation_id,
         dbt_cloud_run_id,
         artifact_run_id,
