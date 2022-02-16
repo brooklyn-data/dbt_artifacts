@@ -41,8 +41,8 @@ sources:
             description: Raw JSON structure of the results.metadata field.
           - name: args
             description: Raw JSON structure of the results.args field.
-      - name: dbt_run_result_nodes
-        identifier: "{{ var('dbt_artifacts_result_nodes_table', 'dbt_run_result_nodes') }}"
+      - name: dbt_run_results_nodes
+        identifier: "{{ var('dbt_artifacts_result_nodes_table', 'dbt_run_results_nodes') }}"
         description: |
           The source table containing the loaded and flattened results from run_results.json loaded artifacts. This belongs
           to the _new style_ upload. See the README for more info.
