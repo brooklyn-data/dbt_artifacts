@@ -20,14 +20,6 @@ run_results as (
 
 ),
 
-dbt_run as (
-
-    select *
-    from run_results
-    where data:args:which in ('run', 'seed', 'snapshot', 'test')
-
-),
-
 fields as (
 
     -- V1
@@ -43,7 +35,7 @@ fields as (
         coalesce(data:args:full_refresh, 'false')::boolean as was_full_refresh,
         data:args:models as selected_models,
         data:args:target::string as target
-    from dbt_run
+    from run_results
 
     union all
 

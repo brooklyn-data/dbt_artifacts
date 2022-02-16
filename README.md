@@ -76,7 +76,7 @@ Snowflake makes it possible to load local files into your warehouse. We've inclu
    to your production run to load files into your table.
    
    **V2 Macro**: Use the `upload_dbt_artifacts_v2` macro ([source](macros/upload_artifacts.sql)). You only
-   need to run the macro after `run`, `test`, `seed` or `build` operations.
+   need to run the macro after `run`, `test`, `seed`, `snapshot` or `build` operations.
    ```txt
    $ dbt  run
    $ dbt  run-operation upload_dbt_artifacts_v2

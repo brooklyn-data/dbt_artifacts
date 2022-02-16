@@ -16,7 +16,7 @@ file_format = (type = json);
 
 {% set create_new_stage_query %}
 create stage if not exists {{ artifact_stage }}
-file_format = ( type =  json );
+file_format = (type = json);
 {% endset %}
 
 {% set create_table_query %}
