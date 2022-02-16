@@ -6,7 +6,7 @@
 {% set artifact_stage = var('dbt_artifacts_stage', 'dbt_artifacts_stage') %}
 
 {% set src_results = source('dbt_artifacts', 'dbt_run_results') %}
-{% set src_result_nodes = source('dbt_artifacts', 'dbt_run_result_nodes') %}
+{% set src_results_nodes = source('dbt_artifacts', 'dbt_run_results_nodes') %}
 {% set src_manifest_nodes = source('dbt_artifacts', 'dbt_run_manifest_nodes') %}
 
 {% set remove_query %}
@@ -47,7 +47,7 @@
 
 {% set result_nodes_query %}
 
-    insert into {{ src_result_nodes }}
+    insert into {{ src_results_nodes }}
         with raw_data as (
 
             select
