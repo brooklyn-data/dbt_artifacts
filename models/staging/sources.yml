@@ -77,4 +77,3 @@ sources:
             description: Unique id for the node, in the form of exposure.[package_name].[exposure_name]
           - name: node_json
             description: Raw JSON structure of the manifest node.
-  
