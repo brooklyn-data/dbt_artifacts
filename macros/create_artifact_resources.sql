@@ -1,4 +1,6 @@
-{% macro create_artifact_resources() %}
+-- NOTE: The `replace` option is designed only to be used during testing.
+-- Using it in production will do a hard reset of your existing artifacts.
+{% macro create_artifact_resources(replace=false) %}
 
 {% set src_dbt_artifacts = source('dbt_artifacts', 'artifacts') %}
 {% set artifact_stage = var('dbt_artifacts_stage', 'dbt_artifacts_stage') %}
@@ -10,17 +12,17 @@
 {{ create_schema(src_dbt_artifacts) }}
 
 {% set create_v1_stage_query %}
-create stage if not exists {{ src_dbt_artifacts }}
+create {% if replace %} or replace {% endif %} stage if not exists {{ src_dbt_artifacts }}
 file_format = (type = json);
 {% endset %}
 
 {% set create_v2_stage_query %}
-create stage if not exists {{ artifact_stage }}
+create {% if replace %} or replace {% endif %} stage if not exists {{ artifact_stage }}
 file_format = (type = json);
 {% endset %}
 
 {% set create_v1_table_query %}
-create table if not exists {{ src_dbt_artifacts }} (
+create {% if replace %} or replace {% endif %} table if not exists {{ src_dbt_artifacts }} (
     data variant,
     generated_at timestamp,
     path string,
@@ -29,7 +31,7 @@ create table if not exists {{ src_dbt_artifacts }} (
 {% endset %}
 
 {% set create_v2_results_query %}
-create table if not exists {{ src_results }} (
+create {% if replace %} or replace {% endif %} table if not exists {{ src_results }} (
     command_invocation_id string,
     dbt_cloud_run_id int,
     artifact_run_id string,
@@ -47,7 +49,7 @@ create table if not exists {{ src_results }} (
 {% endset %}
 
 {% set create_v2_result_nodes_table_query %}
-create table if not exists {{ src_results_nodes }} (
+create {% if replace %} or replace {% endif %} table if not exists {{ src_results_nodes }} (
     command_invocation_id string,
     dbt_cloud_run_id int,
     artifact_run_id string,
@@ -67,7 +69,7 @@ create table if not exists {{ src_results_nodes }} (
 {% endset %}
 
 {% set create_v2_manifest_nodes_table_query %}
-create table if not exists {{ src_manifest_nodes }} (
+create {% if replace %} or replace {% endif %} table if not exists {{ src_manifest_nodes }} (
     command_invocation_id string,
     dbt_cloud_run_id int,
     artifact_run_id string,
