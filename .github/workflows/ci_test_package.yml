@@ -37,5 +37,8 @@ jobs:
       - name: Install tox
         run: python3 -m pip install tox
 
-      - name: Run Tests
+      - name: Run V1 Tests
         run: tox -e integration
+      
+      - name: Run V2 Tests
+        run: tox -e integration_v2
