@@ -17,7 +17,7 @@ expected_results as (
     select
         runs,
         -- Hard coded expected results. Potentially to improve later.
-        1 as expected_runs
+        7 as expected_runs
     from grouped_runs
     where runs != expected_runs
 )
