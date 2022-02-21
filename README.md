@@ -50,8 +50,8 @@ Note that the model materializations are defined in this package's `dbt_project.
 
 3. Run `dbt deps`.
 
-## Generating the source table
-This package requires that the source data exists in Snowflake. There are two supported ways of doing this:
+## Uploading the artifacts
+This package uploads the artifact files into Snowflake. There are two supported ways of doing this:
 - The _V2_ way of doing this which flattens the uploaded files on load. This supports files over
   16MB (the limit of a variant field in snowflake) and also makes rebuilds of the materialised
   models much faster because the JSON unpacking is done once on load. The downside of this approach
@@ -59,7 +59,7 @@ This package requires that the source data exists in Snowflake. There are two su
   _"local file"_ method. Loading via cloud storage is also _possible_ but we recommend users
   copy the method used in `upload_artifacts_v2.sql` to create their own approach.
 - The _V1_ or _legacy_ option, which uploads the files unprocessed. This affords much more flexibility
-  in their use, but the is subject to field size limits and higher compute loads to reprocess the
+  in their use, but is subject to field size limits and higher compute loads to reprocess the
   large JSON payloads in future. This may be appropriate for more custom setups or for small projects
   but for large projects which aren't extending the functionality of the package significantly, we
   recommend the _V2_ method.
