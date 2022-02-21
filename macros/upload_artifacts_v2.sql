@@ -1,4 +1,4 @@
-{% macro upload_dbt_artifacts_v2() %}
+{% macro upload_dbt_artifacts_v2(prefix='target/') %}
 
 {# All main dbt commands produce both files and so set both by default #}
 {% set filenames = ['manifest', 'run_results'] %}
@@ -95,7 +95,7 @@
     {% set file = filename ~ '.json' %}
 
     {% set put_query %}
-        put file://target/{{ file }} @{{ artifact_stage }} auto_compress=true;
+        put file://{{ prefix }}{{ file }} @{{ artifact_stage }} auto_compress=true;
     {% endset %}
 
     {% do log("Uploading " ~ file ~ " to Stage: " ~ put_query, info=True) %}
