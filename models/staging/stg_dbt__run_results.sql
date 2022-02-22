@@ -5,6 +5,13 @@ with base as (
 
 ),
 
+base_v2 as (
+
+    select *
+    from {{ source('dbt_artifacts', 'dbt_run_results') }}
+
+),
+
 run_results as (
 
     select *
@@ -13,18 +20,11 @@ run_results as (
 
 ),
 
-dbt_run as (
-
-    select *
-    from run_results
-    where data:args:which in ('run', 'seed', 'snapshot', 'test')
-
-),
-
 fields as (
 
+    -- V1
     select
-        generated_at as artifact_generated_at,
+        generated_at::timestamp_tz as artifact_generated_at,
         command_invocation_id,
         dbt_cloud_run_id,
         artifact_run_id,
@@ -35,7 +35,24 @@ fields as (
         coalesce(data:args:full_refresh, 'false')::boolean as was_full_refresh,
         data:args:models as selected_models,
         data:args:target::string as target
-    from dbt_run
+    from run_results
+
+    union all
+
+    -- V2
+    select
+        artifact_generated_at,
+        command_invocation_id,
+        dbt_cloud_run_id,
+        artifact_run_id,
+        dbt_version,
+        env,
+        elapsed_time,
+        execution_command,
+        was_full_refresh,
+        selected_models,
+        target
+    from base_v2
 
 )
 

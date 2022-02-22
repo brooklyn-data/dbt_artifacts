@@ -12,6 +12,13 @@ base_nodes as (
 
 ),
 
+base_v2 as (
+
+    select *
+    from {{ source('dbt_artifacts', 'dbt_run_results_nodes') }}
+
+),
+
 run_results as (
 
     select *
@@ -22,31 +29,15 @@ run_results as (
 
 fields as (
 
-    select
-        run_results.command_invocation_id,
-        run_results.dbt_cloud_run_id,
-        run_results.artifact_run_id,
-        run_results.generated_at as artifact_generated_at,
-        run_results.data:args:which::string as execution_command,
-        coalesce(run_results.data:args:full_refresh, 'false')::boolean as was_full_refresh,
-        result.value:unique_id::string as node_id,
-        split(result.value:thread_id::string, '-')[1]::integer as thread_id,
-        result.value:status::string as status,
-        result.value:message::string as message,
+    -- V1 uploads
+    {{ flatten_results("run_results") }}
 
-        -- The first item in the timing array is the model-level `compile`
-        result.value:timing[0]:started_at::timestamp_ntz as compile_started_at,
+    union all
 
-        -- The second item in the timing array is `execute`.
-        result.value:timing[1]:completed_at::timestamp_ntz as query_completed_at,
-
-        -- Confusingly, this does not match the delta of the above two timestamps.
-        -- should we calculate it instead?
-        coalesce(result.value:execution_time::float, 0) as total_node_runtime,
-
-        result.value:adapter_response:rows_affected::int as rows_affected
-    from run_results,
-        lateral flatten(input => data:results) as result
+    -- V2 uploads
+    -- NB: We can safely select * because we know the schemas are the same
+    -- as they're made by the same macro.
+    select * from base_v2
 
 ),
 

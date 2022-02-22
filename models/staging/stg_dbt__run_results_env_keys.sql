@@ -1,31 +1,23 @@
 with base as (
 
     select *
-    from {{ ref('stg_dbt__artifacts') }}
-
-),
-
-run_results as (
-
-    select *
-    from base
-    where artifact_type = 'run_results.json'
+    from {{ ref('stg_dbt__run_results') }}
 
 ),
 
 dbt_run as (
 
     select *
-    from run_results
-    where data:args:which = 'run'
+    from base
+    where execution_command = 'run'
 
 ),
 
 env_keys as (
 
-    select distinct env.key
+    select distinct env_key.key
     from dbt_run,
-        lateral flatten(input => data:metadata:env) as env
+        lateral flatten(input => env) as env_key
     -- Sort results to ensure things are deterministic
     order by 1
 
