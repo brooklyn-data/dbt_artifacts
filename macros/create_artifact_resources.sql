@@ -15,7 +15,7 @@ file_format = (type = json);
 {% endset %}
 
 {% set create_v2_stage_query %}
-create stage if not exists {{ artifact_stage }}
+create stage if not exists {{ src_dbt_artifacts.database }}.{{ src_dbt_artifacts.schema }}.{{ artifact_stage }}
 file_format = (type = json);
 {% endset %}
 
