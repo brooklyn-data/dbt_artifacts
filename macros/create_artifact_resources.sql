@@ -1,7 +1,7 @@
 {% macro create_artifact_resources() %}
 
 {% set src_dbt_artifacts = source('dbt_artifacts', 'artifacts') %}
-{% set artifact_stage = var('dbt_artifacts_stage', 'dbt_artifacts_stage') %}
+{% set artifact_stage = src_dbt_artifacts.database ~ "." ~ src_dbt_artifacts.schema ~ "." ~ var('dbt_artifacts_stage', 'dbt_artifacts_stage') %}
 
 {% set src_results = source('dbt_artifacts', 'dbt_run_results') %}
 {% set src_results_nodes = source('dbt_artifacts', 'dbt_run_results_nodes') %}

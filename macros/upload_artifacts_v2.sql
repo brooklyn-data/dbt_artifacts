@@ -3,7 +3,8 @@
 {# All main dbt commands produce both files and so set both by default #}
 {% set filenames = ['manifest', 'run_results'] %}
 
-{% set artifact_stage = var('dbt_artifacts_stage', 'dbt_artifacts_stage') %}
+{% set src_dbt_artifacts = source('dbt_artifacts', 'artifacts') %}
+{% set artifact_stage = src_dbt_artifacts.database ~ "." ~ src_dbt_artifacts.schema ~ "." ~ var('dbt_artifacts_stage', 'dbt_artifacts_stage') %}
 
 {% set src_results = source('dbt_artifacts', 'dbt_run_results') %}
 {% set src_results_nodes = source('dbt_artifacts', 'dbt_run_results_nodes') %}
