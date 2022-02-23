@@ -3,7 +3,7 @@
 {% set src_dbt_artifacts = source('dbt_artifacts', 'artifacts') %}
 {% set src_results = source('dbt_artifacts', 'dbt_run_results') %}
 {% set src_results_nodes = source('dbt_artifacts', 'dbt_run_results_nodes') %}
-{% set src_manifest_nodes = source('dbt_artifacts', 'dbt_run_manifest_nodes') %}
+{% set src_manifest_nodes = source('dbt_artifacts', 'dbt_manifest_nodes') %}
 
 {% set migrate_results_query %}
 

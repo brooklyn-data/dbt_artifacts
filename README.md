@@ -34,9 +34,7 @@ vars:
     dbt_artifacts_table: your_table # optional, default is 'artifacts'
     dbt_artifacts_results_table: your_table # optional, default is 'dbt_run_results'
     dbt_artifacts_result_nodes_table: your_table # optional, default is 'dbt_run_result_nodes'
-    dbt_artifacts_manifest_nodes_table: your_table # optional, default is 'dbt_run_manifest_nodes'
-    dbt_artifacts_manifest_sources_table: your_table # optional, default is 'dbt_run_manifest_sources'
-    dbt_artifacts_manifest_exposures_table: your_table # optional, default is 'dbt_run_manifest_exposures'
+    dbt_artifacts_manifest_nodes_table: your_table # optional, default is 'dbt_manifest_nodes'
 
 models:
   ...
