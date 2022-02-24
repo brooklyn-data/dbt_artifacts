@@ -8,14 +8,14 @@
 
     {% set dedupe_results_query %}
 
-        create temporary table if not exists {{ artifact_table.database }}.{{ artifact_table.schema }}.dbt_temp_artifact_table as
+        create temporary table {{ artifact_table.database }}.{{ artifact_table.schema }}.dbt_temp_artifact_table as
             select distinct * from {{ artifact_table }};
         
         truncate {{ artifact_table }};
 
         insert into {{ artifact_table }} select * from dbt_temp_artifact_table;
 
-        drop table dbt_temp_artifact_table;
+        drop table {{ artifact_table.database }}.{{ artifact_table.schema }}.dbt_temp_artifact_table;
 
     {% endset %}
 
