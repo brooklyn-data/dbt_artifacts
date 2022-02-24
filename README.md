@@ -55,7 +55,8 @@ This package uploads the artifact files into Snowflake. There are two supported 
   models much faster because the JSON unpacking is done once on load. The downside of this approach
   is that the upload is much heavier and more complex, as such we only directly support the
   _"local file"_ method. Loading via cloud storage is also _possible_ but we recommend users
-  copy the method used in `upload_artifacts_v2.sql` to create their own approach.
+  copy the method used in `upload_artifacts_v2.sql` to create their own approach. To learn more
+  about _migrating_ from a V1 setup to a V2 setup - see the section below.
 - The _V1_ or _legacy_ option, which uploads the files unprocessed. This affords much more flexibility
   in their use, but is subject to field size limits and higher compute loads to reprocess the
   large JSON payloads in future. This may be appropriate for more custom setups or for small projects
@@ -115,6 +116,37 @@ from (
 )
 file_format = (type = 'JSON')
 ```
+
+### Migration from a V1 setup to a V2 setup.
+
+If you've been running using the V1 upload for some time, you'll have built up a meaningfully
+large single artifacts table. This can make the full refresh performance of this package very
+sluggish as the JSON payloads have to be processed on each run. To solve this, we provide
+a migration script to transition existing V1 artifacts to V2 format.
+
+> **NOTE**: A _highly_ recommend taking a backup of your artifact tables before attempting this
+> process. Not only is this good practice, but the scripts don't do this themselves as so if
+> a failure happens during the process you are in charge of your own rollback process.
+
+1. Upgrade the `dbt_artifacts` package to a version of at least `0.8.0` to ensure all the
+   required features for this process are present.
+  
+2. Run `dbt run`, `dbt build` or wait for your automated build process to update your live
+   dbt models in the project to those which use both the V1 and V2 artifacts.
+
+3. Update your regular build processes to use the `upload_dbt_artifacts_v2` macro instead
+   of `upload_dbt_artifacts` so that any _new_ artifacts are loaded in the new format.
+
+4. Run the `migrate_artifacts_v1_to_v2` run operation to process the bulk flattening of 
+   your existing artifacts into the new format. This operation can take some time on larger
+   projects and if it fails can leave your project in a state that is difficult to roll back
+   from. _Make sure you took a backup of your original artifacts table as stated above_.
+
+5. _[Optionally]_ Run the `dedupe_dbt_artifacts_v2` to remove any duplicate records in the
+   V2 artifact tables. Historically, V1 artifacts are deduplicated _on read_, but V2 artifacts
+   are not and assume no duplicates are present in the project. In normal operation this is
+   to be expected, but for long running projects some may have snuck in. Duplicate records
+   will cause `unique` schema tests in the project to fail.
 
 ## Usage
 The models will be picked up on your next `dbt run` command. You can also run the package specifically with `dbt run -m dbt_artifacts`.
