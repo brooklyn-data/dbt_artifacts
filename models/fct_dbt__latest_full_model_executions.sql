@@ -12,11 +12,26 @@ model_executions as (
 
 ),
 
+model_execution_counts as (
+
+    select
+        artifact_run_id,
+        count(*) as executed_models
+    from model_executions
+    group by artifact_run_id
+
+),
+
 latest_full as (
 
     select *
     from run_results
-    where execution_command = 'run' and selected_models is null and was_full_refresh = false
+    inner join model_execution_counts on
+        run_results.artifact_run_id = model_execution_counts.artifact_run_id
+    where execution_command = 'run'
+    and selected_models is null
+    and was_full_refresh = false
+    and executed_models >= 1
     order by artifact_generated_at desc
     limit 1
 
