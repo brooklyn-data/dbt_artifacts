@@ -13,7 +13,7 @@
         
         truncate {{ artifact_table }};
 
-        insert into {{ artifact_table }} select * from dbt_temp_artifact_table;
+        insert into {{ artifact_table }} select * from {{ artifact_table.database }}.{{ artifact_table.schema }}.dbt_temp_artifact_table;
 
         drop table {{ artifact_table.database }}.{{ artifact_table.schema }}.dbt_temp_artifact_table;
 
