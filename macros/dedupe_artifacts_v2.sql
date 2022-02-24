@@ -8,7 +8,7 @@
 
     {% set dedupe_results_query %}
 
-        create temporary table if not exists dbt_temp_artifact_table as
+        create temporary table if not exists {{ artifact_table.database }}.{{ artifact_table.schema }}.dbt_temp_artifact_table as
             select distinct * from {{ artifact_table }};
         
         truncate {{ artifact_table }};
