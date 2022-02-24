@@ -24,7 +24,7 @@ model_execution_counts as (
 
 latest_full as (
 
-    select *
+    select run_results.*
     from run_results
     inner join model_execution_counts on
         run_results.artifact_run_id = model_execution_counts.artifact_run_id
