@@ -8,7 +8,7 @@ with base as (
 base_v2 as (
 
     select *
-    from {{ source('dbt_artifacts', 'dbt_run_manifest_nodes') }}
+    from {{ source('dbt_artifacts', 'dbt_manifest_nodes') }}
 
 ),
 
