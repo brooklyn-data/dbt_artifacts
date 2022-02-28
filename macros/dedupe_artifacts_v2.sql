@@ -9,7 +9,8 @@
     {% set dedupe_results_query %}
 
         create temporary table {{ artifact_table.database }}.{{ artifact_table.schema }}.dbt_temp_artifact_table as
-            select distinct * from {{ artifact_table }};
+            select * from {{ artifact_table }}
+            qualify row_number() over (partition by artifact_run_id, artifact_generated_at) = 1;
         
         truncate {{ artifact_table }};
 

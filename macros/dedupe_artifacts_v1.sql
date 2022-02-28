@@ -5,7 +5,8 @@
 {% set dedupe_results_query %}
 
     create temporary table {{ src_dbt_artifacts.database }}.{{ src_dbt_artifacts.schema }}.dbt_temp_artifact_table as
-        select distinct * from {{ src_dbt_artifacts }};
+        select * from {{ src_dbt_artifacts }}
+        qualify row_number() over (partition by generated_at) = 1;
     
     truncate {{ src_dbt_artifacts }};
 
