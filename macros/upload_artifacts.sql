@@ -21,19 +21,31 @@
     {% do run_query(put_query) %}
 
     {% set copy_query %}
-        begin;
-        copy into {{ src_dbt_artifacts }} from
-            (
-                select
-                $1 as data,
-                $1:metadata:generated_at::timestamp_ntz as generated_at,
-                metadata$filename as path,
-                regexp_substr(metadata$filename, '([a-z_]+.json)') as artifact_type
-                from  @{{ src_dbt_artifacts }}
-            )
-            file_format=(type='JSON')
-            on_error='skip_file';
-        commit;
+
+        -- Merge to avoid duplicates
+        merge into {{ src_dbt_artifacts }} as old_data using (
+            select
+            $1 as data,
+            $1:metadata:generated_at::timestamp_ntz as generated_at,
+            metadata$filename as path,
+            regexp_substr(metadata$filename, '([a-z_]+.json)') as artifact_type
+            from  @{{ src_dbt_artifacts }}
+        ) as new_data
+        -- Matching on the data payload itself. That's probably the most efficient.
+        on old_data.data = new_data.data
+        -- NB: No clause for "when matched" - as matching rows should be skipped.
+        when not matched then insert (
+            data,
+            generated_at,
+            path,
+            artifact_type
+        ) values (
+            new_data.data,
+            new_data.generated_at,
+            new_data.path,
+            new_data.artifact_type
+        )
+
     {% endset %}
 
     {% do log("Copying " ~ file ~ " from Stage: " ~ copy_query, info=True) %}
