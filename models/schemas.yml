@@ -204,10 +204,16 @@ models:
         description: Timestamp of when the source artifact was generated.
       - name: node_id
         description: Unique id for the node, in the form of model.[package_name].[model_name]
+      - name: node_database
+        description: The database of the node.
+      - name: node_description
+        description: The description of the node.
       - name: name
         description: The source node name.
       - name: source_name
         description: The name of the source.
+      - name: source_loader
+        description: The loader of the source.
       - name: source_schema
       - name: package_name
         description: Package source is defined in.
