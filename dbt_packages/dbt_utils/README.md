@@ -3,11 +3,15 @@ This [dbt](https://github.com/dbt-labs/dbt) package contains macros that can be 
 ## Installation Instructions
 Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_utils/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 
+## Compatibility matrix
+For compatibility details between versions of dbt-core and dbt-utils, [see this spreadsheet](https://docs.google.com/spreadsheets/d/1RoDdC69auAtrwiqmkRsgcFdZ3MdNpeKcJrWkmEpXVIs/edit#gid=0).
+
 ----
 ## Contents
 
 **[Schema tests](#schema-tests)**
   - [equal_rowcount](#equal_rowcount-source)
+  - [fewer_rows_than](#fewer_rows_than-source)
   - [equality](#equality-source)
   - [expression_is_true](#expression_is_true-source)
   - [recency](#recency-source)
@@ -63,7 +67,7 @@ Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_utils/latest/) for the lates
 [Materializations](#materializations):
 - [insert_by_period](#insert_by_period-source)
 
----
+----
 ### Schema Tests
 #### equal_rowcount ([source](macros/schema_tests/equal_rowcount.sql))
 This schema test asserts the that two relations have the same number of rows.
@@ -225,6 +229,8 @@ models:
 #### unique_where ([source](macros/schema_tests/test_unique_where.sql))
 This test validates that there are no duplicate values present in a field for a subset of rows by specifying a `where` clause.
 
+*Warning*: This test is no longer supported. Starting in dbt v0.20.0, the built-in `unique` test supports a `where` config. [See the dbt docs for more details](https://docs.getdbt.com/reference/resource-configs/where).
+
 **Usage:**
 ```yaml
 version: 2
@@ -240,6 +246,8 @@ models:
 
 #### not_null_where ([source](macros/schema_tests/test_not_null_where.sql))
 This test validates that there are no null values present in a column for a subset of rows by specifying a `where` clause.
+
+*Warning*: This test is no longer supported. Starting in dbt v0.20.0, the built-in `not_null` test supports a `where` config. [See the dbt docs for more details](https://docs.getdbt.com/reference/resource-configs/where).
 
 **Usage:**
 ```yaml
@@ -369,53 +377,58 @@ models:
         partition_by: customer_id
         gaps: allowed
 ```
+<details>
+<summary>Additional `gaps` and `zero_length_range_allowed` examples</summary>
 
-**Understanding the `gaps` argument:**
-Here are a number of examples for each allowed `gaps` argument.
-* `gaps: not_allowed`: The upper bound of one record must be the lower bound of
-the next record.
+  **Understanding the `gaps` argument:**
 
-| lower_bound | upper_bound |
-|-------------|-------------|
-| 0           | 1           |
-| 1           | 2           |
-| 2           | 3           |
+  Here are a number of examples for each allowed `gaps` argument.
+  * `gaps: not_allowed`: The upper bound of one record must be the lower bound of
+  the next record.
 
-* `gaps: allowed` (default): There may be a gap between the upper bound of one
-record and the lower bound of the next record.
+  | lower_bound | upper_bound |
+  |-------------|-------------|
+  | 0           | 1           |
+  | 1           | 2           |
+  | 2           | 3           |
 
-| lower_bound | upper_bound |
-|-------------|-------------|
-| 0           | 1           |
-| 2           | 3           |
-| 3           | 4           |
+  * `gaps: allowed` (default): There may be a gap between the upper bound of one
+  record and the lower bound of the next record.
 
-* `gaps: required`: There must be a gap between the upper bound of one record and
-the lower bound of the next record (common for date ranges).
+  | lower_bound | upper_bound |
+  |-------------|-------------|
+  | 0           | 1           |
+  | 2           | 3           |
+  | 3           | 4           |
 
-| lower_bound | upper_bound |
-|-------------|-------------|
-| 0           | 1           |
-| 2           | 3           |
-| 4           | 5           |
+  * `gaps: required`: There must be a gap between the upper bound of one record and
+  the lower bound of the next record (common for date ranges).
 
-**Understanding the `zero_length_range_allowed` argument:**
-Here are a number of examples for each allowed `zero_length_range_allowed` argument.
-* `zero_length_range_allowed: false`: (default) The upper bound of each record must be greater than its lower bound.
+  | lower_bound | upper_bound |
+  |-------------|-------------|
+  | 0           | 1           |
+  | 2           | 3           |
+  | 4           | 5           |
 
-| lower_bound | upper_bound |
-|-------------|-------------|
-| 0           | 1           |
-| 1           | 2           |
-| 2           | 3           |
+  **Understanding the `zero_length_range_allowed` argument:**
+  Here are a number of examples for each allowed `zero_length_range_allowed` argument.
+  * `zero_length_range_allowed: false`: (default) The upper bound of each record must be greater than its lower bound.
 
-* `zero_length_range_allowed: true`: The upper bound of each record can be greater than or equal to its lower bound.
+  | lower_bound | upper_bound |
+  |-------------|-------------|
+  | 0           | 1           |
+  | 1           | 2           |
+  | 2           | 3           |
 
-| lower_bound | upper_bound |
-|-------------|-------------|
-| 0           | 1           |
-| 2           | 2           |
-| 3           | 4           |
+  * `zero_length_range_allowed: true`: The upper bound of each record can be greater than or equal to its lower bound.
+
+  | lower_bound | upper_bound |
+  |-------------|-------------|
+  | 0           | 1           |
+  | 2           | 2           |
+  | 3           | 4           |
+
+</details>
 
 #### sequential_values ([source](macros/schema_tests/sequential_values.sql))
 This test confirms that a column contains sequential values. It can be used
@@ -453,7 +466,7 @@ in isolation.
 We generally recommend testing this uniqueness condition by either:
 * generating a [surrogate_key](#surrogate_key-source) for your model and testing
 the uniqueness of said key, OR
-* passing the `unique` test a coalesce of the columns (as discussed [here](https://docs.getdbt.com/docs/building-a-dbt-project/testing-and-documentation/testing/#testing-expressions)).
+* passing the `unique` test a concatenation of the columns (as discussed [here](https://docs.getdbt.com/docs/building-a-dbt-project/testing-and-documentation/testing/#testing-expressions)).
 
 However, these approaches can become non-perfomant on large data sets, in which
 case we recommend using this test instead.
@@ -654,17 +667,25 @@ This macro returns a dictionary from a sql query, so that you don't need to inte
 
 **Usage:**
 ```
--- Returns a dictionary of the users table where the state is California
-{% set california_cities = dbt_utils.get_query_results_as_dict("select * from" ~ ref('cities') ~ "where state = 'CA' and city is not null ") %}
-select
-  city,
-{% for city in california_cities %}
-  sum(case when city = {{ city }} then 1 else 0 end) as users_in_{{ city }},
-{% endfor %}
-  count(*) as total
-from {{ ref('users') }}
+{% set sql_statement %}
+    select city, state from {{ ref('users') }}
+{% endset %}
 
-group by 1
+{%- set places = dbt_utils.get_query_results_as_dict(sql_statement) -%}
+
+select
+
+    {% for city in places['CITY'] | unique -%}
+      sum(case when city = '{{ city }}' then 1 else 0 end) as users_in_{{ dbt_utils.slugify(city) }},
+    {% endfor %}
+
+    {% for state in places['STATE'] | unique -%}
+      sum(case when state = '{{ state }}' then 1 else 0 end) as users_in_{{ state }},
+    {% endfor %}
+
+    count(*) as total_total
+
+from {{ ref('users') }}
 ```
 
 ### SQL generators
@@ -726,7 +747,9 @@ group by 1,2,3
 ```
 
 #### star ([source](macros/sql/star.sql))
-This macro generates a list of all fields that exist in the `from` relation, excluding any fields listed in the `except` argument. The construction is identical to `select * from {{ref('my_model')}}`, replacing star (`*`) with the star macro. This macro also has an optional `relation_alias` argument that will prefix all generated fields with an alias (`relation_alias`.`field_name`). The macro also has optional `prefix` and `suffix` arguments, which will be appropriately concatenated to each field name in the output (`prefix` ~ `field_name` ~ `suffix`).
+This macro generates a comma-separated list of all fields that exist in the `from` relation, excluding any fields listed in the `except` argument. The construction is identical to `select * from {{ref('my_model')}}`, replacing star (`*`) with the star macro. This macro also has an optional `relation_alias` argument that will prefix all generated fields with an alias (`relation_alias`.`field_name`). 
+
+The macro also has optional `prefix` and `suffix` arguments. When one or both are provided, they will be concatenated onto each field's alias in the output (`prefix` ~ `field_name` ~ `suffix`). NB: This prevents the output from being used in any context other than a select statement.
 
 **Usage:**
 ```sql
@@ -1039,7 +1062,7 @@ select
 order_id,
 {%- for payment_method in payment_methods %}
 sum(case when payment_method = '{{ payment_method }}' then amount end)
-  as {{ slugify(payment_method) }}_amount,
+  as {{ dbt_utils.slugify(payment_method) }}_amount,
 
 {% endfor %}
 ...
@@ -1157,10 +1180,10 @@ dbt_utils.default__datediff
 
 ### Getting started with dbt
 
-- [What is dbt]?
-- Read the [dbt viewpoint]
-- [Installation]
-- Join the [chat][slack-url] on Slack for live questions and support.
+- [What is dbt](https://docs.getdbt.com/docs/introduction)?
+- Read the [dbt viewpoint](https://docs.getdbt.com/docs/about/viewpoint)
+- [Installation](https://docs.getdbt.com/dbt-cli/installation)
+- Join the [chat](https://www.getdbt.com/community/) on Slack for live questions and support.
 
 
 ## Code of Conduct
