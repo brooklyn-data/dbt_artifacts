@@ -10,7 +10,11 @@
 
         create temporary table {{ artifact_table.database }}.{{ artifact_table.schema }}.dbt_temp_artifact_table as
             select * from {{ artifact_table }}
-            qualify row_number() over (partition by artifact_run_id, artifact_generated_at) = 1;
+            qualify row_number() over (
+                partition by artifact_run_id, artifact_generated_at
+                -- NB: Snowflake requires an order by clause, although all rows will be the same within a partition.
+                order by artifact_generated_at
+            ) = 1;
         
         truncate {{ artifact_table }};
 

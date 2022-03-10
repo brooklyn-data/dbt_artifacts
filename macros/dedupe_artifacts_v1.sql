@@ -6,7 +6,11 @@
 
     create temporary table {{ src_dbt_artifacts.database }}.{{ src_dbt_artifacts.schema }}.dbt_temp_artifact_table as
         select * from {{ src_dbt_artifacts }}
-        qualify row_number() over (partition by generated_at) = 1;
+        qualify row_number() over (
+            partition by generated_at
+            -- NB: Snowflake requires an order by clause, although all rows will be the same within a partition.
+            order by generated_at
+        ) = 1;
     
     truncate {{ src_dbt_artifacts }};
 
