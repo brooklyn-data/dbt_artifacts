@@ -35,10 +35,7 @@ snapshot_executions_with_materialization as (
         snapshots.name
     from snapshot_executions_incremental
     left join snapshots on
-        (
-            snapshot_executions_incremental.command_invocation_id = snapshots.command_invocation_id
-            or snapshot_executions_incremental.dbt_cloud_run_id = snapshots.dbt_cloud_run_id
-        )
+        snapshot_executions_incremental.command_invocation_id = snapshots.command_invocation_id
         and snapshot_executions_incremental.node_id = snapshots.node_id
 
 ),

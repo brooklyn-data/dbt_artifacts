@@ -63,7 +63,7 @@ surrogate_key as (
     -- Inner join so that we only represent results for nodes which definitely have a manifest
     -- and visa versa.
     inner join base_nodes on (
-        fields.artifact_run_id = base_nodes.artifact_run_id
+        fields.command_invocation_id = base_nodes.command_invocation_id
         and fields.node_id = base_nodes.node_id)
 
 )
