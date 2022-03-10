@@ -29,9 +29,9 @@ latest_full as (
     inner join model_execution_counts on
         run_results.artifact_run_id = model_execution_counts.artifact_run_id
     where run_results.execution_command = 'run'
-    and run_results.selected_models is null
-    and run_results.was_full_refresh = false
-    and model_execution_counts.executed_models >= 1
+        and run_results.selected_models is null
+        and run_results.was_full_refresh = false
+        and model_execution_counts.executed_models >= 1
     order by run_results.artifact_generated_at desc
     limit 1
 
