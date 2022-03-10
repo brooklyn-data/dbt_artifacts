@@ -2,7 +2,7 @@
 
 {% set src_results = source('dbt_artifacts', 'dbt_run_results') %}
 {% set src_results_nodes = source('dbt_artifacts', 'dbt_run_results_nodes') %}
-{% set src_manifest_nodes = source('dbt_artifacts', 'dbt_run_manifest_nodes') %}
+{% set src_manifest_nodes = source('dbt_artifacts', 'dbt_manifest_nodes') %}
 
 {% for artifact_table in [src_results, src_results_nodes, src_manifest_nodes] %}
 

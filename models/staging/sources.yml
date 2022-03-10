@@ -57,8 +57,8 @@ sources:
             description: Unique id for the node, in the form of exposure.[package_name].[exposure_name]
           - name: result_json
             description: Raw JSON structure of the result node.
-      - name: dbt_run_manifest_nodes
-        identifier: "{{ var('dbt_artifacts_manifest_nodes_table', 'dbt_run_manifest_nodes') }}"
+      - name: dbt_manifest_nodes
+        identifier: "{{ var('dbt_artifacts_manifest_nodes_table', 'dbt_manifest_nodes') }}"
         description: |
           The source table containing the loaded and flattened nodes (including tests, seeds, sources, models and
           exposures) from manifest.json loaded artifacts. Note that within the raw manifest file, exposures and sources

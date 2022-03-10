@@ -5,7 +5,7 @@
 
 {% set src_results = source('dbt_artifacts', 'dbt_run_results') %}
 {% set src_results_nodes = source('dbt_artifacts', 'dbt_run_results_nodes') %}
-{% set src_manifest_nodes = source('dbt_artifacts', 'dbt_run_manifest_nodes') %}
+{% set src_manifest_nodes = source('dbt_artifacts', 'dbt_manifest_nodes') %}
 
 {{ create_schema(src_dbt_artifacts) }}
 
