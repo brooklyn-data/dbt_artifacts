@@ -55,13 +55,10 @@ create table if not exists {{ src_results_nodes }} (
     execution_command string,
     was_full_refresh boolean,
     node_id string,
-    thread_id integer,
     status string,
-    message string,
     compile_started_at timestamp_tz,
     query_completed_at timestamp_tz,
     total_node_runtime float,
-    rows_affected int,
     result_json variant
 );
 {% endset %}
@@ -78,18 +75,6 @@ create table if not exists {{ src_manifest_nodes }} (
     node_schema string,
     node_description string,
     name string,
-    depends_on_nodes array,
-    depends_on_sources array,
-    exposure_type string,
-    exposure_owner string,
-    exposure_maturity string,
-    source_name string,
-    source_loader string,
-    package_name string,
-    relation_name string,
-    node_path string,
-    checksum string,
-    materialization string,
     node_json variant
 );
 {% endset %}
