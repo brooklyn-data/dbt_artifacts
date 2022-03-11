@@ -12,7 +12,7 @@
             order by generated_at
         ) = 1;
 
-    create or replace table {{ src_dbt_artifacts }} clone {{ artifact_table.database }}.{{ artifact_table.schema }}.dbt_temp_artifact_table;
+    create or replace table {{ src_dbt_artifacts }} clone {{ src_dbt_artifacts.database }}.{{ src_dbt_artifacts.schema }}.dbt_temp_artifact_table;
 
     drop table {{ src_dbt_artifacts.database }}.{{ src_dbt_artifacts.schema }}.dbt_temp_artifact_table;
 
