@@ -38,7 +38,7 @@
             elapsed_time,
             args:which::string as execution_command,
             coalesce(args:full_refresh, 'false')::boolean as was_full_refresh,
-            args:models as selected_models,
+            coalesce(args:models, args:select) as selected_models,
             args:target::string as target,
             metadata,
             args
