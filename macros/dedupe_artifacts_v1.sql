@@ -11,10 +11,8 @@
             -- NB: Snowflake requires an order by clause, although all rows will be the same within a partition.
             order by generated_at
         ) = 1;
-    
-    truncate {{ src_dbt_artifacts }};
 
-    insert into {{ src_dbt_artifacts }} select * from {{ src_dbt_artifacts.database }}.{{ src_dbt_artifacts.schema }}.dbt_temp_artifact_table;
+    create or replace table {{ src_dbt_artifacts }} clone {{ artifact_table.database }}.{{ artifact_table.schema }}.dbt_temp_artifact_table;
 
     drop table {{ src_dbt_artifacts.database }}.{{ src_dbt_artifacts.schema }}.dbt_temp_artifact_table;
 

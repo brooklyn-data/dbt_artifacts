@@ -20,9 +20,7 @@
                 order by artifact_generated_at
             ) = 1;
         
-        truncate {{ artifact_table }};
-
-        insert into {{ artifact_table }} select * from {{ artifact_table.database }}.{{ artifact_table.schema }}.dbt_temp_artifact_table;
+        create or replace {{ artifact_table }} clone {{ artifact_table.database }}.{{ artifact_table.schema }}.dbt_temp_artifact_table;
 
         drop table {{ artifact_table.database }}.{{ artifact_table.schema }}.dbt_temp_artifact_table;
 
