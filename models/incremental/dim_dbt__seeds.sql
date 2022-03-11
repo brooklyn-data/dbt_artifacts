@@ -34,7 +34,7 @@ fields as (
         to_array(node_json:depends_on:nodes) as depends_on_nodes,
         node_json:package_name::string as package_name,
         node_json:path::string as seed_path,
-        node_json:checksum.checksum::string as checksum,
+        node_json:checksum.checksum::string as checksum
     from dbt_seeds_incremental
 
 )

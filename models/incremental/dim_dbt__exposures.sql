@@ -40,7 +40,7 @@ fields as (
         f.value::string as output_feeds,
         t.node_json:package_name::string as package_name
     from dbt_exposures_incremental as t,
-        lateral flatten(input => depends_on_nodes) as f
+        lateral flatten(input => to_array(t.node_json:depends_on:nodes)) as f
 
 )
 
