@@ -31,12 +31,12 @@ fields as (
         node_database,
         node_description,
         name,
-        source_name,
-        source_loader,
+        node_json:source_name::string as source_name,
+        node_json:loader::string as source_loader,
         node_schema as source_schema,
-        package_name,
-        relation_name,
-        node_path as source_path
+        node_json:package_name::string as package_name,
+        node_json:relation_name::string as relation_name,
+        node_json:path::string as source_path
     from dbt_sources_incremental
 
 )

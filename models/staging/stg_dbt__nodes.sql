@@ -48,18 +48,7 @@ surrogate_key as (
         node_schema,
         node_description,
         name,
-        depends_on_nodes,
-        depends_on_sources,
-        exposure_type,
-        exposure_owner,
-        exposure_maturity,
-        source_name,
-        source_loader,
-        package_name,
-        relation_name,
-        node_path,
-        checksum,
-        materialization
+        node_json
     from flattened
 
 )

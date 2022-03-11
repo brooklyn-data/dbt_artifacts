@@ -1,3 +1,6 @@
+-- NOTE: We only flatten the fields likely to be joined or filtered
+-- at this stage. The rest are flattened later in more specific models.
+
 {% macro flatten_manifest(manifest_cte_name) %}
 
     select
@@ -11,19 +14,7 @@
         node.value:schema::string as node_schema,
         node.value:description::string as node_description,
         node.value:name::string as name,
-        to_array(node.value:depends_on:nodes) as depends_on_nodes,
-        null as depends_on_sources,
-        null as exposure_type,
-        null as exposure_owner,
-        null as exposure_maturity,
-        null as source_name,
-        null as source_loader,
-        node.value:package_name::string as package_name,
-        null as relation_name,
-        node.value:path::string as node_path,
-        node.value:checksum.checksum::string as checksum,
-        node.value:config.materialized::string as materialization,
-        -- Include the raw JSON for future proofing.
+        -- Include the raw JSON to unpack other values.
         node.value as node_json
     from {{ manifest_cte_name }} as manifests,
         lateral flatten(input => manifests.data:nodes) as node
@@ -41,19 +32,7 @@
         null as node_schema,
         null as node_description,
         exposure.value:name::string as name,
-        to_array(exposure.value:depends_on:nodes) as depends_on_nodes,
-        to_array(exposure.value:sources:nodes) as depends_on_sources,
-        exposure.value:type::string as exposure_type,
-        exposure.value:owner:name::string as exposure_owner,
-        exposure.value:maturity::string as exposure_maturity,
-        null as source_name,
-        null as source_loader,
-        exposure.value:package_name::string as package_name,
-        null as relation_name,
-        null as node_path,
-        null as checksum,
-        null as materialization,
-        -- Include the raw JSON for future proofing.
+        -- Include the raw JSON to unpack other values.
         exposure.value as node_json
     from {{ manifest_cte_name }} as manifests,
         lateral flatten(input => manifests.data:exposures) as exposure
@@ -71,19 +50,7 @@
         source.value:schema::string as node_schema,
         source.value:description::string as node_description,
         source.value:name::string::string as name,
-        null as depends_on_nodes,
-        null as depends_on_sources,
-        null as exposure_type,
-        null as exposure_owner,
-        null as exposure_maturity,
-        source.value:source_name::string as source_name,
-        source.value:loader::string as source_loader,
-        source.value:package_name::string as package_name,
-        source.value:relation_name::string as relation_name,
-        source.value:path::string as node_path,
-        null as checksum,
-        null as materialization,
-        -- Include the raw JSON for future proofing.
+        -- Include the raw JSON to unpack other values.
         source.value as node_json
     from {{ manifest_cte_name }} as manifests,
         lateral flatten(input => manifests.data:sources) as source
