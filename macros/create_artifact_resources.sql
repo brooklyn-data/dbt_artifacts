@@ -73,7 +73,6 @@ create table if not exists {{ src_manifest_nodes }} (
     resource_type string,
     node_database string,
     node_schema string,
-    node_description string,
     name string,
     node_json variant
 );

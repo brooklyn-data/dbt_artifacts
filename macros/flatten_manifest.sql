@@ -12,7 +12,6 @@
         node.value:resource_type::string as resource_type,
         node.value:database::string as node_database,
         node.value:schema::string as node_schema,
-        node.value:description::string as node_description,
         node.value:name::string as name,
         -- Include the raw JSON to unpack other values.
         node.value as node_json
@@ -30,7 +29,6 @@
         'exposure' as resource_type,
         null as node_database,
         null as node_schema,
-        null as node_description,
         exposure.value:name::string as name,
         -- Include the raw JSON to unpack other values.
         exposure.value as node_json
@@ -48,7 +46,6 @@
         'source' as resource_type,
         source.value:database::string as node_database,
         source.value:schema::string as node_schema,
-        source.value:description::string as node_description,
         source.value:name::string::string as name,
         -- Include the raw JSON to unpack other values.
         source.value as node_json

@@ -46,7 +46,7 @@ surrogate_key as (
         resource_type,
         node_database,
         node_schema,
-        node_description,
+        node_json:description::string as node_description,
         name,
         node_json
     from flattened
