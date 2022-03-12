@@ -20,8 +20,8 @@
                 -- NB: Snowflake requires an order by clause, although all rows will be the same within a partition.
                 order by artifact_generated_at
             ) = 1;
-        
-        create or replace {{ artifact_table }} clone {{ artifact_table.database }}.{{ artifact_table.schema }}.dbt_temp_artifact_table;
+
+        create or replace table {{ artifact_table }} clone {{ artifact_table.database }}.{{ artifact_table.schema }}.dbt_temp_artifact_table;
 
         drop table {{ artifact_table.database }}.{{ artifact_table.schema }}.dbt_temp_artifact_table;
 
