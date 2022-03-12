@@ -32,6 +32,6 @@
 
 {% endfor %}
 
-{% do log("DONE!", info=True) %}
+{% do log("Done", info=True) %}
 
 {% endmacro %}
