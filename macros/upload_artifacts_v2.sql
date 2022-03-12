@@ -8,7 +8,7 @@
 
 {% set src_results = source('dbt_artifacts', 'dbt_run_results') %}
 {% set src_results_nodes = source('dbt_artifacts', 'dbt_run_results_nodes') %}
-{% set src_manifest_nodes = source('dbt_artifacts', 'dbt_run_manifest_nodes') %}
+{% set src_manifest_nodes = source('dbt_artifacts', 'dbt_manifest_nodes') %}
 
 {% set remove_query %}
     remove @{{ artifact_stage }} pattern='.*.json.gz';
@@ -39,7 +39,7 @@
             elapsed_time,
             args:which::string as execution_command,
             coalesce(args:full_refresh, 'false')::boolean as was_full_refresh,
-            args:models as selected_models,
+            coalesce(args:models, args:select) as selected_models,
             args:target::string as target,
             metadata,
             args
