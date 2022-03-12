@@ -12,7 +12,8 @@
 
     {% set dedupe_results_query %}
 
-        create temporary table {{ artifact_table.database }}.{{ artifact_table.schema }}.dbt_temp_artifact_table as
+        -- NB: Using a non-temporary table allows the clone operation next.
+        create table {{ artifact_table.database }}.{{ artifact_table.schema }}.dbt_temp_artifact_table as
             select * from {{ artifact_table }}
             qualify row_number() over (
                 partition by {{ table_key }}
