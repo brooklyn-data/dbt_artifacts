@@ -32,7 +32,7 @@
             from  @{{ src_dbt_artifacts }}
         ) as new_data
         -- Matching on the data payload itself. That's probably the most efficient.
-        on old_data.data = new_data.data
+        on old_data.generated_at = new_data.generated_at
         -- NB: No clause for "when matched" - as matching rows should be skipped.
         when not matched then insert (
             data,
