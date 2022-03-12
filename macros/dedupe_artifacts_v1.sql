@@ -23,6 +23,7 @@
 {% do run_query(dedupe_results_query) %}
 
 
-{% do log("DONE!", info=True) %}
+{% do log("Done", info=True) %}
+
 
 {% endmacro %}
