@@ -16,7 +16,8 @@
 
 {% set results_query %}
 
-    insert into {{ src_results }}
+    -- Merge to avoid duplicates
+    merge into {{ src_results }} as old_data using (
         with raw_data as (
 
             select
@@ -42,13 +43,46 @@
             args:target::string as target,
             metadata,
             args
-        from raw_data;
+        from raw_data
+    ) as new_data
+    on old_data.command_invocation_id = new_data.command_invocation_id
+    -- NB: No clause for "when matched" - as matching rows should be skipped.
+    when not matched then insert (
+        command_invocation_id,
+        dbt_cloud_run_id,
+        artifact_run_id,
+        artifact_generated_at,
+        dbt_version,
+        env,
+        elapsed_time,
+        execution_command,
+        was_full_refresh,
+        selected_models,
+        target,
+        metadata,
+        args
+    ) values (
+        new_data.command_invocation_id,
+        new_data.dbt_cloud_run_id,
+        new_data.artifact_run_id,
+        new_data.artifact_generated_at,
+        new_data.dbt_version,
+        new_data.env,
+        new_data.elapsed_time,
+        new_data.execution_command,
+        new_data.was_full_refresh,
+        new_data.selected_models,
+        new_data.target,
+        new_data.metadata,
+        new_data.args
+    )
 
 {% endset %}
 
 {% set result_nodes_query %}
 
-    insert into {{ src_results_nodes }}
+    -- Merge to avoid duplicates
+    merge into {{ src_results_nodes }} as old_data using (
         with raw_data as (
 
             select
@@ -63,13 +97,51 @@
 
         )
 
-        {{ flatten_results("raw_data") }};
+        {{ flatten_results("raw_data") }}
+
+    ) as new_data
+    on old_data.command_invocation_id = new_data.command_invocation_id and old_data.node_id = new_data.node_id
+    -- NB: No clause for "when matched" - as matching rows should be skipped.
+    when not matched then insert (
+        command_invocation_id,
+        dbt_cloud_run_id,
+        artifact_run_id,
+        artifact_generated_at,
+        execution_command,
+        was_full_refresh,
+        node_id,
+        thread_id,
+        status,
+        message,
+        compile_started_at,
+        query_completed_at,
+        total_node_runtime,
+        rows_affected,
+        result_json
+    ) values (
+        new_data.command_invocation_id,
+        new_data.dbt_cloud_run_id,
+        new_data.artifact_run_id,
+        new_data.artifact_generated_at,
+        new_data.execution_command,
+        new_data.was_full_refresh,
+        new_data.node_id,
+        new_data.thread_id,
+        new_data.status,
+        new_data.message,
+        new_data.compile_started_at,
+        new_data.query_completed_at,
+        new_data.total_node_runtime,
+        new_data.rows_affected,
+        new_data.result_json
+    )
 
 {% endset %}
 
 {% set manifest_nodes_query %}
 
-    insert into {{ src_manifest_nodes }}
+    -- Merge to avoid duplicates
+    merge into {{ src_manifest_nodes }} as old_data using (
         with raw_data as (
 
             select
@@ -84,7 +156,56 @@
 
         )
 
-        {{ flatten_manifest("raw_data") }};
+        {{ flatten_manifest("raw_data") }}
+
+    ) as new_data
+    on old_data.command_invocation_id = new_data.command_invocation_id and old_data.node_id = new_data.node_id
+    -- NB: No clause for "when matched" - as matching rows should be skipped.
+    when not matched then insert (
+        command_invocation_id,
+        dbt_cloud_run_id,
+        artifact_run_id,
+        artifact_generated_at,
+        node_id,
+        resource_type,
+        node_database,
+        node_schema,
+        name,
+        depends_on_nodes,
+        depends_on_sources,
+        exposure_type,
+        exposure_owner,
+        exposure_maturity,
+        source_name,
+        package_name,
+        relation_name,
+        node_path,
+        checksum,
+        materialization,
+        node_json
+    ) values (
+        new_data.command_invocation_id,
+        new_data.dbt_cloud_run_id,
+        new_data.artifact_run_id,
+        new_data.artifact_generated_at,
+        new_data.node_id,
+        new_data.resource_type,
+        new_data.node_database,
+        new_data.node_schema,
+        new_data.name,
+        new_data.depends_on_nodes,
+        new_data.depends_on_sources,
+        new_data.exposure_type,
+        new_data.exposure_owner,
+        new_data.exposure_maturity,
+        new_data.source_name,
+        new_data.package_name,
+        new_data.relation_name,
+        new_data.node_path,
+        new_data.checksum,
+        new_data.materialization,
+        new_data.node_json
+    )
 
 {% endset %}
 
