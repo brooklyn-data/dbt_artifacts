@@ -31,11 +31,11 @@ fields as (
         node_database as model_database,
         node_schema as model_schema,
         name,
-        depends_on_nodes,
-        package_name,
-        node_path as model_path,
-        checksum,
-        materialization as model_materialization
+        to_array(node_json:depends_on:nodes) as depends_on_nodes,
+        node_json:package_name::string as package_name,
+        node_json:path::string as model_path,
+        node_json:checksum.checksum::string as checksum,
+        node_json:config.materialized::string as model_materialization
     from dbt_models_incremental
 
 )
