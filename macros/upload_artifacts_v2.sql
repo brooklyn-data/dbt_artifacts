@@ -27,10 +27,10 @@
             from @{{ artifact_stage }} as run_results
 
         )
-        
+
         select
             metadata:invocation_id::string as command_invocation_id,
-            -- NOTE: DBT_CLOUD_RUN_ID is case sensitive here 
+            -- NOTE: DBT_CLOUD_RUN_ID is case sensitive here
             metadata:env:DBT_CLOUD_RUN_ID::int as dbt_cloud_run_id,
             {{ make_artifact_run_id() }} as artifact_run_id,
             metadata:generated_at::timestamp_tz as artifact_generated_at,
@@ -89,7 +89,7 @@
                 run_results.$1:metadata as metadata,
                 run_results.$1 as data,
                 metadata:invocation_id::string as command_invocation_id,
-                -- NOTE: DBT_CLOUD_RUN_ID is case sensitive here 
+                -- NOTE: DBT_CLOUD_RUN_ID is case sensitive here
                 metadata:env:DBT_CLOUD_RUN_ID::int as dbt_cloud_run_id,
                 {{ make_artifact_run_id() }} as artifact_run_id,
                 metadata:generated_at::timestamp_tz as generated_at
@@ -110,13 +110,10 @@
         execution_command,
         was_full_refresh,
         node_id,
-        thread_id,
         status,
-        message,
         compile_started_at,
         query_completed_at,
         total_node_runtime,
-        rows_affected,
         result_json
     ) values (
         new_data.command_invocation_id,
@@ -126,13 +123,10 @@
         new_data.execution_command,
         new_data.was_full_refresh,
         new_data.node_id,
-        new_data.thread_id,
         new_data.status,
-        new_data.message,
         new_data.compile_started_at,
         new_data.query_completed_at,
         new_data.total_node_runtime,
-        new_data.rows_affected,
         new_data.result_json
     )
 
@@ -147,7 +141,7 @@
             select
                 manifests.$1:metadata as metadata,
                 metadata:invocation_id::string as command_invocation_id,
-                -- NOTE: DBT_CLOUD_RUN_ID is case sensitive here 
+                -- NOTE: DBT_CLOUD_RUN_ID is case sensitive here
                 metadata:env:DBT_CLOUD_RUN_ID::int as dbt_cloud_run_id,
                 {{ make_artifact_run_id() }} as artifact_run_id,
                 metadata:generated_at::timestamp_tz as generated_at,
@@ -171,17 +165,6 @@
         node_database,
         node_schema,
         name,
-        depends_on_nodes,
-        depends_on_sources,
-        exposure_type,
-        exposure_owner,
-        exposure_maturity,
-        source_name,
-        package_name,
-        relation_name,
-        node_path,
-        checksum,
-        materialization,
         node_json
     ) values (
         new_data.command_invocation_id,
@@ -193,17 +176,6 @@
         new_data.node_database,
         new_data.node_schema,
         new_data.name,
-        new_data.depends_on_nodes,
-        new_data.depends_on_sources,
-        new_data.exposure_type,
-        new_data.exposure_owner,
-        new_data.exposure_maturity,
-        new_data.source_name,
-        new_data.package_name,
-        new_data.relation_name,
-        new_data.node_path,
-        new_data.checksum,
-        new_data.materialization,
         new_data.node_json
     )
 
