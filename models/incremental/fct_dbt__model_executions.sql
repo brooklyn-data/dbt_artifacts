@@ -35,7 +35,7 @@ model_executions_with_materialization as (
         models.name
     from model_executions_incremental
     left join models on
-        model_executions_incremental.command_invocation_id = models.command_invocation_id
+        model_executions_incremental.artifact_run_id = models.artifact_run_id
         and model_executions_incremental.node_id = models.node_id
 
 ),

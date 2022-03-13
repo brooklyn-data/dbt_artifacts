@@ -35,7 +35,7 @@ seed_executions_with_materialization as (
         seeds.name
     from seed_executions_incremental
     left join seeds on
-        seed_executions_incremental.command_invocation_id = seeds.command_invocation_id
+        seed_executions_incremental.artifact_run_id = seeds.artifact_run_id
         and seed_executions_incremental.node_id = seeds.node_id
 
 ),
