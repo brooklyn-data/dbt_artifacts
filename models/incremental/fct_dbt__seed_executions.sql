@@ -22,7 +22,7 @@ seed_executions_incremental as (
 
         {% if is_incremental() %}
             -- this filter will only be applied on an incremental run
-            and artifact_generated_at > (select max(artifact_generated_at) from {{ this }})
+            and coalesce(artifact_generated_at > (select max(artifact_generated_at) from {{ this }}), true)
         {% endif %}
 
 ),
