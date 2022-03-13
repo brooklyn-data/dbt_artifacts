@@ -52,13 +52,14 @@ surrogate_key as (
         fields.was_full_refresh,
         fields.node_id,
         base_nodes.resource_type,
-        fields.thread_id,
+        split(fields.result_json:thread_id::string, '-')[1]::integer as thread_id,
         fields.status,
-        fields.message,
+        fields.result_json:message::string as message,
         fields.compile_started_at,
         fields.query_completed_at,
         fields.total_node_runtime,
-        fields.rows_affected
+        fields.result_json:adapter_response:rows_affected::int as rows_affected,
+        fields.result_json
     from fields
     -- Inner join so that we only represent results for nodes which definitely have a manifest
     -- and visa versa.

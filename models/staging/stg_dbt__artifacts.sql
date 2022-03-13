@@ -18,19 +18,6 @@ fields as (
 
 ),
 
-deduped as (
-
-    select
-        *,
-        row_number() over (
-            partition by command_invocation_id, artifact_type
-            order by generated_at desc
-        ) as index
-    from fields
-    qualify index = 1
-
-),
-
 artifacts as (
 
     select
@@ -41,7 +28,7 @@ artifacts as (
         path,
         artifact_type,
         data
-    from deduped
+    from fields
 
 )
 

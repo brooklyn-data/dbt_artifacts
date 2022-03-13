@@ -34,13 +34,13 @@ fields as (
         t.artifact_generated_at,
         t.node_id,
         t.name,
-        t.exposure_type as type,
-        t.exposure_owner as owner,
-        t.exposure_maturity as maturity,
+        t.node_json:type::string as type,
+        t.node_json:owner:name::string as owner,
+        t.node_json:maturity::string as maturity,
         f.value::string as output_feeds,
-        t.package_name
+        t.node_json:package_name::string as package_name
     from dbt_exposures_incremental as t,
-        lateral flatten(input => depends_on_nodes) as f
+        lateral flatten(input => to_array(t.node_json:depends_on:nodes)) as f
 
 )
 

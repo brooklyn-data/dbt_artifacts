@@ -29,9 +29,9 @@ fields as (
         artifact_generated_at,
         node_id,
         name,
-        depends_on_nodes,
-        package_name,
-        node_path as test_path
+        to_array(node_json:depends_on:nodes) as depends_on_nodes,
+        node_json:package_name::string as package_name,
+        node_json:path::string as test_path
     from dbt_tests_incremental
 
 )

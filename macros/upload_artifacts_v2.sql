@@ -16,7 +16,8 @@
 
 {% set results_query %}
 
-    insert into {{ src_results }}
+    -- Merge to avoid duplicates
+    merge into {{ src_results }} as old_data using (
         with raw_data as (
 
             select
@@ -26,10 +27,10 @@
             from @{{ artifact_stage }} as run_results
 
         )
-        
+
         select
             metadata:invocation_id::string as command_invocation_id,
-            -- NOTE: DBT_CLOUD_RUN_ID is case sensitive here 
+            -- NOTE: DBT_CLOUD_RUN_ID is case sensitive here
             metadata:env:DBT_CLOUD_RUN_ID::int as dbt_cloud_run_id,
             {{ make_artifact_run_id() }} as artifact_run_id,
             metadata:generated_at::timestamp_tz as artifact_generated_at,
@@ -42,20 +43,53 @@
             args:target::string as target,
             metadata,
             args
-        from raw_data;
+        from raw_data
+    ) as new_data
+    on old_data.command_invocation_id = new_data.command_invocation_id
+    -- NB: No clause for "when matched" - as matching rows should be skipped.
+    when not matched then insert (
+        command_invocation_id,
+        dbt_cloud_run_id,
+        artifact_run_id,
+        artifact_generated_at,
+        dbt_version,
+        env,
+        elapsed_time,
+        execution_command,
+        was_full_refresh,
+        selected_models,
+        target,
+        metadata,
+        args
+    ) values (
+        new_data.command_invocation_id,
+        new_data.dbt_cloud_run_id,
+        new_data.artifact_run_id,
+        new_data.artifact_generated_at,
+        new_data.dbt_version,
+        new_data.env,
+        new_data.elapsed_time,
+        new_data.execution_command,
+        new_data.was_full_refresh,
+        new_data.selected_models,
+        new_data.target,
+        new_data.metadata,
+        new_data.args
+    )
 
 {% endset %}
 
 {% set result_nodes_query %}
 
-    insert into {{ src_results_nodes }}
+    -- Merge to avoid duplicates
+    merge into {{ src_results_nodes }} as old_data using (
         with raw_data as (
 
             select
                 run_results.$1:metadata as metadata,
                 run_results.$1 as data,
                 metadata:invocation_id::string as command_invocation_id,
-                -- NOTE: DBT_CLOUD_RUN_ID is case sensitive here 
+                -- NOTE: DBT_CLOUD_RUN_ID is case sensitive here
                 metadata:env:DBT_CLOUD_RUN_ID::int as dbt_cloud_run_id,
                 {{ make_artifact_run_id() }} as artifact_run_id,
                 metadata:generated_at::timestamp_tz as generated_at
@@ -63,19 +97,51 @@
 
         )
 
-        {{ flatten_results("raw_data") }};
+        {{ flatten_results("raw_data") }}
+
+    ) as new_data
+    on old_data.command_invocation_id = new_data.command_invocation_id and old_data.node_id = new_data.node_id
+    -- NB: No clause for "when matched" - as matching rows should be skipped.
+    when not matched then insert (
+        command_invocation_id,
+        dbt_cloud_run_id,
+        artifact_run_id,
+        artifact_generated_at,
+        execution_command,
+        was_full_refresh,
+        node_id,
+        status,
+        compile_started_at,
+        query_completed_at,
+        total_node_runtime,
+        result_json
+    ) values (
+        new_data.command_invocation_id,
+        new_data.dbt_cloud_run_id,
+        new_data.artifact_run_id,
+        new_data.artifact_generated_at,
+        new_data.execution_command,
+        new_data.was_full_refresh,
+        new_data.node_id,
+        new_data.status,
+        new_data.compile_started_at,
+        new_data.query_completed_at,
+        new_data.total_node_runtime,
+        new_data.result_json
+    )
 
 {% endset %}
 
 {% set manifest_nodes_query %}
 
-    insert into {{ src_manifest_nodes }}
+    -- Merge to avoid duplicates
+    merge into {{ src_manifest_nodes }} as old_data using (
         with raw_data as (
 
             select
                 manifests.$1:metadata as metadata,
                 metadata:invocation_id::string as command_invocation_id,
-                -- NOTE: DBT_CLOUD_RUN_ID is case sensitive here 
+                -- NOTE: DBT_CLOUD_RUN_ID is case sensitive here
                 metadata:env:DBT_CLOUD_RUN_ID::int as dbt_cloud_run_id,
                 {{ make_artifact_run_id() }} as artifact_run_id,
                 metadata:generated_at::timestamp_tz as generated_at,
@@ -84,7 +150,34 @@
 
         )
 
-        {{ flatten_manifest("raw_data") }};
+        {{ flatten_manifest("raw_data") }}
+
+    ) as new_data
+    on old_data.command_invocation_id = new_data.command_invocation_id and old_data.node_id = new_data.node_id
+    -- NB: No clause for "when matched" - as matching rows should be skipped.
+    when not matched then insert (
+        command_invocation_id,
+        dbt_cloud_run_id,
+        artifact_run_id,
+        artifact_generated_at,
+        node_id,
+        resource_type,
+        node_database,
+        node_schema,
+        name,
+        node_json
+    ) values (
+        new_data.command_invocation_id,
+        new_data.dbt_cloud_run_id,
+        new_data.artifact_run_id,
+        new_data.artifact_generated_at,
+        new_data.node_id,
+        new_data.resource_type,
+        new_data.node_database,
+        new_data.node_schema,
+        new_data.name,
+        new_data.node_json
+    )
 
 {% endset %}
 
