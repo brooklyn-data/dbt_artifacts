@@ -71,31 +71,32 @@ Snowflake makes it possible to load local files into your warehouse. We've inclu
    names using the variables listed in the Installation section, above.
 
 2. Add [operations](https://docs.getdbt.com/docs/building-a-dbt-project/hooks-operations/#operations)
-   to your production run to load files into your table.
+   to your production run to load files into your table. The [--no-write-json](https://docs.getdbt.com/reference/global-configs#writing-json-artifacts) flag ensures that no
+   artifacts are overwritten by the run-operation prior to uploading.
 
    **V2 Macro**: Use the `upload_dbt_artifacts_v2` macro ([source](macros/upload_artifacts.sql)). Run the macro after `build`, `run`, `test`, `seed` and `snapshot` operations.
    ```txt
    $ dbt build
-   $ dbt run-operation upload_dbt_artifacts_v2
+   $ dbt --no-write-json run-operation upload_dbt_artifacts_v2
    ```
 
    **V1 Macro**: Use the `upload_dbt_artifacts` macro ([source](macros/upload_artifacts.sql)). You'll need
    to specify which files to upload through use of the `--args` flag. Here's an example setup.
    ```txt
    $ dbt seed
-   $ dbt run-operation upload_dbt_artifacts --args '{filenames: [manifest, run_results]}'
+   $ dbt --no-write-json run-operation upload_dbt_artifacts --args '{filenames: [manifest, run_results]}'
 
    $ dbt run
-   $ dbt run-operation upload_dbt_artifacts --args '{filenames: [manifest, run_results]}'
+   $ dbt --no-write-json run-operation upload_dbt_artifacts --args '{filenames: [manifest, run_results]}'
 
    $ dbt test
-   $ dbt run-operation upload_dbt_artifacts --args '{filenames: [run_results]}'
+   $ dbt --no-write-json run-operation upload_dbt_artifacts --args '{filenames: [run_results]}'
 
    $ dbt source snapshot-freshness
-   $ dbt run-operation upload_dbt_artifacts --args '{filenames: [sources]}'
+   $ dbt --no-write-json run-operation upload_dbt_artifacts --args '{filenames: [sources]}'
 
    $ dbt docs generate
-   $ dbt run-operation upload_dbt_artifacts --args '{filenames: [catalog]}'
+   $ dbt --no-write-json run-operation upload_dbt_artifacts --args '{filenames: [catalog]}'
    ```
 
 ### Option 2: Loading cloud storage files [V1 upload method only]
