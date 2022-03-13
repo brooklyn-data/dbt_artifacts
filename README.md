@@ -116,7 +116,7 @@ file_format = (type = 'JSON')
 ```
 
 ## Running the models
-The models will be picked up on your next `dbt run` command. You can also run the package specifically with `dbt build -s dbt_artifacts`.
+Run `dbt build` (or `dbt run`). You can also run the package specifically with `dbt build -s dbt_artifacts`.
 
 ### Migration from V1 upload method to V2.
 
