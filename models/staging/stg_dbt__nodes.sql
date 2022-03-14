@@ -33,7 +33,7 @@ deduped_v1 as (
     -- Deduplicate the V1 issue of potential multiple manifest files.
     -- This is a very likely occurance if using dbt-cloud as each artifact upload
     -- will generate a new manifest.
-    qualify row_number() over (partition by artifact_run_id, node_id order by generated_at asc) = 1
+    qualify row_number() over (partition by artifact_run_id, node_id order by artifact_generated_at asc) = 1
 
 ),
 
