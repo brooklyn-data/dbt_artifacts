@@ -66,7 +66,7 @@ surrogate_key as (
         node_json:description::string as node_description,
         name,
         node_json
-    from flattened
+    from unioned
 
 )
 
