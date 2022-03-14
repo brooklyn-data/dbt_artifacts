@@ -153,7 +153,7 @@
         {{ flatten_manifest("raw_data") }}
 
     ) as new_data
-    -- NB: We dedupe on artifact_run_id rather than command_invodation_id for manifest nodes
+    -- NB: We dedupe on artifact_run_id rather than command_invocation_id for manifest nodes
     -- to avoid holding duplicate data.
     on old_data.artifact_run_id = new_data.artifact_run_id and old_data.node_id = new_data.node_id
     -- NB: No clause for "when matched" - as matching rows should be skipped.
