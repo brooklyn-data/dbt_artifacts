@@ -22,8 +22,11 @@ sources:
       - name: dbt_run_results
         identifier: "{{ var('dbt_artifacts_results_table', 'dbt_run_results') }}"
         description: |
-          The source table containing the loaded metadata from run_results.json loaded artifacts. This belongs
-          to the V2 upload. See the README for more info.
+          The source table containing the loaded metadata from run_results.json loaded artifacts. Granularity is
+          `command_invocation_id`, because each step of the a multi-step dbt cloud job will generate a seperate
+          run results file.
+
+          This belongs to the V2 upload. See the README for more info.
         columns:
           - name: command_invocation_id
             description: The id of the command which resulted in the source artifact's generation.
@@ -44,8 +47,11 @@ sources:
       - name: dbt_run_results_nodes
         identifier: "{{ var('dbt_artifacts_result_nodes_table', 'dbt_run_results_nodes') }}"
         description: |
-          The source table containing the loaded and flattened results from run_results.json loaded artifacts. This belongs
-          to the V2 upload. See the README for more info.
+          The source table containing the loaded and flattened results from run_results.json loaded artifacts.
+          Granularity is `command_invocation_id` & `node_id`, because each step of the a multi-step dbt cloud
+          job will generate a seperate run results file, which may have one or more nodes being run at that step.
+
+          This belongs to the V2 upload. See the README for more info.
         columns:
           - name: command_invocation_id
             description: The id of the command which resulted in the source artifact's generation.
@@ -63,12 +69,17 @@ sources:
           The source table containing the loaded and flattened nodes (including tests, seeds, sources, models and
           exposures) from manifest.json loaded artifacts. Note that within the raw manifest file, exposures and sources
           are stored seperately from seeds, models and tests, but for convenience they are all flattened to a single table
-          for this package.
-          
+          for this package. Granularity is `artifact_run_id` & `node_id`, because each step of the a multi-step dbt cloud
+          job will generate a seperate manifest file but each will be equivalent. For this V2 upload we deduplicate that
+          on _load_, so any subsequent joins must be done on `artifact_run_id` and not `command_invocation_id`.
+
           This belongs to the V2 upload. See the README for more info.
         columns:
           - name: command_invocation_id
-            description: The id of the command which resulted in the source artifact's generation.
+            description: The id of the command which resulted in the source artifact's generation. Note that because
+              manifests are generated for each step in a dbt cloud run, but the id here will be the one belonging
+              to the _first_ manifest generated. For most circumstances, users should use the `artifact_run_id` to
+              join on this table.
           - name: artifact_run_id
             description: A constructed ID to serve as a reliable identifier for a single run.
           - name: artifact_generated_at

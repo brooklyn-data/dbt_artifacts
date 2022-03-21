@@ -19,7 +19,6 @@ seed_executions_incremental as (
     select *
     from node_executions
     where resource_type = 'seed'
-
         {% if is_incremental() %}
             -- this filter will only be applied on an incremental run
             and coalesce(artifact_generated_at > (select max(artifact_generated_at) from {{ this }}), true)
@@ -35,10 +34,7 @@ seed_executions_with_materialization as (
         seeds.name
     from seed_executions_incremental
     left join seeds on
-        (
-            seed_executions_incremental.command_invocation_id = seeds.command_invocation_id
-            or seed_executions_incremental.dbt_cloud_run_id = seeds.dbt_cloud_run_id
-        )
+        seed_executions_incremental.artifact_run_id = seeds.artifact_run_id
         and seed_executions_incremental.node_id = seeds.node_id
 
 ),

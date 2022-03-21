@@ -19,7 +19,6 @@ snapshot_executions_incremental as (
     select *
     from node_executions
     where resource_type = 'snapshot'
-
         {% if is_incremental() %}
             -- this filter will only be applied on an incremental run
             and coalesce(artifact_generated_at > (select max(artifact_generated_at) from {{ this }}), true)
@@ -35,10 +34,7 @@ snapshot_executions_with_materialization as (
         snapshots.name
     from snapshot_executions_incremental
     left join snapshots on
-        (
-            snapshot_executions_incremental.command_invocation_id = snapshots.command_invocation_id
-            or snapshot_executions_incremental.dbt_cloud_run_id = snapshots.dbt_cloud_run_id
-        )
+        snapshot_executions_incremental.artifact_run_id = snapshots.artifact_run_id
         and snapshot_executions_incremental.node_id = snapshots.node_id
 
 ),

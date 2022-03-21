@@ -12,7 +12,7 @@ base_v2 as (
 
 ),
 
-manifests as (
+manifests_v1 as (
 
     select *
     from base
@@ -20,10 +20,27 @@ manifests as (
 
 ),
 
-flattened as (
+flattened_v1 as (
+
+    {{ flatten_manifest("manifests_v1") }}
+
+),
+
+deduped_v1 as (
+
+    select *
+    from flattened_v1
+    -- Deduplicate the V1 issue of potential multiple manifest files.
+    -- This is a very likely occurance if using dbt-cloud as each artifact upload
+    -- will generate a new manifest.
+    qualify row_number() over (partition by artifact_run_id, node_id order by artifact_generated_at asc) = 1
+
+),
+
+unioned as (
 
     -- V1 uploads
-    {{ flatten_manifest("manifests") }}
+    select * from deduped_v1
 
     union all
 
@@ -49,7 +66,7 @@ surrogate_key as (
         node_json:description::string as node_description,
         name,
         node_json
-    from flattened
+    from unioned
 
 )
 

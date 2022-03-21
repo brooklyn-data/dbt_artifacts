@@ -7,7 +7,7 @@
 {% for artifact_table, table_key in [
     (src_results, 'command_invocation_id'),
     (src_results_nodes, 'command_invocation_id, node_id'),
-    (src_manifest_nodes, 'command_invocation_id, node_id')
+    (src_manifest_nodes, 'artifact_run_id, node_id')
 ] %}
 
     {% set dedupe_results_query %}
