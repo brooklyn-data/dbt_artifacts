@@ -2,8 +2,9 @@
 
 {% set src_dbt_artifacts = source('dbt_artifacts', 'artifacts') %}
 
+{# All uploads are prefixed by the invocation_id in the stage to isolate parallel jobs from one another #}
 {% set remove_query %}
-    remove @{{ src_dbt_artifacts }} pattern='.*.json.gz';
+    remove @{{ src_dbt_artifacts }} pattern='{{ invocation_id }}\/.*\.json.gz';
 {% endset %}
 
 {% do log("Clearing existing files from Stage: " ~ remove_query, info=True) %}
@@ -14,7 +15,7 @@
     {% set file = filename ~ '.json' %}
 
     {% set put_query %}
-        put file://{{ prefix }}{{ file }} @{{ src_dbt_artifacts }} auto_compress=true;
+        put file://{{ prefix }}{{ file }} @{{ src_dbt_artifacts }}/{{ invocation_id }} auto_compress=true;
     {% endset %}
 
     {% do log("Uploading " ~ file ~ " to Stage: " ~ put_query, info=True) %}

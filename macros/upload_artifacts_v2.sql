@@ -10,8 +10,9 @@
 {% set src_results_nodes = source('dbt_artifacts', 'dbt_run_results_nodes') %}
 {% set src_manifest_nodes = source('dbt_artifacts', 'dbt_manifest_nodes') %}
 
+{# All uploads are prefixed by the invocation_id in the stage to isolate parallel jobs from one another #}
 {% set remove_query %}
-    remove @{{ artifact_stage }} pattern='.*.json.gz';
+    remove @{{ artifact_stage }} pattern='{{ invocation_id }}\/.*\.json.gz';
 {% endset %}
 
 {% set results_query %}
@@ -191,7 +192,7 @@
     {% set file = filename ~ '.json' %}
 
     {% set put_query %}
-        put file://{{ prefix }}{{ file }} @{{ artifact_stage }} auto_compress=true;
+        put file://{{ prefix }}{{ file }} @{{ artifact_stage }}/{{ invocation_id }} auto_compress=true;
     {% endset %}
 
     {% do log("Uploading " ~ file ~ " to Stage: " ~ put_query, info=True) %}
