@@ -12,7 +12,7 @@
 
 {# All uploads are prefixed by the invocation_id in the stage to isolate parallel jobs from one another #}
 {% set remove_query %}
-    remove @{{ artifact_stage }} pattern='{{ invocation_id }}\/.*\.json.gz';
+    remove @{{ artifact_stage }} pattern='.*\/{{ invocation_id }}\/.*\.json.gz';
 {% endset %}
 
 {% set results_query %}
