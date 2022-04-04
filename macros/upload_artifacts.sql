@@ -30,7 +30,7 @@
             $1:metadata:generated_at::timestamp_ntz as generated_at,
             metadata$filename as path,
             regexp_substr(metadata$filename, '([a-z_]+.json)') as artifact_type
-            from  @{{ src_dbt_artifacts }}
+            from  @{{ src_dbt_artifacts }}/{{ invocation_id }}
         ) as new_data
         on old_data.generated_at = new_data.generated_at
         -- NB: No clause for "when matched" - as matching rows should be skipped.
