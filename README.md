@@ -77,26 +77,26 @@ Snowflake makes it possible to load local files into your warehouse. We've inclu
    **V2 Macro**: Use the `upload_dbt_artifacts_v2` macro ([source](macros/upload_artifacts.sql)). Run the macro after `build`, `run`, `test`, `seed` and `snapshot` operations.
    ```txt
    $ dbt build
-   $ dbt --no-write-json run-operation upload_dbt_artifacts_v2
+   $ dbt run-operation upload_dbt_artifacts_v2 --no-write-json
    ```
 
    **V1 Macro**: Use the `upload_dbt_artifacts` macro ([source](macros/upload_artifacts.sql)). You'll need
    to specify which files to upload through use of the `--args` flag. Here's an example setup.
    ```txt
    $ dbt seed
-   $ dbt --no-write-json run-operation upload_dbt_artifacts --args '{filenames: [manifest, run_results]}'
+   $ dbt run-operation upload_dbt_artifacts --args '{filenames: [manifest, run_results]}' --no-write-json
 
    $ dbt run
-   $ dbt --no-write-json run-operation upload_dbt_artifacts --args '{filenames: [manifest, run_results]}'
+   $ dbt run-operation upload_dbt_artifacts --args '{filenames: [manifest, run_results]}' --no-write-json
 
    $ dbt test
-   $ dbt --no-write-json run-operation upload_dbt_artifacts --args '{filenames: [run_results]}'
+   $ dbt run-operation upload_dbt_artifacts --args '{filenames: [run_results]}' --no-write-json
 
    $ dbt source snapshot-freshness
-   $ dbt --no-write-json run-operation upload_dbt_artifacts --args '{filenames: [sources]}'
+   $ dbt run-operation upload_dbt_artifacts --args '{filenames: [sources]}' --no-write-json
 
    $ dbt docs generate
-   $ dbt --no-write-json run-operation upload_dbt_artifacts --args '{filenames: [catalog]}'
+   $ dbt run-operation upload_dbt_artifacts --args '{filenames: [catalog]}' --no-write-json
    ```
 
 ### Option 2: Loading cloud storage files [V1 upload method only]
