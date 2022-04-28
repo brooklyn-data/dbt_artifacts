@@ -35,7 +35,8 @@ fields as (
         compile_started_at,
         query_completed_at,
         total_node_runtime,
-        rows_affected
+        rows_affected,
+        failures
     from test_executions_incremental
 
 )

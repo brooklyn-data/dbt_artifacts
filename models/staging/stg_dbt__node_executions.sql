@@ -59,6 +59,7 @@ surrogate_key as (
         fields.query_completed_at,
         fields.total_node_runtime,
         fields.result_json:adapter_response:rows_affected::int as rows_affected,
+        fields.result_json:failures::int as failures,
         fields.result_json
     from fields
     -- Inner join so that we only represent results for nodes which definitely have a manifest
