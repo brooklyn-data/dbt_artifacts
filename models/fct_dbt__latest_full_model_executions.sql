@@ -39,7 +39,7 @@ latest_full as (
 
 joined as (
 
-    select
+    SELECT
         model_executions.*
     from latest_full
     left join model_executions on
@@ -66,7 +66,7 @@ fields as (
         rows_affected,
         status,
         was_full_refresh
-    from joined
+    from joined j
 
 )
 
