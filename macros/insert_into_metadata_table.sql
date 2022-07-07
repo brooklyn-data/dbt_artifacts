@@ -1,10 +1,10 @@
-{% macro insert_into_metadata_table(table_name, content) -%}
-    {{ return(adapter.dispatch('insert_into_metadata_table', 'dbt_artifacts')(table_name, content)) }}
+{% macro insert_into_metadata_table(schema_name, table_name, content) -%}
+    {{ return(adapter.dispatch('insert_into_metadata_table', 'dbt_artifacts')(schema_name, table_name, content)) }}
 {%- endmacro %}
 
-{% macro databricks__insert_into_metadata_table(table_name, content) -%}
+{% macro databricks__insert_into_metadata_table(schema_name, table_name, content) -%}
     {% set insert_into_table_query %}
-    insert into {{ var('dbt_artifacts_schema', 'dbt_artifacts') }}.{{table_name}}
+    insert into {{ schema_name }}.{{ table_name }}
     values {{content}}
     {% endset %}
 

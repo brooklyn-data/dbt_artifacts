@@ -1,0 +1,34 @@
+version: 2
+
+sources:
+  - name: dbt_artifacts
+    schema: "{{ var('dbt_artifacts_schema', 'dbt_artifacts') }}"
+    tables:
+      - name: results_executions
+        identifier: "{{ var('dbt_results_executions_table', 'results_executions') }}"
+        description: |
+          
+        columns:
+          - name: command_invocation_id
+            description: ""
+          - name: node_id
+            description: ""
+          - name: was_full_refresh
+            description: ""
+          - name: thread_id
+            description: ""
+          - name: status
+            description: ""
+          - name: compile_started_at
+            description: ""
+          - name: query_completed_at
+            description: ""
+          - name: total_node_runtime
+            description: ""
+          - name: rows_affected
+            description: ""
+          - name: model_materialization
+            description: ""
+          - name: model_schema
+            description: ""
+          - name: name

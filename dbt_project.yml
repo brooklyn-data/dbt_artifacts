@@ -9,6 +9,7 @@ models:
     # No schema override is defined here, but we recommend that you
     # override the schema for specific projects.
     +materialized: table
+    +file_format: delta
     incremental:
       +materialized: incremental
     staging:

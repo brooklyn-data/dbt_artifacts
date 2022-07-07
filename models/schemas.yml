@@ -94,8 +94,8 @@ models:
       description: Success/fail status of the model's execution.
     - name: command_invocation_id
       description: Foreign key to fct_dbt_run_results. The id of the command which resulted in the source artifact's generation.
-    - name: artifact_generated_at
-      description: Timestamp of when the source artifact was generated.
+    # - name: artifact_generated_at
+    #   description: Timestamp of when the source artifact was generated.
     - name: node_id
       description: Unique id for the node, in the form of model.[package_name].[model_name]
     - name: rows_affected
