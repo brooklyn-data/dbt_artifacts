@@ -52,7 +52,7 @@ surrogate_key as (
         fields.was_full_refresh,
         fields.node_id,
         base_nodes.resource_type,
-        split(fields.result_json:thread_id::string, '-')[1]::integer as thread_id,
+        regexp_substr(split(fields.result_json:thread_id::string, '-')[1], '[0-9]*')::integer as thread_id,
         fields.status,
         fields.result_json:message::string as message,
         fields.compile_started_at,
