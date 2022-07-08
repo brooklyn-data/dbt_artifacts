@@ -6,8 +6,6 @@ sources:
     tables:
       - name: model_executions
         identifier: "{{ var('dbt_model_executions_table', 'model_executions') }}"
-        description: |
-
         columns:
           - name: command_invocation_id
             description: ""
@@ -32,3 +30,6 @@ sources:
           - name: model_schema
             description: ""
           - name: name
+
+      - name: test_executions
+        identifier: "{{ var('dbt_test_executions_table', 'test_executions') }}"
