@@ -12,7 +12,7 @@ enhanced as (
         command_invocation_id,
         node_id,
         was_full_refresh,
-        {{ dbt_utils.split_part(string_text='thread_id', delimiter_text="'-'", part_number=2) }}::int as thread_id,
+        split(thread_id, '-')[1]::int as thread_id,
         status,
         compile_started_at,
         query_completed_at,
