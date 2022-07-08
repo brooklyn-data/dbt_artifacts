@@ -1,7 +1,7 @@
 with results_executions as (
 
     select *
-    from {{ ref('stg_dbt__results_executions') }}
+    from {{ ref('stg_dbt__model_executions') }}
 
 ),
 
