@@ -3,13 +3,7 @@
         {% if results != [] %}
             {% set src_dbt_results_executions = source('dbt_artifacts', 'results_executions') %}
 
-            {{ dbt_artifacts.create_metadata_schema(schema_name=src_dbt_results_executions.schema) }}
-
-            {{ dbt_artifacts.create_metadata_table(
-                schema_name=src_dbt_results_executions.schema,
-                table_name=src_dbt_results_executions.identifier
-                )
-            }}
+            {{ dbt_artifacts.create_table_if_not_exists(src_dbt_results_executions.schema, src_dbt_results_executions.identifier) }}
 
             {% set model_execution_values %}
             {% for model in results if model.node.resource_type == "model" -%}
