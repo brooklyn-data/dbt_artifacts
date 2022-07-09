@@ -1,14 +1,14 @@
 with base as (
 
     select *
-    from {{ ref('stg_dbt__model_executions') }}
+    from {{ ref('stg_dbt__test_executions') }}
 
 ),
 
-model_executions as (
+test_executions as (
 
     select
-        model_execution_id,
+        test_execution_id,
         command_invocation_id,
         node_id,
         was_full_refresh,
@@ -18,11 +18,9 @@ model_executions as (
         query_completed_at,
         total_node_runtime,
         rows_affected,
-        model_materialization,
-        model_schema,
-        name
+        failures
     from base
 
 )
 
-select * from model_executions
+select * from test_executions

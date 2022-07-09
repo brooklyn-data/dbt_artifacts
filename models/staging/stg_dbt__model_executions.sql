@@ -1,18 +1,18 @@
 with base as (
 
     select *
-    from {{ ref('stg_dbt__model_executions') }}
+    from {{ source('dbt_artifacts', 'model_executions') }}
 
 ),
 
-model_executions as (
+enhanced as (
 
     select
-        model_execution_id,
+        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as model_execution_id,
         command_invocation_id,
         node_id,
         was_full_refresh,
-        thread_id,
+        split(thread_id, '-')[1]::int as thread_id,
         status,
         compile_started_at,
         query_completed_at,
@@ -25,4 +25,4 @@ model_executions as (
 
 )
 
-select * from model_executions
+select * from enhanced

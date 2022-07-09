@@ -1,14 +1,14 @@
 with base as (
 
     select *
-    from {{ source('dbt_artifacts', 'results_executions') }}
+    from {{ source('dbt_artifacts', 'test_executions') }}
 
 ),
 
 enhanced as (
 
     select
-        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as node_execution_id,
+        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as test_execution_id,
         command_invocation_id,
         node_id,
         was_full_refresh,
@@ -18,9 +18,7 @@ enhanced as (
         query_completed_at,
         total_node_runtime,
         rows_affected,
-        model_materialization,
-        model_schema,
-        name
+        failures
     from base
 
 )
