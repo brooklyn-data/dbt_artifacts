@@ -12,42 +12,42 @@
         {% set test_execution_values %}
         {% for test in tests -%}
             (
-                '{{ invocation_id }}',
-                '{{ test.node.unique_id }}',
+                '{{ invocation_id }}', {# command_invocation_id #}
+                '{{ test.node.unique_id }}', {# node_id #}
 
                 {% set config_full_refresh = test.node.config.full_refresh %}
                 {% if config_full_refresh is none %}
                     {% set config_full_refresh = flags.FULL_REFRESH %}
                 {% endif %}
-                '{{ config_full_refresh }}',
+                '{{ config_full_refresh }}', {# was_full_refresh #}
 
-                '{{ test.thread_id }}',
-                '{{ test.status }}',
+                '{{ test.thread_id }}', {# thread_id #}
+                '{{ test.status }}', {# status #}
 
                 {% if test.timing != [] %}
                     {% for stage in test.timing if stage.name == "compile" %}
                         {% if loop.length == 0 %}
-                            null,
+                            null, {# compile_started_at #}
                         {% else %}
-                            '{{ stage.started_at }}',
+                            '{{ stage.started_at }}', {# compile_started_at #}
                         {% endif %}
                     {% endfor %}
 
                     {% for stage in test.timing if stage.name == "execute" %}
                         {% if loop.length == 0 %}
-                            null,
+                            null, {# query_completed_at #}
                         {% else %}
-                            '{{ stage.completed_at }}',
+                            '{{ stage.completed_at }}', {# query_completed_at #}
                         {% endif %}
                     {% endfor %}
                 {% else %}
-                    null,
-                    null,
+                    null, {# compile_started_at #}
+                    null, {# query_completed_at #}
                 {% endif %}
 
-                {{ test.execution_time }},
-                null, -- rows_affected not available in Databricks
-                '{{ test.failures }}'
+                {{ test.execution_time }}, {# total_node_runtime #}
+                null, {# rows_affected not available in Databricks #}
+                '{{ test.failures }}' {# failures #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}

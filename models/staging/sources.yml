@@ -33,3 +33,6 @@ sources:
 
       - name: test_executions
         identifier: "{{ var('dbt_test_executions_table', 'test_executions') }}"
+
+      - name: models
+        identifier: "{{ var('dbt_models_table', 'models') }}"
