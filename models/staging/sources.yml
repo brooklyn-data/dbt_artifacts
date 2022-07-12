@@ -31,6 +31,9 @@ sources:
             description: ""
           - name: name
 
+      - name: tests
+        identifier: "{{ var('dbt_tests_table', 'tests') }}"
+
       - name: test_executions
         identifier: "{{ var('dbt_test_executions_table', 'test_executions') }}"
 
