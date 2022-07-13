@@ -15,7 +15,7 @@
 {%- endmacro %}
 
 {% macro databricks__get_create_model_executions_table_if_not_exists_statement(schema_name, table_name) -%}
-    create table {{schema_name}}.{{table_name}} (
+    create or replace table {{schema_name}}.{{table_name}} (
         command_invocation_id STRING,
         node_id STRING,
         was_full_refresh BOOLEAN,
@@ -25,8 +25,8 @@
         query_completed_at TIMESTAMP,
         total_node_runtime DOUBLE,
         rows_affected INTEGER,
-        model_materialization STRING,
-        model_schema STRING,
+        materialization STRING,
+        schema STRING,
         name STRING
     )
     using delta
@@ -43,8 +43,8 @@
         query_completed_at TIMESTAMP,
         total_node_runtime INTEGER,
         rows_affected INTEGER,
-        model_materialization STRING,
-        model_schema STRING,
+        materialization STRING,
+        schema STRING,
         name STRING
     )
 {%- endmacro %}

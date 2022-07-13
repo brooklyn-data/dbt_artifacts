@@ -25,9 +25,9 @@ sources:
             description: ""
           - name: rows_affected
             description: ""
-          - name: model_materialization
+          - name: materialization
             description: ""
-          - name: model_schema
+          - name: schema
             description: ""
           - name: name
 
@@ -39,3 +39,12 @@ sources:
 
       - name: models
         identifier: "{{ var('dbt_models_table', 'models') }}"
+
+      - name: seeds
+        identifier: "{{ var('dbt_seeds_table', 'seeds') }}"
+
+      - name: exposures
+        identifier: "{{ var('dbt_exposures_table', 'exposures') }}"
+
+      - name: snapshots
+        identifier: "{{ var('dbt_snapshots_table', 'snapshots') }}"

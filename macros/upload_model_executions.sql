@@ -47,8 +47,8 @@
 
                 {{ model.execution_time }}, {# total_node_runtime #}
                 null, -- rows_affected not available {# Databricks #}
-                '{{ model.node.config.materialized }}', {# model_materialization #}
-                '{{ model.node.schema }}', {# model_schema #}
+                '{{ model.node.config.materialized }}', {# materialization #}
+                '{{ model.node.schema }}', {# schema #}
                 '{{ model.node.name }}' {# name #}
             )
             {%- if not loop.last %},{%- endif %}
