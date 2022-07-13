@@ -18,8 +18,8 @@ model_executions as (
         query_completed_at,
         total_node_runtime,
         rows_affected,
-        model_materialization,
-        model_schema,
+        materialization,
+        schema,
         name
     from base
 

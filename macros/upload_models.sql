@@ -12,14 +12,14 @@
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
                 '{{ model.unique_id }}', {# node_id #}
-                '{{ model.database }}', {# model_database #}
-                '{{ model.schema }}', {# model_schema #}
+                '{{ model.database }}', {# database #}
+                '{{ model.schema }}', {# schema #}
                 '{{ model.name }}', {# name #}
                 '{{ tojson(model.depends_on.nodes) }}', {# depends_on_nodes #}
                 '{{ model.package_name }}', {# package_name #}
-                '{{ model.path }}', {# model_path #}
+                '{{ model.original_file_path }}', {# path #}
                 '{{ model.checksum.checksum }}', {# checksum #}
-                '{{ model.unrendered_config.materialized }}' {# model_materialization #}
+                '{{ model.unrendered_config.materialized }}' {# materialization #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}

@@ -1,26 +1,24 @@
 with base as (
 
     select *
-    from {{ ref('stg_dbt__models') }}
+    from {{ ref('stg_dbt__seeds') }}
 
 ),
 
-models as (
+seeds as (
 
     select
-        model_execution_id,
+        seed_execution_id,
         command_invocation_id,
         node_id,
         database,
         schema,
         name,
-        depends_on_nodes,
         package_name,
         path,
-        checksum,
-        materialization
+        checksum
     from base
 
 )
 
-select * from models
+select * from seeds

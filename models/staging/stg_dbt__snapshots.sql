@@ -1,14 +1,14 @@
 with base as (
 
     select *
-    from {{ ref('stg_dbt__models') }}
+    from {{ source('dbt_artifacts', 'snapshots') }}
 
 ),
 
-models as (
+enhanced as (
 
     select
-        model_execution_id,
+        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as snapshot_execution_id,
         command_invocation_id,
         node_id,
         database,
@@ -18,9 +18,9 @@ models as (
         package_name,
         path,
         checksum,
-        materialization
+        strategy
     from base
 
 )
 
-select * from models
+select * from enhanced
