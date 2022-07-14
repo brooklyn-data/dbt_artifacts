@@ -12,7 +12,7 @@ enhanced as (
         command_invocation_id,
         node_id,
         name,
-        depends_on_nodes,
+        {{ adapter.dispatch('parse_json')('depends_on_nodes')}} as depends_on_nodes,
         package_name,
         test_path,
         tags
