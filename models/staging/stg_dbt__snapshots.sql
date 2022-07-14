@@ -14,7 +14,7 @@ enhanced as (
         database,
         schema,
         name,
-        depends_on_nodes,depends_on_nodes,
+        depends_on_nodes,
         package_name,
         path,
         checksum,
