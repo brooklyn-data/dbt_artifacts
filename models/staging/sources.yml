@@ -52,3 +52,6 @@ sources:
 
       - name: snapshots
         identifier: "{{ var('dbt_snapshots_table', 'snapshots') }}"
+
+      - name: snapshot_executions
+        identifier: "{{ var('dbt_snapshot_executions_table', 'snapshot_executions') }}"
