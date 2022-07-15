@@ -8,6 +8,19 @@
         {{ dbt_artifacts.create_exposures_table_if_not_exists(src_dbt_exposures.schema, src_dbt_exposures.identifier) }}
 
         {% set exposure_values %}
+        select
+            $1,
+            $2,
+            $3,
+            $4,
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')('$5') }},
+            $6,
+            $7,
+            $8,
+            $9,
+            $10,
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')('$11') }}
+        from values
         {% for exposure in exposures -%}
             (
                 '{{ invocation_id }}', {# command_invocation_id #}

@@ -2,7 +2,8 @@ version: 2
 
 sources:
   - name: dbt_artifacts
-    schema: "{{ var('dbt_artifacts_schema', 'dbt_artifacts') }}"
+    database: "{{ var('dbt_artifacts_database', target.database) }}"
+    schema: "{{ var('dbt_artifacts_schema', target.schema) }}"
     tables:
       - name: model_executions
         identifier: "{{ var('dbt_model_executions_table', 'model_executions') }}"

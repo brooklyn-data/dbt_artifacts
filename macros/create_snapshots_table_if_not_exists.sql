@@ -37,7 +37,7 @@
         database STRING,
         schema STRING,
         name STRING,
-        depends_on_nodes VARIANT,
+        depends_on_nodes ARRAY,
         package_name STRING,
         path STRING,
         checksum STRING,

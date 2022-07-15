@@ -10,6 +10,20 @@
         {{ dbt_artifacts.create_model_executions_table_if_not_exists(src_dbt_model_executions.schema, src_dbt_model_executions.identifier) }}
 
         {% set model_execution_values %}
+        select
+            $1,
+            $2,
+            $3,
+            $4,
+            $5,
+            $6,
+            $7,
+            $8,
+            $9,
+            $10,
+            $11,
+            $12
+        from values
         {% for model in results if model.node.resource_type == "model" -%}
             (
                 '{{ invocation_id }}', {# command_invocation_id #}

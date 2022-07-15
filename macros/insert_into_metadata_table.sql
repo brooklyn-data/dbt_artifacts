@@ -5,7 +5,7 @@
 {% macro databricks__insert_into_metadata_table(schema_name, table_name, content) -%}
     {% set insert_into_table_query %}
     insert into {{ schema_name }}.{{ table_name }}
-    values {{content}}
+    {{ content }}
     {% endset %}
 
     {% do run_query(insert_into_table_query) %}
@@ -14,7 +14,7 @@
 {% macro snowflake__insert_into_metadata_table(schema_name, table_name, content) -%}
     {% set insert_into_table_query %}
     insert into {{database}}.{{ schema_name }}.{{ table_name }}
-    values {{content}}
+    {{ content }}
     {% endset %}
 
     {% do run_query(insert_into_table_query) %}

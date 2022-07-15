@@ -10,6 +10,18 @@
         {{ dbt_artifacts.create_test_executions_table_if_not_exists(src_dbt_test_executions.schema, src_dbt_test_executions.identifier) }}
 
         {% set test_execution_values %}
+        select
+            $1,
+            $2,
+            $3,
+            $4,
+            $5,
+            $6,
+            $7,
+            $8,
+            $9,
+            $10
+        from values
         {% for test in tests -%}
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
@@ -47,7 +59,7 @@
 
                 {{ test.execution_time }}, {# total_node_runtime #}
                 null, {# rows_affected not available in Databricks #}
-                '{{ test.failures }}' {# failures #}
+                {{ 'null' if test.failures is none else test.failures }} {# failures #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}

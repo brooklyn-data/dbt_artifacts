@@ -32,10 +32,10 @@
         command_invocation_id STRING,
         node_id STRING,
         name STRING,
-        depends_on_nodes VARIANT,
+        depends_on_nodes ARRAY,
         package_name STRING,
         test_path STRING,
-        tags VARIANT
+        tags ARRAY
     )
 {%- endmacro %}
 
