@@ -44,6 +44,9 @@ sources:
       - name: seeds
         identifier: "{{ var('dbt_seeds_table', 'seeds') }}"
 
+      - name: seed_executions
+        identifier: "{{ var('dbt_seed_executions_table', 'seed_executions') }}"
+
       - name: exposures
         identifier: "{{ var('dbt_exposures_table', 'exposures') }}"
 
