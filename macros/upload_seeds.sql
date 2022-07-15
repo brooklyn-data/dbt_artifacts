@@ -8,6 +8,16 @@
         {{ dbt_artifacts.create_seeds_table_if_not_exists(src_dbt_seeds.schema, src_dbt_seeds.identifier) }}
 
         {% set seed_values %}
+        select
+            $1,
+            $2,
+            $3,
+            $4,
+            $5,
+            $6,
+            $7,
+            $8
+        from values
         {% for seed in seeds -%}
             (
                 '{{ invocation_id }}', {# command_invocation_id #}

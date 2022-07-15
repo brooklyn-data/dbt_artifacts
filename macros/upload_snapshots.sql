@@ -8,6 +8,18 @@
         {{ dbt_artifacts.create_snapshots_table_if_not_exists(src_dbt_snapshots.schema, src_dbt_snapshots.identifier) }}
 
         {% set snapshot_values %}
+        select
+            $1,
+            $2,
+            $3,
+            $4,
+            $5,
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')('$6') }},
+            $7,
+            $8,
+            $9,
+            $10
+        from values
         {% for snapshot in snapshots -%}
             (
                 '{{ invocation_id }}', {# command_invocation_id #}

@@ -8,6 +8,15 @@
         {{ dbt_artifacts.create_tests_table_if_not_exists(src_dbt_tests.schema, src_dbt_tests.identifier) }}
 
         {% set test_values %}
+        select
+            $1,
+            $2,
+            $3,
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')('$4') }},
+            $5,
+            $6,
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')('$7') }}
+        from values
         {% for test in tests -%}
             (
                 '{{ invocation_id }}', {# command_invocation_id #}

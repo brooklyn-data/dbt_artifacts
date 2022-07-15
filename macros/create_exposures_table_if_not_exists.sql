@@ -43,7 +43,7 @@
         description STRING,
         url STRING,
         package_name STRING,
-        depends_on_nodes VARIANT
+        depends_on_nodes ARRAY
     )
 {%- endmacro %}
 
