@@ -18,3 +18,10 @@ dbt_artifacts:
       warehouse: "{{ env_var('DBT_ENV_SECRET_SNOWFLAKE_TEST_WAREHOUSE') }}"
       schema: dbt_artifacts_test_commit_{{ env_var('GITHUB_SHA') }}
       threads: 8
+    databricks:
+      type: databricks
+      schema: dbt_artifacts_test_commit_{{ env_var('GITHUB_SHA') }}
+      host: "{{ env_var('DBT_ENV_SECRET_DATABRICKS_HOST') }}"
+      http_path: "{{ env_var('DBT_ENV_SECRET_DATABRICKS_HTTP_PATH') }}"
+      token: "{{ env_var('DBT_ENV_SECRET_DATABRICKS_TOKEN') }}"
+      threads: 8
