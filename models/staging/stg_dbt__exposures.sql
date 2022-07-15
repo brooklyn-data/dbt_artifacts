@@ -19,7 +19,7 @@ enhanced as (
         description,
         url,
         package_name,
-        {{ adapter.dispatch('parse_json')('depends_on_nodes')}} as depends_on_nodes
+        depends_on_nodes
     from base
 
 )
