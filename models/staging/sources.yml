@@ -2,7 +2,7 @@ version: 2
 
 sources:
   - name: dbt_artifacts
-    # database: "{{ var('dbt_artifacts_database', 'blah') }}" this is currently breaking databricks, see https://getdbt.slack.com/archives/CU4MRJ7QB/p1657887390206099
+    # database: "{{ var('dbt_artifacts_database', target.database) }}" this is currently breaking databricks, see https://getdbt.slack.com/archives/CU4MRJ7QB/p1657887390206099
     schema: "{{ var('dbt_artifacts_schema', target.schema) }}"
     tables:
       - name: model_executions
