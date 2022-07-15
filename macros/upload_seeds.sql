@@ -9,14 +9,14 @@
 
         {% set seed_values %}
         select
-            $1,
-            $2,
-            $3,
-            $4,
-            $5,
-            $6,
-            $7,
-            $8
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(1) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(2) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(3) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(4) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(5) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(6) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(7) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(8) }}
         from values
         {% for seed in seeds -%}
             (
