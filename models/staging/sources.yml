@@ -49,3 +49,6 @@ sources:
 
       - name: snapshots
         identifier: "{{ var('dbt_snapshots_table', 'snapshots') }}"
+
+      - name: sources
+        identifier: "{{ var('dbt_sources_table', 'sources') }}"
