@@ -44,11 +44,17 @@ sources:
       - name: seeds
         identifier: "{{ var('dbt_seeds_table', 'seeds') }}"
 
+      - name: seed_executions
+        identifier: "{{ var('dbt_seed_executions_table', 'seed_executions') }}"
+
       - name: exposures
         identifier: "{{ var('dbt_exposures_table', 'exposures') }}"
 
       - name: snapshots
         identifier: "{{ var('dbt_snapshots_table', 'snapshots') }}"
+
+      - name: snapshot_executions
+        identifier: "{{ var('dbt_snapshot_executions_table', 'snapshot_executions') }}"
 
       - name: sources
         identifier: "{{ var('dbt_sources_table', 'sources') }}"
