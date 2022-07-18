@@ -16,6 +16,8 @@
         {% do dbt_artifacts.upload_seeds(graph) %}
         {% do log("Uploading snapshots", true) %}
         {% do dbt_artifacts.upload_snapshots(graph) %}
+        {% do log("Uploading sources", true) %}
+        {% do dbt_artifacts.upload_sources(graph) %}
     {% endif %}
 {%- endmacro %}
 
