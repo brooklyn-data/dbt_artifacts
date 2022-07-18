@@ -1,0 +1,30 @@
+version: 2
+
+models:
+- name: stg_dbt__exposures
+  description: Placeholder
+  columns:
+  - name: command_invocation_id
+    description: '{{ doc("command_invocation_id") }}'
+  - name: depends_on_nodes
+    description: '{{ doc("depends_on_nodes") }}'
+  - name: description
+    description: '{{ doc("description") }}'
+  - name: exposure_execution_id
+    description: '{{ doc("exposure_execution_id") }}'
+  - name: maturity
+    description: '{{ doc("maturity") }}'
+  - name: name
+    description: '{{ doc("name") }}'
+  - name: node_id
+    description: '{{ doc("node_id") }}'
+  - name: owner
+    description: '{{ doc("owner") }}'
+  - name: package_name
+    description: '{{ doc("package_name") }}'
+  - name: path
+    description: '{{ doc("path") }}'
+  - name: type
+    description: '{{ doc("type") }}'
+  - name: url
+    description: '{{ doc("url") }}'

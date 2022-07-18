@@ -1,0 +1,28 @@
+version: 2
+
+models:
+- name: stg_dbt__sources
+  description: Placeholder
+  columns:
+  - name: command_invocation_id
+    description: '{{ doc("command_invocation_id") }}'
+  - name: database
+    description: '{{ doc("database") }}'
+  - name: freshness
+    description: '{{ doc("freshness") }}'
+  - name: identifier
+    description: '{{ doc("identifier") }}'
+  - name: loaded_at_field
+    description: '{{ doc("loaded_at_field") }}'
+  - name: loader
+    description: '{{ doc("loader") }}'
+  - name: name
+    description: '{{ doc("name") }}'
+  - name: node_id
+    description: '{{ doc("node_id") }}'
+  - name: schema
+    description: '{{ doc("schema") }}'
+  - name: source_execution_id
+    description: '{{ doc("source_execution_id") }}'
+  - name: source_name
+    description: '{{ doc("source_name") }}'
