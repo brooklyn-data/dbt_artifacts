@@ -9,13 +9,13 @@
 
         {% set test_values %}
         select
-            $1,
-            $2,
-            $3,
-            {{ adapter.dispatch('parse_json', 'dbt_artifacts')('$4') }},
-            $5,
-            $6,
-            {{ adapter.dispatch('parse_json', 'dbt_artifacts')('$7') }}
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(1) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(2) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(3) }},
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(4)) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(5) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(6) }},
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(7)) }}
         from values
         {% for test in tests -%}
             (
