@@ -20,7 +20,6 @@ dbt_artifacts:
       threads: 8
     databricks:
       type: databricks
-      database: dbt_artifacts_test_commit_{{ env_var('GITHUB_SHA') }}
       schema: dbt_artifacts_test_commit_{{ env_var('GITHUB_SHA') }}
       host: "{{ env_var('DBT_ENV_SECRET_DATABRICKS_HOST') }}"
       http_path: "{{ env_var('DBT_ENV_SECRET_DATABRICKS_HTTP_PATH') }}"
