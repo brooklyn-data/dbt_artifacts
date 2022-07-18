@@ -10,6 +10,20 @@
         {{ dbt_artifacts.create_snapshot_executions_table_if_not_exists(src_dbt_snapshot_executions.schema, src_dbt_snapshot_executions.identifier) }}
 
         {% set snapshot_execution_values %}
+        select
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(1) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(2) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(3) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(4) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(5) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(6) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(7) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(8) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(9) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }}
+        from values
         {% for model in results if model.node.resource_type == "snapshot" -%}
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
