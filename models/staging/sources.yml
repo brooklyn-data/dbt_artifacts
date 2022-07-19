@@ -2,7 +2,7 @@ version: 2
 
 sources:
   - name: dbt_artifacts
-    database: "{% if target.type != 'databricks' %}{{ var('dbt_artifacts_database', target.database) }}{% endif %}"
+    database: "{% if target.type not in ('spark', 'databricks') %}{{ var('dbt_artifacts_database', target.database) }}{% endif %}"
     schema: "{{ var('dbt_artifacts_schema', target.schema) }}"
     tables:
       - name: model_executions

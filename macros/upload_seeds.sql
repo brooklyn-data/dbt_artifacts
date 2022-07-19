@@ -1,12 +1,11 @@
 {% macro upload_seeds(graph) -%}
+    {% set src_dbt_seeds = source('dbt_artifacts', 'seeds') %}
     {% set seeds = [] %}
     {% for node in graph.nodes.values() | selectattr("resource_type", "equalto", "seed") %}
         {% do seeds.append(node) %}
     {% endfor %}
-    {% if seeds != [] %}
-        {% set src_dbt_seeds = source('dbt_artifacts', 'seeds') %}
-        {{ dbt_artifacts.create_seeds_table_if_not_exists(src_dbt_seeds.schema, src_dbt_seeds.identifier) }}
 
+    {% if seeds != [] %}
         {% set seed_values %}
         select
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(1) }},

@@ -1,14 +1,13 @@
 {% macro upload_model_executions(results) -%}
+    {% set src_dbt_model_executions = source('dbt_artifacts', 'model_executions') %}
     {% set models = [] %}
     {% for result in results  %}
         {% if result.node.resource_type == "model" %}
             {% do models.append(result) %}
         {% endif %}
     {% endfor %}
-    {% if models != [] %}
-        {% set src_dbt_model_executions = source('dbt_artifacts', 'model_executions') %}
-        {{ dbt_artifacts.create_model_executions_table_if_not_exists(src_dbt_model_executions.schema, src_dbt_model_executions.identifier) }}
 
+    {% if models != [] %}
         {% set model_execution_values %}
         select
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(1) }},

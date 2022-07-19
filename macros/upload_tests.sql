@@ -1,12 +1,11 @@
 {% macro upload_tests(graph) -%}
+    {% set src_dbt_tests = source('dbt_artifacts', 'tests') %}
     {% set tests = [] %}
     {% for node in graph.nodes.values() | selectattr("resource_type", "equalto", "test") %}
         {% do tests.append(node) %}
     {% endfor %}
-    {% if tests != [] %}
-        {% set src_dbt_tests = source('dbt_artifacts', 'tests') %}
-        {{ dbt_artifacts.create_tests_table_if_not_exists(src_dbt_tests.schema, src_dbt_tests.identifier) }}
 
+    {% if tests != [] %}
         {% set test_values %}
         select
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(1) }},
