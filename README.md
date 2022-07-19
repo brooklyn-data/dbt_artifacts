@@ -20,13 +20,15 @@ See the generated [dbt docs site](https://brooklyn-data.github.io/dbt_artifacts/
 
 ## Quickstart
 
-1. Add this package to your `packages.yml` following [these instructions](https://docs.getdbt.com/docs/building-a-dbt-project/package-management/).
+1. Add this package to your `packages.yml` following [these instructions](https://docs.getdbt.com/docs/building-a-dbt-project/package-management/)
 
-2. Run `dbt deps` to install the package.
+2. Run `dbt deps` to install the package
 
-3. Add an on-run-end hook to your `dbt_project.yml`: `on-run-end: "{{ dbt_artifacts.upload_results(results) }}"`.
+3. Add an on-run-end hook to your `dbt_project.yml`: `on-run-end: "{{ dbt_artifacts.upload_results(results) }}"`
 
-4. Run `dbt build -s dbt_artifacts` as the last step of any existing dbt jobs to ensure that the latest data is always available.
+4. Create the tables dbt_artifacts uploads to with `dbt run-operation create_dbt_artifacts_tables`
+
+5. Run `dbt build -s dbt_artifacts` as the last step of any existing dbt jobs to ensure that the latest data is always available
 
 ## Configuration
 

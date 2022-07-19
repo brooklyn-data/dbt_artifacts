@@ -1,14 +1,13 @@
 {% macro upload_test_executions(results) -%}
+    {% set src_dbt_test_executions = source('dbt_artifacts', 'test_executions') %}
     {% set tests = [] %}
     {% for result in results  %}
         {% if result.node.resource_type == "test" %}
             {% do tests.append(result) %}
         {% endif %}
     {% endfor %}
-    {% if tests != [] %}
-        {% set src_dbt_test_executions = source('dbt_artifacts', 'test_executions') %}
-        {{ dbt_artifacts.create_test_executions_table_if_not_exists(src_dbt_test_executions.schema, src_dbt_test_executions.identifier) }}
 
+    {% if tests != [] %}
         {% set test_execution_values %}
         select
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(1) }},

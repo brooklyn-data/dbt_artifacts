@@ -1,12 +1,11 @@
 {% macro upload_snapshots(graph) -%}
+    {% set src_dbt_snapshots = source('dbt_artifacts', 'snapshots') %}
     {% set snapshots = [] %}
     {% for node in graph.nodes.values() | selectattr("resource_type", "equalto", "snapshot") %}
         {% do snapshots.append(node) %}
     {% endfor %}
-    {% if snapshots != [] %}
-        {% set src_dbt_snapshots = source('dbt_artifacts', 'snapshots') %}
-        {{ dbt_artifacts.create_snapshots_table_if_not_exists(src_dbt_snapshots.schema, src_dbt_snapshots.identifier) }}
 
+    {% if snapshots != [] %}
         {% set snapshot_values %}
         select
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(1) }},

@@ -1,14 +1,13 @@
 {% macro upload_snapshot_executions(results) -%}
+    {% set src_dbt_snapshot_executions = source('dbt_artifacts', 'snapshot_executions') %}
     {% set snapshots = [] %}
     {% for result in results  %}
         {% if result.node.resource_type == "snapshot" %}
             {% do snapshots.append(result) %}
         {% endif %}
     {% endfor %}
-    {% if snapshots != [] %}
-        {% set src_dbt_snapshot_executions = source('dbt_artifacts', 'snapshot_executions') %}
-        {{ dbt_artifacts.create_snapshot_executions_table_if_not_exists(src_dbt_snapshot_executions.schema, src_dbt_snapshot_executions.identifier) }}
 
+    {% if snapshots != [] %}
         {% set snapshot_execution_values %}
         select
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(1) }},

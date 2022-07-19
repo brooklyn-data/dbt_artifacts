@@ -1,12 +1,11 @@
 {% macro upload_exposures(graph) -%}
+    {% set src_dbt_exposures = source('dbt_artifacts', 'exposures') %}
     {% set exposures = [] %}
     {% for node in graph.exposures.values() %}
         {% do exposures.append(node) %}
     {% endfor %}
-    {% if exposures != [] %}
-        {% set src_dbt_exposures = source('dbt_artifacts', 'exposures') %}
-        {{ dbt_artifacts.create_exposures_table_if_not_exists(src_dbt_exposures.schema, src_dbt_exposures.identifier) }}
 
+    {% if exposures != [] %}
         {% set exposure_values %}
         select
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(1) }},

@@ -1,14 +1,13 @@
 {% macro upload_seed_executions(results) -%}
+    {% set src_dbt_seed_executions = source('dbt_artifacts', 'seed_executions') %}
     {% set seeds = [] %}
     {% for result in results  %}
         {% if result.node.resource_type == "seed" %}
             {% do seeds.append(result) %}
         {% endif %}
     {% endfor %}
-    {% if seeds != [] %}
-        {% set src_dbt_seed_executions = source('dbt_artifacts', 'seed_executions') %}
-        {{ dbt_artifacts.create_seed_executions_table_if_not_exists(src_dbt_seed_executions.schema, src_dbt_seed_executions.identifier) }}
 
+    {% if seeds != [] %}
         {% set seed_execution_values %}
         select
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(1) }},
