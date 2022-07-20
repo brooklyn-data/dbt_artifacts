@@ -28,4 +28,7 @@
 
     {% set src_dbt_tests = source('dbt_artifacts', 'tests') %}
     {{ dbt_artifacts.create_tests_table_if_not_exists(src_dbt_tests.schema, src_dbt_tests.identifier) }}
+
+    {% set src_dbt_invocations = source('dbt_artifacts', 'invocations') %}
+    {{ dbt_artifacts.create_invocations_table_if_not_exists(src_dbt_invocations.schema, src_dbt_invocations.identifier) }}
 {% endmacro %}

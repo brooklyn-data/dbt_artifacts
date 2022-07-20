@@ -22,6 +22,7 @@
         {% do dbt_artifacts.upload_sources(graph) %}
         {% do log("Uploading tests", true) %}
         {% do dbt_artifacts.upload_snapshots(graph) %}
+        {% do log("Uploading invocations", true) %}
+        {% do dbt_artifacts.upload_invocations() %}
     {% endif %}
 {%- endmacro %}
-

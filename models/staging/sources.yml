@@ -248,3 +248,27 @@ sources:
           description: '{{ doc("schema") }}'
         - name: source_name
           description: '{{ doc("source_name") }}'
+
+      - name: invocations
+        identifier: "{{ var('dbt_invocations_table', 'invocations') }}"
+        columns:
+        - name: command_invocation_id
+          description: '{{ doc("command_invocation_id") }}'
+        - name: dbt_version
+          description: '{{ doc("dbt_version") }}'
+        - name: project_name
+          description: '{{ doc("project_name") }}'
+        - name: run_started_at
+          description: '{{ doc("run_started_at") }}'
+        - name: dbt_command
+          description: '{{ doc("dbt_command") }}'
+        - name: was_full_refresh
+          description: '{{ doc("was_full_refresh") }}'
+        - name: target_profile_name
+          description: '{{ doc("target_profile_name") }}'
+        - name: target_name
+          description: '{{ doc("target_name") }}'
+        - name: target_schema
+          description: '{{ doc("target_schema") }}'
+        - name: target_threads
+          description: '{{ doc("target_threads") }}'

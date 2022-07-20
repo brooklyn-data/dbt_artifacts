@@ -232,3 +232,50 @@ Placeholder
 
 {% enddocs %}
 
+{% docs dbt_version %}
+
+Placeholder
+
+{% enddocs %}
+
+{% docs project_name %}
+
+Placeholder
+
+{% enddocs %}
+
+{% docs run_started_at %}
+
+Placeholder
+
+{% enddocs %}
+
+{% docs dbt_command %}
+
+Placeholder
+
+{% enddocs %}
+
+{% docs target_profile_name %}
+
+Placeholder
+
+{% enddocs %}
+
+{% docs target_name %}
+
+Placeholder
+
+{% enddocs %}
+
+{% docs target_schema %}
+
+Placeholder
+
+{% enddocs %}
+
+{% docs target_threads %}
+
+Placeholder
+
+{% enddocs %}
