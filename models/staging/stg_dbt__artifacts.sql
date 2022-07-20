@@ -1,7 +1,13 @@
+{{config(materialized='incremental')}}
+
 with base as (
 
     select *
     from {{ source('dbt_artifacts', 'artifacts') }}
+
+    {%- if is_incremental() %}
+        where generated_at > (select max(generated_at) from {{this}})
+    {%- endif %}
 
 ),
 

@@ -12,4 +12,4 @@ models:
     incremental:
       +materialized: incremental
     staging:
-      +materialized: view # The staging tables cannot be ephemeral
+      +materialized: incremental

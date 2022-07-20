@@ -1,7 +1,13 @@
+{{config(materialized='incremental')}}
+
 with base as (
 
     select *
     from {{ ref('stg_dbt__artifacts') }}
+
+    {%- if is_incremental() %}
+        where generated_at > (select max(artifact_generated_at) from {{this}})
+    {%- endif %}
 
 ),
 
@@ -9,6 +15,10 @@ base_nodes as (
 
     select *
     from {{ ref('stg_dbt__nodes') }}
+
+    {%- if is_incremental() %}
+        where artifact_generated_at > (select max(artifact_generated_at) from {{this}})
+    {%- endif %}
 
 ),
 
