@@ -2,7 +2,7 @@ version: 2
 
 models:
 - name: fct_dbt__invocations
-  description: Placeholder
+  description: Fact model that contains data about invocations.
   columns:
   - name: command_invocation_id
     description: '{{ doc("command_invocation_id") }}'
