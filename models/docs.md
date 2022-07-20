@@ -234,48 +234,48 @@ Placeholder
 
 {% docs dbt_version %}
 
-Placeholder
+Installed version of dbt that is currently running.
 
 {% enddocs %}
 
 {% docs project_name %}
 
-Placeholder
+Name for the root-level project which is being run by dbt.
 
 {% enddocs %}
 
 {% docs run_started_at %}
 
-Placeholder
+Timestamp that this run started.
 
 {% enddocs %}
 
 {% docs dbt_command %}
 
-Placeholder
+dbt command of this run.
 
 {% enddocs %}
 
 {% docs target_profile_name %}
 
-Placeholder
+The name of the active profile.
 
 {% enddocs %}
 
 {% docs target_name %}
 
-Placeholder
+The name of the active target.
 
 {% enddocs %}
 
 {% docs target_schema %}
 
-Placeholder
+The name of the target dbt schema.
 
 {% enddocs %}
 
 {% docs target_threads %}
 
-Placeholder
+The number of threads in use by dbt.
 
 {% enddocs %}
