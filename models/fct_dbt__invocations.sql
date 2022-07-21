@@ -13,7 +13,7 @@ invocations as (
         project_name,
         run_started_at,
         dbt_command,
-        was_full_refresh,
+        full_refresh_flag,
         target_profile_name,
         target_name,
         target_schema,

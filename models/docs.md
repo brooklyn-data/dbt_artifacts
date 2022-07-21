@@ -245,6 +245,12 @@ dbt command of this run.
 
 {% enddocs %}
 
+{% docs full_refresh_flag %}
+
+Boolean flag indicating whether the dbt run was in full refresh mode or not.
+
+{% enddocs %}
+
 {% docs target_profile_name %}
 
 The name of the active profile.
