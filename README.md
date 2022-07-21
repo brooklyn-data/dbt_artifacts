@@ -1,5 +1,5 @@
 # dbt Artifacts Package
-This package builds a mart of tables describing the project it is installed in. In pre V1 versions of the package, the artifacts dbt produces were uploaded to the warehouse, hence the name of the package. That's no longer the case, but the name has stuck!
+This package builds a mart of tables and views describing the project it is installed in. In pre V1 versions of the package, the artifacts dbt produces were uploaded to the warehouse, hence the name of the package. That's no longer the case, but the name has stuck!
 
 Models included:
 
@@ -29,7 +29,7 @@ See the generated [dbt docs site](https://brooklyn-data.github.io/dbt_artifacts/
 
 4. Create the tables dbt_artifacts uploads to with `dbt run-operation create_dbt_artifacts_tables`
 
-5. Run `dbt build -s dbt_artifacts` as the last step of any existing dbt jobs to ensure that the latest data is always available
+5. Run your project!
 
 ## Configuration
 
