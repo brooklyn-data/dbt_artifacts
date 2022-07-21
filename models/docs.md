@@ -220,3 +220,57 @@ Execution ID of the source node.
 Execution ID of the exposure node.
 
 {% enddocs %}
+
+{% docs dbt_version %}
+
+Installed version of dbt that is currently running.
+
+{% enddocs %}
+
+{% docs project_name %}
+
+Name for the root-level project which is being run by dbt.
+
+{% enddocs %}
+
+{% docs run_started_at %}
+
+Timestamp that this run started.
+
+{% enddocs %}
+
+{% docs dbt_command %}
+
+dbt command of this run.
+
+{% enddocs %}
+
+{% docs full_refresh_flag %}
+
+Boolean flag indicating whether the dbt run was in full refresh mode or not.
+
+{% enddocs %}
+
+{% docs target_profile_name %}
+
+The name of the active profile.
+
+{% enddocs %}
+
+{% docs target_name %}
+
+The name of the active target.
+
+{% enddocs %}
+
+{% docs target_schema %}
+
+The name of the target dbt schema.
+
+{% enddocs %}
+
+{% docs target_threads %}
+
+The number of threads in use by dbt.
+
+{% enddocs %}
