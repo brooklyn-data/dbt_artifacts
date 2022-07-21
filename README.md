@@ -4,16 +4,17 @@ This package builds a mart of tables describing the project it is installed in. 
 Models included:
 
 ```
-dim_dbt__exposures.sql
-dim_dbt__models.sql
-dim_dbt__seeds.sql
-dim_dbt__snapshots.sql
-dim_dbt__sources.sql
-dim_dbt__tests.sql
-fct_dbt__model_executions.sql
-fct_dbt__seed_executions.sql
-fct_dbt__snapshot_executions.sql
-fct_dbt__test_executions.sql
+dim_dbt__exposures
+dim_dbt__models
+dim_dbt__seeds
+dim_dbt__snapshots
+dim_dbt__sources
+dim_dbt__tests
+fct_dbt__invocations
+fct_dbt__model_executions
+fct_dbt__seed_executions
+fct_dbt__snapshot_executions
+fct_dbt__test_executions
 ```
 
 See the generated [dbt docs site](https://brooklyn-data.github.io/dbt_artifacts/#!/overview) for documentation on each model.
