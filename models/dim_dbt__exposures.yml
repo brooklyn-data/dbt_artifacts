@@ -2,7 +2,7 @@ version: 2
 
 models:
 - name: dim_dbt__exposures
-  description: Placeholder
+  description: Dimension model that contains data about exposures.
   columns:
   - name: command_invocation_id
     description: '{{ doc("command_invocation_id") }}'

@@ -2,7 +2,7 @@ version: 2
 
 models:
 - name: dim_dbt__models
-  description: Placeholder
+  description: Dimension model that contains data about models.
   columns:
   - name: checksum
     description: '{{ doc("checksum") }}'
