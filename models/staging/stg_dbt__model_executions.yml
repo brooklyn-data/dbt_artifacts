@@ -2,7 +2,7 @@ version: 2
 
 models:
 - name: stg_dbt__model_executions
-  description: Placeholder
+  description: Staging model that contains data about model executions. One row per model execution.
   columns:
   - name: command_invocation_id
     description: '{{ doc("command_invocation_id") }}'

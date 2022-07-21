@@ -2,7 +2,7 @@ version: 2
 
 models:
 - name: stg_dbt__seeds
-  description: Placeholder
+  description: Stageing model that contains metadata about seed executions. One row per node per run.
   columns:
   - name: checksum
     description: '{{ doc("checksum") }}'
