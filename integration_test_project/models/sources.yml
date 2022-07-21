@@ -1,8 +1,8 @@
 version: 2
 
 sources:
-  - name: dbt_artifacts
-    overrides: dbt_artifacts
+  - name: dummy_source
+    database: dummy
     schema: "{{ target.schema }}"
     freshness:
       error_after: {count: 24, period: hour}

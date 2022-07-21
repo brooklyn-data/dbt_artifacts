@@ -1,3 +1,4 @@
+.idea
 
 target/
 dbt_modules/
@@ -7,3 +8,4 @@ logs/
 .vscode/
 Pipfile
 Pipfile.lock
+env.sh

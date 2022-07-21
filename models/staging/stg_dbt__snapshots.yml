@@ -1,0 +1,28 @@
+version: 2
+
+models:
+- name: stg_dbt__snapshots
+  description: Staging model that contains metadata about seed executions. One row per node per run.
+  columns:
+  - name: checksum
+    description: '{{ doc("checksum") }}'
+  - name: command_invocation_id
+    description: '{{ doc("command_invocation_id") }}'
+  - name: database
+    description: '{{ doc("database") }}'
+  - name: depends_on_nodes
+    description: '{{ doc("depends_on_nodes") }}'
+  - name: name
+    description: '{{ doc("name") }}'
+  - name: node_id
+    description: '{{ doc("node_id") }}'
+  - name: package_name
+    description: '{{ doc("package_name") }}'
+  - name: path
+    description: '{{ doc("path") }}'
+  - name: schema
+    description: '{{ doc("schema") }}'
+  - name: snapshot_execution_id
+    description: '{{ doc("snapshot_execution_id") }}'
+  - name: strategy
+    description: '{{ doc("strategy") }}'

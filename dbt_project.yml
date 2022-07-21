@@ -6,10 +6,5 @@ profile: "dbt_artifacts"
 
 models:
   dbt_artifacts:
-    # No schema override is defined here, but we recommend that you
-    # override the schema for specific projects.
-    +materialized: table
-    incremental:
-      +materialized: incremental
-    staging:
-      +materialized: view # The staging tables cannot be ephemeral
+    +materialized: view
+    +file_format: delta

@@ -1,0 +1,28 @@
+version: 2
+
+models:
+- name: fct_dbt__test_executions
+  description: Fact model that contains data about test executions.
+  columns:
+  - name: command_invocation_id
+    description: '{{ doc("command_invocation_id") }}'
+  - name: compile_started_at
+    description: '{{ doc("compile_started_at") }}'
+  - name: failures
+    description: '{{ doc("failures") }}'
+  - name: node_id
+    description: '{{ doc("node_id") }}'
+  - name: query_completed_at
+    description: '{{ doc("query_completed_at") }}'
+  - name: rows_affected
+    description: '{{ doc("rows_affected") }}'
+  - name: status
+    description: '{{ doc("status") }}'
+  - name: test_execution_id
+    description: '{{ doc("test_execution_id") }}'
+  - name: thread_id
+    description: '{{ doc("thread_id") }}'
+  - name: total_node_runtime
+    description: '{{ doc("total_node_runtime") }}'
+  - name: was_full_refresh
+    description: '{{ doc("was_full_refresh") }}'

@@ -1,0 +1,32 @@
+version: 2
+
+models:
+- name: stg_dbt__snapshot_executions
+  description: Staging model that contains data about snapshot executions. One row per snapshot execution.
+  columns:
+  - name: command_invocation_id
+    description: '{{ doc("command_invocation_id") }}'
+  - name: compile_started_at
+    description: '{{ doc("compile_started_at") }}'
+  - name: materialization
+    description: '{{ doc("materialization") }}'
+  - name: name
+    description: '{{ doc("name") }}'
+  - name: node_id
+    description: '{{ doc("node_id") }}'
+  - name: query_completed_at
+    description: '{{ doc("query_completed_at") }}'
+  - name: rows_affected
+    description: '{{ doc("rows_affected") }}'
+  - name: schema
+    description: '{{ doc("schema") }}'
+  - name: snapshot_execution_id
+    description: '{{ doc("snapshot_execution_id") }}'
+  - name: status
+    description: '{{ doc("status") }}'
+  - name: thread_id
+    description: '{{ doc("thread_id") }}'
+  - name: total_node_runtime
+    description: '{{ doc("total_node_runtime") }}'
+  - name: was_full_refresh
+    description: '{{ doc("was_full_refresh") }}'

@@ -1,0 +1,22 @@
+version: 2
+
+models:
+- name: dim_dbt__tests
+  description: Dimension model that contains data about tests.
+  columns:
+  - name: command_invocation_id
+    description: '{{ doc("command_invocation_id") }}'
+  - name: depends_on_nodes
+    description: '{{ doc("depends_on_nodes") }}'
+  - name: name
+    description: '{{ doc("name") }}'
+  - name: node_id
+    description: '{{ doc("node_id") }}'
+  - name: package_name
+    description: '{{ doc("package_name") }}'
+  - name: tags
+    description: '{{ doc("tags") }}'
+  - name: test_execution_id
+    description: '{{ doc("test_execution_id") }}'
+  - name: test_path
+    description: '{{ doc("test_path") }}'

@@ -10,12 +10,16 @@ on:
 env:
   # These are configured in GitHub secrets
   DBT_PROFILES_DIR: /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/integration_test_project
+  GITHUB_SHA: ${{ github.sha}}
   DBT_ENV_SECRET_SNOWFLAKE_TEST_ACCOUNT: ${{ secrets.SNOWFLAKE_TEST_ACCOUNT }}
   DBT_ENV_SECRET_SNOWFLAKE_TEST_USER: ${{ secrets.SNOWFLAKE_TEST_USER }}
   DBT_ENV_SECRET_SNOWFLAKE_TEST_PASSWORD: ${{ secrets.SNOWFLAKE_TEST_PASSWORD }}
   DBT_ENV_SECRET_SNOWFLAKE_TEST_ROLE: ${{ secrets.SNOWFLAKE_TEST_ROLE }}
   DBT_ENV_SECRET_SNOWFLAKE_TEST_DATABASE: ${{ secrets.SNOWFLAKE_TEST_DATABASE }}
   DBT_ENV_SECRET_SNOWFLAKE_TEST_WAREHOUSE: ${{ secrets.SNOWFLAKE_TEST_WAREHOUSE }}
+  DBT_ENV_SECRET_DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+  DBT_ENV_SECRET_DATABRICKS_HTTP_PATH: ${{ secrets.DATABRICKS_HTTP_PATH }}
+  DBT_ENV_SECRET_DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
 
 jobs:
   ci-workflow:
@@ -33,5 +37,8 @@ jobs:
       - name: Install tox
         run: python3 -m pip install tox
 
-      - name: Run Tests
-        run: tox -e integration
+      - name: Run Snowflake Tests
+        run: tox -e integration_snowflake
+
+      - name: Run Databricks Tests
+        run: tox -e integration_databricks
