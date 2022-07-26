@@ -33,6 +33,7 @@
         {% endset %}
 
         {{ dbt_artifacts.insert_into_metadata_table(
+            database_name=src_dbt_seeds.database,
             schema_name=src_dbt_seeds.schema,
             table_name=src_dbt_seeds.identifier,
             content=seed_values
