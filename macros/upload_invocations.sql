@@ -12,7 +12,12 @@
         {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(7) }},
         {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(8) }},
         {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(9) }},
-        {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }}
+        {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
+        {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
+        {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }},
+        {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }},
+        {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }},
+        {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(15) }}
     from values
     (
         '{{ invocation_id }}', {# command_invocation_id #}
@@ -24,7 +29,21 @@
         '{{ target.profile_name }}', {# target_profile_name #}
         '{{ target.name }}', {# target_name #}
         '{{ target.schema }}', {# target_schema #}
-        {{ target.threads }} {# target_threads #}
+        {{ target.threads }}, {# target_threads #}
+
+        {% if var('include_dbt_cloud_run_details_env_vars') is true %}
+            {{ env_var('DBT_CLOUD_PROJECT_ID') }}, {# dbt_cloud_project_id #}
+            {{ env_var('DBT_CLOUD_JOB_ID') }}, {# dbt_cloud_job_id #}
+            {{ env_var('DBT_CLOUD_RUN_ID') }}, {# dbt_cloud_run_id #}
+            '{{ env_var('DBT_CLOUD_RUN_REASON_CATEGORY') }}', {# dbt_cloud_run_reason_category #}
+            '{{ env_var('DBT_CLOUD_RUN_REASON') }}' {# dbt_cloud_run_reason #}
+        {% else %}
+            null, {# dbt_cloud_project_id #}
+            null, {# dbt_cloud_job_id #}
+            null, {# dbt_cloud_run_id #}
+            null, {# dbt_cloud_run_reason_category #}
+            null {# dbt_cloud_run_reason #}
+        {% endif %}
     )
     {% endset %}
 

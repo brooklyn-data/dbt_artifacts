@@ -25,7 +25,12 @@
         target_profile_name STRING,
         target_name STRING,
         target_schema STRING,
-        target_threads INTEGER
+        target_threads INTEGER,
+        dbt_cloud_project_id INTEGER,
+        dbt_cloud_job_id INTEGER,
+        dbt_cloud_run_id INTEGER,
+        dbt_cloud_run_reason_category STRING,
+        dbt_cloud_run_reason STRING
     )
     using delta
 {%- endmacro %}
@@ -41,6 +46,11 @@
         target_profile_name STRING,
         target_name STRING,
         target_schema STRING,
-        target_threads INTEGER
+        target_threads INTEGER,
+        dbt_cloud_project_id INTEGER,
+        dbt_cloud_job_id INTEGER,
+        dbt_cloud_run_id INTEGER,
+        dbt_cloud_run_reason_category STRING,
+        dbt_cloud_run_reason STRING
     )
 {%- endmacro %}
