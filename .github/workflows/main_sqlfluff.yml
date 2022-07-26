@@ -30,7 +30,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install Python packages
-        run: python -m pip install dbt-snowflake~=1.0.0 sqlfluff-templater-dbt
+        run: python -m pip install dbt-snowflake~=1.1.0 sqlfluff-templater-dbt
 
       - name: Test database connection
         run: dbt debug

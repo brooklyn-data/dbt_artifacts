@@ -39,6 +39,7 @@
         {% endset %}
 
         {{ dbt_artifacts.insert_into_metadata_table(
+            database_name=src_dbt_exposures.database,
             schema_name=src_dbt_exposures.schema,
             table_name=src_dbt_exposures.identifier,
             content=exposure_values

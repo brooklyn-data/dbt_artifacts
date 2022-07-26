@@ -69,6 +69,7 @@
         {% endset %}
 
         {{ dbt_artifacts.insert_into_metadata_table(
+            database_name=src_dbt_snapshot_executions.database,
             schema_name=src_dbt_snapshot_executions.schema,
             table_name=src_dbt_snapshot_executions.identifier,
             content=snapshot_execution_values

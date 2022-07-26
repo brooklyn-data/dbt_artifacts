@@ -12,10 +12,7 @@ macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
 
 target-path: "target"
-clean-targets: ["target", "dbt_modules"]
-
-vars:
-  deployment_target_names: ['production', 'prod']
+clean-targets: ["target", "dbt_packages"]
 
 models:
   +persist_docs:

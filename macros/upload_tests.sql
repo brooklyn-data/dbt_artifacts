@@ -31,6 +31,7 @@
         {% endset %}
 
         {{ dbt_artifacts.insert_into_metadata_table(
+            database_name=src_dbt_tests.database,
             schema_name=src_dbt_tests.schema,
             table_name=src_dbt_tests.identifier,
             content=test_values
