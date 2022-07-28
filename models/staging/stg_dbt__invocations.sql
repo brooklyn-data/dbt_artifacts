@@ -17,7 +17,14 @@ enhanced as (
         target_profile_name,
         target_name,
         target_schema,
-        target_threads
+        target_threads,
+        dbt_cloud_project_id,
+        dbt_cloud_job_id,
+        dbt_cloud_run_id,
+        dbt_cloud_run_reason_category,
+        dbt_cloud_run_reason,
+        other_env_vars,
+        dbt_vars
     from base
 
 )
