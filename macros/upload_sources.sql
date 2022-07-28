@@ -37,6 +37,7 @@
         {% endset %}
 
         {{ dbt_artifacts.insert_into_metadata_table(
+            database_name=src_dbt_sources.database,
             schema_name=src_dbt_sources.schema,
             table_name=src_dbt_sources.identifier,
             content=source_values

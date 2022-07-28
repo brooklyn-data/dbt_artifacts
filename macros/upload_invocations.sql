@@ -62,6 +62,7 @@
     {% endset %}
 
     {{ dbt_artifacts.insert_into_metadata_table(
+        database_name=src_dbt_invocations.database,
         schema_name=src_dbt_invocations.schema,
         table_name=src_dbt_invocations.identifier,
         content=invocation_values
