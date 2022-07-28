@@ -274,3 +274,45 @@ The name of the target dbt schema.
 The number of threads in use by dbt.
 
 {% enddocs %}
+
+{% docs dbt_cloud_project_id %}
+
+The ID of the dbt Cloud Project for this run.
+
+{% enddocs %}
+
+{% docs dbt_cloud_job_id %}
+
+The ID of the dbt Cloud Job for this run.
+
+{% enddocs %}
+
+{% docs dbt_cloud_run_id %}
+
+The ID of this particular run.
+
+{% enddocs %}
+
+{% docs dbt_cloud_run_reason_category %}
+
+The "category" of the trigger for this run.
+
+{% enddocs %}
+
+{% docs dbt_cloud_run_reason %}
+
+The specific trigger for this run.
+
+{% enddocs %}
+
+{% docs other_env_vars %}
+
+Key-value pairs of environment variables to be capture.
+
+{% enddocs %}
+
+{% docs dbt_vars %}
+
+Key-value pairs of project variables to be capture.
+
+{% enddocs %}
