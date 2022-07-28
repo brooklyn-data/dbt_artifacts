@@ -13,11 +13,13 @@
         {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(8) }},
         {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(9) }},
         {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
-        {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
-        {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }},
-        {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }},
-        {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }},
-        {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(15) }}
+        nullif({{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }}, ''),
+        nullif({{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }}, ''),
+        nullif({{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }}, ''),
+        nullif({{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }}, ''),
+        nullif({{ adapter.dispatch('column_identifier', 'dbt_artifacts')(15) }}, ''),
+        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(16)) }},
+        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(17)) }}
     from values
     (
         '{{ invocation_id }}', {# command_invocation_id #}
@@ -31,18 +33,30 @@
         '{{ target.schema }}', {# target_schema #}
         {{ target.threads }}, {# target_threads #}
 
-        {% if var('include_dbt_cloud_run_details_env_vars') is true %}
-            {{ env_var('DBT_CLOUD_PROJECT_ID') }}, {# dbt_cloud_project_id #}
-            {{ env_var('DBT_CLOUD_JOB_ID') }}, {# dbt_cloud_job_id #}
-            {{ env_var('DBT_CLOUD_RUN_ID') }}, {# dbt_cloud_run_id #}
-            '{{ env_var('DBT_CLOUD_RUN_REASON_CATEGORY') }}', {# dbt_cloud_run_reason_category #}
-            '{{ env_var('DBT_CLOUD_RUN_REASON') }}' {# dbt_cloud_run_reason #}
+        '{{ env_var('DBT_CLOUD_PROJECT_ID', '') }}', {# dbt_cloud_project_id #}
+        '{{ env_var('DBT_CLOUD_JOB_ID', '') }}', {# dbt_cloud_job_id #}
+        '{{ env_var('DBT_CLOUD_RUN_ID', '') }}', {# dbt_cloud_run_id #}
+        '{{ env_var('DBT_CLOUD_RUN_REASON_CATEGORY', '') }}', {# dbt_cloud_run_reason_category #}
+        '{{ env_var('DBT_CLOUD_RUN_REASON', '') }}', {# dbt_cloud_run_reason #}
+
+        {% if var('other_env_vars', none) is not none %}
+            {% set other_env_vars_dict = {} %}
+            {% for other_env_var in var('other_env_vars') %}
+                {% do other_env_vars_dict.update({other_env_var: env_var(other_env_var)}) %}
+            {% endfor %}
+            '{{ tojson(other_env_vars_dict) }}', {# other_env_vars #}
         {% else %}
-            null, {# dbt_cloud_project_id #}
-            null, {# dbt_cloud_job_id #}
-            null, {# dbt_cloud_run_id #}
-            null, {# dbt_cloud_run_reason_category #}
-            null {# dbt_cloud_run_reason #}
+            null, {# other_env_vars #}
+        {% endif %}
+
+        {% if var('dbt_vars', none) is not none %}
+            {% set dbt_vars_dict = {} %}
+            {% for dbt_var in var('dbt_vars') %}
+                {% do dbt_vars_dict.update({dbt_var: var(dbt_var)}) %}
+            {% endfor %}
+            '{{ tojson(dbt_vars_dict) }}' {# dbt_vars #}
+        {% else %}
+            null {# dbt_vars #}
         {% endif %}
     )
     {% endset %}
