@@ -103,9 +103,11 @@ pipx ensurepath
 pipx install tox
 ```
 
-3. Copy and paste `integration_test_project/example-env.sh` as `env.sh`. Fill in the missing values. Source the file with `. ./env.sh`.
+3. From this repository, copy and paste the `integration_test_project/example-env.sh` file and save as `env.sh` in your local repo. Fill in the missing values.
 
-4. From this directory, run
+4. Source the file in your current shell context with the command: `. ./env.sh`.
+
+5. From this directory, run
 
 ```
 tox -e integration_snowflake # For the Snowflake tests
