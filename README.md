@@ -103,7 +103,7 @@ pipx ensurepath
 pipx install tox
 ```
 
-3. From this repository, copy and paste the `integration_test_project/example-env.sh` file and save as `env.sh` in your local repo. Fill in the missing values.
+3. Copy and paste the `integration_test_project/example-env.sh` file and save as `env.sh`. Fill in the missing values.
 
 4. Source the file in your current shell context with the command: `. ./env.sh`.
 
