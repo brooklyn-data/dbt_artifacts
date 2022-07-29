@@ -2,7 +2,7 @@ version: 2
 
 sources:
   - name: dummy_source
-    database: dummy
+    database: "{% if target.type not in ('spark', 'databricks') %}{{ var('dbt_artifacts_database', target.database) }}{% endif %}"
     schema: "{{ target.schema }}"
     freshness:
       error_after: {count: 24, period: hour}
