@@ -17,7 +17,7 @@
 {%- endmacro %}
 
 {% macro databricks__get_create_model_executions_table_if_not_exists_statement(database_name, schema_name, table_name) -%}
-    create table {{schema_name}}.{{table_name}} (
+    create table {% if database_name %}{{ database_name }}.{% endif %}{{schema_name}}.{{table_name}} (
         command_invocation_id STRING,
         node_id STRING,
         was_full_refresh BOOLEAN,
