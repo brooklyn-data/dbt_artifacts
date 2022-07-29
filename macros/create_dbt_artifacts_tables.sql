@@ -1,6 +1,12 @@
 {% macro create_dbt_artifacts_tables() %}
 
-    {%- do adapter.create_schema(api.Relation.create(database=var('dbt_artifacts_database', target.database), schema=var('dbt_artifacts_schema', target.schema))) -%}
+    {% if target.type in ('spark', 'databricks') and target.database is not defined %}
+    {% set database_name = None %}
+    {% else %}
+    {% set database_name = var('dbt_artifacts_database', target.database) %}
+    {% endif %}
+
+    {%- do adapter.create_schema(api.Relation.create(database=database_name, schema=var('dbt_artifacts_schema', target.schema))) -%}
 
     {% set src_dbt_exposures = source('dbt_artifacts', 'exposures') %}
     {{ dbt_artifacts.create_exposures_table_if_not_exists(src_dbt_exposures.database, src_dbt_exposures.schema, src_dbt_exposures.identifier) }}
