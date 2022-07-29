@@ -33,7 +33,7 @@
         dbt_cloud_run_id STRING,
         dbt_cloud_run_reason_category STRING,
         dbt_cloud_run_reason STRING,
-        other_env_vars STRING,
+        env_vars STRING,
         dbt_vars STRING
     )
     using delta
@@ -56,7 +56,7 @@
         dbt_cloud_run_id STRING,
         dbt_cloud_run_reason_category STRING,
         dbt_cloud_run_reason STRING,
-        other_env_vars ARRAY,
+        env_vars ARRAY,
         dbt_vars ARRAY
     )
 {%- endmacro %}
@@ -78,7 +78,7 @@
         dbt_cloud_run_id STRING,
         dbt_cloud_run_reason_category STRING,
         dbt_cloud_run_reason STRING,
-        other_env_vars STRING,
+        env_vars STRING,
         dbt_vars STRING
     )
 {%- endmacro %}

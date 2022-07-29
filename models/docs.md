@@ -305,7 +305,7 @@ The specific trigger for this run.
 
 {% enddocs %}
 
-{% docs other_env_vars %}
+{% docs env_vars %}
 
 Key-value pairs of environment variables to be capture.
 

@@ -23,7 +23,7 @@ invocations as (
         dbt_cloud_run_id,
         dbt_cloud_run_reason_category,
         dbt_cloud_run_reason,
-        other_env_vars,
+        env_vars,
         dbt_vars
     from base
 

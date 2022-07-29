@@ -60,11 +60,11 @@ If the project is running in dbt Cloud, the following five run details environme
 - dbt_cloud_run_reason_category
 - dbt_cloud_run_reason
 
-To capture other environment variables as a dictionnary field (`other_env_vars`) in the fct_dbt__invocations model, add the below list variable to the configuration in your `dbt_project.yml` file and list all the environment variables you wish to capture. Note that environment variables with secrets (`DBT_ENV_SECRET_`) can't be logged.
+To capture other environment variables as a dictionnary field (`env_vars`) in the fct_dbt__invocations model, add the below list variable to the configuration in your `dbt_project.yml` file and list all the environment variables you wish to capture. Note that environment variables with secrets (`DBT_ENV_SECRET_`) can't be logged.
 ```yml
 vars:
   dbt_artifacts:
-    other_env_vars: [
+    env_vars: [
       'DBT_KEY_1',
       'DBT_KEY_2',
       '...'

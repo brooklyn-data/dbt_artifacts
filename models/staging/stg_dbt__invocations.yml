@@ -34,7 +34,7 @@ models:
     description: '{{ doc("dbt_cloud_run_reason_category") }}'
   - name: dbt_cloud_run_reason
     description: '{{ doc("dbt_cloud_run_reason") }}'
-  - name: other_env_vars
-    description: '{{ doc("other_env_vars") }}'
+  - name: env_vars
+    description: '{{ doc("env_vars") }}'
   - name: dbt_vars
     description: '{{ doc("dbt_vars") }}'
