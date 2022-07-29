@@ -1,7 +1,5 @@
 {% macro create_dbt_artifacts_tables() %}
 
-    {{ log("SHA " ~ env_var("GITHUB_SHA"), True) }}
-
     {% if target.type in ('spark', 'databricks') and target.database is not defined %}
     {% set database_name = None %}
     {% else %}
