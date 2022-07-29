@@ -41,8 +41,8 @@
 
         {% if var('env_vars', none) is not none %}
             {% set env_vars_dict = {} %}
-            {% for env_var in var('env_vars') %}
-                {% do env_vars_dict.update({env_var: env_var(env_var)}) %}
+            {% for env_variable in var('env_vars') %}
+                {% do env_vars_dict.update({env_variable: env_var(env_variable)}) %}
             {% endfor %}
             '{{ tojson(env_vars_dict) }}', {# env_vars #}
         {% else %}
