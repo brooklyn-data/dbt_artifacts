@@ -2,8 +2,11 @@ version: 2
 
 sources:
   - name: dummy_source
-    database: dummy
+    database: "{% if target.type not in ('spark', 'databricks') %}{{ var('dbt_artifacts_database', target.database) }}{% endif %}"
     schema: "{{ target.schema }}"
     freshness:
       error_after: {count: 24, period: hour}
+      filter: dayname(updatedat) not in ('Sunday', 'Monday')
     loaded_at_field: current_timestamp
+    tables:
+      - name: doesnt_exist
