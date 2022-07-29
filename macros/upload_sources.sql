@@ -30,7 +30,7 @@
                 '{{ source.name }}', {# name #}
                 '{{ source.identifier }}', {# identifier #}
                 '{{ source.loaded_at_field }}', {# loaded_at_field #}
-                '{{ tojson(source.freshness) }}' {# freshness #}
+                '{{ tojson(source.freshness) | replace("'","\\'") }}' {# freshness #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
