@@ -54,32 +54,39 @@ models:
 
 Note that the model materializations are defined in this package's `dbt_project.yml`, so do not set them in your project.
 
-If the project is running in dbt Cloud, the following five columns (https://docs.getdbt.com/docs/dbt-cloud/using-dbt-cloud/cloud-environment-variables#special-environment-variables) will be populated in the fct_dbt__invocations model:
+### Environment Variables
+
+If the project is running in dbt Cloud, the following five columns (https://docs.getdbt.com/docs/dbt-cloud/using-dbt-cloud/cloud-environment-variables#special-environment-variables) will be automatically populated in the fct_dbt__invocations model:
 - dbt_cloud_project_id
 - dbt_cloud_job_id
 - dbt_cloud_run_id
 - dbt_cloud_run_reason_category
 - dbt_cloud_run_reason
 
-To capture other environment variables as a dictionnary field (`env_vars`) in the fct_dbt__invocations model, add the below list variable to the configuration in your `dbt_project.yml` file and list all the environment variables you wish to capture. Note that environment variables with secrets (`DBT_ENV_SECRET_`) can't be logged.
+To capture other environment variables in the fct_dbt__invocations model in the `env_vars` column, add them to the `env_vars` variable in your `dbt_project.yml`. Note that environment variables with secrets (`DBT_ENV_SECRET_`) can't be logged.
 ```yml
 vars:
-  env_vars: [
-    'DBT_KEY_1',
-    'DBT_KEY_2',
-    '...'
-  ]
+  dbt_artifacts:
+    env_vars: [
+        'DBT_KEY_1',
+        'DBT_KEY_2',
+        '...'
+    ]
 ```
 
-To capture project variables as a dictionnary field (`dbt_vars`) in the fct_dbt__invocations model, add the below list variable to the configuration in your `dbt_project.yml` file and list all the variables you wish to capture.
+### dbt Variables
+
+To capture dbt variables in the fct_dbt__invocations model in the `dbt_vars` column, add them to the `dbt_vars` variable in your `dbt_project.yml`.
 ```yml
 vars:
-  dbt_vars: [
-    'var_1',
-    'var_2',
-    '...'
-  ]
+  dbt_artifacts:
+    dbt_vars: [
+        'var_1',
+        'var_2',
+        '...'
+    ]
 ```
+
 ## Acknowledgements
 Thank you to [Tails.com](https://tails.com/gb/careers/) for initial development and maintenance of this package. On 2021/12/20, the repository was transferred from the Tails.com GitHub organization to Brooklyn Data Co.
 
