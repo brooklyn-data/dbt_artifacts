@@ -20,7 +20,7 @@ vars:
   test_dbt_vars_3: dbt_vars_3
 
   env_vars: [
-    'DBT_ENV_VARS'
+    'TEST_ENV_VAR_1'
   ]
   dbt_vars: [
     'test_dbt_vars_1',
