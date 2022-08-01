@@ -28,6 +28,7 @@ See the generated [dbt docs site](https://brooklyn-data.github.io/dbt_artifacts/
 2. Run `dbt deps` to install the package
 
 3. Add an on-run-end hook to your `dbt_project.yml`: `on-run-end: "{{ dbt_artifacts.upload_results(results) }}"`
+(We recommend adding a conditional here so that the upload only occurs in your production environment, such as `on-run-end: "{% if target.name == 'prod' %}{{ dbt_artifacts.upload_results(results) }}{% endif %}"`)
 
 4. Create the tables dbt_artifacts uploads to with `dbt run-operation create_dbt_artifacts_tables`
 
