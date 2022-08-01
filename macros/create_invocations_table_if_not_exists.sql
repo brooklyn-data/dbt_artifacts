@@ -56,8 +56,8 @@
         dbt_cloud_run_id STRING,
         dbt_cloud_run_reason_category STRING,
         dbt_cloud_run_reason STRING,
-        env_vars ARRAY,
-        dbt_vars ARRAY
+        env_vars OBJECT,
+        dbt_vars OBJECT
     )
 {%- endmacro %}
 
