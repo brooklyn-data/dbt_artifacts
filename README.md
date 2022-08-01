@@ -54,7 +54,7 @@ models:
 
 Note that the model materializations are defined in this package's `dbt_project.yml`, so do not set them in your project.
 
-If the project is running in dbt Cloud, the following five run details environment variables (https://docs.getdbt.com/docs/dbt-cloud/using-dbt-cloud/cloud-environment-variables#special-environment-variables) will be populated in the fct_dbt__invocations model:
+If the project is running in dbt Cloud, the following five columns (https://docs.getdbt.com/docs/dbt-cloud/using-dbt-cloud/cloud-environment-variables#special-environment-variables) will be populated in the fct_dbt__invocations model:
 - dbt_cloud_project_id
 - dbt_cloud_job_id
 - dbt_cloud_run_id
