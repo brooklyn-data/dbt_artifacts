@@ -40,9 +40,8 @@ The following configuration can be used to specify where the raw data is uploade
 
 ```yml
 vars:
-  dbt_artifacts:
-    dbt_artifacts_database: your_db # optional, default is your target database
-    dbt_artifacts_schema: your_schema # optional, default is your target schema
+  dbt_artifacts_database: your_db # optional, default is your target database
+  dbt_artifacts_schema: your_schema # optional, default is your target schema
 
 models:
   ...
@@ -53,6 +52,38 @@ models:
 ```
 
 Note that the model materializations are defined in this package's `dbt_project.yml`, so do not set them in your project.
+
+### Environment Variables
+
+If the project is running in dbt Cloud, the following five columns (https://docs.getdbt.com/docs/dbt-cloud/using-dbt-cloud/cloud-environment-variables#special-environment-variables) will be automatically populated in the fct_dbt__invocations model:
+- dbt_cloud_project_id
+- dbt_cloud_job_id
+- dbt_cloud_run_id
+- dbt_cloud_run_reason_category
+- dbt_cloud_run_reason
+
+To capture other environment variables in the fct_dbt__invocations model in the `env_vars` column, add them to the `env_vars` variable in your `dbt_project.yml`. Note that environment variables with secrets (`DBT_ENV_SECRET_`) can't be logged.
+```yml
+vars:
+  env_vars: [
+    'ENV_VAR_1',
+    'ENV_VAR_2',
+    '...'
+  ]
+```
+
+### dbt Variables
+
+To capture dbt variables in the fct_dbt__invocations model in the `dbt_vars` column, add them to the `dbt_vars` variable in your `dbt_project.yml`.
+```yml
+vars:
+  dbt_vars: [
+    'var_1',
+    'var_2',
+    '...'
+  ]
+```
+
 ## Acknowledgements
 Thank you to [Tails.com](https://tails.com/gb/careers/) for initial development and maintenance of this package. On 2021/12/20, the repository was transferred from the Tails.com GitHub organization to Brooklyn Data Co.
 
@@ -75,9 +106,11 @@ pipx ensurepath
 pipx install tox
 ```
 
-3. Copy and paste `integration_test_project/example-env.sh` as `env.sh`. Fill in the missing values. Source the file with `. ./env.sh`.
+3. Copy and paste the `integration_test_project/example-env.sh` file and save as `env.sh`. Fill in the missing values.
 
-4. From this directory, run
+4. Source the file in your current shell context with the command: `. ./env.sh`.
+
+5. From this directory, run
 
 ```
 tox -e integration_snowflake # For the Snowflake tests

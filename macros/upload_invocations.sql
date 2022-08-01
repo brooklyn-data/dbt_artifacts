@@ -12,7 +12,14 @@
         {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(7) }},
         {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(8) }},
         {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(9) }},
-        {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }}
+        {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
+        nullif({{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }}, ''),
+        nullif({{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }}, ''),
+        nullif({{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }}, ''),
+        nullif({{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }}, ''),
+        nullif({{ adapter.dispatch('column_identifier', 'dbt_artifacts')(15) }}, ''),
+        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(16)) }},
+        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(17)) }}
     from values
     (
         '{{ invocation_id }}', {# command_invocation_id #}
@@ -24,7 +31,33 @@
         '{{ target.profile_name }}', {# target_profile_name #}
         '{{ target.name }}', {# target_name #}
         '{{ target.schema }}', {# target_schema #}
-        {{ target.threads }} {# target_threads #}
+        {{ target.threads }}, {# target_threads #}
+
+        '{{ env_var('DBT_CLOUD_PROJECT_ID', '') }}', {# dbt_cloud_project_id #}
+        '{{ env_var('DBT_CLOUD_JOB_ID', '') }}', {# dbt_cloud_job_id #}
+        '{{ env_var('DBT_CLOUD_RUN_ID', '') }}', {# dbt_cloud_run_id #}
+        '{{ env_var('DBT_CLOUD_RUN_REASON_CATEGORY', '') }}', {# dbt_cloud_run_reason_category #}
+        '{{ env_var('DBT_CLOUD_RUN_REASON', '') }}', {# dbt_cloud_run_reason #}
+
+        {% if var('env_vars', none) %}
+            {% set env_vars_dict = {} %}
+            {% for env_variable in var('env_vars') %}
+                {% do env_vars_dict.update({env_variable: env_var(env_variable)}) %}
+            {% endfor %}
+            '{{ tojson(env_vars_dict) }}', {# env_vars #}
+        {% else %}
+            null, {# env_vars #}
+        {% endif %}
+
+        {% if var('dbt_vars', none) %}
+            {% set dbt_vars_dict = {} %}
+            {% for dbt_var in var('dbt_vars') %}
+                {% do dbt_vars_dict.update({dbt_var: var(dbt_var)}) %}
+            {% endfor %}
+            '{{ tojson(dbt_vars_dict) }}' {# dbt_vars #}
+        {% else %}
+            null {# dbt_vars #}
+        {% endif %}
     )
     {% endset %}
 
