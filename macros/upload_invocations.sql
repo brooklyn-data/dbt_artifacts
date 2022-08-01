@@ -39,7 +39,7 @@
         '{{ env_var('DBT_CLOUD_RUN_REASON_CATEGORY', '') }}', {# dbt_cloud_run_reason_category #}
         '{{ env_var('DBT_CLOUD_RUN_REASON', '') }}', {# dbt_cloud_run_reason #}
 
-        {% if var('env_vars', none) is not none %}
+        {% if var('env_vars', none) %}
             {% set env_vars_dict = {} %}
             {% for env_variable in var('env_vars') %}
                 {% do env_vars_dict.update({env_variable: env_var(env_variable)}) %}
@@ -49,7 +49,7 @@
             null, {# env_vars #}
         {% endif %}
 
-        {% if var('dbt_vars', none) is not none %}
+        {% if var('dbt_vars', none) %}
             {% set dbt_vars_dict = {} %}
             {% for dbt_var in var('dbt_vars') %}
                 {% do dbt_vars_dict.update({dbt_var: var(dbt_var)}) %}
