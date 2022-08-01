@@ -63,23 +63,21 @@ If the project is running in dbt Cloud, the following five run details environme
 To capture other environment variables as a dictionnary field (`env_vars`) in the fct_dbt__invocations model, add the below list variable to the configuration in your `dbt_project.yml` file and list all the environment variables you wish to capture. Note that environment variables with secrets (`DBT_ENV_SECRET_`) can't be logged.
 ```yml
 vars:
-  dbt_artifacts:
-    env_vars: [
-      'DBT_KEY_1',
-      'DBT_KEY_2',
-      '...'
-    ]
+  env_vars: [
+    'DBT_KEY_1',
+    'DBT_KEY_2',
+    '...'
+  ]
 ```
 
 To capture project variables as a dictionnary field (`dbt_vars`) in the fct_dbt__invocations model, add the below list variable to the configuration in your `dbt_project.yml` file and list all the variables you wish to capture.
 ```yml
 vars:
-  dbt_artifacts:
-    dbt_vars: [
-      'var_1',
-      'var_2',
-      '...'
-    ]
+  dbt_vars: [
+    'var_1',
+    'var_2',
+    '...'
+  ]
 ```
 ## Acknowledgements
 Thank you to [Tails.com](https://tails.com/gb/careers/) for initial development and maintenance of this package. On 2021/12/20, the repository was transferred from the Tails.com GitHub organization to Brooklyn Data Co.
