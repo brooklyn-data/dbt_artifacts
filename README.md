@@ -40,9 +40,8 @@ The following configuration can be used to specify where the raw data is uploade
 
 ```yml
 vars:
-  dbt_artifacts:
-    dbt_artifacts_database: your_db # optional, default is your target database
-    dbt_artifacts_schema: your_schema # optional, default is your target schema
+  dbt_artifacts_database: your_db # optional, default is your target database
+  dbt_artifacts_schema: your_schema # optional, default is your target schema
 
 models:
   ...
@@ -66,12 +65,11 @@ If the project is running in dbt Cloud, the following five columns (https://docs
 To capture other environment variables in the fct_dbt__invocations model in the `env_vars` column, add them to the `env_vars` variable in your `dbt_project.yml`. Note that environment variables with secrets (`DBT_ENV_SECRET_`) can't be logged.
 ```yml
 vars:
-  dbt_artifacts:
-    env_vars: [
-        'DBT_KEY_1',
-        'DBT_KEY_2',
-        '...'
-    ]
+  env_vars: [
+    'ENV_VAR_1',
+    'ENV_VAR_2',
+    '...'
+  ]
 ```
 
 ### dbt Variables
@@ -79,12 +77,11 @@ vars:
 To capture dbt variables in the fct_dbt__invocations model in the `dbt_vars` column, add them to the `dbt_vars` variable in your `dbt_project.yml`.
 ```yml
 vars:
-  dbt_artifacts:
-    dbt_vars: [
-        'var_1',
-        'var_2',
-        '...'
-    ]
+  dbt_vars: [
+    'var_1',
+    'var_2',
+    '...'
+  ]
 ```
 
 ## Acknowledgements

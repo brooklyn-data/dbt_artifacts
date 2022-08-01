@@ -18,15 +18,14 @@ vars:
   test_dbt_vars_1: dbt_vars_1
   test_dbt_vars_2: dbt_vars_2
   test_dbt_vars_3: dbt_vars_3
-  dbt_artifacts:
-    env_vars: [
-      'TEST_ENV_VAR_1'
-    ]
-    dbt_vars: [
-      'test_dbt_vars_1',
-      'test_dbt_vars_2',
-      'test_dbt_vars_3'
-    ]
+  env_vars: [
+    'TEST_ENV_VAR_1'
+  ]
+  dbt_vars: [
+    'test_dbt_vars_1',
+    'test_dbt_vars_2',
+    'test_dbt_vars_3'
+  ]
 
 
 models:
