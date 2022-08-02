@@ -1,0 +1,5777 @@
+{
+"exposures": {
+"exposure.artifacts_integration_tests.imaginary": {
+"fqn": [
+"artifacts_integration_tests",
+"imaginary"
+],
+"unique_id": "exposure.artifacts_integration_tests.imaginary",
+"package_name": "artifacts_integration_tests",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project",
+"path": "tests_and_exposures.yml",
+"original_file_path": "models/tests_and_exposures.yml",
+"name": "imaginary",
+"type": "dashboard",
+"owner": {
+"email": "data@jaffleshop.com",
+"name": "Claire from Data"
+},
+"resource_type": "exposure",
+"description": "dashboard description",
+"maturity": "high",
+"meta": {},
+"tags": [],
+"url": "https://bi.tool/dashboards/1",
+"depends_on": {
+"macros": [],
+"nodes": [
+"model.artifacts_integration_tests.non_incremental"
+]
+},
+"refs": [
+[
+"non_incremental"
+]
+],
+"sources": [],
+"created_at": 1659104979.2459881
+}
+},
+"metrics": {},
+"nodes": {
+"model.artifacts_integration_tests.incremental": {
+"raw_sql": "{{\n    config(\n        materialized='incremental',\n        unique_key='id'\n    )\n}}\n\nselect\n\n{% if is_incremental() %}\n\n    1 as id,\n    'banana' as fruit\n\n{% else %}\n\n    2 as id,\n    'apple' as fruit\n\n{% endif %}",
+"resource_type": "model",
+"depends_on": {
+"macros": [
+"macro.dbt.is_incremental"
+],
+"nodes": []
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": null,
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "incremental",
+"persist_docs": {
+"relation": true,
+"columns": true
+},
+"quoting": {},
+"column_types": {},
+"full_refresh": null,
+"unique_key": "id",
+"on_schema_change": "ignore",
+"post-hook": [],
+"pre-hook": []
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"fqn": [
+"artifacts_integration_tests",
+"incremental"
+],
+"unique_id": "model.artifacts_integration_tests.incremental",
+"package_name": "artifacts_integration_tests",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project",
+"path": "incremental.sql",
+"original_file_path": "models/incremental.sql",
+"name": "incremental",
+"alias": "incremental",
+"checksum": {
+"name": "sha256",
+"checksum": "8a6478b638921c222774b5a3eb78a87c4b86ec86f2eb480503d6da75474b8de4"
+},
+"tags": [],
+"refs": [],
+"sources": [],
+"description": "",
+"columns": {},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": null,
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {
+"persist_docs": {
+"relation": true,
+"columns": true
+},
+"materialized": "incremental",
+"unique_key": "id"
+},
+"created_at": 1659104978.9334688
+},
+"model.artifacts_integration_tests.non_incremental": {
+"raw_sql": "select\n    1 as id,\n    'banana' as fruit",
+"resource_type": "model",
+"depends_on": {
+"macros": [],
+"nodes": []
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": null,
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "view",
+"persist_docs": {
+"relation": true,
+"columns": true
+},
+"quoting": {},
+"column_types": {},
+"full_refresh": null,
+"unique_key": null,
+"on_schema_change": "ignore",
+"post-hook": [],
+"pre-hook": []
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"fqn": [
+"artifacts_integration_tests",
+"non_incremental"
+],
+"unique_id": "model.artifacts_integration_tests.non_incremental",
+"package_name": "artifacts_integration_tests",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project",
+"path": "non_incremental.sql",
+"original_file_path": "models/non_incremental.sql",
+"name": "non_incremental",
+"alias": "non_incremental",
+"checksum": {
+"name": "sha256",
+"checksum": "51a6b9b2d9932e66f63ac4e8c473e53b47ba4a47f63b11103ecd194782b4b770"
+},
+"tags": [],
+"refs": [],
+"sources": [],
+"description": "A normal, non incremental model",
+"columns": {
+"id": {
+"name": "id",
+"description": "",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": "artifacts_integration_tests://models/tests_and_exposures.yml",
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {
+"persist_docs": {
+"relation": true,
+"columns": true
+}
+},
+"created_at": 1659104979.225224
+},
+"snapshot.artifacts_integration_tests.my_snapshot": {
+"raw_sql": "\n{{\n    config(\n        strategy='check',\n        unique_key='id',\n        target_schema='snapshot',\n        check_cols=['id', 'fruit'],\n    )\n}}\n\nselect * from {{ ref('non_incremental') }}\n\n",
+"resource_type": "snapshot",
+"depends_on": {
+"macros": [],
+"nodes": [
+"model.artifacts_integration_tests.non_incremental"
+]
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": null,
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "snapshot",
+"persist_docs": {},
+"quoting": {},
+"column_types": {},
+"full_refresh": null,
+"unique_key": "id",
+"on_schema_change": "ignore",
+"strategy": "check",
+"target_schema": "snapshot",
+"target_database": null,
+"updated_at": null,
+"check_cols": [
+"id",
+"fruit"
+],
+"post-hook": [],
+"pre-hook": []
+},
+"database": "*****_tests",
+"schema": "snapshot",
+"fqn": [
+"artifacts_integration_tests",
+"snapshot",
+"my_snapshot"
+],
+"unique_id": "snapshot.artifacts_integration_tests.my_snapshot",
+"package_name": "artifacts_integration_tests",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project",
+"path": "snapshot.sql",
+"original_file_path": "snapshots/snapshot.sql",
+"name": "my_snapshot",
+"alias": "my_snapshot",
+"checksum": {
+"name": "sha256",
+"checksum": "5051fe7d97bca02c247cd65a93b11648400f191285a993bdfc803a9fb1c34287"
+},
+"tags": [],
+"refs": [
+[
+"non_incremental"
+]
+],
+"sources": [],
+"description": "",
+"columns": {},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": null,
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {
+"strategy": "check",
+"unique_key": "id",
+"target_schema": "snapshot",
+"check_cols": [
+"id",
+"fruit"
+]
+},
+"created_at": 1659104978.9778109
+},
+"test.artifacts_integration_tests.singular_test": {
+"raw_sql": "select 1 as failures from (select 2) where 1 = 2",
+"resource_type": "test",
+"depends_on": {
+"macros": [],
+"nodes": []
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": "dbt_test__audit",
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "test",
+"severity": "ERROR",
+"store_failures": null,
+"where": null,
+"limit": null,
+"fail_calc": "count(*)",
+"warn_if": "!= 0",
+"error_if": "!= 0"
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE_dbt_test__audit",
+"fqn": [
+"artifacts_integration_tests",
+"singular_test"
+],
+"unique_id": "test.artifacts_integration_tests.singular_test",
+"package_name": "artifacts_integration_tests",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project",
+"path": "singular_test.sql",
+"original_file_path": "tests/singular_test.sql",
+"name": "singular_test",
+"alias": "singular_test",
+"checksum": {
+"name": "sha256",
+"checksum": "56798c374f7084b99097a8b631a2f1c06bba2c9c46c107a683827274770c08d8"
+},
+"tags": [],
+"refs": [],
+"sources": [],
+"description": "",
+"columns": {},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": null,
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {},
+"created_at": 1659104979.0003068
+},
+"seed.artifacts_integration_tests.my_seed": {
+"raw_sql": "",
+"resource_type": "seed",
+"depends_on": {
+"macros": [],
+"nodes": []
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": null,
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "seed",
+"persist_docs": {},
+"quoting": {},
+"column_types": {},
+"full_refresh": null,
+"unique_key": null,
+"on_schema_change": "ignore",
+"quote_columns": false,
+"post-hook": [],
+"pre-hook": []
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"fqn": [
+"artifacts_integration_tests",
+"my_seed"
+],
+"unique_id": "seed.artifacts_integration_tests.my_seed",
+"package_name": "artifacts_integration_tests",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project",
+"path": "my_seed.csv",
+"original_file_path": "seeds/my_seed.csv",
+"name": "my_seed",
+"alias": "my_seed",
+"checksum": {
+"name": "sha256",
+"checksum": "18f1f6ee92718135085ecea7466a3e7c7aebcc54f2efb339bad0bb42a71c8403"
+},
+"tags": [],
+"refs": [],
+"sources": [],
+"description": "",
+"columns": {},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": null,
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {
+"quote_columns": false
+},
+"created_at": 1659104979.0192509
+},
+"operation.artifacts_integration_tests.artifacts_integration_tests-on-run-end-0": {
+"raw_sql": "{{ dbt_artifacts.upload_results(results) }}",
+"resource_type": "operation",
+"depends_on": {
+"macros": [
+"macro.dbt_artifacts.upload_results"
+],
+"nodes": []
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": null,
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "view",
+"persist_docs": {
+"relation": true,
+"columns": true
+},
+"quoting": {},
+"column_types": {},
+"full_refresh": null,
+"unique_key": null,
+"on_schema_change": "ignore",
+"post-hook": [],
+"pre-hook": []
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"fqn": [
+"artifacts_integration_tests",
+"hooks",
+"artifacts_integration_tests-on-run-end-0"
+],
+"unique_id": "operation.artifacts_integration_tests.artifacts_integration_tests-on-run-end-0",
+"package_name": "artifacts_integration_tests",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project",
+"path": "hooks/artifacts_integration_tests-on-run-end-0.sql",
+"original_file_path": "./dbt_project.yml",
+"name": "artifacts_integration_tests-on-run-end-0",
+"alias": "artifacts_integration_tests-on-run-end-0",
+"checksum": {
+"name": "sha256",
+"checksum": "7982c29e0f68404f1476f61f985c1fa546b567f0c86cabc8f5c77850048da6e4"
+},
+"tags": [
+"on-run-end"
+],
+"refs": [],
+"sources": [],
+"description": "",
+"columns": {},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": null,
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {
+"persist_docs": {
+"relation": true,
+"columns": true
+}
+},
+"created_at": 1659104979.033078,
+"index": 0
+},
+"model.dbt_artifacts.fct_dbt__invocations": {
+"raw_sql": "with base as (\n\n    select *\n    from {{ ref('stg_dbt__invocations') }}\n\n),\n\ninvocations as (\n\n    select\n        command_invocation_id,\n        dbt_version,\n        project_name,\n        run_started_at,\n        dbt_command,\n        full_refresh_flag,\n        target_profile_name,\n        target_name,\n        target_schema,\n        target_threads\n    from base\n\n)\n\nselect * from invocations",
+"resource_type": "model",
+"depends_on": {
+"macros": [],
+"nodes": [
+"model.dbt_artifacts.stg_dbt__invocations"
+]
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": null,
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "view",
+"persist_docs": {
+"relation": true,
+"columns": true
+},
+"quoting": {},
+"column_types": {},
+"full_refresh": null,
+"unique_key": null,
+"on_schema_change": "ignore",
+"file_format": "delta",
+"post-hook": [],
+"pre-hook": []
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"fqn": [
+"dbt_artifacts",
+"fct_dbt__invocations"
+],
+"unique_id": "model.dbt_artifacts.fct_dbt__invocations",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "fct_dbt__invocations.sql",
+"original_file_path": "models/fct_dbt__invocations.sql",
+"name": "fct_dbt__invocations",
+"alias": "fct_dbt__invocations",
+"checksum": {
+"name": "sha256",
+"checksum": "66b9f957055df1227f8cce5554386771b04c31fcd6583f6658360d657dc71833"
+},
+"tags": [],
+"refs": [
+[
+"stg_dbt__invocations"
+]
+],
+"sources": [],
+"description": "Fact model that contains data about invocations.",
+"columns": {
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"dbt_version": {
+"name": "dbt_version",
+"description": "Installed version of dbt that is currently running.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"project_name": {
+"name": "project_name",
+"description": "Name for the root-level project which is being run by dbt.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"run_started_at": {
+"name": "run_started_at",
+"description": "Timestamp that this run started.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"dbt_command": {
+"name": "dbt_command",
+"description": "dbt command of this run.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"full_refresh_flag": {
+"name": "full_refresh_flag",
+"description": "Boolean flag indicating whether the dbt run was in full refresh mode or not.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"target_profile_name": {
+"name": "target_profile_name",
+"description": "The name of the active profile.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"target_name": {
+"name": "target_name",
+"description": "The name of the active target.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"target_schema": {
+"name": "target_schema",
+"description": "The name of the target dbt schema.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"target_threads": {
+"name": "target_threads",
+"description": "The number of threads in use by dbt.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": "dbt_artifacts://models/fct_dbt__invocations.yml",
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {
+"materialized": "view",
+"file_format": "delta",
+"persist_docs": {
+"relation": true,
+"columns": true
+}
+},
+"created_at": 1659104979.3058019
+},
+"model.dbt_artifacts.fct_dbt__seed_executions": {
+"raw_sql": "with base as (\n\n    select *\n    from {{ ref('stg_dbt__seed_executions') }}\n\n),\n\nseed_executions as (\n\n    select\n        seed_execution_id,\n        command_invocation_id,\n        node_id,\n        was_full_refresh,\n        thread_id,\n        status,\n        compile_started_at,\n        query_completed_at,\n        total_node_runtime,\n        rows_affected,\n        materialization,\n        schema,\n        name\n    from base\n\n)\n\nselect * from seed_executions",
+"resource_type": "model",
+"depends_on": {
+"macros": [],
+"nodes": [
+"model.dbt_artifacts.stg_dbt__seed_executions"
+]
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": null,
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "view",
+"persist_docs": {
+"relation": true,
+"columns": true
+},
+"quoting": {},
+"column_types": {},
+"full_refresh": null,
+"unique_key": null,
+"on_schema_change": "ignore",
+"file_format": "delta",
+"post-hook": [],
+"pre-hook": []
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"fqn": [
+"dbt_artifacts",
+"fct_dbt__seed_executions"
+],
+"unique_id": "model.dbt_artifacts.fct_dbt__seed_executions",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "fct_dbt__seed_executions.sql",
+"original_file_path": "models/fct_dbt__seed_executions.sql",
+"name": "fct_dbt__seed_executions",
+"alias": "fct_dbt__seed_executions",
+"checksum": {
+"name": "sha256",
+"checksum": "5ffd85fd7cca2233302f442b5e83ecc3ebccc57d0c1746202345bbde36049757"
+},
+"tags": [],
+"refs": [
+[
+"stg_dbt__seed_executions"
+]
+],
+"sources": [],
+"description": "Fact model that contains data about seed executions.",
+"columns": {
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"compile_started_at": {
+"name": "compile_started_at",
+"description": "Timestamp when the node started compiling.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"materialization": {
+"name": "materialization",
+"description": "The materialization of the model.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"name": {
+"name": "name",
+"description": "Name of the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"query_completed_at": {
+"name": "query_completed_at",
+"description": "Timestamp when the node's SQL query completed.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"rows_affected": {
+"name": "rows_affected",
+"description": "Number of rows affected by the model execution.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"schema": {
+"name": "schema",
+"description": "Configured schema for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"seed_execution_id": {
+"name": "seed_execution_id",
+"description": "Execution ID of the seed node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"status": {
+"name": "status",
+"description": "Represents the execution status of a node, can be success, failure, or error.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"thread_id": {
+"name": "thread_id",
+"description": "Which thread executed this node? E.g. Thread-1",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"total_node_runtime": {
+"name": "total_node_runtime",
+"description": "Total time spent executing this node (seconds).",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"was_full_refresh": {
+"name": "was_full_refresh",
+"description": "Boolean flag indicating whether the nodes run was a full refresh or not.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": "dbt_artifacts://models/fct_dbt__seed_executions.yml",
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {
+"materialized": "view",
+"file_format": "delta",
+"persist_docs": {
+"relation": true,
+"columns": true
+}
+},
+"created_at": 1659104979.313163
+},
+"model.dbt_artifacts.dim_dbt__tests": {
+"raw_sql": "with base as (\n\n    select *\n    from {{ ref('stg_dbt__tests') }}\n\n),\n\ntests as (\n\n    select\n        test_execution_id,\n        command_invocation_id,\n        node_id,\n        name,\n        depends_on_nodes,\n        package_name,\n        test_path,\n        tags\n    from base\n\n)\n\nselect * from tests",
+"resource_type": "model",
+"depends_on": {
+"macros": [],
+"nodes": [
+"model.dbt_artifacts.stg_dbt__tests"
+]
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": null,
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "view",
+"persist_docs": {
+"relation": true,
+"columns": true
+},
+"quoting": {},
+"column_types": {},
+"full_refresh": null,
+"unique_key": null,
+"on_schema_change": "ignore",
+"file_format": "delta",
+"post-hook": [],
+"pre-hook": []
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"fqn": [
+"dbt_artifacts",
+"dim_dbt__tests"
+],
+"unique_id": "model.dbt_artifacts.dim_dbt__tests",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "dim_dbt__tests.sql",
+"original_file_path": "models/dim_dbt__tests.sql",
+"name": "dim_dbt__tests",
+"alias": "dim_dbt__tests",
+"checksum": {
+"name": "sha256",
+"checksum": "d653a44f302824778d10689c2fee177eac19c804e4db8ab158b6b30ae1eca136"
+},
+"tags": [],
+"refs": [
+[
+"stg_dbt__tests"
+]
+],
+"sources": [],
+"description": "Dimension model that contains data about tests.",
+"columns": {
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"depends_on_nodes": {
+"name": "depends_on_nodes",
+"description": "Array of node identifiers that this node depends on in the execution graph.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"name": {
+"name": "name",
+"description": "Name of the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"package_name": {
+"name": "package_name",
+"description": "Name of the dbt package which contains the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"tags": {
+"name": "tags",
+"description": "Tags used in resource selection associated with the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"test_execution_id": {
+"name": "test_execution_id",
+"description": "Execution ID of the test node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"test_path": {
+"name": "test_path",
+"description": "Path to the yaml (SQL in case of a singular test) file describing the test.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": "dbt_artifacts://models/dim_dbt__tests.yml",
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {
+"materialized": "view",
+"file_format": "delta",
+"persist_docs": {
+"relation": true,
+"columns": true
+}
+},
+"created_at": 1659104979.2839592
+},
+"model.dbt_artifacts.fct_dbt__test_executions": {
+"raw_sql": "with base as (\n\n    select *\n    from {{ ref('stg_dbt__test_executions') }}\n\n),\n\ntest_executions as (\n\n    select\n        test_execution_id,\n        command_invocation_id,\n        node_id,\n        was_full_refresh,\n        thread_id,\n        status,\n        compile_started_at,\n        query_completed_at,\n        total_node_runtime,\n        rows_affected,\n        failures\n    from base\n\n)\n\nselect * from test_executions",
+"resource_type": "model",
+"depends_on": {
+"macros": [],
+"nodes": [
+"model.dbt_artifacts.stg_dbt__test_executions"
+]
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": null,
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "view",
+"persist_docs": {
+"relation": true,
+"columns": true
+},
+"quoting": {},
+"column_types": {},
+"full_refresh": null,
+"unique_key": null,
+"on_schema_change": "ignore",
+"file_format": "delta",
+"post-hook": [],
+"pre-hook": []
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"fqn": [
+"dbt_artifacts",
+"fct_dbt__test_executions"
+],
+"unique_id": "model.dbt_artifacts.fct_dbt__test_executions",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "fct_dbt__test_executions.sql",
+"original_file_path": "models/fct_dbt__test_executions.sql",
+"name": "fct_dbt__test_executions",
+"alias": "fct_dbt__test_executions",
+"checksum": {
+"name": "sha256",
+"checksum": "274739cd448e01da3c8abd89927a1cc9f1e09f06c82817f71ee2b69992d28937"
+},
+"tags": [],
+"refs": [
+[
+"stg_dbt__test_executions"
+]
+],
+"sources": [],
+"description": "Fact model that contains data about test executions.",
+"columns": {
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"compile_started_at": {
+"name": "compile_started_at",
+"description": "Timestamp when the node started compiling.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"failures": {
+"name": "failures",
+"description": "Test failures. Value is 1 if the test failed, 0 if successful.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"query_completed_at": {
+"name": "query_completed_at",
+"description": "Timestamp when the node's SQL query completed.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"rows_affected": {
+"name": "rows_affected",
+"description": "Number of rows affected by the model execution.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"status": {
+"name": "status",
+"description": "Represents the execution status of a node, can be success, failure, or error.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"test_execution_id": {
+"name": "test_execution_id",
+"description": "Execution ID of the test node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"thread_id": {
+"name": "thread_id",
+"description": "Which thread executed this node? E.g. Thread-1",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"total_node_runtime": {
+"name": "total_node_runtime",
+"description": "Total time spent executing this node (seconds).",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"was_full_refresh": {
+"name": "was_full_refresh",
+"description": "Boolean flag indicating whether the nodes run was a full refresh or not.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": "dbt_artifacts://models/fct_dbt__test_executions.yml",
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {
+"materialized": "view",
+"file_format": "delta",
+"persist_docs": {
+"relation": true,
+"columns": true
+}
+},
+"created_at": 1659104979.279101
+},
+"model.dbt_artifacts.dim_dbt__snapshots": {
+"raw_sql": "with base as (\n\n    select *\n    from {{ ref('stg_dbt__snapshots') }}\n\n),\n\nsnapshots as (\n\n    select\n        snapshot_execution_id,\n        command_invocation_id,\n        node_id,\n        database,\n        schema,\n        name,\n        depends_on_nodes,\n        package_name,\n        path,\n        checksum,\n        strategy\n    from base\n\n)\n\nselect * from snapshots",
+"resource_type": "model",
+"depends_on": {
+"macros": [],
+"nodes": [
+"model.dbt_artifacts.stg_dbt__snapshots"
+]
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": null,
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "view",
+"persist_docs": {
+"relation": true,
+"columns": true
+},
+"quoting": {},
+"column_types": {},
+"full_refresh": null,
+"unique_key": null,
+"on_schema_change": "ignore",
+"file_format": "delta",
+"post-hook": [],
+"pre-hook": []
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"fqn": [
+"dbt_artifacts",
+"dim_dbt__snapshots"
+],
+"unique_id": "model.dbt_artifacts.dim_dbt__snapshots",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "dim_dbt__snapshots.sql",
+"original_file_path": "models/dim_dbt__snapshots.sql",
+"name": "dim_dbt__snapshots",
+"alias": "dim_dbt__snapshots",
+"checksum": {
+"name": "sha256",
+"checksum": "63c1c7c270f42bafbbd02a04e44c37f7b5533783af5db4b4dd4a042aa6a3867f"
+},
+"tags": [],
+"refs": [
+[
+"stg_dbt__snapshots"
+]
+],
+"sources": [],
+"description": "Dimension model that contains data about snapshots.",
+"columns": {
+"checksum": {
+"name": "checksum",
+"description": "Checksum of the model.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"database": {
+"name": "database",
+"description": "The configured database for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"depends_on_nodes": {
+"name": "depends_on_nodes",
+"description": "Array of node identifiers that this node depends on in the execution graph.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"name": {
+"name": "name",
+"description": "Name of the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"package_name": {
+"name": "package_name",
+"description": "Name of the dbt package which contains the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"path": {
+"name": "path",
+"description": "Path to the model on the local filesystem.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"schema": {
+"name": "schema",
+"description": "Configured schema for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"snapshot_execution_id": {
+"name": "snapshot_execution_id",
+"description": "Execution ID of the snapshot node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"strategy": {
+"name": "strategy",
+"description": "Snapshot \"strategies\" define how dbt knows if a row has changed. There are two strategies built-in to dbt — timestamp\nand check.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": "dbt_artifacts://models/dim_dbt__snapshots.yml",
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {
+"materialized": "view",
+"file_format": "delta",
+"persist_docs": {
+"relation": true,
+"columns": true
+}
+},
+"created_at": 1659104979.30015
+},
+"model.dbt_artifacts.fct_dbt__model_executions": {
+"raw_sql": "with base as (\n\n    select *\n    from {{ ref('stg_dbt__model_executions') }}\n\n),\n\nmodel_executions as (\n\n    select\n        model_execution_id,\n        command_invocation_id,\n        node_id,\n        was_full_refresh,\n        thread_id,\n        status,\n        compile_started_at,\n        query_completed_at,\n        total_node_runtime,\n        rows_affected,\n        materialization,\n        schema,\n        name\n    from base\n\n)\n\nselect * from model_executions",
+"resource_type": "model",
+"depends_on": {
+"macros": [],
+"nodes": [
+"model.dbt_artifacts.stg_dbt__model_executions"
+]
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": null,
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "view",
+"persist_docs": {
+"relation": true,
+"columns": true
+},
+"quoting": {},
+"column_types": {},
+"full_refresh": null,
+"unique_key": null,
+"on_schema_change": "ignore",
+"file_format": "delta",
+"post-hook": [],
+"pre-hook": []
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"fqn": [
+"dbt_artifacts",
+"fct_dbt__model_executions"
+],
+"unique_id": "model.dbt_artifacts.fct_dbt__model_executions",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "fct_dbt__model_executions.sql",
+"original_file_path": "models/fct_dbt__model_executions.sql",
+"name": "fct_dbt__model_executions",
+"alias": "fct_dbt__model_executions",
+"checksum": {
+"name": "sha256",
+"checksum": "68de694ee680a29c0b34cd480346d5246898176af3fe9a30c2ece3c40248cf02"
+},
+"tags": [],
+"refs": [
+[
+"stg_dbt__model_executions"
+]
+],
+"sources": [],
+"description": "Fact model that contains data about model executions.",
+"columns": {
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"compile_started_at": {
+"name": "compile_started_at",
+"description": "Timestamp when the node started compiling.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"materialization": {
+"name": "materialization",
+"description": "The materialization of the model.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"model_execution_id": {
+"name": "model_execution_id",
+"description": "Execution ID of the model node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"name": {
+"name": "name",
+"description": "Name of the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"query_completed_at": {
+"name": "query_completed_at",
+"description": "Timestamp when the node's SQL query completed.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"rows_affected": {
+"name": "rows_affected",
+"description": "Number of rows affected by the model execution.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"schema": {
+"name": "schema",
+"description": "Configured schema for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"status": {
+"name": "status",
+"description": "Represents the execution status of a node, can be success, failure, or error.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"thread_id": {
+"name": "thread_id",
+"description": "Which thread executed this node? E.g. Thread-1",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"total_node_runtime": {
+"name": "total_node_runtime",
+"description": "Total time spent executing this node (seconds).",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"was_full_refresh": {
+"name": "was_full_refresh",
+"description": "Boolean flag indicating whether the nodes run was a full refresh or not.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": "dbt_artifacts://models/fct_dbt__model_executions.yml",
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {
+"materialized": "view",
+"file_format": "delta",
+"persist_docs": {
+"relation": true,
+"columns": true
+}
+},
+"created_at": 1659104979.2925289
+},
+"model.dbt_artifacts.dim_dbt__sources": {
+"raw_sql": "with base as (\n\n    select *\n    from {{ ref('stg_dbt__sources') }}\n\n),\n\nsources as (\n\n    select\n        source_execution_id,\n        command_invocation_id,\n        node_id,\n        database,\n        schema,\n        source_name,\n        loader,\n        name,\n        identifier,\n        loaded_at_field,\n        freshness\n    from base\n\n)\n\nselect * from sources",
+"resource_type": "model",
+"depends_on": {
+"macros": [],
+"nodes": [
+"model.dbt_artifacts.stg_dbt__sources"
+]
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": null,
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "view",
+"persist_docs": {
+"relation": true,
+"columns": true
+},
+"quoting": {},
+"column_types": {},
+"full_refresh": null,
+"unique_key": null,
+"on_schema_change": "ignore",
+"file_format": "delta",
+"post-hook": [],
+"pre-hook": []
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"fqn": [
+"dbt_artifacts",
+"dim_dbt__sources"
+],
+"unique_id": "model.dbt_artifacts.dim_dbt__sources",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "dim_dbt__sources.sql",
+"original_file_path": "models/dim_dbt__sources.sql",
+"name": "dim_dbt__sources",
+"alias": "dim_dbt__sources",
+"checksum": {
+"name": "sha256",
+"checksum": "a7344adfdbaca9aa0f0b347870951c0609aa07528454bcc6f362875641de559f"
+},
+"tags": [],
+"refs": [
+[
+"stg_dbt__sources"
+]
+],
+"sources": [],
+"description": "Dimension model that contains data about sources.",
+"columns": {
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"database": {
+"name": "database",
+"description": "The configured database for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"freshness": {
+"name": "freshness",
+"description": "The specified freshness of the source model.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"identifier": {
+"name": "identifier",
+"description": "Source identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"loaded_at_field": {
+"name": "loaded_at_field",
+"description": "A column name (or expression) that returns a timestamp indicating freshness.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"loader": {
+"name": "loader",
+"description": "Describes the tool that loads this source into your warehouse.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"name": {
+"name": "name",
+"description": "Name of the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"schema": {
+"name": "schema",
+"description": "Configured schema for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"source_execution_id": {
+"name": "source_execution_id",
+"description": "Execution ID of the source node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"source_name": {
+"name": "source_name",
+"description": "Source name.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": "dbt_artifacts://models/dim_dbt__sources.yml",
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {
+"materialized": "view",
+"file_format": "delta",
+"persist_docs": {
+"relation": true,
+"columns": true
+}
+},
+"created_at": 1659104979.33851
+},
+"model.dbt_artifacts.dim_dbt__exposures": {
+"raw_sql": "with base as (\n\n    select *\n    from {{ ref('stg_dbt__exposures') }}\n\n),\n\nexposures as (\n\n    select\n        exposure_execution_id,\n        command_invocation_id,\n        node_id,\n        name,\n        type,\n        owner,\n        maturity,\n        path,\n        description,\n        url,\n        package_name,\n        depends_on_nodes\n    from base\n\n)\n\nselect * from exposures",
+"resource_type": "model",
+"depends_on": {
+"macros": [],
+"nodes": [
+"model.dbt_artifacts.stg_dbt__exposures"
+]
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": null,
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "view",
+"persist_docs": {
+"relation": true,
+"columns": true
+},
+"quoting": {},
+"column_types": {},
+"full_refresh": null,
+"unique_key": null,
+"on_schema_change": "ignore",
+"file_format": "delta",
+"post-hook": [],
+"pre-hook": []
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"fqn": [
+"dbt_artifacts",
+"dim_dbt__exposures"
+],
+"unique_id": "model.dbt_artifacts.dim_dbt__exposures",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "dim_dbt__exposures.sql",
+"original_file_path": "models/dim_dbt__exposures.sql",
+"name": "dim_dbt__exposures",
+"alias": "dim_dbt__exposures",
+"checksum": {
+"name": "sha256",
+"checksum": "f09191904b71a87eadfa93cf15ea02655faa54bcbbc159b380138cf8932645ad"
+},
+"tags": [],
+"refs": [
+[
+"stg_dbt__exposures"
+]
+],
+"sources": [],
+"description": "Dimension model that contains data about exposures.",
+"columns": {
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"depends_on_nodes": {
+"name": "depends_on_nodes",
+"description": "Array of node identifiers that this node depends on in the execution graph.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"description": {
+"name": "description",
+"description": "Node description.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"exposure_execution_id": {
+"name": "exposure_execution_id",
+"description": "Execution ID of the exposure node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"maturity": {
+"name": "maturity",
+"description": "Exposure maturity; one of high, medium, low.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"name": {
+"name": "name",
+"description": "Name of the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"owner": {
+"name": "owner",
+"description": "Owner of the exposure, usually an email address.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"package_name": {
+"name": "package_name",
+"description": "Name of the dbt package which contains the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"path": {
+"name": "path",
+"description": "Path to the model on the local filesystem.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"type": {
+"name": "type",
+"description": "Exposure type; one of dashboard, notebook, analysis, ml, application (used to organize on docs site)",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"url": {
+"name": "url",
+"description": "The URL of the BI tool where the data defined by the exposure can be viewed.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": "dbt_artifacts://models/dim_dbt__exposures.yml",
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {
+"materialized": "view",
+"file_format": "delta",
+"persist_docs": {
+"relation": true,
+"columns": true
+}
+},
+"created_at": 1659104979.352332
+},
+"model.dbt_artifacts.dim_dbt__models": {
+"raw_sql": "with base as (\n\n    select *\n    from {{ ref('stg_dbt__models') }}\n\n),\n\nmodels as (\n\n    select\n        model_execution_id,\n        command_invocation_id,\n        node_id,\n        database,\n        schema,\n        name,\n        depends_on_nodes,\n        package_name,\n        path,\n        checksum,\n        materialization\n    from base\n\n)\n\nselect * from models",
+"resource_type": "model",
+"depends_on": {
+"macros": [],
+"nodes": [
+"model.dbt_artifacts.stg_dbt__models"
+]
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": null,
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "view",
+"persist_docs": {
+"relation": true,
+"columns": true
+},
+"quoting": {},
+"column_types": {},
+"full_refresh": null,
+"unique_key": null,
+"on_schema_change": "ignore",
+"file_format": "delta",
+"post-hook": [],
+"pre-hook": []
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"fqn": [
+"dbt_artifacts",
+"dim_dbt__models"
+],
+"unique_id": "model.dbt_artifacts.dim_dbt__models",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "dim_dbt__models.sql",
+"original_file_path": "models/dim_dbt__models.sql",
+"name": "dim_dbt__models",
+"alias": "dim_dbt__models",
+"checksum": {
+"name": "sha256",
+"checksum": "c20bda4f5be75c91a17aa792bce74979dac26b1e569991e23980615f86f09014"
+},
+"tags": [],
+"refs": [
+[
+"stg_dbt__models"
+]
+],
+"sources": [],
+"description": "Dimension model that contains data about models.",
+"columns": {
+"checksum": {
+"name": "checksum",
+"description": "Checksum of the model.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"database": {
+"name": "database",
+"description": "The configured database for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"depends_on_nodes": {
+"name": "depends_on_nodes",
+"description": "Array of node identifiers that this node depends on in the execution graph.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"materialization": {
+"name": "materialization",
+"description": "The materialization of the model.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"model_execution_id": {
+"name": "model_execution_id",
+"description": "Execution ID of the model node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"name": {
+"name": "name",
+"description": "Name of the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"package_name": {
+"name": "package_name",
+"description": "Name of the dbt package which contains the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"path": {
+"name": "path",
+"description": "Path to the model on the local filesystem.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"schema": {
+"name": "schema",
+"description": "Configured schema for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": "dbt_artifacts://models/dim_dbt__models.yml",
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {
+"materialized": "view",
+"file_format": "delta",
+"persist_docs": {
+"relation": true,
+"columns": true
+}
+},
+"created_at": 1659104979.3458052
+},
+"model.dbt_artifacts.fct_dbt__snapshot_executions": {
+"raw_sql": "with base as (\n\n    select *\n    from {{ ref('stg_dbt__snapshot_executions') }}\n\n),\n\nsnapshot_executions as (\n\n    select\n        snapshot_execution_id,\n        command_invocation_id,\n        node_id,\n        was_full_refresh,\n        thread_id,\n        status,\n        compile_started_at,\n        query_completed_at,\n        total_node_runtime,\n        rows_affected,\n        materialization,\n        schema,\n        name\n    from base\n\n)\n\nselect * from snapshot_executions",
+"resource_type": "model",
+"depends_on": {
+"macros": [],
+"nodes": [
+"model.dbt_artifacts.stg_dbt__snapshot_executions"
+]
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": null,
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "view",
+"persist_docs": {
+"relation": true,
+"columns": true
+},
+"quoting": {},
+"column_types": {},
+"full_refresh": null,
+"unique_key": null,
+"on_schema_change": "ignore",
+"file_format": "delta",
+"post-hook": [],
+"pre-hook": []
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"fqn": [
+"dbt_artifacts",
+"fct_dbt__snapshot_executions"
+],
+"unique_id": "model.dbt_artifacts.fct_dbt__snapshot_executions",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "fct_dbt__snapshot_executions.sql",
+"original_file_path": "models/fct_dbt__snapshot_executions.sql",
+"name": "fct_dbt__snapshot_executions",
+"alias": "fct_dbt__snapshot_executions",
+"checksum": {
+"name": "sha256",
+"checksum": "55804c9d8682291de5da715158bcf798400eb9541433a99d514bd6666f8f908a"
+},
+"tags": [],
+"refs": [
+[
+"stg_dbt__snapshot_executions"
+]
+],
+"sources": [],
+"description": "Fact model that contains data about snapshot executions.",
+"columns": {
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"compile_started_at": {
+"name": "compile_started_at",
+"description": "Timestamp when the node started compiling.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"materialization": {
+"name": "materialization",
+"description": "The materialization of the model.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"name": {
+"name": "name",
+"description": "Name of the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"query_completed_at": {
+"name": "query_completed_at",
+"description": "Timestamp when the node's SQL query completed.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"rows_affected": {
+"name": "rows_affected",
+"description": "Number of rows affected by the model execution.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"schema": {
+"name": "schema",
+"description": "Configured schema for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"snapshot_execution_id": {
+"name": "snapshot_execution_id",
+"description": "Execution ID of the snapshot node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"status": {
+"name": "status",
+"description": "Represents the execution status of a node, can be success, failure, or error.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"thread_id": {
+"name": "thread_id",
+"description": "Which thread executed this node? E.g. Thread-1",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"total_node_runtime": {
+"name": "total_node_runtime",
+"description": "Total time spent executing this node (seconds).",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"was_full_refresh": {
+"name": "was_full_refresh",
+"description": "Boolean flag indicating whether the nodes run was a full refresh or not.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": "dbt_artifacts://models/fct_dbt__snapshot_executions.yml",
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {
+"materialized": "view",
+"file_format": "delta",
+"persist_docs": {
+"relation": true,
+"columns": true
+}
+},
+"created_at": 1659104979.323313
+},
+"model.dbt_artifacts.dim_dbt__seeds": {
+"raw_sql": "with base as (\n\n    select *\n    from {{ ref('stg_dbt__seeds') }}\n\n),\n\nseeds as (\n\n    select\n        seed_execution_id,\n        command_invocation_id,\n        node_id,\n        database,\n        schema,\n        name,\n        package_name,\n        path,\n        checksum\n    from base\n\n)\n\nselect * from seeds",
+"resource_type": "model",
+"depends_on": {
+"macros": [],
+"nodes": [
+"model.dbt_artifacts.stg_dbt__seeds"
+]
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": null,
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "view",
+"persist_docs": {
+"relation": true,
+"columns": true
+},
+"quoting": {},
+"column_types": {},
+"full_refresh": null,
+"unique_key": null,
+"on_schema_change": "ignore",
+"file_format": "delta",
+"post-hook": [],
+"pre-hook": []
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"fqn": [
+"dbt_artifacts",
+"dim_dbt__seeds"
+],
+"unique_id": "model.dbt_artifacts.dim_dbt__seeds",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "dim_dbt__seeds.sql",
+"original_file_path": "models/dim_dbt__seeds.sql",
+"name": "dim_dbt__seeds",
+"alias": "dim_dbt__seeds",
+"checksum": {
+"name": "sha256",
+"checksum": "65cb09c5bd7d9552d95e93bfdb29ed70981615c0968cd1354b501bd0a8a099d0"
+},
+"tags": [],
+"refs": [
+[
+"stg_dbt__seeds"
+]
+],
+"sources": [],
+"description": "Dimension model that contains data about seeds.",
+"columns": {
+"checksum": {
+"name": "checksum",
+"description": "Checksum of the model.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"database": {
+"name": "database",
+"description": "The configured database for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"name": {
+"name": "name",
+"description": "Name of the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"package_name": {
+"name": "package_name",
+"description": "Name of the dbt package which contains the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"path": {
+"name": "path",
+"description": "Path to the model on the local filesystem.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"schema": {
+"name": "schema",
+"description": "Configured schema for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"seed_execution_id": {
+"name": "seed_execution_id",
+"description": "Execution ID of the seed node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": "dbt_artifacts://models/dim_dbt__seeds.yml",
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {
+"materialized": "view",
+"file_format": "delta",
+"persist_docs": {
+"relation": true,
+"columns": true
+}
+},
+"created_at": 1659104979.3316312
+},
+"model.dbt_artifacts.stg_dbt__snapshot_executions": {
+"raw_sql": "with base as (\n\n    select *\n    from {{ source('dbt_artifacts', 'snapshot_executions') }}\n\n),\n\nenhanced as (\n\n    select\n        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as snapshot_execution_id,\n        command_invocation_id,\n        node_id,\n        was_full_refresh,\n        split(thread_id, '-')[1]::int as thread_id,\n        status,\n        compile_started_at,\n        query_completed_at,\n        total_node_runtime,\n        rows_affected,\n        materialization,\n        schema,\n        name\n    from base\n\n)\n\nselect * from enhanced",
+"resource_type": "model",
+"depends_on": {
+"macros": [
+"macro.dbt_utils.surrogate_key"
+],
+"nodes": [
+"source.dbt_artifacts.dbt_artifacts.snapshot_executions"
+]
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": null,
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "view",
+"persist_docs": {
+"relation": true,
+"columns": true
+},
+"quoting": {},
+"column_types": {},
+"full_refresh": null,
+"unique_key": null,
+"on_schema_change": "ignore",
+"file_format": "delta",
+"post-hook": [],
+"pre-hook": []
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"fqn": [
+"dbt_artifacts",
+"staging",
+"stg_dbt__snapshot_executions"
+],
+"unique_id": "model.dbt_artifacts.stg_dbt__snapshot_executions",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "staging/stg_dbt__snapshot_executions.sql",
+"original_file_path": "models/staging/stg_dbt__snapshot_executions.sql",
+"name": "stg_dbt__snapshot_executions",
+"alias": "stg_dbt__snapshot_executions",
+"checksum": {
+"name": "sha256",
+"checksum": "8c37f8efc452cf14547270bb8870ad2faf17f20781dbd2b89267c84f08f30a19"
+},
+"tags": [],
+"refs": [],
+"sources": [
+[
+"dbt_artifacts",
+"snapshot_executions"
+]
+],
+"description": "Staging model that contains data about snapshot executions. One row per snapshot execution.",
+"columns": {
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"compile_started_at": {
+"name": "compile_started_at",
+"description": "Timestamp when the node started compiling.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"materialization": {
+"name": "materialization",
+"description": "The materialization of the model.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"name": {
+"name": "name",
+"description": "Name of the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"query_completed_at": {
+"name": "query_completed_at",
+"description": "Timestamp when the node's SQL query completed.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"rows_affected": {
+"name": "rows_affected",
+"description": "Number of rows affected by the model execution.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"schema": {
+"name": "schema",
+"description": "Configured schema for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"snapshot_execution_id": {
+"name": "snapshot_execution_id",
+"description": "Execution ID of the snapshot node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"status": {
+"name": "status",
+"description": "Represents the execution status of a node, can be success, failure, or error.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"thread_id": {
+"name": "thread_id",
+"description": "Which thread executed this node? E.g. Thread-1",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"total_node_runtime": {
+"name": "total_node_runtime",
+"description": "Total time spent executing this node (seconds).",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"was_full_refresh": {
+"name": "was_full_refresh",
+"description": "Boolean flag indicating whether the nodes run was a full refresh or not.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": "dbt_artifacts://models/staging/stg_dbt__snapshot_executions.yml",
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {
+"materialized": "view",
+"file_format": "delta",
+"persist_docs": {
+"relation": true,
+"columns": true
+}
+},
+"created_at": 1659104979.4238951
+},
+"model.dbt_artifacts.stg_dbt__models": {
+"raw_sql": "with base as (\n\n    select *\n    from {{ source('dbt_artifacts', 'models') }}\n\n),\n\nenhanced as (\n\n    select\n        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as model_execution_id,\n        command_invocation_id,\n        node_id,\n        database,\n        schema,\n        name,\n        depends_on_nodes,\n        package_name,\n        path,\n        checksum,\n        materialization\n    from base\n\n)\n\nselect * from enhanced",
+"resource_type": "model",
+"depends_on": {
+"macros": [
+"macro.dbt_utils.surrogate_key"
+],
+"nodes": [
+"source.dbt_artifacts.dbt_artifacts.models"
+]
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": null,
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "view",
+"persist_docs": {
+"relation": true,
+"columns": true
+},
+"quoting": {},
+"column_types": {},
+"full_refresh": null,
+"unique_key": null,
+"on_schema_change": "ignore",
+"file_format": "delta",
+"post-hook": [],
+"pre-hook": []
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"fqn": [
+"dbt_artifacts",
+"staging",
+"stg_dbt__models"
+],
+"unique_id": "model.dbt_artifacts.stg_dbt__models",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "staging/stg_dbt__models.sql",
+"original_file_path": "models/staging/stg_dbt__models.sql",
+"name": "stg_dbt__models",
+"alias": "stg_dbt__models",
+"checksum": {
+"name": "sha256",
+"checksum": "42ec62e1c3f2c5abe7733031e1a55bdd6e06a3f024494655074071f2649a35fe"
+},
+"tags": [],
+"refs": [],
+"sources": [
+[
+"dbt_artifacts",
+"models"
+]
+],
+"description": "Staging model that contains metadata about model executions. One row per node per run.",
+"columns": {
+"checksum": {
+"name": "checksum",
+"description": "Checksum of the model.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"database": {
+"name": "database",
+"description": "The configured database for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"depends_on_nodes": {
+"name": "depends_on_nodes",
+"description": "Array of node identifiers that this node depends on in the execution graph.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"materialization": {
+"name": "materialization",
+"description": "The materialization of the model.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"model_execution_id": {
+"name": "model_execution_id",
+"description": "Execution ID of the model node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"name": {
+"name": "name",
+"description": "Name of the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"package_name": {
+"name": "package_name",
+"description": "Name of the dbt package which contains the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"path": {
+"name": "path",
+"description": "Path to the model on the local filesystem.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"schema": {
+"name": "schema",
+"description": "Configured schema for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": "dbt_artifacts://models/staging/stg_dbt__models.yml",
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {
+"materialized": "view",
+"file_format": "delta",
+"persist_docs": {
+"relation": true,
+"columns": true
+}
+},
+"created_at": 1659104979.4298828
+},
+"model.dbt_artifacts.stg_dbt__invocations": {
+"raw_sql": "with base as (\n\n    select *\n    from {{ source('dbt_artifacts', 'invocations') }}\n\n),\n\nenhanced as (\n\n    select\n        command_invocation_id,\n        dbt_version,\n        project_name,\n        run_started_at,\n        dbt_command,\n        full_refresh_flag,\n        target_profile_name,\n        target_name,\n        target_schema,\n        target_threads\n    from base\n\n)\n\nselect * from enhanced",
+"resource_type": "model",
+"depends_on": {
+"macros": [],
+"nodes": [
+"source.dbt_artifacts.dbt_artifacts.invocations"
+]
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": null,
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "view",
+"persist_docs": {
+"relation": true,
+"columns": true
+},
+"quoting": {},
+"column_types": {},
+"full_refresh": null,
+"unique_key": null,
+"on_schema_change": "ignore",
+"file_format": "delta",
+"post-hook": [],
+"pre-hook": []
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"fqn": [
+"dbt_artifacts",
+"staging",
+"stg_dbt__invocations"
+],
+"unique_id": "model.dbt_artifacts.stg_dbt__invocations",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "staging/stg_dbt__invocations.sql",
+"original_file_path": "models/staging/stg_dbt__invocations.sql",
+"name": "stg_dbt__invocations",
+"alias": "stg_dbt__invocations",
+"checksum": {
+"name": "sha256",
+"checksum": "c83c88d3e405532e863e7967199b4f417803e73b4bd3eb37b86628dd625f30ee"
+},
+"tags": [],
+"refs": [],
+"sources": [
+[
+"dbt_artifacts",
+"invocations"
+]
+],
+"description": "Staging model that contains data about the invocations of dbt. One row per run.",
+"columns": {
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"dbt_version": {
+"name": "dbt_version",
+"description": "Installed version of dbt that is currently running.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"project_name": {
+"name": "project_name",
+"description": "Name for the root-level project which is being run by dbt.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"run_started_at": {
+"name": "run_started_at",
+"description": "Timestamp that this run started.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"dbt_command": {
+"name": "dbt_command",
+"description": "dbt command of this run.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"full_refresh_flag": {
+"name": "full_refresh_flag",
+"description": "Boolean flag indicating whether the dbt run was in full refresh mode or not.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"target_profile_name": {
+"name": "target_profile_name",
+"description": "The name of the active profile.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"target_name": {
+"name": "target_name",
+"description": "The name of the active target.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"target_schema": {
+"name": "target_schema",
+"description": "The name of the target dbt schema.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"target_threads": {
+"name": "target_threads",
+"description": "The number of threads in use by dbt.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": "dbt_artifacts://models/staging/stg_dbt__invocations.yml",
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {
+"materialized": "view",
+"file_format": "delta",
+"persist_docs": {
+"relation": true,
+"columns": true
+}
+},
+"created_at": 1659104979.435004
+},
+"model.dbt_artifacts.stg_dbt__seeds": {
+"raw_sql": "with base as (\n\n    select *\n    from {{ source('dbt_artifacts', 'seeds') }}\n\n),\n\nenhanced as (\n\n    select\n        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as seed_execution_id,\n        command_invocation_id,\n        node_id,\n        database,\n        schema,\n        name,\n        package_name,\n        path,\n        checksum\n    from base\n\n)\n\nselect * from enhanced",
+"resource_type": "model",
+"depends_on": {
+"macros": [
+"macro.dbt_utils.surrogate_key"
+],
+"nodes": [
+"source.dbt_artifacts.dbt_artifacts.seeds"
+]
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": null,
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "view",
+"persist_docs": {
+"relation": true,
+"columns": true
+},
+"quoting": {},
+"column_types": {},
+"full_refresh": null,
+"unique_key": null,
+"on_schema_change": "ignore",
+"file_format": "delta",
+"post-hook": [],
+"pre-hook": []
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"fqn": [
+"dbt_artifacts",
+"staging",
+"stg_dbt__seeds"
+],
+"unique_id": "model.dbt_artifacts.stg_dbt__seeds",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "staging/stg_dbt__seeds.sql",
+"original_file_path": "models/staging/stg_dbt__seeds.sql",
+"name": "stg_dbt__seeds",
+"alias": "stg_dbt__seeds",
+"checksum": {
+"name": "sha256",
+"checksum": "66c9145125a91450a5b7122291b4983890dbecc5253a060eb9b07d3cafbedf97"
+},
+"tags": [],
+"refs": [],
+"sources": [
+[
+"dbt_artifacts",
+"seeds"
+]
+],
+"description": "Stageing model that contains metadata about seed executions. One row per node per run.",
+"columns": {
+"checksum": {
+"name": "checksum",
+"description": "Checksum of the model.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"database": {
+"name": "database",
+"description": "The configured database for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"name": {
+"name": "name",
+"description": "Name of the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"package_name": {
+"name": "package_name",
+"description": "Name of the dbt package which contains the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"path": {
+"name": "path",
+"description": "Path to the model on the local filesystem.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"schema": {
+"name": "schema",
+"description": "Configured schema for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"seed_execution_id": {
+"name": "seed_execution_id",
+"description": "Execution ID of the seed node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": "dbt_artifacts://models/staging/stg_dbt__seeds.yml",
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {
+"materialized": "view",
+"file_format": "delta",
+"persist_docs": {
+"relation": true,
+"columns": true
+}
+},
+"created_at": 1659104979.357696
+},
+"model.dbt_artifacts.stg_dbt__snapshots": {
+"raw_sql": "with base as (\n\n    select *\n    from {{ source('dbt_artifacts', 'snapshots') }}\n\n),\n\nenhanced as (\n\n    select\n        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as snapshot_execution_id,\n        command_invocation_id,\n        node_id,\n        database,\n        schema,\n        name,\n        depends_on_nodes,\n        package_name,\n        path,\n        checksum,\n        strategy\n    from base\n\n)\n\nselect * from enhanced",
+"resource_type": "model",
+"depends_on": {
+"macros": [
+"macro.dbt_utils.surrogate_key"
+],
+"nodes": [
+"source.dbt_artifacts.dbt_artifacts.snapshots"
+]
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": null,
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "view",
+"persist_docs": {
+"relation": true,
+"columns": true
+},
+"quoting": {},
+"column_types": {},
+"full_refresh": null,
+"unique_key": null,
+"on_schema_change": "ignore",
+"file_format": "delta",
+"post-hook": [],
+"pre-hook": []
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"fqn": [
+"dbt_artifacts",
+"staging",
+"stg_dbt__snapshots"
+],
+"unique_id": "model.dbt_artifacts.stg_dbt__snapshots",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "staging/stg_dbt__snapshots.sql",
+"original_file_path": "models/staging/stg_dbt__snapshots.sql",
+"name": "stg_dbt__snapshots",
+"alias": "stg_dbt__snapshots",
+"checksum": {
+"name": "sha256",
+"checksum": "b7e14ac3dce3e739ad937e02f9d608923fe47d399695eb029b17d043a531a1d1"
+},
+"tags": [],
+"refs": [],
+"sources": [
+[
+"dbt_artifacts",
+"snapshots"
+]
+],
+"description": "Staging model that contains metadata about seed executions. One row per node per run.",
+"columns": {
+"checksum": {
+"name": "checksum",
+"description": "Checksum of the model.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"database": {
+"name": "database",
+"description": "The configured database for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"depends_on_nodes": {
+"name": "depends_on_nodes",
+"description": "Array of node identifiers that this node depends on in the execution graph.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"name": {
+"name": "name",
+"description": "Name of the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"package_name": {
+"name": "package_name",
+"description": "Name of the dbt package which contains the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"path": {
+"name": "path",
+"description": "Path to the model on the local filesystem.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"schema": {
+"name": "schema",
+"description": "Configured schema for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"snapshot_execution_id": {
+"name": "snapshot_execution_id",
+"description": "Execution ID of the snapshot node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"strategy": {
+"name": "strategy",
+"description": "Snapshot \"strategies\" define how dbt knows if a row has changed. There are two strategies built-in to dbt — timestamp\nand check.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": "dbt_artifacts://models/staging/stg_dbt__snapshots.yml",
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {
+"materialized": "view",
+"file_format": "delta",
+"persist_docs": {
+"relation": true,
+"columns": true
+}
+},
+"created_at": 1659104979.364424
+},
+"model.dbt_artifacts.stg_dbt__exposures": {
+"raw_sql": "with base as (\n\n    select *\n    from {{ source('dbt_artifacts', 'exposures') }}\n\n),\n\nenhanced as (\n\n    select\n        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as exposure_execution_id,\n        command_invocation_id,\n        node_id,\n        name,\n        type,\n        owner,\n        maturity,\n        path,\n        description,\n        url,\n        package_name,\n        depends_on_nodes\n    from base\n\n)\n\nselect * from enhanced",
+"resource_type": "model",
+"depends_on": {
+"macros": [
+"macro.dbt_utils.surrogate_key"
+],
+"nodes": [
+"source.dbt_artifacts.dbt_artifacts.exposures"
+]
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": null,
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "view",
+"persist_docs": {
+"relation": true,
+"columns": true
+},
+"quoting": {},
+"column_types": {},
+"full_refresh": null,
+"unique_key": null,
+"on_schema_change": "ignore",
+"file_format": "delta",
+"post-hook": [],
+"pre-hook": []
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"fqn": [
+"dbt_artifacts",
+"staging",
+"stg_dbt__exposures"
+],
+"unique_id": "model.dbt_artifacts.stg_dbt__exposures",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "staging/stg_dbt__exposures.sql",
+"original_file_path": "models/staging/stg_dbt__exposures.sql",
+"name": "stg_dbt__exposures",
+"alias": "stg_dbt__exposures",
+"checksum": {
+"name": "sha256",
+"checksum": "d36e6bbe9a313984f9ebd731407ba0b8a89729c39892711ab8b2fa9b4e104d3c"
+},
+"tags": [],
+"refs": [],
+"sources": [
+[
+"dbt_artifacts",
+"exposures"
+]
+],
+"description": "Staging model that contains data about exposure exections. One row per node per run.",
+"columns": {
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"depends_on_nodes": {
+"name": "depends_on_nodes",
+"description": "Array of node identifiers that this node depends on in the execution graph.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"description": {
+"name": "description",
+"description": "Node description.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"exposure_execution_id": {
+"name": "exposure_execution_id",
+"description": "Execution ID of the exposure node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"maturity": {
+"name": "maturity",
+"description": "Exposure maturity; one of high, medium, low.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"name": {
+"name": "name",
+"description": "Name of the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"owner": {
+"name": "owner",
+"description": "Owner of the exposure, usually an email address.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"package_name": {
+"name": "package_name",
+"description": "Name of the dbt package which contains the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"path": {
+"name": "path",
+"description": "Path to the model on the local filesystem.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"type": {
+"name": "type",
+"description": "Exposure type; one of dashboard, notebook, analysis, ml, application (used to organize on docs site)",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"url": {
+"name": "url",
+"description": "The URL of the BI tool where the data defined by the exposure can be viewed.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": "dbt_artifacts://models/staging/stg_dbt__exposures.yml",
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {
+"materialized": "view",
+"file_format": "delta",
+"persist_docs": {
+"relation": true,
+"columns": true
+}
+},
+"created_at": 1659104979.4577322
+},
+"model.dbt_artifacts.stg_dbt__test_executions": {
+"raw_sql": "with base as (\n\n    select *\n    from {{ source('dbt_artifacts', 'test_executions') }}\n\n),\n\nenhanced as (\n\n    select\n        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as test_execution_id,\n        command_invocation_id,\n        node_id,\n        was_full_refresh,\n        split(thread_id, '-')[1]::int as thread_id,\n        status,\n        compile_started_at,\n        query_completed_at,\n        total_node_runtime,\n        rows_affected,\n        failures\n    from base\n\n)\n\nselect * from enhanced",
+"resource_type": "model",
+"depends_on": {
+"macros": [
+"macro.dbt_utils.surrogate_key"
+],
+"nodes": [
+"source.dbt_artifacts.dbt_artifacts.test_executions"
+]
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": null,
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "view",
+"persist_docs": {
+"relation": true,
+"columns": true
+},
+"quoting": {},
+"column_types": {},
+"full_refresh": null,
+"unique_key": null,
+"on_schema_change": "ignore",
+"file_format": "delta",
+"post-hook": [],
+"pre-hook": []
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"fqn": [
+"dbt_artifacts",
+"staging",
+"stg_dbt__test_executions"
+],
+"unique_id": "model.dbt_artifacts.stg_dbt__test_executions",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "staging/stg_dbt__test_executions.sql",
+"original_file_path": "models/staging/stg_dbt__test_executions.sql",
+"name": "stg_dbt__test_executions",
+"alias": "stg_dbt__test_executions",
+"checksum": {
+"name": "sha256",
+"checksum": "9594ffd78d4caf464c685a0f65d7063d2771da9c81a353054f2de3f57ce2c3e9"
+},
+"tags": [],
+"refs": [],
+"sources": [
+[
+"dbt_artifacts",
+"test_executions"
+]
+],
+"description": "Staging model that contains metadata about test executions. One row per test execution.",
+"columns": {
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"compile_started_at": {
+"name": "compile_started_at",
+"description": "Timestamp when the node started compiling.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"failures": {
+"name": "failures",
+"description": "Test failures. Value is 1 if the test failed, 0 if successful.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"query_completed_at": {
+"name": "query_completed_at",
+"description": "Timestamp when the node's SQL query completed.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"rows_affected": {
+"name": "rows_affected",
+"description": "Number of rows affected by the model execution.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"status": {
+"name": "status",
+"description": "Represents the execution status of a node, can be success, failure, or error.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"test_execution_id": {
+"name": "test_execution_id",
+"description": "Execution ID of the test node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"thread_id": {
+"name": "thread_id",
+"description": "Which thread executed this node? E.g. Thread-1",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"total_node_runtime": {
+"name": "total_node_runtime",
+"description": "Total time spent executing this node (seconds).",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"was_full_refresh": {
+"name": "was_full_refresh",
+"description": "Boolean flag indicating whether the nodes run was a full refresh or not.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": "dbt_artifacts://models/staging/stg_dbt__test_executions.yml",
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {
+"materialized": "view",
+"file_format": "delta",
+"persist_docs": {
+"relation": true,
+"columns": true
+}
+},
+"created_at": 1659104979.4629471
+},
+"model.dbt_artifacts.stg_dbt__sources": {
+"raw_sql": "with base as (\n\n    select *\n    from {{ source('dbt_artifacts', 'sources') }}\n\n),\n\nenhanced as (\n\n    select\n        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as source_execution_id,\n        command_invocation_id,\n        node_id,\n        database,\n        schema,\n        source_name,\n        loader,\n        name,\n        identifier,\n        loaded_at_field,\n        freshness\n    from base\n\n)\n\nselect * from enhanced",
+"resource_type": "model",
+"depends_on": {
+"macros": [
+"macro.dbt_utils.surrogate_key"
+],
+"nodes": [
+"source.dbt_artifacts.dbt_artifacts.sources"
+]
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": null,
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "view",
+"persist_docs": {
+"relation": true,
+"columns": true
+},
+"quoting": {},
+"column_types": {},
+"full_refresh": null,
+"unique_key": null,
+"on_schema_change": "ignore",
+"file_format": "delta",
+"post-hook": [],
+"pre-hook": []
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"fqn": [
+"dbt_artifacts",
+"staging",
+"stg_dbt__sources"
+],
+"unique_id": "model.dbt_artifacts.stg_dbt__sources",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "staging/stg_dbt__sources.sql",
+"original_file_path": "models/staging/stg_dbt__sources.sql",
+"name": "stg_dbt__sources",
+"alias": "stg_dbt__sources",
+"checksum": {
+"name": "sha256",
+"checksum": "a9ac5371b74387189827d6daadee9ea3dc5b878bb6744d0d5d6ae2cc1a7bf5f1"
+},
+"tags": [],
+"refs": [],
+"sources": [
+[
+"dbt_artifacts",
+"sources"
+]
+],
+"description": "Staging model that contains data about sources. One row per node per execution.",
+"columns": {
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"database": {
+"name": "database",
+"description": "The configured database for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"freshness": {
+"name": "freshness",
+"description": "The specified freshness of the source model.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"identifier": {
+"name": "identifier",
+"description": "Source identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"loaded_at_field": {
+"name": "loaded_at_field",
+"description": "A column name (or expression) that returns a timestamp indicating freshness.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"loader": {
+"name": "loader",
+"description": "Describes the tool that loads this source into your warehouse.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"name": {
+"name": "name",
+"description": "Name of the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"schema": {
+"name": "schema",
+"description": "Configured schema for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"source_execution_id": {
+"name": "source_execution_id",
+"description": "Execution ID of the source node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"source_name": {
+"name": "source_name",
+"description": "Source name.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": "dbt_artifacts://models/staging/stg_dbt__sources.yml",
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {
+"materialized": "view",
+"file_format": "delta",
+"persist_docs": {
+"relation": true,
+"columns": true
+}
+},
+"created_at": 1659104979.5271811
+},
+"model.dbt_artifacts.stg_dbt__tests": {
+"raw_sql": "with base as (\n\n    select *\n    from {{ source('dbt_artifacts', 'tests') }}\n\n),\n\nenhanced as (\n\n    select\n        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as test_execution_id,\n        command_invocation_id,\n        node_id,\n        name,\n        depends_on_nodes,\n        package_name,\n        test_path,\n        tags\n    from base\n\n)\n\nselect * from enhanced",
+"resource_type": "model",
+"depends_on": {
+"macros": [
+"macro.dbt_utils.surrogate_key"
+],
+"nodes": [
+"source.dbt_artifacts.dbt_artifacts.tests"
+]
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": null,
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "view",
+"persist_docs": {
+"relation": true,
+"columns": true
+},
+"quoting": {},
+"column_types": {},
+"full_refresh": null,
+"unique_key": null,
+"on_schema_change": "ignore",
+"file_format": "delta",
+"post-hook": [],
+"pre-hook": []
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"fqn": [
+"dbt_artifacts",
+"staging",
+"stg_dbt__tests"
+],
+"unique_id": "model.dbt_artifacts.stg_dbt__tests",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "staging/stg_dbt__tests.sql",
+"original_file_path": "models/staging/stg_dbt__tests.sql",
+"name": "stg_dbt__tests",
+"alias": "stg_dbt__tests",
+"checksum": {
+"name": "sha256",
+"checksum": "980bc16f1d2f03f997e273bb194456fd9fb11f039f9aa2905be445e38f903ded"
+},
+"tags": [],
+"refs": [],
+"sources": [
+[
+"dbt_artifacts",
+"tests"
+]
+],
+"description": "Staging model that contains metadata about test executions. One row per node per run.",
+"columns": {
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"depends_on_nodes": {
+"name": "depends_on_nodes",
+"description": "Array of node identifiers that this node depends on in the execution graph.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"name": {
+"name": "name",
+"description": "Name of the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"package_name": {
+"name": "package_name",
+"description": "Name of the dbt package which contains the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"tags": {
+"name": "tags",
+"description": "Tags used in resource selection associated with the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"test_execution_id": {
+"name": "test_execution_id",
+"description": "Execution ID of the test node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"test_path": {
+"name": "test_path",
+"description": "Path to the yaml (SQL in case of a singular test) file describing the test.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": "dbt_artifacts://models/staging/stg_dbt__tests.yml",
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {
+"materialized": "view",
+"file_format": "delta",
+"persist_docs": {
+"relation": true,
+"columns": true
+}
+},
+"created_at": 1659104979.445573
+},
+"model.dbt_artifacts.stg_dbt__seed_executions": {
+"raw_sql": "with base as (\n\n    select *\n    from {{ source('dbt_artifacts', 'seed_executions') }}\n\n),\n\nenhanced as (\n\n    select\n        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as seed_execution_id,\n        command_invocation_id,\n        node_id,\n        was_full_refresh,\n        split(thread_id, '-')[1]::int as thread_id,\n        status,\n        compile_started_at,\n        query_completed_at,\n        total_node_runtime,\n        rows_affected,\n        materialization,\n        schema,\n        name\n    from base\n\n)\n\nselect * from enhanced",
+"resource_type": "model",
+"depends_on": {
+"macros": [
+"macro.dbt_utils.surrogate_key"
+],
+"nodes": [
+"source.dbt_artifacts.dbt_artifacts.seed_executions"
+]
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": null,
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "view",
+"persist_docs": {
+"relation": true,
+"columns": true
+},
+"quoting": {},
+"column_types": {},
+"full_refresh": null,
+"unique_key": null,
+"on_schema_change": "ignore",
+"file_format": "delta",
+"post-hook": [],
+"pre-hook": []
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"fqn": [
+"dbt_artifacts",
+"staging",
+"stg_dbt__seed_executions"
+],
+"unique_id": "model.dbt_artifacts.stg_dbt__seed_executions",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "staging/stg_dbt__seed_executions.sql",
+"original_file_path": "models/staging/stg_dbt__seed_executions.sql",
+"name": "stg_dbt__seed_executions",
+"alias": "stg_dbt__seed_executions",
+"checksum": {
+"name": "sha256",
+"checksum": "5d7dc60befddc3df754c0789c4b1a8ea907037b7e65ffdd68c09e3306a703014"
+},
+"tags": [],
+"refs": [],
+"sources": [
+[
+"dbt_artifacts",
+"seed_executions"
+]
+],
+"description": "Staging model that contains data about seed executions. One row per seed execution.",
+"columns": {
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"compile_started_at": {
+"name": "compile_started_at",
+"description": "Timestamp when the node started compiling.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"materialization": {
+"name": "materialization",
+"description": "The materialization of the model.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"name": {
+"name": "name",
+"description": "Name of the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"query_completed_at": {
+"name": "query_completed_at",
+"description": "Timestamp when the node's SQL query completed.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"rows_affected": {
+"name": "rows_affected",
+"description": "Number of rows affected by the model execution.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"schema": {
+"name": "schema",
+"description": "Configured schema for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"seed_execution_id": {
+"name": "seed_execution_id",
+"description": "Execution ID of the seed node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"status": {
+"name": "status",
+"description": "Represents the execution status of a node, can be success, failure, or error.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"thread_id": {
+"name": "thread_id",
+"description": "Which thread executed this node? E.g. Thread-1",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"total_node_runtime": {
+"name": "total_node_runtime",
+"description": "Total time spent executing this node (seconds).",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"was_full_refresh": {
+"name": "was_full_refresh",
+"description": "Boolean flag indicating whether the nodes run was a full refresh or not.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": "dbt_artifacts://models/staging/stg_dbt__seed_executions.yml",
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {
+"materialized": "view",
+"file_format": "delta",
+"persist_docs": {
+"relation": true,
+"columns": true
+}
+},
+"created_at": 1659104979.4415429
+},
+"model.dbt_artifacts.stg_dbt__model_executions": {
+"raw_sql": "with base as (\n\n    select *\n    from {{ source('dbt_artifacts', 'model_executions') }}\n\n),\n\nenhanced as (\n\n    select\n        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as model_execution_id,\n        command_invocation_id,\n        node_id,\n        was_full_refresh,\n        split(thread_id, '-')[1]::int as thread_id,\n        status,\n        compile_started_at,\n        query_completed_at,\n        total_node_runtime,\n        rows_affected,\n        materialization,\n        schema,\n        name\n    from base\n\n)\n\nselect * from enhanced",
+"resource_type": "model",
+"depends_on": {
+"macros": [
+"macro.dbt_utils.surrogate_key"
+],
+"nodes": [
+"source.dbt_artifacts.dbt_artifacts.model_executions"
+]
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": null,
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "view",
+"persist_docs": {
+"relation": true,
+"columns": true
+},
+"quoting": {},
+"column_types": {},
+"full_refresh": null,
+"unique_key": null,
+"on_schema_change": "ignore",
+"file_format": "delta",
+"post-hook": [],
+"pre-hook": []
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"fqn": [
+"dbt_artifacts",
+"staging",
+"stg_dbt__model_executions"
+],
+"unique_id": "model.dbt_artifacts.stg_dbt__model_executions",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "staging/stg_dbt__model_executions.sql",
+"original_file_path": "models/staging/stg_dbt__model_executions.sql",
+"name": "stg_dbt__model_executions",
+"alias": "stg_dbt__model_executions",
+"checksum": {
+"name": "sha256",
+"checksum": "c653d34795cb2fad6d899f35c0e6f87177ae14204d1a7c8cda1e8ef1520f7dc9"
+},
+"tags": [],
+"refs": [],
+"sources": [
+[
+"dbt_artifacts",
+"model_executions"
+]
+],
+"description": "Staging model that contains data about model executions. One row per model execution.",
+"columns": {
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"compile_started_at": {
+"name": "compile_started_at",
+"description": "Timestamp when the node started compiling.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"materialization": {
+"name": "materialization",
+"description": "The materialization of the model.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"model_execution_id": {
+"name": "model_execution_id",
+"description": "Execution ID of the model node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"name": {
+"name": "name",
+"description": "Name of the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"query_completed_at": {
+"name": "query_completed_at",
+"description": "Timestamp when the node's SQL query completed.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"rows_affected": {
+"name": "rows_affected",
+"description": "Number of rows affected by the model execution.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"schema": {
+"name": "schema",
+"description": "Configured schema for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"status": {
+"name": "status",
+"description": "Represents the execution status of a node, can be success, failure, or error.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"thread_id": {
+"name": "thread_id",
+"description": "Which thread executed this node? E.g. Thread-1",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"total_node_runtime": {
+"name": "total_node_runtime",
+"description": "Total time spent executing this node (seconds).",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"was_full_refresh": {
+"name": "was_full_refresh",
+"description": "Boolean flag indicating whether the nodes run was a full refresh or not.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": "dbt_artifacts://models/staging/stg_dbt__model_executions.yml",
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {
+"materialized": "view",
+"file_format": "delta",
+"persist_docs": {
+"relation": true,
+"columns": true
+}
+},
+"created_at": 1659104979.4517791
+},
+"test.artifacts_integration_tests.not_null_non_incremental_id.ed87286330": {
+"raw_sql": "{{ test_not_null(**_dbt_generic_test_kwargs) }}",
+"test_metadata": {
+"name": "not_null",
+"kwargs": {
+"column_name": "id",
+"model": "{{ get_where_subquery(ref('non_incremental')) }}"
+},
+"namespace": null
+},
+"resource_type": "test",
+"depends_on": {
+"macros": [
+"macro.dbt.test_not_null"
+],
+"nodes": [
+"model.artifacts_integration_tests.non_incremental"
+]
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": "dbt_test__audit",
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "test",
+"severity": "ERROR",
+"store_failures": null,
+"where": null,
+"limit": null,
+"fail_calc": "count(*)",
+"warn_if": "!= 0",
+"error_if": "!= 0"
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE_dbt_test__audit",
+"fqn": [
+"artifacts_integration_tests",
+"not_null_non_incremental_id"
+],
+"unique_id": "test.artifacts_integration_tests.not_null_non_incremental_id.ed87286330",
+"package_name": "artifacts_integration_tests",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project",
+"path": "not_null_non_incremental_id.sql",
+"original_file_path": "models/tests_and_exposures.yml",
+"name": "not_null_non_incremental_id",
+"alias": "not_null_non_incremental_id",
+"checksum": {
+"name": "none",
+"checksum": ""
+},
+"tags": [],
+"refs": [
+[
+"non_incremental"
+]
+],
+"sources": [],
+"description": "",
+"columns": {},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": null,
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {},
+"created_at": 1659104979.234487,
+"column_name": "id",
+"file_key_name": "models.non_incremental"
+},
+"test.artifacts_integration_tests.unique_non_incremental_id.b4a58ac233": {
+"raw_sql": "{{ test_unique(**_dbt_generic_test_kwargs) }}",
+"test_metadata": {
+"name": "unique",
+"kwargs": {
+"column_name": "id",
+"model": "{{ get_where_subquery(ref('non_incremental')) }}"
+},
+"namespace": null
+},
+"resource_type": "test",
+"depends_on": {
+"macros": [
+"macro.dbt.test_unique"
+],
+"nodes": [
+"model.artifacts_integration_tests.non_incremental"
+]
+},
+"config": {
+"enabled": true,
+"alias": null,
+"schema": "dbt_test__audit",
+"database": null,
+"tags": [],
+"meta": {},
+"materialized": "test",
+"severity": "ERROR",
+"store_failures": null,
+"where": null,
+"limit": null,
+"fail_calc": "count(*)",
+"warn_if": "!= 0",
+"error_if": "!= 0"
+},
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE_dbt_test__audit",
+"fqn": [
+"artifacts_integration_tests",
+"unique_non_incremental_id"
+],
+"unique_id": "test.artifacts_integration_tests.unique_non_incremental_id.b4a58ac233",
+"package_name": "artifacts_integration_tests",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project",
+"path": "unique_non_incremental_id.sql",
+"original_file_path": "models/tests_and_exposures.yml",
+"name": "unique_non_incremental_id",
+"alias": "unique_non_incremental_id",
+"checksum": {
+"name": "none",
+"checksum": ""
+},
+"tags": [],
+"refs": [
+[
+"non_incremental"
+]
+],
+"sources": [],
+"description": "",
+"columns": {},
+"meta": {},
+"docs": {
+"show": true
+},
+"patch_path": null,
+"compiled_path": null,
+"build_path": null,
+"deferred": false,
+"unrendered_config": {},
+"created_at": 1659104979.238029,
+"column_name": "id",
+"file_key_name": "models.non_incremental"
+}
+},
+"sources": {
+"source.artifacts_integration_tests.dummy_source.doesnt_exist": {
+"fqn": [
+"artifacts_integration_tests",
+"dummy_source",
+"doesnt_exist"
+],
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"unique_id": "source.artifacts_integration_tests.dummy_source.doesnt_exist",
+"package_name": "artifacts_integration_tests",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project",
+"path": "models/sources.yml",
+"original_file_path": "models/sources.yml",
+"name": "doesnt_exist",
+"source_name": "dummy_source",
+"source_description": "",
+"loader": "",
+"identifier": "doesnt_exist",
+"resource_type": "source",
+"quoting": {
+"database": null,
+"schema": null,
+"identifier": null,
+"column": null
+},
+"loaded_at_field": "current_timestamp",
+"freshness": {
+"warn_after": {
+"count": null,
+"period": null
+},
+"error_after": {
+"count": 24,
+"period": "hour"
+},
+"filter": "dayname(updatedat) not in ('Sunday', 'Monday')"
+},
+"external": null,
+"description": "",
+"columns": {},
+"meta": {},
+"source_meta": {},
+"tags": [],
+"config": {
+"enabled": true
+},
+"patch_path": null,
+"unrendered_config": {},
+"relation_name": "*****_tests.dbt_artifacts_test_commit_NIALL_OVERRIDE.doesnt_exist",
+"created_at": 1659104979.527376
+},
+"source.dbt_artifacts.dbt_artifacts.model_executions": {
+"fqn": [
+"dbt_artifacts",
+"staging",
+"dbt_artifacts",
+"model_executions"
+],
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"unique_id": "source.dbt_artifacts.dbt_artifacts.model_executions",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "models/staging/sources.yml",
+"original_file_path": "models/staging/sources.yml",
+"name": "model_executions",
+"source_name": "dbt_artifacts",
+"source_description": "",
+"loader": "",
+"identifier": "model_executions",
+"resource_type": "source",
+"quoting": {
+"database": null,
+"schema": null,
+"identifier": null,
+"column": null
+},
+"loaded_at_field": null,
+"freshness": {
+"warn_after": {
+"count": null,
+"period": null
+},
+"error_after": {
+"count": null,
+"period": null
+},
+"filter": null
+},
+"external": null,
+"description": "",
+"columns": {
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"compile_started_at": {
+"name": "compile_started_at",
+"description": "Timestamp when the node started compiling.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"materialization": {
+"name": "materialization",
+"description": "The materialization of the model.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"name": {
+"name": "name",
+"description": "Name of the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"query_completed_at": {
+"name": "query_completed_at",
+"description": "Timestamp when the node's SQL query completed.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"rows_affected": {
+"name": "rows_affected",
+"description": "Number of rows affected by the model execution.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"schema": {
+"name": "schema",
+"description": "Configured schema for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"status": {
+"name": "status",
+"description": "Represents the execution status of a node, can be success, failure, or error.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"thread_id": {
+"name": "thread_id",
+"description": "Which thread executed this node? E.g. Thread-1",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"total_node_runtime": {
+"name": "total_node_runtime",
+"description": "Total time spent executing this node (seconds).",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"was_full_refresh": {
+"name": "was_full_refresh",
+"description": "Boolean flag indicating whether the nodes run was a full refresh or not.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"source_meta": {},
+"tags": [],
+"config": {
+"enabled": true
+},
+"patch_path": null,
+"unrendered_config": {},
+"relation_name": "*****_tests.dbt_artifacts_test_commit_NIALL_OVERRIDE.model_executions",
+"created_at": 1659104979.527578
+},
+"source.dbt_artifacts.dbt_artifacts.tests": {
+"fqn": [
+"dbt_artifacts",
+"staging",
+"dbt_artifacts",
+"tests"
+],
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"unique_id": "source.dbt_artifacts.dbt_artifacts.tests",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "models/staging/sources.yml",
+"original_file_path": "models/staging/sources.yml",
+"name": "tests",
+"source_name": "dbt_artifacts",
+"source_description": "",
+"loader": "",
+"identifier": "tests",
+"resource_type": "source",
+"quoting": {
+"database": null,
+"schema": null,
+"identifier": null,
+"column": null
+},
+"loaded_at_field": null,
+"freshness": {
+"warn_after": {
+"count": null,
+"period": null
+},
+"error_after": {
+"count": null,
+"period": null
+},
+"filter": null
+},
+"external": null,
+"description": "",
+"columns": {
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"depends_on_nodes": {
+"name": "depends_on_nodes",
+"description": "Array of node identifiers that this node depends on in the execution graph.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"name": {
+"name": "name",
+"description": "Name of the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"package_name": {
+"name": "package_name",
+"description": "Name of the dbt package which contains the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"tags": {
+"name": "tags",
+"description": "Tags used in resource selection associated with the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"test_path": {
+"name": "test_path",
+"description": "Path to the yaml (SQL in case of a singular test) file describing the test.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"source_meta": {},
+"tags": [],
+"config": {
+"enabled": true
+},
+"patch_path": null,
+"unrendered_config": {},
+"relation_name": "*****_tests.dbt_artifacts_test_commit_NIALL_OVERRIDE.tests",
+"created_at": 1659104979.527735
+},
+"source.dbt_artifacts.dbt_artifacts.test_executions": {
+"fqn": [
+"dbt_artifacts",
+"staging",
+"dbt_artifacts",
+"test_executions"
+],
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"unique_id": "source.dbt_artifacts.dbt_artifacts.test_executions",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "models/staging/sources.yml",
+"original_file_path": "models/staging/sources.yml",
+"name": "test_executions",
+"source_name": "dbt_artifacts",
+"source_description": "",
+"loader": "",
+"identifier": "test_executions",
+"resource_type": "source",
+"quoting": {
+"database": null,
+"schema": null,
+"identifier": null,
+"column": null
+},
+"loaded_at_field": null,
+"freshness": {
+"warn_after": {
+"count": null,
+"period": null
+},
+"error_after": {
+"count": null,
+"period": null
+},
+"filter": null
+},
+"external": null,
+"description": "",
+"columns": {
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"compile_started_at": {
+"name": "compile_started_at",
+"description": "Timestamp when the node started compiling.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"failures": {
+"name": "failures",
+"description": "Test failures. Value is 1 if the test failed, 0 if successful.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"query_completed_at": {
+"name": "query_completed_at",
+"description": "Timestamp when the node's SQL query completed.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"rows_affected": {
+"name": "rows_affected",
+"description": "Number of rows affected by the model execution.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"status": {
+"name": "status",
+"description": "Represents the execution status of a node, can be success, failure, or error.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"thread_id": {
+"name": "thread_id",
+"description": "Which thread executed this node? E.g. Thread-1",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"total_node_runtime": {
+"name": "total_node_runtime",
+"description": "Total time spent executing this node (seconds).",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"was_full_refresh": {
+"name": "was_full_refresh",
+"description": "Boolean flag indicating whether the nodes run was a full refresh or not.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"source_meta": {},
+"tags": [],
+"config": {
+"enabled": true
+},
+"patch_path": null,
+"unrendered_config": {},
+"relation_name": "*****_tests.dbt_artifacts_test_commit_NIALL_OVERRIDE.test_executions",
+"created_at": 1659104979.5278919
+},
+"source.dbt_artifacts.dbt_artifacts.models": {
+"fqn": [
+"dbt_artifacts",
+"staging",
+"dbt_artifacts",
+"models"
+],
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"unique_id": "source.dbt_artifacts.dbt_artifacts.models",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "models/staging/sources.yml",
+"original_file_path": "models/staging/sources.yml",
+"name": "models",
+"source_name": "dbt_artifacts",
+"source_description": "",
+"loader": "",
+"identifier": "models",
+"resource_type": "source",
+"quoting": {
+"database": null,
+"schema": null,
+"identifier": null,
+"column": null
+},
+"loaded_at_field": null,
+"freshness": {
+"warn_after": {
+"count": null,
+"period": null
+},
+"error_after": {
+"count": null,
+"period": null
+},
+"filter": null
+},
+"external": null,
+"description": "",
+"columns": {
+"checksum": {
+"name": "checksum",
+"description": "Checksum of the model.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"database": {
+"name": "database",
+"description": "The configured database for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"depends_on_nodes": {
+"name": "depends_on_nodes",
+"description": "Array of node identifiers that this node depends on in the execution graph.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"materialization": {
+"name": "materialization",
+"description": "The materialization of the model.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"name": {
+"name": "name",
+"description": "Name of the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"package_name": {
+"name": "package_name",
+"description": "Name of the dbt package which contains the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"path": {
+"name": "path",
+"description": "Path to the model on the local filesystem.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"schema": {
+"name": "schema",
+"description": "Configured schema for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"source_meta": {},
+"tags": [],
+"config": {
+"enabled": true
+},
+"patch_path": null,
+"unrendered_config": {},
+"relation_name": "*****_tests.dbt_artifacts_test_commit_NIALL_OVERRIDE.models",
+"created_at": 1659104979.528048
+},
+"source.dbt_artifacts.dbt_artifacts.seeds": {
+"fqn": [
+"dbt_artifacts",
+"staging",
+"dbt_artifacts",
+"seeds"
+],
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"unique_id": "source.dbt_artifacts.dbt_artifacts.seeds",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "models/staging/sources.yml",
+"original_file_path": "models/staging/sources.yml",
+"name": "seeds",
+"source_name": "dbt_artifacts",
+"source_description": "",
+"loader": "",
+"identifier": "seeds",
+"resource_type": "source",
+"quoting": {
+"database": null,
+"schema": null,
+"identifier": null,
+"column": null
+},
+"loaded_at_field": null,
+"freshness": {
+"warn_after": {
+"count": null,
+"period": null
+},
+"error_after": {
+"count": null,
+"period": null
+},
+"filter": null
+},
+"external": null,
+"description": "",
+"columns": {
+"checksum": {
+"name": "checksum",
+"description": "Checksum of the model.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"database": {
+"name": "database",
+"description": "The configured database for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"name": {
+"name": "name",
+"description": "Name of the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"package_name": {
+"name": "package_name",
+"description": "Name of the dbt package which contains the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"path": {
+"name": "path",
+"description": "Path to the model on the local filesystem.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"schema": {
+"name": "schema",
+"description": "Configured schema for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"source_meta": {},
+"tags": [],
+"config": {
+"enabled": true
+},
+"patch_path": null,
+"unrendered_config": {},
+"relation_name": "*****_tests.dbt_artifacts_test_commit_NIALL_OVERRIDE.seeds",
+"created_at": 1659104979.528199
+},
+"source.dbt_artifacts.dbt_artifacts.seed_executions": {
+"fqn": [
+"dbt_artifacts",
+"staging",
+"dbt_artifacts",
+"seed_executions"
+],
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"unique_id": "source.dbt_artifacts.dbt_artifacts.seed_executions",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "models/staging/sources.yml",
+"original_file_path": "models/staging/sources.yml",
+"name": "seed_executions",
+"source_name": "dbt_artifacts",
+"source_description": "",
+"loader": "",
+"identifier": "seed_executions",
+"resource_type": "source",
+"quoting": {
+"database": null,
+"schema": null,
+"identifier": null,
+"column": null
+},
+"loaded_at_field": null,
+"freshness": {
+"warn_after": {
+"count": null,
+"period": null
+},
+"error_after": {
+"count": null,
+"period": null
+},
+"filter": null
+},
+"external": null,
+"description": "",
+"columns": {
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"compile_started_at": {
+"name": "compile_started_at",
+"description": "Timestamp when the node started compiling.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"materialization": {
+"name": "materialization",
+"description": "The materialization of the model.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"name": {
+"name": "name",
+"description": "Name of the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"query_completed_at": {
+"name": "query_completed_at",
+"description": "Timestamp when the node's SQL query completed.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"rows_affected": {
+"name": "rows_affected",
+"description": "Number of rows affected by the model execution.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"schema": {
+"name": "schema",
+"description": "Configured schema for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"status": {
+"name": "status",
+"description": "Represents the execution status of a node, can be success, failure, or error.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"thread_id": {
+"name": "thread_id",
+"description": "Which thread executed this node? E.g. Thread-1",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"total_node_runtime": {
+"name": "total_node_runtime",
+"description": "Total time spent executing this node (seconds).",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"was_full_refresh": {
+"name": "was_full_refresh",
+"description": "Boolean flag indicating whether the nodes run was a full refresh or not.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"source_meta": {},
+"tags": [],
+"config": {
+"enabled": true
+},
+"patch_path": null,
+"unrendered_config": {},
+"relation_name": "*****_tests.dbt_artifacts_test_commit_NIALL_OVERRIDE.seed_executions",
+"created_at": 1659104979.528356
+},
+"source.dbt_artifacts.dbt_artifacts.exposures": {
+"fqn": [
+"dbt_artifacts",
+"staging",
+"dbt_artifacts",
+"exposures"
+],
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"unique_id": "source.dbt_artifacts.dbt_artifacts.exposures",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "models/staging/sources.yml",
+"original_file_path": "models/staging/sources.yml",
+"name": "exposures",
+"source_name": "dbt_artifacts",
+"source_description": "",
+"loader": "",
+"identifier": "exposures",
+"resource_type": "source",
+"quoting": {
+"database": null,
+"schema": null,
+"identifier": null,
+"column": null
+},
+"loaded_at_field": null,
+"freshness": {
+"warn_after": {
+"count": null,
+"period": null
+},
+"error_after": {
+"count": null,
+"period": null
+},
+"filter": null
+},
+"external": null,
+"description": "",
+"columns": {
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"depends_on_nodes": {
+"name": "depends_on_nodes",
+"description": "Array of node identifiers that this node depends on in the execution graph.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"description": {
+"name": "description",
+"description": "Node description.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"maturity": {
+"name": "maturity",
+"description": "Exposure maturity; one of high, medium, low.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"name": {
+"name": "name",
+"description": "Name of the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"owner": {
+"name": "owner",
+"description": "Owner of the exposure, usually an email address.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"package_name": {
+"name": "package_name",
+"description": "Name of the dbt package which contains the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"path": {
+"name": "path",
+"description": "Path to the model on the local filesystem.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"type": {
+"name": "type",
+"description": "Exposure type; one of dashboard, notebook, analysis, ml, application (used to organize on docs site)",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"url": {
+"name": "url",
+"description": "The URL of the BI tool where the data defined by the exposure can be viewed.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"source_meta": {},
+"tags": [],
+"config": {
+"enabled": true
+},
+"patch_path": null,
+"unrendered_config": {},
+"relation_name": "*****_tests.dbt_artifacts_test_commit_NIALL_OVERRIDE.exposures",
+"created_at": 1659104979.5285099
+},
+"source.dbt_artifacts.dbt_artifacts.snapshots": {
+"fqn": [
+"dbt_artifacts",
+"staging",
+"dbt_artifacts",
+"snapshots"
+],
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"unique_id": "source.dbt_artifacts.dbt_artifacts.snapshots",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "models/staging/sources.yml",
+"original_file_path": "models/staging/sources.yml",
+"name": "snapshots",
+"source_name": "dbt_artifacts",
+"source_description": "",
+"loader": "",
+"identifier": "snapshots",
+"resource_type": "source",
+"quoting": {
+"database": null,
+"schema": null,
+"identifier": null,
+"column": null
+},
+"loaded_at_field": null,
+"freshness": {
+"warn_after": {
+"count": null,
+"period": null
+},
+"error_after": {
+"count": null,
+"period": null
+},
+"filter": null
+},
+"external": null,
+"description": "",
+"columns": {
+"checksum": {
+"name": "checksum",
+"description": "Checksum of the model.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"database": {
+"name": "database",
+"description": "The configured database for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"depends_on_nodes": {
+"name": "depends_on_nodes",
+"description": "Array of node identifiers that this node depends on in the execution graph.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"name": {
+"name": "name",
+"description": "Name of the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"package_name": {
+"name": "package_name",
+"description": "Name of the dbt package which contains the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"path": {
+"name": "path",
+"description": "Path to the model on the local filesystem.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"schema": {
+"name": "schema",
+"description": "Configured schema for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"strategy": {
+"name": "strategy",
+"description": "Snapshot \"strategies\" define how dbt knows if a row has changed. There are two strategies built-in to dbt — timestamp\nand check.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"source_meta": {},
+"tags": [],
+"config": {
+"enabled": true
+},
+"patch_path": null,
+"unrendered_config": {},
+"relation_name": "*****_tests.dbt_artifacts_test_commit_NIALL_OVERRIDE.snapshots",
+"created_at": 1659104979.5286632
+},
+"source.dbt_artifacts.dbt_artifacts.snapshot_executions": {
+"fqn": [
+"dbt_artifacts",
+"staging",
+"dbt_artifacts",
+"snapshot_executions"
+],
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"unique_id": "source.dbt_artifacts.dbt_artifacts.snapshot_executions",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "models/staging/sources.yml",
+"original_file_path": "models/staging/sources.yml",
+"name": "snapshot_executions",
+"source_name": "dbt_artifacts",
+"source_description": "",
+"loader": "",
+"identifier": "snapshot_executions",
+"resource_type": "source",
+"quoting": {
+"database": null,
+"schema": null,
+"identifier": null,
+"column": null
+},
+"loaded_at_field": null,
+"freshness": {
+"warn_after": {
+"count": null,
+"period": null
+},
+"error_after": {
+"count": null,
+"period": null
+},
+"filter": null
+},
+"external": null,
+"description": "",
+"columns": {
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"compile_started_at": {
+"name": "compile_started_at",
+"description": "Timestamp when the node started compiling.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"materialization": {
+"name": "materialization",
+"description": "The materialization of the model.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"name": {
+"name": "name",
+"description": "Name of the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"query_completed_at": {
+"name": "query_completed_at",
+"description": "Timestamp when the node's SQL query completed.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"rows_affected": {
+"name": "rows_affected",
+"description": "Number of rows affected by the model execution.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"schema": {
+"name": "schema",
+"description": "Configured schema for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"status": {
+"name": "status",
+"description": "Represents the execution status of a node, can be success, failure, or error.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"thread_id": {
+"name": "thread_id",
+"description": "Which thread executed this node? E.g. Thread-1",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"total_node_runtime": {
+"name": "total_node_runtime",
+"description": "Total time spent executing this node (seconds).",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"was_full_refresh": {
+"name": "was_full_refresh",
+"description": "Boolean flag indicating whether the nodes run was a full refresh or not.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"source_meta": {},
+"tags": [],
+"config": {
+"enabled": true
+},
+"patch_path": null,
+"unrendered_config": {},
+"relation_name": "*****_tests.dbt_artifacts_test_commit_NIALL_OVERRIDE.snapshot_executions",
+"created_at": 1659104979.528818
+},
+"source.dbt_artifacts.dbt_artifacts.sources": {
+"fqn": [
+"dbt_artifacts",
+"staging",
+"dbt_artifacts",
+"sources"
+],
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"unique_id": "source.dbt_artifacts.dbt_artifacts.sources",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "models/staging/sources.yml",
+"original_file_path": "models/staging/sources.yml",
+"name": "sources",
+"source_name": "dbt_artifacts",
+"source_description": "",
+"loader": "",
+"identifier": "sources",
+"resource_type": "source",
+"quoting": {
+"database": null,
+"schema": null,
+"identifier": null,
+"column": null
+},
+"loaded_at_field": null,
+"freshness": {
+"warn_after": {
+"count": null,
+"period": null
+},
+"error_after": {
+"count": null,
+"period": null
+},
+"filter": null
+},
+"external": null,
+"description": "",
+"columns": {
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"database": {
+"name": "database",
+"description": "The configured database for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"freshness": {
+"name": "freshness",
+"description": "The specified freshness of the source model.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"identifier": {
+"name": "identifier",
+"description": "Source identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"loaded_at_field": {
+"name": "loaded_at_field",
+"description": "A column name (or expression) that returns a timestamp indicating freshness.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"loader": {
+"name": "loader",
+"description": "Describes the tool that loads this source into your warehouse.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"name": {
+"name": "name",
+"description": "Name of the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"node_id": {
+"name": "node_id",
+"description": "Unique node identifier.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"schema": {
+"name": "schema",
+"description": "Configured schema for the node.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"source_name": {
+"name": "source_name",
+"description": "Source name.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"source_meta": {},
+"tags": [],
+"config": {
+"enabled": true
+},
+"patch_path": null,
+"unrendered_config": {},
+"relation_name": "*****_tests.dbt_artifacts_test_commit_NIALL_OVERRIDE.sources",
+"created_at": 1659104979.5289721
+},
+"source.dbt_artifacts.dbt_artifacts.invocations": {
+"fqn": [
+"dbt_artifacts",
+"staging",
+"dbt_artifacts",
+"invocations"
+],
+"database": "*****_tests",
+"schema": "dbt_artifacts_test_commit_NIALL_OVERRIDE",
+"unique_id": "source.dbt_artifacts.dbt_artifacts.invocations",
+"package_name": "dbt_artifacts",
+"root_path": "/Users/niall.woodward/dev/dbx_artifacts/dbt_artifacts_internal/integration_test_project/dbt_packages/dbt_artifacts",
+"path": "models/staging/sources.yml",
+"original_file_path": "models/staging/sources.yml",
+"name": "invocations",
+"source_name": "dbt_artifacts",
+"source_description": "",
+"loader": "",
+"identifier": "invocations",
+"resource_type": "source",
+"quoting": {
+"database": null,
+"schema": null,
+"identifier": null,
+"column": null
+},
+"loaded_at_field": null,
+"freshness": {
+"warn_after": {
+"count": null,
+"period": null
+},
+"error_after": {
+"count": null,
+"period": null
+},
+"filter": null
+},
+"external": null,
+"description": "",
+"columns": {
+"command_invocation_id": {
+"name": "command_invocation_id",
+"description": "The invocation_id is a UUID generated by dbt for each invocation. It can be used to link records which were generated by the same dbt invocation.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"dbt_version": {
+"name": "dbt_version",
+"description": "Installed version of dbt that is currently running.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"project_name": {
+"name": "project_name",
+"description": "Name for the root-level project which is being run by dbt.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"run_started_at": {
+"name": "run_started_at",
+"description": "Timestamp that this run started.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"dbt_command": {
+"name": "dbt_command",
+"description": "dbt command of this run.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"full_refresh_flag": {
+"name": "full_refresh_flag",
+"description": "Boolean flag indicating whether the dbt run was in full refresh mode or not.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"target_profile_name": {
+"name": "target_profile_name",
+"description": "The name of the active profile.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"target_name": {
+"name": "target_name",
+"description": "The name of the active target.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"target_schema": {
+"name": "target_schema",
+"description": "The name of the target dbt schema.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+},
+"target_threads": {
+"name": "target_threads",
+"description": "The number of threads in use by dbt.",
+"meta": {},
+"data_type": null,
+"quote": null,
+"tags": []
+}
+},
+"meta": {},
+"source_meta": {},
+"tags": [],
+"config": {
+"enabled": true
+},
+"patch_path": null,
+"unrendered_config": {},
+"relation_name": "*****_tests.dbt_artifacts_test_commit_NIALL_OVERRIDE.invocations",
+"created_at": 1659104979.529124
+}
+}
+}

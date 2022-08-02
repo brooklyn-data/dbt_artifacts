@@ -37,7 +37,7 @@
     create table {{database_name}}.{{schema_name}}.{{table_name}} (
         command_invocation_id STRING,
         node_id STRING,
-        run_started_at TIMESTAMP,
+        run_started_at TIMESTAMP_TZ,
         database STRING,
         schema STRING,
         source_name STRING,

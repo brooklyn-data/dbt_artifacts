@@ -35,6 +35,24 @@
     using delta
 {%- endmacro %}
 
+{% macro snowflake__get_create_model_executions_table_if_not_exists_statement(database_name, schema_name, table_name) -%}
+    create table {{schema_name}}.{{table_name}} (
+        command_invocation_id STRING,
+        node_id STRING,
+        run_started_at TIMESTAMP_TZ,
+        was_full_refresh BOOLEAN,
+        thread_id STRING,
+        status STRING,
+        compile_started_at TIMESTAMP_TZ,
+        query_completed_at TIMESTAMP_TZ,
+        total_node_runtime DOUBLE,
+        rows_affected INTEGER,
+        materialization STRING,
+        schema STRING,
+        name STRING
+    )
+{%- endmacro %}
+
 {% macro default__get_create_model_executions_table_if_not_exists_statement(database_name, schema_name, table_name) -%}
     create table {{database_name}}.{{schema_name}}.{{table_name}} (
         command_invocation_id STRING,
