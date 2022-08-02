@@ -11,6 +11,7 @@ tests as (
         test_execution_id,
         command_invocation_id,
         node_id,
+        run_started_at,
         name,
         depends_on_nodes,
         package_name,

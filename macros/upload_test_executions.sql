@@ -19,12 +19,14 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(7) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(8) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(9) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }}
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }}
         from values
         {% for test in tests -%}
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
                 '{{ test.node.unique_id }}', {# node_id #}
+                '{{ run_started_at }}', {# run_started_at #}
 
                 {% set config_full_refresh = test.node.config.full_refresh %}
                 {% if config_full_refresh is none %}

@@ -24,6 +24,8 @@ models:
     description: '{{ doc("package_name") }}'
   - name: path
     description: '{{ doc("path") }}'
+  - name: run_started_at
+    description: '{{ doc("run_started_at") }}'
   - name: type
     description: '{{ doc("type") }}'
   - name: url

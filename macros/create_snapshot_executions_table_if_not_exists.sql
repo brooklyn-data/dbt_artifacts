@@ -20,6 +20,7 @@
     create or replace table {{schema_name}}.{{table_name}} (
         command_invocation_id STRING,
         node_id STRING,
+        run_started_at TIMESTAMP,
         was_full_refresh BOOLEAN,
         thread_id STRING,
         status STRING,
@@ -38,6 +39,7 @@
     create table {{database_name}}.{{schema_name}}.{{table_name}} (
         command_invocation_id STRING,
         node_id STRING,
+        run_started_at TIMESTAMP,
         was_full_refresh BOOLEAN,
         thread_id STRING,
         status STRING,

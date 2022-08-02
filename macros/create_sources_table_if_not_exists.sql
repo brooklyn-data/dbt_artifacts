@@ -20,6 +20,7 @@
     create table {{schema_name}}.{{table_name}} (
         command_invocation_id STRING,
         node_id STRING,
+        run_started_at TIMESTAMP,
         database STRING,
         schema STRING,
         source_name STRING,
@@ -36,6 +37,7 @@
     create table {{database_name}}.{{schema_name}}.{{table_name}} (
         command_invocation_id STRING,
         node_id STRING,
+        run_started_at TIMESTAMP,
         database STRING,
         schema STRING,
         source_name STRING,
@@ -51,6 +53,7 @@
     create table {{database_name}}.{{schema_name}}.{{table_name}} (
         command_invocation_id STRING,
         node_id STRING,
+        run_started_at TIMESTAMP,
         database STRING,
         schema STRING,
         source_name STRING,

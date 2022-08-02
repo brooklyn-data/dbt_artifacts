@@ -12,18 +12,20 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(2) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(3) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(4) }},
-            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(5)) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(6) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(5) }},
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(6)) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(7) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(8) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(9) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
-            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(11)) }}
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(12)) }}
         from values
         {% for exposure in exposures -%}
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
                 '{{ exposure.unique_id }}', {# node_id #}
+                '{{ run_started_at }}', {# run_started_at #}
                 '{{ exposure.name }}', {# name #}
                 '{{ exposure.type }}', {# type #}
                 '{{ tojson(exposure.owner) }}', {# owner #}

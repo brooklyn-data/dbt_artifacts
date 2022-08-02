@@ -11,6 +11,7 @@ snapshots as (
         snapshot_execution_id,
         command_invocation_id,
         node_id,
+        run_started_at,
         database,
         schema,
         name,

@@ -11,6 +11,7 @@ sources as (
         source_execution_id,
         command_invocation_id,
         node_id,
+        run_started_at,
         database,
         schema,
         source_name,
