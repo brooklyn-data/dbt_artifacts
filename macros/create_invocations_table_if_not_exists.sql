@@ -44,7 +44,7 @@
         command_invocation_id STRING,
         dbt_version STRING,
         project_name STRING,
-        run_started_at TIMESTAMP,
+        run_started_at TIMESTAMP_TZ,
         dbt_command STRING,
         full_refresh_flag BOOLEAN,
         target_profile_name STRING,

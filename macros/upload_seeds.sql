@@ -15,12 +15,14 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(5) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(6) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(7) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(8) }}
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(8) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(9) }}
         from values
         {% for seed in seeds -%}
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
                 '{{ seed.unique_id }}', {# node_id #}
+                '{{ run_started_at }}', {# run_started_at #}
                 '{{ seed.database }}', {# database #}
                 '{{ seed.schema }}', {# schema #}
                 '{{ seed.name }}', {# name #}

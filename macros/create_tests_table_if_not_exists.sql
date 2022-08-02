@@ -20,6 +20,7 @@
     create table {{schema_name}}.{{table_name}} (
         command_invocation_id STRING,
         node_id STRING,
+        run_started_at TIMESTAMP,
         name STRING,
         depends_on_nodes STRING,
         package_name STRING,
@@ -33,6 +34,7 @@
     create table {{database_name}}.{{schema_name}}.{{table_name}} (
         command_invocation_id STRING,
         node_id STRING,
+        run_started_at TIMESTAMP_TZ,
         name STRING,
         depends_on_nodes ARRAY,
         package_name STRING,
@@ -45,6 +47,7 @@
     create table {{database_name}}.{{schema_name}}.{{table_name}} (
         command_invocation_id STRING,
         node_id STRING,
+        run_started_at TIMESTAMP,
         name STRING,
         depends_on_nodes STRING,
         package_name STRING,

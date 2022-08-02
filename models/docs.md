@@ -235,7 +235,7 @@ Name for the root-level project which is being run by dbt.
 
 {% docs run_started_at %}
 
-Timestamp that this run started.
+The start timestamp of the dbt execution which generated the record.
 
 {% enddocs %}
 

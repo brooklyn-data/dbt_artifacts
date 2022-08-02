@@ -11,6 +11,7 @@ model_executions as (
         model_execution_id,
         command_invocation_id,
         node_id,
+        run_started_at,
         was_full_refresh,
         thread_id,
         status,

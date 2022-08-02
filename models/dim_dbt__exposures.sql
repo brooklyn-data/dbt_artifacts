@@ -11,6 +11,7 @@ exposures as (
         exposure_execution_id,
         command_invocation_id,
         node_id,
+        run_started_at,
         name,
         type,
         owner,

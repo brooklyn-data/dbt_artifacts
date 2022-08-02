@@ -21,12 +21,14 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(9) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }}
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }}
         from values
         {% for model in results if model.node.resource_type == "snapshot" -%}
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
                 '{{ model.node.unique_id }}', {# node_id #}
+                '{{ run_started_at }}', {# run_started_at #}
 
                 {% set config_full_refresh = model.node.config.full_refresh %}
                 {% if config_full_refresh is none %}

@@ -11,6 +11,7 @@ enhanced as (
         {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as snapshot_execution_id,
         command_invocation_id,
         node_id,
+        run_started_at,
         database,
         schema,
         name,

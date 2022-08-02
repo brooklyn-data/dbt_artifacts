@@ -20,6 +20,8 @@ models:
     description: '{{ doc("name") }}'
   - name: node_id
     description: '{{ doc("node_id") }}'
+  - name: run_started_at
+    description: '{{ doc("run_started_at") }}'
   - name: schema
     description: '{{ doc("schema") }}'
   - name: source_execution_id

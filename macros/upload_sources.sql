@@ -17,12 +17,14 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(7) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(8) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(9) }},
-            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(10)) }}
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(11)) }}
         from values
         {% for source in sources -%}
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
                 '{{ source.unique_id }}', {# node_id #}
+                '{{ run_started_at }}', {# run_started_at #}
                 '{{ source.database }}', {# database #}
                 '{{ source.schema }}', {# schema #}
                 '{{ source.source_name }}', {# source_name #}
