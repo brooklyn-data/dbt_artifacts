@@ -13,7 +13,8 @@
             status,
             thread_id,
             total_node_runtime,
-            was_full_refresh
+            was_full_refresh,
+            run_started_at
         )
         select
             command_invocation_id,
@@ -27,7 +28,8 @@
             status,
             thread_id,
             total_node_runtime,
-            was_full_refresh
+            was_full_refresh,
+            artifact_generated_at
         from {{old_database}}.{{old_schema}}.fct_dbt__model_executions
     {% endset %}
 
@@ -44,7 +46,8 @@
             node_id,
             package_name,
             tags,
-            test_path
+            test_path,
+            run_started_at
         )
         select
             command_invocation_id,
@@ -53,7 +56,8 @@
             node_id,
             package_name,
             [],
-            test_path
+            test_path,
+            artifact_generated_at
         from {{old_database}}.{{old_schema}}.dim_dbt__tests
     {% endset %}
 
@@ -73,7 +77,8 @@
             status,
             thread_id,
             total_node_runtime,
-            was_full_refresh
+            was_full_refresh,
+            run_started_at
         )
         select
             command_invocation_id,
@@ -85,7 +90,8 @@
             status,
             thread_id,
             total_node_runtime,
-            was_full_refresh
+            was_full_refresh,
+            artifact_generated_at
         from {{old_database}}.{{old_schema}}.fct_dbt__test_executions
     {% endset %}
 
@@ -105,7 +111,8 @@
             node_id,
             package_name,
             path,
-            schema
+            schema,
+            run_started_at
         )
         select
             checksum,
@@ -117,7 +124,8 @@
             node_id,
             package_name,
             model_path,
-            model_schema
+            model_schema,
+            artifact_generated_at
         from {{old_database}}.{{old_schema}}.dim_dbt__models
     {% endset %}
 
@@ -135,7 +143,8 @@
             node_id,
             package_name,
             path,
-            schema
+            schema,
+            run_started_at
         )
         select
             checksum,
@@ -145,7 +154,8 @@
             node_id,
             package_name,
             seed_path,
-            seed_schema
+            seed_schema,
+            artifact_generated_at
         from {{old_database}}.{{old_schema}}.dim_dbt__seeds
     {% endset %}
 
@@ -167,7 +177,8 @@
             status,
             thread_id,
             total_node_runtime,
-            was_full_refresh
+            was_full_refresh,
+            run_started_at
         )
         select
             command_invocation_id,
@@ -181,7 +192,8 @@
             status,
             thread_id,
             total_node_runtime,
-            was_full_refresh
+            was_full_refresh,
+            artifact_generated_at
         from {{old_database}}.{{old_schema}}.fct_dbt__seed_executions
     {% endset %}
 
@@ -202,7 +214,8 @@
             package_name,
             path,
             type,
-            url
+            url,
+            run_started_at
         )
         select
             command_invocation_id,
@@ -215,7 +228,8 @@
             package_name,
             null,
             type,
-            null
+            null,
+            artifact_generated_at
         from {{old_database}}.{{old_schema}}.dim_dbt__exposures
     {% endset %}
 
@@ -235,7 +249,8 @@
             package_name,
             path,
             schema,
-            strategy
+            strategy,
+            run_started_at
         )
         select
             checksum,
@@ -247,7 +262,8 @@
             package_name,
             snapshot_path,
             snapshot_schema,
-            null
+            null,
+            artifact_generated_at
         from {{old_database}}.{{old_schema}}.dim_dbt__snapshots
     {% endset %}
 
@@ -269,7 +285,8 @@
             status,
             thread_id,
             total_node_runtime,
-            was_full_refresh
+            was_full_refresh,
+            run_started_at
         )
         select
             command_invocation_id,
@@ -283,7 +300,8 @@
             status,
             thread_id,
             total_node_runtime,
-            was_full_refresh
+            was_full_refresh,
+            artifact_generated_at
         from {{old_database}}.{{old_schema}}.fct_dbt__snapshot_executions
     {% endset %}
 
@@ -303,7 +321,8 @@
             name,
             node_id,
             schema,
-            source_name
+            source_name,
+            run_started_at
         )
         select
             command_invocation_id,
@@ -315,7 +334,8 @@
             name,
             node_id,
             source_schema,
-            source_name
+            source_name,
+            artifact_generated_at
         from {{old_database}}.{{old_schema}}.dim_dbt__sources
     {% endset %}
 
