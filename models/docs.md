@@ -317,38 +317,38 @@ Key-value pairs of project variables to be capture.
 
 {% enddocs %}
 
-{% docs last_full_run_completed_at %}
+{% docs last_full_refresh_run_completed_at %}
 
 Timestamp when the node's SQL query completed on the last full (non-incremental) run.
 
 {% enddocs %}
 
-{% docs last_full_run_rows_affected %}
+{% docs last_full_refresh_run_rows_affected %}
 
-Number of rows affected by the node's last full (non-incremental) run
+Number of rows affected by the node's last full (non-incremental) run.
 
 {% enddocs %}
 
-{% docs last_full_run_total_runtime %}
+{% docs last_full_refresh_run_total_runtime %}
 
 Total time spent executing the node's last full (non-incremental) run (seconds).
 
 {% enddocs %}
 
-{% docs last_incremental_run_completed_at %}
+{% docs last_run_completed_at %}
 
-Timestamp when the node's SQL query completed on the last incremental run.
-
-{% enddocs %}
-
-{% docs last_incremental_run_rows_affected %}
-
-Number of rows affected by the node's last incremental run
+Timestamp when the node's SQL query completed on the last run.
 
 {% enddocs %}
 
-{% docs last_incremental_run_total_runtime %}
+{% docs last_run_rows_affected %}
 
-Total time spent executing the node's last incremental run (seconds).
+Number of rows affected by the node's last run.
+
+{% enddocs %}
+
+{% docs last_run_total_runtime %}
+
+Total time spent executing the node's last run (seconds).
 
 {% enddocs %}

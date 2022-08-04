@@ -36,25 +36,26 @@ latest_models_runs as (
 latest_model_stats as (
     select
         node_id
-        , case when was_full_refresh then query_completed_at end as last_full_run_completed_at
-        , case when was_full_refresh then total_node_runtime end as last_full_run_total_runtime
-        , case when was_full_refresh then rows_affected end as last_full_run_rows_affected
-        , case when not was_full_refresh then query_completed_at end as last_incremental_run_completed_at
-        , case when not was_full_refresh then total_node_runtime end as last_incremental_run_total_runtime
-        , case when not was_full_refresh then rows_affected end as last_incremental_run_rows_affected
+        , max(case when was_full_refresh then query_completed_at end) as last_full_refresh_run_completed_at
+        , max(case when was_full_refresh then total_node_runtime end) as last_full_refresh_run_total_runtime
+        , max(case when was_full_refresh then rows_affected end) as last_full_refresh_run_rows_affected
+        , max(query_completed_at) as last_run_completed_at
+        , max(total_node_runtime) as last_run_total_runtime
+        , max(rows_affected) as last_run_rows_affected
     from latest_models_runs
     where run_idx = 1
+    group by 1
 ),
 
 final as (
     select
         latest_models.*
-        , latest_model_stats.last_full_run_completed_at
-        , latest_model_stats.last_full_run_total_runtime
-        , latest_model_stats.last_full_run_rows_affected
-        , latest_model_stats.last_incremental_run_completed_at
-        , latest_model_stats.last_incremental_run_total_runtime
-        , latest_model_stats.last_incremental_run_rows_affected
+        , latest_model_stats.last_full_refresh_run_completed_at
+        , latest_model_stats.last_full_refresh_run_total_runtime
+        , latest_model_stats.last_full_refresh_run_rows_affected
+        , latest_model_stats.last_run_completed_at
+        , latest_model_stats.last_run_total_runtime
+        , latest_model_stats.last_run_rows_affected
     from latest_models
     left join latest_model_stats
         on latest_models.node_id = latest_model_stats.node_id
