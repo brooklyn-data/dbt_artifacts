@@ -6,6 +6,7 @@ The package currently supports Databricks and Snowflake.
 Models included:
 
 ```
+dim_dbt__current_models
 dim_dbt__exposures
 dim_dbt__models
 dim_dbt__seeds
