@@ -30,7 +30,7 @@ latest_models_runs as (
         ) as run_idx
     from model_executions
     inner join latest_models on model_executions.node_id = latest_models.node_id
-    where status = 'success'
+    where model_executions.status = 'success'
 ),
 
 latest_model_stats as (
