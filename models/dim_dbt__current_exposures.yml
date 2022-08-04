@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: fct_dbt__exposures_updates
+    description: A table of exposures and models feeding them. Latest update time for each models is provided.
+    columns:
+    - name: node_id
+      description: '{{ doc("node_id") }}'
+    - name: name
+      description: '{{ doc("name") }}'
+    - name: type
+      description: '{{ doc("type") }}'
+    - name: owner
+      description: '{{ doc("owner") }}'
+    - name: maturity
+      description: '{{ doc("maturity") }}'
+    - name: package_name
+      description: '{{ doc("package_name") }}'
+    - name: output_feeds
+      description: '{{ doc("output_feeds") }}'
+    - name: feed_latest_update
+      description: '{{ doc("feed_latest_update") }}'

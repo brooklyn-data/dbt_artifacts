@@ -352,3 +352,15 @@ Number of rows affected by the node's last run.
 Total time spent executing the node's last run (seconds).
 
 {% enddocs %}
+
+{% docs output_feeds %}
+
+Unique id for each feed of an exposure, in the form of model.[package_name].[model_name]
+
+{% enddocs %}
+
+{% docs feed_latest_update %}
+
+Timestamp of the latest update of each feed of an exposure.
+
+{% enddocs %}
