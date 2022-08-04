@@ -32,7 +32,7 @@
                 '{{ model.package_name }}', {# package_name #}
                 '{{ model.original_file_path }}', {# path #}
                 '{{ model.checksum.checksum }}', {# checksum #}
-                '{{ model.unrendered_config.materialized }}' {# materialization #}
+                '{{ model.config.materialized }}' {# materialization #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
