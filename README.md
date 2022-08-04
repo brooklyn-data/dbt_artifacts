@@ -84,6 +84,29 @@ vars:
   ]
 ```
 
+## Migrating From <1.0.0 to >=1.0.0
+To migrate your existing data from the `dbt-artifacts` versions <=0.8.0, a helper macro and guide is provided. This migration uses the old `fct_*` and `dim_*` models' data to populate the new sources. The steps to use the macro are as follows:
+
+1. If not already completed, run `dbt run-operation create_dbt_artifacts_tables` to make your source tables.
+2. Run `dbt run-operation migrate_from_v0_to_v1 --args '<see-below-for-arguments>'`.
+3. Verify that the migration completes successfully.
+4. Manually delete any database objects (sources, staging models, tables/views) from the previous `dbt-artifacts` version.
+
+The arguments for `migrate_from_v0_to_v1` are as follows:
+| argument     	| description                                              	|
+|--------------	|----------------------------------------------------------	|
+| `old_database` 	| the database of the <1.0.0 output (`fct_`/`dim_`) models 	|
+| `old_schema`   	| the schema of the <1.0.0 output (`fct_`/`dim_`) models   	|
+| `new_database` 	| the target database that the artifact sources are in     	|
+| `new_schema`   	| the target schema that the artifact sources are in       	|
+
+The old and new database/schemas *do not* have to be different, but it is explicitly defined for flexible support.
+
+An example operation is as follows:
+```bash
+dbt run-operation migrate_from_v0_to_v1 --args '{old_database: analytics, old_schema: dbt_artifacts, new_database: analytics, new_schema: artifact_sources}'
+```
+
 ## Acknowledgements
 Thank you to [Tails.com](https://tails.com/gb/careers/) for initial development and maintenance of this package. On 2021/12/20, the repository was transferred from the Tails.com GitHub organization to Brooklyn Data Co.
 
