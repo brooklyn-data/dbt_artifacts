@@ -4,6 +4,8 @@ models:
   - name: fct_dbt__exposures_updates
     description: A table of exposures and models feeding them. Latest update time for each models is provided.
     columns:
+    - name: run_started_at
+      description: '{{ doc("run_started_at") }}'
     - name: node_id
       description: '{{ doc("node_id") }}'
     - name: name

@@ -18,7 +18,8 @@ model_updates as (
 
 exposures_latest as (
     select
-        node_id
+        run_started_at
+        , node_id
         , name
         , type,
         , owner
@@ -31,7 +32,8 @@ exposures_latest as (
 
 exposures_updates as (
     select
-        exposures_latest.node_id
+        exposures_latest.run_started_at
+        , exposures_latest.node_id
         , exposures_latest.name
         , exposures_latest.type
         , exposures_latest.owner
