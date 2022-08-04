@@ -1,0 +1,42 @@
+version: 2
+
+models:
+- name: dim_dbt__current_models
+  description: Dimension model that contains data about models' most recent successful runs
+  columns:
+  - name: checksum
+    description: '{{ doc("checksum") }}'
+  - name: command_invocation_id
+    description: '{{ doc("command_invocation_id") }}'
+  - name: database
+    description: '{{ doc("database") }}'
+  - name: depends_on_nodes
+    description: '{{ doc("depends_on_nodes") }}'
+  - name: last_full_refresh_run_completed_at
+    description: '{{ doc("last_full_refresh_run_completed_at") }}'
+  - name: last_full_refresh_run_rows_affected
+    description: '{{ doc("last_full_refresh_run_rows_affected") }}'
+  - name: last_full_refresh_run_total_runtime
+    description: '{{ doc("last_full_refresh_run_total_runtime") }}'
+  - name: last_run_completed_at
+    description: '{{ doc("last_run_completed_at") }}'
+  - name: last_run_rows_affected
+    description: '{{ doc("last_run_rows_affected") }}'
+  - name: last_run_total_runtime
+    description: '{{ doc("last_run_total_runtime") }}'
+  - name: materialization
+    description: '{{ doc("materialization") }}'
+  - name: model_execution_id
+    description: '{{ doc("model_execution_id") }}'
+  - name: name
+    description: '{{ doc("name") }}'
+  - name: node_id
+    description: '{{ doc("node_id") }}'
+  - name: package_name
+    description: '{{ doc("package_name") }}'
+  - name: path
+    description: '{{ doc("path") }}'
+  - name: run_started_at
+    description: '{{ doc("run_started_at") }}'
+  - name: schema
+    description: '{{ doc("schema") }}'
