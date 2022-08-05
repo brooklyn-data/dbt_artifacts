@@ -21,7 +21,7 @@ exposures_latest as (
         run_started_at
         , node_id
         , name
-        , type,
+        , type
         , owner
         , maturity
         , package_name
