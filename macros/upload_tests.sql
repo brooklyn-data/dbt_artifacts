@@ -25,7 +25,7 @@
                 '{{ test.name }}', {# name #}
                 '{{ tojson(test.depends_on.nodes) }}', {# depends_on_nodes #}
                 '{{ test.package_name }}', {# package_name #}
-                '{{ test.original_file_path }}', {# test_path #}
+                '{{ test.original_file_path | replace('\\', '\\\\') }}', {# test_path #}
                 '{{ tojson(test.tags) }}' {# tags #}
             )
             {%- if not loop.last %},{%- endif %}

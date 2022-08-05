@@ -27,7 +27,7 @@
                 '{{ seed.schema }}', {# schema #}
                 '{{ seed.name }}', {# name #}
                 '{{ seed.package_name }}', {# package_name #}
-                '{{ seed.original_file_path }}', {# path #}
+                '{{ seed.original_file_path | replace('\\', '\\\\') }}', {# path #}
                 '{{ seed.checksum.checksum }}' {# checksum #}
             )
             {%- if not loop.last %},{%- endif %}
