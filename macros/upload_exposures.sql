@@ -30,7 +30,7 @@
                 '{{ exposure.type }}', {# type #}
                 '{{ tojson(exposure.owner) }}', {# owner #}
                 '{{ exposure.maturity }}', {# maturity #}
-                '{{ exposure.original_file_path }}', {# path #}
+                '{{ exposure.original_file_path | replace('\\', '\\\\') }}', {# path #}
                 '{{ exposure.description }}', {# description #}
                 '{{ exposure.url }}', {# url #}
                 '{{ exposure.package_name }}', {# package_name #}
