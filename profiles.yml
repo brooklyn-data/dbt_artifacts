@@ -1,0 +1,21 @@
+config:
+  partial_parse: true
+  use_colors: true
+  printer_width: 80
+  send_anonymous_usage_stats: false
+
+dbt_artifacts:
+  target: sbx
+  outputs:
+    sbx:
+      type: bigquery
+      method: oauth
+      project: dbt-demo-aaa
+      execution_project: dbt-demo-aaa
+      schema: dbt_artifacts
+      threads: 4
+      timeout_seconds: 300
+      location: EU
+      priority: interactive
+      retries: 1
+      impersonate_service_account: sa-dbt-demo@dbt-demo-aaa.iam.gserviceaccount.com

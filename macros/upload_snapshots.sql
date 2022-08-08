@@ -1,9 +1,13 @@
 {% macro upload_snapshots(graph) -%}
-    {% set src_dbt_snapshots = source('dbt_artifacts', 'snapshots') %}
     {% set snapshots = [] %}
     {% for node in graph.nodes.values() | selectattr("resource_type", "equalto", "snapshot") %}
         {% do snapshots.append(node) %}
     {% endfor %}
+    {{ return(adapter.dispatch('get_snapshots_dml_sql', 'dbt_artifacts')(snapshots)) }}
+
+{%- endmacro %}
+
+{% macro default__get_snapshots_dml_sql(snapshots) -%}
 
     {% if snapshots != [] %}
         {% set snapshot_values %}
@@ -37,13 +41,34 @@
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
         {% endset %}
-
-        {{ dbt_artifacts.insert_into_metadata_table(
-            database_name=src_dbt_snapshots.database,
-            schema_name=src_dbt_snapshots.schema,
-            table_name=src_dbt_snapshots.identifier,
-            content=snapshot_values
-            )
-        }}
+        {{ snapshot_values }}
+    {% else %}
+        {{ return("") }}
     {% endif %}
 {% endmacro -%}
+
+{% macro bigquery__get_snapshots_dml_sql(snapshots) -%}
+    {% if snapshots != [] %}
+        {% set snapshot_values %}
+            {% for snapshot in snapshots -%}
+                (
+                    '{{ invocation_id }}', {# command_invocation_id #}
+                    '{{ snapshot.unique_id }}', {# node_id #}
+                    '{{ run_started_at }}', {# run_started_at #}
+                    '{{ snapshot.database }}', {# database #}
+                    '{{ snapshot.schema }}', {# schema #}
+                    '{{ snapshot.name }}', {# name #}
+                    {{ tojson(snapshot.depends_on.nodes) }}, {# depends_on_nodes #}
+                    '{{ snapshot.package_name }}', {# package_name #}
+                    '{{ snapshot.original_file_path | replace('\\', '\\\\') }}', {# path #}
+                    '{{ snapshot.checksum.checksum }}', {# checksum #}
+                    '{{ snapshot.config.strategy }}' {# strategy #}
+                )
+                {%- if not loop.last %},{%- endif %}
+            {%- endfor %}
+        {% endset %}
+        {{ snapshot_values }}
+    {% else %}
+        {{ return("") }}
+    {% endif %}
+{%- endmacro %}
