@@ -24,7 +24,12 @@ See the generated [dbt docs site](https://brooklyn-data.github.io/dbt_artifacts/
 
 ## Quickstart
 
-1. Add this package to your `packages.yml` following [these instructions](https://docs.getdbt.com/docs/building-a-dbt-project/package-management/)
+1. Add this package to your `packages.yml`:
+```
+packages:
+  - package: brooklyn-data/dbt_artifacts
+    version: 1.0.0
+```
 
 2. Run `dbt deps` to install the package
 
