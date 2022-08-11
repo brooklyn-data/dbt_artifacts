@@ -9,3 +9,5 @@ logs/
 Pipfile
 Pipfile.lock
 env.sh
+
+.python-version
