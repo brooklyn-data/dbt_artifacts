@@ -1,7 +1,7 @@
 # dbt Artifacts Package
 This package builds a mart of tables and views describing the project it is installed in. In pre V1 versions of the package, the artifacts dbt produces were uploaded to the warehouse, hence the name of the package. That's no longer the case, but the name has stuck!
 
-The package currently supports Databricks and Snowflake.
+The package currently supports Databricks, Spark and Snowflake adapters.
 
 Models included:
 
@@ -28,7 +28,7 @@ See the generated [dbt docs site](https://brooklyn-data.github.io/dbt_artifacts/
 ```
 packages:
   - package: brooklyn-data/dbt_artifacts
-    version: 1.0.0
+    version: 1.1.0
 ```
 
 2. Run `dbt deps` to install the package
