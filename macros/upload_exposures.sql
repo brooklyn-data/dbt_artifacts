@@ -31,7 +31,7 @@
                 '{{ tojson(exposure.owner) }}', {# owner #}
                 '{{ exposure.maturity }}', {# maturity #}
                 '{{ exposure.original_file_path | replace('\\', '\\\\') }}', {# path #}
-                '{{ exposure.description }}', {# description #}
+                '{{ exposure.description | replace("'","\\'") }}', {# description #}
                 '{{ exposure.url }}', {# url #}
                 '{{ exposure.package_name }}', {# package_name #}
                 '{{ tojson(exposure.depends_on.nodes) }}' {# depends_on_nodes #}
