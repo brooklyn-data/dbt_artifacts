@@ -29,6 +29,7 @@
         total_node_runtime DOUBLE,
         rows_affected INTEGER,
         materialization STRING,
+        database STRING,
         schema STRING,
         name STRING
     )
@@ -48,6 +49,7 @@
         total_node_runtime INTEGER,
         rows_affected INTEGER,
         materialization STRING,
+        database STRING,
         schema STRING,
         name STRING
     )
@@ -66,6 +68,7 @@
         total_node_runtime INTEGER,
         rows_affected INTEGER,
         materialization STRING,
+        database STRING,
         schema STRING,
         name STRING
     )
