@@ -22,7 +22,8 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }}
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }}
         from values
         {% for model in results if model.node.resource_type == "seed" -%}
             (
@@ -63,6 +64,7 @@
                 {{ model.execution_time }}, {# total_node_runtime #}
                 null, -- rows_affected not available {# Databricks #}
                 '{{ model.node.config.materialized }}', {# materialization #}
+                '{{ model.node.database }}', {# database #}
                 '{{ model.node.schema }}', {# schema #}
                 '{{ model.node.name }}' {# name #}
             )

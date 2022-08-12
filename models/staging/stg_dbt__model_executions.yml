@@ -22,6 +22,8 @@ models:
     description: '{{ doc("rows_affected") }}'
   - name: run_started_at
     description: '{{ doc("run_started_at") }}'
+  - name: database
+    description: '{{ doc("database") }}'
   - name: schema
     description: '{{ doc("schema") }}'
   - name: status

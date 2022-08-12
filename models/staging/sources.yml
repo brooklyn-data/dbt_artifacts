@@ -22,6 +22,8 @@ sources:
           description: '{{ doc("query_completed_at") }}'
         - name: rows_affected
           description: '{{ doc("rows_affected") }}'
+        - name: database
+          description: '{{ doc("database") }}'
         - name: schema
           description: '{{ doc("schema") }}'
         - name: status
@@ -142,6 +144,8 @@ sources:
           description: '{{ doc("rows_affected") }}'
         - name: run_started_at
           description: '{{ doc("run_started_at") }}'
+        - name: database
+          description: '{{ doc("database") }}'
         - name: schema
           description: '{{ doc("schema") }}'
         - name: status
@@ -224,6 +228,8 @@ sources:
           description: '{{ doc("query_completed_at") }}'
         - name: rows_affected
           description: '{{ doc("rows_affected") }}'
+        - name: database
+          description: '{{ doc("database") }}'
         - name: schema
           description: '{{ doc("schema") }}'
         - name: status
@@ -280,6 +286,8 @@ sources:
           description: '{{ doc("target_profile_name") }}'
         - name: target_name
           description: '{{ doc("target_name") }}'
+        - name: target_database
+          description: '{{ doc("target_database") }}'
         - name: target_schema
           description: '{{ doc("target_schema") }}'
         - name: target_threads

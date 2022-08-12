@@ -13,13 +13,14 @@
         {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(8) }},
         {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(9) }},
         {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
-        nullif({{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }}, ''),
+        {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
         nullif({{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }}, ''),
         nullif({{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }}, ''),
         nullif({{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }}, ''),
         nullif({{ adapter.dispatch('column_identifier', 'dbt_artifacts')(15) }}, ''),
-        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(16)) }},
-        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(17)) }}
+        nullif({{ adapter.dispatch('column_identifier', 'dbt_artifacts')(16) }}, ''),
+        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(17)) }},
+        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(18)) }}
     from values
     (
         '{{ invocation_id }}', {# command_invocation_id #}
@@ -30,6 +31,7 @@
         '{{ flags.FULL_REFRESH }}', {# full_refresh_flag #}
         '{{ target.profile_name }}', {# target_profile_name #}
         '{{ target.name }}', {# target_name #}
+        '{{ target.database }}', {# target_database #}
         '{{ target.schema }}', {# target_schema #}
         {{ target.threads }}, {# target_threads #}
 

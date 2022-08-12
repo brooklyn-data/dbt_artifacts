@@ -20,6 +20,7 @@ enhanced as (
         total_node_runtime,
         rows_affected,
         materialization,
+        database,
         schema,
         name
     from base
