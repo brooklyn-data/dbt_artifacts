@@ -19,6 +19,7 @@ enhanced as (
         query_completed_at,
         total_node_runtime,
         rows_affected,
+        bytes_processed,
         materialization,
         schema,
         name

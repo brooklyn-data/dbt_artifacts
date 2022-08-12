@@ -24,7 +24,8 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }}
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }}
         from values
         {% for model in models -%}
             (
@@ -63,7 +64,8 @@
                 {% endif %}
 
                 {{ model.execution_time }}, {# total_node_runtime #}
-                null, -- rows_affected not available {# Databricks #}
+                null, -- rows_affected not available {# Only available in BigQuery #}
+                null, -- bytes_processed not available {# Only available in BigQuery #}
                 '{{ model.node.config.materialized }}', {# materialization #}
                 '{{ model.node.schema }}', {# schema #}
                 '{{ model.node.name }}' {# name #}

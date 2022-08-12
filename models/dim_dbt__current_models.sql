@@ -24,6 +24,7 @@ latest_models_runs as (
         , model_executions.query_completed_at
         , model_executions.total_node_runtime
         , model_executions.rows_affected
+        , model_executions.bytes_processed
         , row_number() over (
             partition by latest_models.node_id, model_executions.was_full_refresh
             order by model_executions.query_completed_at desc /* most recent ranked first */
@@ -39,9 +40,11 @@ latest_model_stats as (
         , max(case when was_full_refresh then query_completed_at end) as last_full_refresh_run_completed_at
         , max(case when was_full_refresh then total_node_runtime end) as last_full_refresh_run_total_runtime
         , max(case when was_full_refresh then rows_affected end) as last_full_refresh_run_rows_affected
+        , max(case when was_full_refresh then bytes_processed end) as last_full_refresh_run_bytes_processed
         , max(query_completed_at) as last_run_completed_at
         , max(total_node_runtime) as last_run_total_runtime
         , max(rows_affected) as last_run_rows_affected
+        , max(bytes_processed) as last_run_bytes_processed
     from latest_models_runs
     where run_idx = 1
     group by 1
@@ -53,9 +56,11 @@ final as (
         , latest_model_stats.last_full_refresh_run_completed_at
         , latest_model_stats.last_full_refresh_run_total_runtime
         , latest_model_stats.last_full_refresh_run_rows_affected
+        , latest_model_stats.last_full_refresh_run_bytes_processed
         , latest_model_stats.last_run_completed_at
         , latest_model_stats.last_run_total_runtime
         , latest_model_stats.last_run_rows_affected
+        , latest_model_stats.last_run_bytes_processed
     from latest_models
     left join latest_model_stats
         on latest_models.node_id = latest_model_stats.node_id

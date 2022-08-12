@@ -20,6 +20,8 @@ models:
     description: '{{ doc("query_completed_at") }}'
   - name: rows_affected
     description: '{{ doc("rows_affected") }}'
+  - name: bytes_processed
+    description: '{{ doc("bytes_processed") }}'
   - name: run_started_at
     description: '{{ doc("run_started_at") }}'
   - name: schema

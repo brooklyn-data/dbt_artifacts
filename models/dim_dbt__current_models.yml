@@ -16,12 +16,16 @@ models:
     description: '{{ doc("last_full_refresh_run_completed_at") }}'
   - name: last_full_refresh_run_rows_affected
     description: '{{ doc("last_full_refresh_run_rows_affected") }}'
+  - name: last_full_refresh_run_bytes_processed
+    description: '{{ doc("last_full_refresh_run_bytes_processed") }}'
   - name: last_full_refresh_run_total_runtime
     description: '{{ doc("last_full_refresh_run_total_runtime") }}'
   - name: last_run_completed_at
     description: '{{ doc("last_run_completed_at") }}'
   - name: last_run_rows_affected
     description: '{{ doc("last_run_rows_affected") }}'
+  - name: last_run_bytes_processed
+    description: '{{ doc("last_run_bytes_processed") }}'
   - name: last_run_total_runtime
     description: '{{ doc("last_run_total_runtime") }}'
   - name: materialization

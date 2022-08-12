@@ -76,6 +76,12 @@ Number of rows affected by the model execution.
 
 {% enddocs %}
 
+{% docs bytes_processed %}
+
+Number of bytes processed by the model execution.
+
+{% enddocs %}
+
 {% docs thread_id %}
 
 Which thread executed this node? E.g. Thread-1
@@ -329,6 +335,12 @@ Number of rows affected by the node's last full (non-incremental) run.
 
 {% enddocs %}
 
+{% docs last_full_refresh_run_bytes_processed %}
+
+Number of bytes processed by the node's last full (non-incremental) run.
+
+{% enddocs %}
+
 {% docs last_full_refresh_run_total_runtime %}
 
 Total time spent executing the node's last full (non-incremental) run (seconds).
@@ -344,6 +356,12 @@ Timestamp when the node's SQL query completed on the last run.
 {% docs last_run_rows_affected %}
 
 Number of rows affected by the node's last run.
+
+{% enddocs %}
+
+{% docs last_run_bytes_processed %}
+
+Number of bytes processed by the node's last run.
 
 {% enddocs %}
 

@@ -28,6 +28,7 @@
         query_completed_at TIMESTAMP,
         total_node_runtime DOUBLE,
         rows_affected INTEGER,
+        bytes_processed INTEGER,
         materialization STRING,
         schema STRING,
         name STRING
@@ -47,6 +48,7 @@
         query_completed_at TIMESTAMP_TZ,
         total_node_runtime DOUBLE,
         rows_affected INTEGER,
+        bytes_processed INTEGER,
         materialization STRING,
         schema STRING,
         name STRING
@@ -65,6 +67,7 @@
         query_completed_at TIMESTAMP,
         total_node_runtime FLOAT64,
         rows_affected INTEGER,
+        bytes_processed INTEGER,
         materialization STRING,
         schema STRING,
         name STRING
