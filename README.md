@@ -36,7 +36,10 @@ packages:
 3. Add an on-run-end hook to your `dbt_project.yml`: `on-run-end: "{{ dbt_artifacts.upload_results(results) }}"`
 (We recommend adding a conditional here so that the upload only occurs in your production environment, such as `on-run-end: "{% if target.name == 'prod' %}{{ dbt_artifacts.upload_results(results) }}{% endif %}"`)
 
-4. Create the tables dbt_artifacts uploads to with `dbt run-operation create_dbt_artifacts_tables`
+4. In case you don't want the artifacts to be uploaded for certain dbt commands (for instance 'dbt compile'), add the following conditional:
+`on-run-end: "{% if not var('artifact', False) %}{{ dbt_artifacts.upload_results(results) }}{% endif %}"`
+If you then run the following command by providing a variable to the command, the 'on-run-end' will not execute:
+`dbt compile --vars 'artifact: disable'`
 
 5. Run your project!
 
@@ -55,6 +58,7 @@ models:
     +schema: your_destination_schema # optional, default is your target database
     staging:
       +schema: your_destination_schema # optional, default is your target schema
+  ...
 ```
 
 Note that the model materializations are defined in this package's `dbt_project.yml`, so do not set them in your project.
