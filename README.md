@@ -1,7 +1,7 @@
 # dbt Artifacts Package
 This package builds a mart of tables and views describing the project it is installed in. In pre V1 versions of the package, the artifacts dbt produces were uploaded to the warehouse, hence the name of the package. That's no longer the case, but the name has stuck!
 
-The package currently supports Databricks and Snowflake.
+The package currently supports Databricks, Spark and Snowflake adapters.
 
 Models included:
 
@@ -28,7 +28,7 @@ See the generated [dbt docs site](https://brooklyn-data.github.io/dbt_artifacts/
 ```
 packages:
   - package: brooklyn-data/dbt_artifacts
-    version: 1.0.0
+    version: 1.1.1
 ```
 
 2. Run `dbt deps` to install the package
@@ -145,6 +145,8 @@ pipx install tox
 tox -e integration_snowflake # For the Snowflake tests
 tox -e integration_databricks # For the Databricks tests
 ```
+
+The Spark tests require installing the [ODBC driver](https://www.databricks.com/spark/odbc-drivers-download). On a Mac, DBT_ENV_SPARK_DRIVER_PATH should be set to `/Library/simba/spark/lib/libsparkodbc_sbu.dylib`. Spark tests have not yet been added to the integration tests.
 
 ### SQLFluff
 

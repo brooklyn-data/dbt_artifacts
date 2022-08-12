@@ -2,7 +2,7 @@
     {{ return(adapter.dispatch('insert_into_metadata_table', 'dbt_artifacts')(database_name, schema_name, table_name, content)) }}
 {%- endmacro %}
 
-{% macro databricks__insert_into_metadata_table(database_name, schema_name, table_name, content) -%}
+{% macro spark__insert_into_metadata_table(database_name, schema_name, table_name, content) -%}
     {% set insert_into_table_query %}
     insert into {{ schema_name }}.{{ table_name }}
     {{ content }}

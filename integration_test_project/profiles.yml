@@ -25,3 +25,12 @@ dbt_artifacts:
       http_path: "{{ env_var('DBT_ENV_SECRET_DATABRICKS_HTTP_PATH') }}"
       token: "{{ env_var('DBT_ENV_SECRET_DATABRICKS_TOKEN') }}"
       threads: 8
+    spark:
+      type: spark
+      method: odbc
+      schema: dbt_artifacts_test_commit_spark_{{ env_var('GITHUB_SHA_OVERRIDE', '') if env_var('GITHUB_SHA_OVERRIDE', '') else env_var('GITHUB_SHA') }}
+      host: "{{ env_var('DBT_ENV_SECRET_DATABRICKS_HOST') }}"
+      driver: "{{ env_var('DBT_ENV_SPARK_DRIVER_PATH') }}"
+      endpoint: "{{ env_var('DBT_ENV_SPARK_ENDPOINT') }}"
+      token: "{{ env_var('DBT_ENV_SECRET_DATABRICKS_TOKEN') }}"
+      threads: 8

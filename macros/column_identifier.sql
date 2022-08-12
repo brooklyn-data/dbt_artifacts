@@ -10,6 +10,6 @@
     ${{ column_index }}
 {%- endmacro %}
 
-{% macro databricks__column_identifier(column_index) -%}
+{% macro spark__column_identifier(column_index) -%}
     col{{ column_index }}
 {%- endmacro %}
