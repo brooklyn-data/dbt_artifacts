@@ -20,6 +20,8 @@ models:
     description: '{{ doc("target_profile_name") }}'
   - name: target_name
     description: '{{ doc("target_name") }}'
+  - name: target_database
+    description: '{{ doc("target_database") }}'
   - name: target_schema
     description: '{{ doc("target_schema") }}'
   - name: target_threads

@@ -16,6 +16,7 @@ enhanced as (
         full_refresh_flag,
         target_profile_name,
         target_name,
+        target_database,
         target_schema,
         target_threads,
         dbt_cloud_project_id,

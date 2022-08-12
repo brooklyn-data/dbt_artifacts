@@ -18,6 +18,8 @@ models:
     description: '{{ doc("query_completed_at") }}'
   - name: rows_affected
     description: '{{ doc("rows_affected") }}'
+  - name: database
+    description: '{{ doc("database") }}'
   - name: schema
     description: '{{ doc("schema") }}'
   - name: snapshot_execution_id

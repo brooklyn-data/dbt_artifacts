@@ -16,6 +16,12 @@ Name of the node.
 
 {% enddocs %}
 
+{% docs database %}
+
+Configured database for the node.
+
+{% enddocs %}
+
 {% docs schema %}
 
 Configured schema for the node.
@@ -260,6 +266,12 @@ The name of the active profile.
 {% docs target_name %}
 
 The name of the active target.
+
+{% enddocs %}
+
+{% docs target_database %}
+
+The name of the target dbt database.
 
 {% enddocs %}
 
