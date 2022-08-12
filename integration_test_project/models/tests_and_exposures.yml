@@ -13,7 +13,7 @@ exposures:
   - name: imaginary
     type: dashboard
     maturity: high
-    description: "dashboard description"
+    description: "ceo's favourite dashboard"
     url: https://bi.tool/dashboards/1
 
     depends_on:
