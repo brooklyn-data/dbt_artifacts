@@ -144,6 +144,7 @@ pipx install tox
 ```
 tox -e integration_snowflake # For the Snowflake tests
 tox -e integration_databricks # For the Databricks tests
+tox -e integration_bigquery # For the BigQuery tests
 ```
 
 The Spark tests require installing the [ODBC driver](https://www.databricks.com/spark/odbc-drivers-download). On a Mac, DBT_ENV_SPARK_DRIVER_PATH should be set to `/Library/simba/spark/lib/libsparkodbc_sbu.dylib`. Spark tests have not yet been added to the integration tests.

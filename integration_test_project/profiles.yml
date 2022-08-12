@@ -34,3 +34,14 @@ dbt_artifacts:
       endpoint: "{{ env_var('DBT_ENV_SPARK_ENDPOINT') }}"
       token: "{{ env_var('DBT_ENV_SECRET_DATABRICKS_TOKEN') }}"
       threads: 8
+    bigquery:
+      type: bigquery
+      method: oauth
+      project: "{{ env_var('DBT_ENV_SECRET_BIGQUERY_TEST_DATABASE') }}"
+      execution_project: "{{ env_var('DBT_ENV_SECRET_BIGQUERY_TEST_DATABASE') }}"
+      dataset: "{{ env_var('DBT_ENV_SECRET_BIGQUERY_TEST_DATASET') }}"
+      threads: 8
+      timeout_seconds: 300
+      location: EU
+      priority: interactive
+      retries: 1

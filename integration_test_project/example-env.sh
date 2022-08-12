@@ -15,6 +15,8 @@ export DBT_ENV_SECRET_DATABRICKS_HTTP_PATH=
 export DBT_ENV_SECRET_DATABRICKS_TOKEN=
 export DBT_ENV_SPARK_DRIVER_PATH= # /Library/simba/spark/lib/libsparkodbc_sbu.dylib on a Mac
 export DBT_ENV_SPARK_ENDPOINT= # The endpoint ID from the Databricks HTTP path
+export DBT_ENV_SECRET_BIGQUERY_TEST_DATABASE=
+export DBT_ENV_SECRET_BIGQUERY_TEST_DATASET=
 
 # dbt environment variables, change these
 export DBT_CLOUD_PROJECT_ID=
