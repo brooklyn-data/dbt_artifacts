@@ -31,7 +31,7 @@
                 '{{ source.loader }}', {# loader #}
                 '{{ source.name }}', {# name #}
                 '{{ source.identifier }}', {# identifier #}
-                '{{ source.loaded_at_field }}', {# loaded_at_field #}
+                '{{ source.loaded_at_field | replace("'","\\'") }}', {# loaded_at_field #}
                 '{{ tojson(source.freshness) | replace("'","\\'") }}' {# freshness #}
             )
             {%- if not loop.last %},{%- endif %}
