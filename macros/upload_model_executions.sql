@@ -25,7 +25,8 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(15) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(16) }}
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(16) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(17) }}
         from values
         {% for model in results if model.node.resource_type == "model" -%}
             (
