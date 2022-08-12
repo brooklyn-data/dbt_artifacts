@@ -42,6 +42,7 @@
     create table {{database_name}}.{{schema_name}}.{{table_name}} (
         command_invocation_id STRING,
         node_id STRING,
+        query_id STRING,
         run_started_at TIMESTAMP_TZ,
         was_full_refresh BOOLEAN,
         thread_id STRING,
@@ -63,6 +64,7 @@
     create table {{database_name}}.{{schema_name}}.{{table_name}} (
         command_invocation_id STRING,
         node_id STRING,
+        query_id STRING,
         run_started_at TIMESTAMP,
         was_full_refresh BOOLEAN,
         thread_id STRING,

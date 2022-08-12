@@ -31,6 +31,7 @@
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
                 '{{ model.node.unique_id }}', {# node_id #}
+                '{{ model.adapter_response.query_id }}', {# query_id #}
                 '{{ run_started_at }}', {# run_started_at #}
 
                 {% set config_full_refresh = model.node.config.full_refresh %}
