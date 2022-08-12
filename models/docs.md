@@ -70,12 +70,6 @@ The materialization of the model.
 
 {% enddocs %}
 
-{% docs database %}
-
-The configured database for the node.
-
-{% enddocs %}
-
 {% docs rows_affected %}
 
 Number of rows affected by the model execution.
