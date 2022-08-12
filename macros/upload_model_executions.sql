@@ -23,7 +23,9 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }}
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(15) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(16) }}
         from values
         {% for model in results if model.node.resource_type == "model" -%}
             (
@@ -44,20 +46,26 @@
                     {% for stage in model.timing if stage.name == "compile" %}
                         {% if loop.length == 0 %}
                             null, {# compile_started_at #}
+                            null, {# compile_completed_at #}
                         {% else %}
                             '{{ stage.started_at }}', {# compile_started_at #}
+                            '{{ stage.completed_at }}', {# compile_completed_at #}
                         {% endif %}
                     {% endfor %}
 
                     {% for stage in model.timing if stage.name == "execute" %}
                         {% if loop.length == 0 %}
+                            null, {# query_started_at #}
                             null, {# query_completed_at #}
                         {% else %}
+                            '{{ stage.started_at }}', {# query_started_at #}
                             '{{ stage.completed_at }}', {# query_completed_at #}
                         {% endif %}
                     {% endfor %}
                 {% else %}
                     null, {# compile_started_at #}
+                    null, {# compile_completed_at #}
+                    null, {# query_started_at #}
                     null, {# query_completed_at #}
                 {% endif %}
 
