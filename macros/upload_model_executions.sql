@@ -65,7 +65,6 @@
 
                 {{ model.execution_time }}, {# total_node_runtime #}
                 null, -- rows_affected not available {# Only available in BigQuery #}
-                null, -- bytes_processed not available {# Only available in BigQuery #}
                 '{{ model.node.config.materialized }}', {# materialization #}
                 '{{ model.node.schema }}', {# schema #}
                 '{{ model.node.name }}' {# name #}

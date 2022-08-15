@@ -15,7 +15,6 @@
             {% do log("Uploading seed executions", true) %}
             {% set src_dbt_seed_executions = source('dbt_artifacts', 'seed_executions') %}
             {% set content_seed_executions = dbt_artifacts.upload_seed_executions(results) %}
-            {% do log("FROUFROU " ~ content_seed_executions) %}
             {{ dbt_artifacts.insert_into_metadata_table(
                 database_name=src_dbt_seed_executions.database,
                 schema_name=src_dbt_seed_executions.schema,

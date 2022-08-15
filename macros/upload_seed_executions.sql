@@ -122,6 +122,7 @@
                 '{{ model.node.schema }}', {# schema #}
                 '{{ model.node.name }}' {# name #}
             )
+            {%- if not loop.last %},{%- endif %}
         {%- endfor %}
         {% endset %}
         {{ seed_execution_values }}

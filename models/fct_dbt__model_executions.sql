@@ -19,7 +19,9 @@ model_executions as (
         query_completed_at,
         total_node_runtime,
         rows_affected,
+        {% if target.type == 'bigquery' %}
         bytes_processed,
+        {% endif %}
         materialization,
         schema,
         name
