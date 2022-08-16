@@ -20,7 +20,9 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(8) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(9) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }}
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }}
         from values
         {% for test in tests -%}
             (
@@ -37,29 +39,35 @@
                 '{{ test.thread_id }}', {# thread_id #}
                 '{{ test.status }}', {# status #}
 
-                {% if test.timing != [] %}
-                    {% for stage in test.timing if stage.name == "compile" %}
+                {% if model.timing != [] %}
+                    {% for stage in model.timing if stage.name == "compile" %}
                         {% if loop.length == 0 %}
                             null, {# compile_started_at #}
+                            null, {# compile_completed_at #}
                         {% else %}
                             '{{ stage.started_at }}', {# compile_started_at #}
+                            '{{ stage.completed_at }}', {# compile_completed_at #}
                         {% endif %}
                     {% endfor %}
 
-                    {% for stage in test.timing if stage.name == "execute" %}
+                    {% for stage in model.timing if stage.name == "execute" %}
                         {% if loop.length == 0 %}
+                            null, {# query_started_at #}
                             null, {# query_completed_at #}
                         {% else %}
+                            '{{ stage.started_at }}', {# query_started_at #}
                             '{{ stage.completed_at }}', {# query_completed_at #}
                         {% endif %}
                     {% endfor %}
                 {% else %}
                     null, {# compile_started_at #}
+                    null, {# compile_completed_at #}
+                    null, {# query_started_at #}
                     null, {# query_completed_at #}
                 {% endif %}
 
                 {{ test.execution_time }}, {# total_node_runtime #}
-                null, {# rows_affected not available in Databricks #}
+                {{ model.adapter_response.rows_affected }}, {# rows_affected #}
                 {{ 'null' if test.failures is none else test.failures }} {# failures #}
             )
             {%- if not loop.last %},{%- endif %}

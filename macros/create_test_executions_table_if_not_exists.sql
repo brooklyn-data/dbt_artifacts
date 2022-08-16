@@ -37,13 +37,15 @@
     create table {{database_name}}.{{schema_name}}.{{table_name}} (
         command_invocation_id STRING,
         node_id STRING,
-        run_started_at TIMESTAMP_TZ,
+        run_started_at TIMESTAMP_NTZ,
         was_full_refresh BOOLEAN,
         thread_id STRING,
         status STRING,
-        compile_started_at TIMESTAMP_TZ,
-        query_completed_at TIMESTAMP_TZ,
-        total_node_runtime DOUBLE,
+        compile_started_at TIMESTAMP_NTZ,
+        compile_completed_at TIMESTAMP_NTZ,
+        query_started_at TIMESTAMP_NTZ,
+        query_completed_at TIMESTAMP_NTZ,
+        execution_time DOUBLE,
         rows_affected INTEGER,
         failures INTEGER
     )
@@ -58,8 +60,10 @@
         thread_id STRING,
         status STRING,
         compile_started_at TIMESTAMP,
+        compile_completed_at TIMESTAMP,
+        query_started_at TIMESTAMP,
         query_completed_at TIMESTAMP,
-        total_node_runtime INTEGER,
+        execution_time INTEGER,
         rows_affected INTEGER,
         failures INTEGER
     )
