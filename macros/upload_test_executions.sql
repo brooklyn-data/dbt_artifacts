@@ -21,7 +21,8 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(9) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }}
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }}
         from values
         {% for test in tests -%}
             (
@@ -65,8 +66,9 @@
                     null, {# query_completed_at #}
                 {% endif %}
 
-                {{ test.execution_time }}, {# total_node_runtime #}
-                {{ 'null' if test.failures is none else test.failures }} {# failures #}
+                {{ test.execution_time }}, {# execution_time #}
+                {{ 'null' if test.failures is none else test.failures }}, {# failures #}
+                '{{ test.node.compiled_sql }}' {# compiled_sql #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
