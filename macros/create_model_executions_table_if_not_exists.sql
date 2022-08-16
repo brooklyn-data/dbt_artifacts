@@ -43,14 +43,14 @@
         command_invocation_id STRING,
         node_id STRING,
         query_id STRING,
-        run_started_at TIMESTAMP_TZ,
+        run_started_at TIMESTAMP_NTZ,
         was_full_refresh BOOLEAN,
         thread_id STRING,
         status STRING,
-        compile_started_at TIMESTAMP_TZ,
-        compile_completed_at TIMESTAMP_TZ,
-        query_started_at TIMESTAMP_TZ,
-        query_completed_at TIMESTAMP_TZ,
+        compile_started_at TIMESTAMP_NTZ,
+        compile_completed_at TIMESTAMP_NTZ,
+        query_started_at TIMESTAMP_NTZ,
+        query_completed_at TIMESTAMP_NTZ,
         total_node_runtime DOUBLE,
         rows_affected INTEGER,
         materialization STRING,
@@ -79,39 +79,5 @@
         database STRING,
         schema STRING,
         name STRING
-    )
-{%- endmacro %}
-
-{% macro snowflake__get_create_model_executions_table_if_not_exists_statement(database_name, schema_name, table_name) -%}
-    create table {{database_name}}.{{schema_name}}.{{table_name}} (
-        command_invocation_id STRING,
-        run_started_at TIMESTAMP_NTZ,
-        was_full_refresh BOOLEAN,
-        status STRING,
-        thread_id STRING,
-        execution_time NUMBER(38,15),
-        timing VARIANT,
-        adapter_response VARIANT,
-        message VARIANT,
-        failures VARIANT,
-        node VARIANT,
-        agate_table VARIANT
-    )
-{%- endmacro %}
-
-{% macro default__get_create_model_executions_table_if_not_exists_statement(database_name, schema_name, table_name) -%}
-    create table {{database_name}}.{{schema_name}}.{{table_name}} (
-        command_invocation_id STRING,
-        run_started_at TIMESTAMP,
-        was_full_refresh BOOLEAN,
-        status STRING,
-        thread_id STRING,
-        execution_time NUMERIC,
-        timing STRING,
-        adapter_response STRING,
-        message STRING,
-        failures STRING,
-        node STRING,
-        agate_table STRING
     )
 {%- endmacro %}
