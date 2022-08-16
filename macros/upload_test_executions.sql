@@ -68,7 +68,7 @@
 
                 {{ test.execution_time }}, {# execution_time #}
                 {{ 'null' if test.failures is none else test.failures }}, {# failures #}
-                '{{ test.node.compiled_sql }}' {# compiled_sql #}
+                '{{ test.node.compiled_sql | replace("'","\\'") }}' {# compiled_sql #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
