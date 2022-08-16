@@ -44,20 +44,26 @@
                     {% for stage in model.timing if stage.name == "compile" %}
                         {% if loop.length == 0 %}
                             null, {# compile_started_at #}
+                            null, {# compile_completed_at #}
                         {% else %}
                             '{{ stage.started_at }}', {# compile_started_at #}
+                            '{{ stage.completed_at }}', {# compile_completed_at #}
                         {% endif %}
                     {% endfor %}
 
                     {% for stage in model.timing if stage.name == "execute" %}
                         {% if loop.length == 0 %}
+                            null, {# query_started_at #}
                             null, {# query_completed_at #}
                         {% else %}
+                            '{{ stage.started_at }}', {# query_started_at #}
                             '{{ stage.completed_at }}', {# query_completed_at #}
                         {% endif %}
                     {% endfor %}
                 {% else %}
                     null, {# compile_started_at #}
+                    null, {# compile_completed_at #}
+                    null, {# query_started_at #}
                     null, {# query_completed_at #}
                 {% endif %}
 
