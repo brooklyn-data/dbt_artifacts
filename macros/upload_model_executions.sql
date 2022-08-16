@@ -141,7 +141,7 @@
                 '{{ model.adapter_response | replace("'","\\'") }}', {# adapter_response #}
                 '{{ model.message | replace("'","\\'") }}', {# message #}
                 '{{ model.failures | replace("'","\\'") }}', {# failures #}
-                '{{ model.node | replace("'","\\'") }}', {# node #}
+                '{{ model.node | regex_replace("\w*(?<!\\)'","\\'") }}', {# node #}
                 '{{ model.agate_table }}' {# agate_table #}
 
             )
