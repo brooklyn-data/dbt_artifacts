@@ -70,7 +70,7 @@
                 {% endif %}
 
                 {{ model.execution_time }}, {# total_node_runtime #}
-                null, -- rows_affected not available {# Databricks #}
+                {{ model.adapter_response.rows_affected }}, -- rows_affected not available {# Databricks #}
                 '{{ model.node.config.materialized }}', {# materialization #}
                 '{{ model.node.database }}', {# database #}
                 '{{ model.node.schema }}', {# schema #}
