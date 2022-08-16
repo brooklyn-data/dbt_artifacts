@@ -38,8 +38,8 @@
                 '{{ test.thread_id }}', {# thread_id #}
                 '{{ test.status }}', {# status #}
 
-                {% if model.timing != [] %}
-                    {% for stage in model.timing if stage.name == "compile" %}
+                {% if test.timing != [] %}
+                    {% for stage in test.timing if stage.name == "compile" %}
                         {% if loop.length == 0 %}
                             null, {# compile_started_at #}
                             null, {# compile_completed_at #}
@@ -49,7 +49,7 @@
                         {% endif %}
                     {% endfor %}
 
-                    {% for stage in model.timing if stage.name == "execute" %}
+                    {% for stage in test.timing if stage.name == "execute" %}
                         {% if loop.length == 0 %}
                             null, {# query_started_at #}
                             null, {# query_completed_at #}
