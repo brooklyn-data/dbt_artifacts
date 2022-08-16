@@ -23,12 +23,16 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }}
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(15) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(16) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(17) }}
         from values
         {% for model in results if model.node.resource_type == "snapshot" -%}
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
                 '{{ model.node.unique_id }}', {# node_id #}
+                '{{ model.adapter_response.query_id }}', {# query_id #}
                 '{{ run_started_at }}', {# run_started_at #}
 
                 {% set config_full_refresh = model.node.config.full_refresh %}
@@ -44,25 +48,31 @@
                     {% for stage in model.timing if stage.name == "compile" %}
                         {% if loop.length == 0 %}
                             null, {# compile_started_at #}
+                            null, {# compile_completed_at #}
                         {% else %}
                             '{{ stage.started_at }}', {# compile_started_at #}
+                            '{{ stage.completed_at }}', {# compile_completed_at #}
                         {% endif %}
                     {% endfor %}
 
                     {% for stage in model.timing if stage.name == "execute" %}
                         {% if loop.length == 0 %}
+                            null, {# query_started_at #}
                             null, {# query_completed_at #}
                         {% else %}
+                            '{{ stage.started_at }}', {# query_started_at #}
                             '{{ stage.completed_at }}', {# query_completed_at #}
                         {% endif %}
                     {% endfor %}
                 {% else %}
                     null, {# compile_started_at #}
+                    null, {# compile_completed_at #}
+                    null, {# query_started_at #}
                     null, {# query_completed_at #}
                 {% endif %}
 
                 {{ model.execution_time }}, {# total_node_runtime #}
-                null, -- rows_affected not available {# Databricks #}
+                 {{ model.adapter_response.rows_affected }}, -- {# rows_affected #}
                 '{{ model.node.config.materialized }}', {# materialization #}
                 '{{ model.node.database }}', {# database #}
                 '{{ model.node.schema }}', {# schema #}

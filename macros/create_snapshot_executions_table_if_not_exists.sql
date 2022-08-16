@@ -16,36 +16,18 @@
 
 {%- endmacro %}
 
-{% macro spark__get_create_snapshot_executions_table_if_not_exists_statement(database_name, schema_name, table_name) -%}
-    create or replace table {{schema_name}}.{{table_name}} (
-        command_invocation_id STRING,
-        node_id STRING,
-        run_started_at TIMESTAMP,
-        was_full_refresh BOOLEAN,
-        thread_id STRING,
-        status STRING,
-        compile_started_at TIMESTAMP,
-        query_completed_at TIMESTAMP,
-        total_node_runtime DOUBLE,
-        rows_affected INTEGER,
-        materialization STRING,
-        database STRING,
-        schema STRING,
-        name STRING
-    )
-    using delta
-{%- endmacro %}
-
 {% macro snowflake__get_create_snapshot_executions_table_if_not_exists_statement(database_name, schema_name, table_name) -%}
     create or replace table {{database_name}}.{{schema_name}}.{{table_name}} (
         command_invocation_id STRING,
         node_id STRING,
-        run_started_at TIMESTAMP_TZ,
+        run_started_at TIMESTAMP_NTZ,
         was_full_refresh BOOLEAN,
         thread_id STRING,
         status STRING,
-        compile_started_at TIMESTAMP_TZ,
-        query_completed_at TIMESTAMP_TZ,
+        compile_started_at TIMESTAMP_NTZ,
+        compile_completed_at TIMESTAMP_NTZ,
+        query_started_at TIMESTAMP_NTZ,
+        query_completed_at TIMESTAMP_NTZ,
         total_node_runtime DOUBLE,
         rows_affected INTEGER,
         materialization STRING,
@@ -64,6 +46,8 @@
         thread_id STRING,
         status STRING,
         compile_started_at TIMESTAMP,
+        compile_completed_at TIMESTAMP,
+        query_started_at TIMESTAMP,
         query_completed_at TIMESTAMP,
         total_node_runtime INTEGER,
         rows_affected INTEGER,
