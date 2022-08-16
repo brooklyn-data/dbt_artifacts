@@ -166,6 +166,12 @@ Tags used in resource selection associated with the node.
 
 {% enddocs %}
 
+{% docs meta %}
+
+The meta field of the config associated with the node.
+
+{% enddocs %}
+
 {% docs strategy %}
 
 Snapshot "strategies" define how dbt knows if a row has changed. There are two strategies built-in to dbt — timestamp

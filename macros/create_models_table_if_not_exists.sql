@@ -28,7 +28,9 @@
         package_name STRING,
         path STRING,
         checksum STRING,
-        materialization STRING
+        materialization STRING,
+        tags STRING,
+        meta STRING
     )
     using delta
 {%- endmacro %}
@@ -45,7 +47,9 @@
         package_name STRING,
         path STRING,
         checksum STRING,
-        materialization STRING
+        materialization STRING,
+        tags ARRAY,
+        meta VARIANT
     )
 {%- endmacro %}
 
@@ -61,6 +65,8 @@
         package_name STRING,
         path STRING,
         checksum STRING,
-        materialization STRING
+        materialization STRING,
+        tags STRING,
+        meta STRING
     )
 {%- endmacro %}
