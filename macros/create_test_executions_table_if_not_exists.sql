@@ -46,7 +46,6 @@
         query_started_at TIMESTAMP_NTZ,
         query_completed_at TIMESTAMP_NTZ,
         execution_time DOUBLE,
-        rows_affected INTEGER,
         failures INTEGER
     )
 {%- endmacro %}
@@ -64,7 +63,6 @@
         query_started_at TIMESTAMP,
         query_completed_at TIMESTAMP,
         execution_time INTEGER,
-        rows_affected INTEGER,
         failures INTEGER
     )
 {%- endmacro %}

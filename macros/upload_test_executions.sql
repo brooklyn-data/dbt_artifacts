@@ -67,7 +67,6 @@
                 {% endif %}
 
                 {{ test.execution_time }}, {# total_node_runtime #}
-                {{ model.adapter_response.rows_affected }}, {# rows_affected #}
                 {{ 'null' if test.failures is none else test.failures }} {# failures #}
             )
             {%- if not loop.last %},{%- endif %}
