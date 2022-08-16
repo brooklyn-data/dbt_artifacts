@@ -136,11 +136,12 @@
                 '{{ model.status }}', {# status #}
                 '{{ model.thread_id }}', {# thread_id #}
                 '{{ model.execution_time }}', {# execution_time #}
-                '{{ model.timing }}', {# timing #}
-                '{{ model.adapter_response }}', {# adapter_response #}
-                '{{ model.message }}', {# message #}
-                '{{ model.failures }}', {# failures #}
-                '{{ model.node }}', {# node #}
+
+                '{{ model.timing | replace("'","\\'") }}', {# timing #}
+                '{{ model.adapter_response | replace("'","\\'") }}', {# adapter_response #}
+                '{{ model.message | replace("'","\\'") }}', {# message #}
+                '{{ model.failures | replace("'","\\'") }}', {# failures #}
+                '{{ model.node | replace("'","\\'") }}', {# node #}
                 '{{ model.agate_table }}' {# agate_table #}
 
             )
