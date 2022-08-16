@@ -102,6 +102,10 @@ sources:
           description: '{{ doc("run_started_at") }}'
         - name: schema
           description: '{{ doc("schema") }}'
+        - name: tags
+          description: '{{ doc("tags") }}'
+        - name: meta
+          description: '{{ doc("meta") }}'
 
       - name: seeds
         identifier: "{{ var('dbt_seeds_table', 'seeds') }}"
