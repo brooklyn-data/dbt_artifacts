@@ -16,6 +16,12 @@ Name of the node.
 
 {% enddocs %}
 
+{% docs short_name %}
+
+Short Name for a test, for example 'unique'.
+
+{% enddocs %}
+
 {% docs schema %}
 
 Configured schema for the node.
@@ -350,5 +356,31 @@ Number of rows affected by the node's last run.
 {% docs last_run_total_runtime %}
 
 Total time spent executing the node's last run (seconds).
+
+{% enddocs %}
+
+
+
+{% docs model_refs %}
+
+A comma delimited string of the models related to this node, as defined in the execution graph.
+
+{% enddocs %}
+
+{% docs model_refs %}
+
+A comma delimited string of the sources related to this node, as defined in the execution graph.
+
+{% enddocs %}
+
+{% docs test_severity_config %}
+
+Configuration for test severity. For example 'ERROR' or 'WARN'. 
+
+{% enddocs %}
+
+{% docs test_type %}
+
+Type of test. For example 'singular' or 'generic'
 
 {% enddocs %}
