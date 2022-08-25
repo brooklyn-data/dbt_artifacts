@@ -10,29 +10,13 @@
         select
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(1) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(2) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(3) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(4) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(5) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(6) }},
-            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(7)) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(8) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(9) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }}
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(3)) }}
         from values
         {% for snapshot in snapshots -%}
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
-                '{{ snapshot.unique_id }}', {# node_id #}
                 '{{ run_started_at }}', {# run_started_at #}
-                '{{ snapshot.database }}', {# database #}
-                '{{ snapshot.schema }}', {# schema #}
-                '{{ snapshot.name }}', {# name #}
-                '{{ tojson(snapshot.depends_on.nodes) }}', {# depends_on_nodes #}
-                '{{ snapshot.package_name }}', {# package_name #}
-                '{{ snapshot.original_file_path | replace('\\', '\\\\') }}', {# path #}
-                '{{ snapshot.checksum.checksum }}', {# checksum #}
-                '{{ snapshot.config.strategy }}' {# strategy #}
+                '{{ tojson(snapshot) | replace('\\', '\\\\') | replace("'", "\\'") }}' {# snapshot #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}

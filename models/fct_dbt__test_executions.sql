@@ -1,7 +1,28 @@
+{{
+    config(
+        materialized='incremental',
+        unique_key='test_execution_id'
+    )
+}}
+
 with base as (
 
-    select *
-    from {{ ref('stg_dbt__test_executions') }}
+    select
+        *
+    
+    from
+        {{ ref('stg_dbt__test_executions') }}
+
+    where
+        1 = 1
+    
+    {% if target.name == 'reddev' %}
+        and run_started_at > dateadd('day', -10, current_date)
+    
+    {% elif is_incremental() %}
+        and run_started_at > (select max(run_started_at) from {{ this }})
+    
+    {% endif %}
 
 ),
 
@@ -11,16 +32,25 @@ test_executions as (
         test_execution_id,
         command_invocation_id,
         node_id,
-        run_started_at,
-        was_full_refresh,
         thread_id,
-        status,
+        run_started_at,
         compile_started_at,
+        compile_completed_at,
+        compile_execution_time,
+        query_started_at,
         query_completed_at,
-        total_node_runtime,
-        rows_affected,
-        failures
-    from base
+        query_execution_time,    
+        execution_time,
+        status,
+        failures,
+        materialization,
+        database,
+        schema,
+        name,
+        compiled_sql
+
+    from
+        base
 
 )
 

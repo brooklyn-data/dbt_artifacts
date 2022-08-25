@@ -19,17 +19,20 @@
 {% macro snowflake__get_create_test_executions_table_if_not_exists_statement(database_name, schema_name, table_name) -%}
     create table {{database_name}}.{{schema_name}}.{{table_name}} (
         command_invocation_id STRING,
-        node_id STRING,
+        unique_id STRING,
         run_started_at TIMESTAMP_NTZ,
         was_full_refresh BOOLEAN,
-        thread_id STRING,
         status STRING,
+        thread_id STRING,
+        execution_time DOUBLE,
+        failures INTEGER,
         compile_started_at TIMESTAMP_NTZ,
         compile_completed_at TIMESTAMP_NTZ,
         query_started_at TIMESTAMP_NTZ,
         query_completed_at TIMESTAMP_NTZ,
-        execution_time DOUBLE,
-        failures INTEGER,
+        database STRING,
+        schema STRING,
+        name STRING,
         compiled_sql STRING
     )
 {%- endmacro %}
@@ -37,17 +40,20 @@
 {% macro default__get_create_test_executions_table_if_not_exists_statement(database_name, schema_name, table_name) -%}
     create table {{database_name}}.{{schema_name}}.{{table_name}} (
         command_invocation_id STRING,
-        node_id STRING,
+        unique_id STRING,
         run_started_at TIMESTAMP,
         was_full_refresh BOOLEAN,
-        thread_id STRING,
         status STRING,
+        thread_id STRING,
+        execution_time INTEGER,
+        failures INTEGER,
         compile_started_at TIMESTAMP,
         compile_completed_at TIMESTAMP,
         query_started_at TIMESTAMP,
         query_completed_at TIMESTAMP,
-        execution_time INTEGER,
-        failures INTEGER,
+        database STRING,
+        schema STRING,
+        name STRING,
         compiled_sql STRING
     )
 {%- endmacro %}

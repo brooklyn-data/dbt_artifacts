@@ -19,8 +19,10 @@
         nullif({{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }}, ''),
         nullif({{ adapter.dispatch('column_identifier', 'dbt_artifacts')(15) }}, ''),
         nullif({{ adapter.dispatch('column_identifier', 'dbt_artifacts')(16) }}, ''),
-        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(17)) }},
-        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(18)) }}
+        nullif({{ adapter.dispatch('column_identifier', 'dbt_artifacts')(17) }}, ''),
+        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(18)) }},
+        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(19)) }},
+        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(20)) }}
     from values
     (
         '{{ invocation_id }}', {# command_invocation_id #}
@@ -41,6 +43,8 @@
         '{{ env_var('DBT_CLOUD_RUN_REASON_CATEGORY', '') }}', {# dbt_cloud_run_reason_category #}
         '{{ env_var('DBT_CLOUD_RUN_REASON', '') }}', {# dbt_cloud_run_reason #}
 
+        '{{ var('job_name', '') }}', {# job_name #}
+
         {% if var('env_vars', none) %}
             {% set env_vars_dict = {} %}
             {% for env_variable in var('env_vars') %}
@@ -56,10 +60,12 @@
             {% for dbt_var in var('dbt_vars') %}
                 {% do dbt_vars_dict.update({dbt_var: var(dbt_var)}) %}
             {% endfor %}
-            '{{ tojson(dbt_vars_dict) }}' {# dbt_vars #}
+            '{{ tojson(dbt_vars_dict) }}', {# dbt_vars #}
         {% else %}
-            null {# dbt_vars #}
+            null, {# dbt_vars #}
         {% endif %}
+
+        '{{ tojson(selected_resources) }}' {# selected_resources #}
     )
     {% endset %}
 

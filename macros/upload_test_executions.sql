@@ -22,12 +22,15 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }}
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(15) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(16) }}
         from values
         {% for test in tests -%}
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
-                '{{ test.node.unique_id }}', {# node_id #}
+                '{{ test.node.unique_id }}', {# unique_id #}
                 '{{ run_started_at }}', {# run_started_at #}
 
                 {% set config_full_refresh = test.node.config.full_refresh %}
@@ -36,8 +39,10 @@
                 {% endif %}
                 '{{ config_full_refresh }}', {# was_full_refresh #}
 
-                '{{ test.thread_id }}', {# thread_id #}
                 '{{ test.status }}', {# status #}
+                '{{ test.thread_id }}', {# thread_id #}
+                {{ test.execution_time }}, {# execution_time #}
+                {{ 'null' if test.failures is none else test.failures }}, {# failures #}
 
                 {% if test.timing != [] %}
                     {% for stage in test.timing if stage.name == "compile" %}
@@ -66,8 +71,9 @@
                     null, {# query_completed_at #}
                 {% endif %}
 
-                {{ test.execution_time }}, {# execution_time #}
-                {{ 'null' if test.failures is none else test.failures }}, {# failures #}
+                '{{ test.node.database }}', {# database #}
+                '{{ test.node.schema }}', {# schema #}
+                '{{ test.node.name }}', {# name #}
                 '{{ test.node.compiled_sql | replace("'","\\'") }}' {# compiled_sql #}
             )
             {%- if not loop.last %},{%- endif %}

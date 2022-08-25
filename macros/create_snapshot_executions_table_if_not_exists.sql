@@ -19,43 +19,47 @@
 {% macro snowflake__get_create_snapshot_executions_table_if_not_exists_statement(database_name, schema_name, table_name) -%}
     create or replace table {{database_name}}.{{schema_name}}.{{table_name}} (
         command_invocation_id STRING,
-        node_id STRING,
-        query_id STRING,
+        unique_id STRING,
         run_started_at TIMESTAMP_NTZ,
         was_full_refresh BOOLEAN,
-        thread_id STRING,
         status STRING,
+        thread_id STRING,
+        execution_time DOUBLE,
+        message STRING,
+        failures INTEGER,
         compile_started_at TIMESTAMP_NTZ,
         compile_completed_at TIMESTAMP_NTZ,
         query_started_at TIMESTAMP_NTZ,
         query_completed_at TIMESTAMP_NTZ,
-        total_node_runtime DOUBLE,
-        rows_affected INTEGER,
+        adapter_response VARIANT,
         materialization STRING,
         database STRING,
         schema STRING,
-        name STRING
+        name STRING,
+        compiled_sql STRING
     )
 {%- endmacro %}
 
 {% macro default__get_create_snapshot_executions_table_if_not_exists_statement(database_name, schema_name, table_name) -%}
     create table {{database_name}}.{{schema_name}}.{{table_name}} (
         command_invocation_id STRING,
-        node_id STRING,
-        query_id STRING,
+        unique_id STRING,
         run_started_at TIMESTAMP,
         was_full_refresh BOOLEAN,
-        thread_id STRING,
         status STRING,
+        thread_id STRING,
+        execution_time INTEGER,
+        message STRING,
+        failures INTEGER,
         compile_started_at TIMESTAMP,
         compile_completed_at TIMESTAMP,
         query_started_at TIMESTAMP,
         query_completed_at TIMESTAMP,
-        total_node_runtime INTEGER,
-        rows_affected INTEGER,
+        adapter_response STRING,
         materialization STRING,
         database STRING,
         schema STRING,
-        name STRING
+        name STRING,
+        compiled_sql STRING
     )
 {%- endmacro %}

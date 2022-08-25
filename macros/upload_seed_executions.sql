@@ -22,15 +22,16 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }},
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(13)) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(15) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(16) }}
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(16) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(17) }}
         from values
         {% for model in results if model.node.resource_type == "seed" -%}
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
-                '{{ model.node.unique_id }}', {# node_id #}
+                '{{ model.node.unique_id }}', {# unique_id #}
                 '{{ run_started_at }}', {# run_started_at #}
 
                 {% set config_full_refresh = model.node.config.full_refresh %}
@@ -39,8 +40,10 @@
                 {% endif %}
                 '{{ config_full_refresh }}', {# was_full_refresh #}
 
-                '{{ model.thread_id }}', {# thread_id #}
                 '{{ model.status }}', {# status #}
+                '{{ model.thread_id }}', {# thread_id #}
+                {{ model.execution_time }}, {# execution_time #}
+                '{{ model.message | replace('\\', '\\\\') | replace("'", "\\'") }}', {# message #}
 
                 {% if model.timing != [] %}
                     {% for stage in model.timing if stage.name == "compile" %}
@@ -69,8 +72,7 @@
                     null, {# query_completed_at #}
                 {% endif %}
 
-                {{ model.execution_time }}, {# total_node_runtime #}
-                {{ model.adapter_response.rows_affected }}, -- rows_affected not available {# Databricks #}
+                '{{ tojson(model.adapter_response) | replace('\\', '\\\\') | replace("'", "\\'") }}', {# adapter_response #}
                 '{{ model.node.config.materialized }}', {# materialization #}
                 '{{ model.node.database }}', {# database #}
                 '{{ model.node.schema }}', {# schema #}

@@ -1,7 +1,28 @@
+{{
+    config(
+        materialized='incremental',
+        unique_key='source_execution_id'
+    )
+}}
+
 with base as (
 
-    select *
-    from {{ ref('stg_dbt__sources') }}
+    select
+        *
+    
+    from
+        {{ ref('stg_dbt__sources') }}
+
+    where
+        1 = 1
+    
+    {% if target.name == 'reddev' %}
+        and run_started_at > dateadd('day', -10, current_date)
+    
+    {% elif is_incremental() %}
+        and run_started_at > (select max(run_started_at) from {{ this }})
+    
+    {% endif %}
 
 ),
 
@@ -12,15 +33,26 @@ sources as (
         command_invocation_id,
         node_id,
         run_started_at,
-        database,
-        schema,
-        source_name,
+        depends_on_nodes,
+        depends_on_macros,
+        tags,
+        refs,
         loader,
+        source_name,
         name,
-        identifier,
-        loaded_at_field,
-        freshness
-    from base
+        package_name,
+        path,
+        checksum,
+        freshness_warn_after_count,
+        freshness_warn_after_period,
+        freshness_error_after_count,
+        freshness_error_after_period,
+        freshness_filter,
+        is_enabled,
+        is_full_refresh
+
+    from
+        base
 
 )
 
