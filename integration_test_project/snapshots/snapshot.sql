@@ -6,7 +6,7 @@
     config(
         strategy='check',
         unique_key='id',
-        target_schema='snapshot',
+        target_schema=target.schema,
         check_cols=['id', 'fruit'],
         tags="snapshot"
     )

@@ -34,3 +34,12 @@ dbt_artifacts:
       endpoint: "{{ env_var('DBT_ENV_SPARK_ENDPOINT') }}"
       token: "{{ env_var('DBT_ENV_SECRET_DATABRICKS_TOKEN') }}"
       threads: 8
+    bigquery:
+      type: bigquery
+      method: oauth
+      project: "{{ env_var('DBT_ENV_SECRET_GCP_PROJECT') }}"
+      dataset: dbt_artifacts_test_commit_{{ env_var('GITHUB_SHA_OVERRIDE', '') if env_var('GITHUB_SHA_OVERRIDE', '') else env_var('GITHUB_SHA') }}
+      threads: 8
+      timeout_seconds: 300
+      priority: interactive
+      retries: 1
