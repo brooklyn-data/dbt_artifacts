@@ -27,9 +27,9 @@
         {% for exposure in exposures -%}
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
-                '{{ exposure.unique_id }}', {# node_id #}
+                '{{ exposure.unique_id | replace("'","\\'") }}', {# node_id #}
                 '{{ run_started_at }}', {# run_started_at #}
-                '{{ exposure.name }}', {# name #}
+                '{{ exposure.name | replace("'","\\'") }}', {# name #}
                 '{{ exposure.type }}', {# type #}
                 '{{ tojson(exposure.owner) }}', {# owner #}
                 '{{ exposure.maturity }}', {# maturity #}
@@ -54,9 +54,9 @@
             {% for exposure in exposures -%}
                 (
                     '{{ invocation_id }}', {# command_invocation_id #}
-                    '{{ exposure.unique_id }}', {# node_id #}
+                    '{{ exposure.unique_id | replace("'","\\'") }}', {# node_id #}
                     '{{ run_started_at }}', {# run_started_at #}
-                    '{{ exposure.name }}', {# name #}
+                    '{{ exposure.name | replace("'","\\'") }}', {# name #}
                     '{{ exposure.type }}', {# type #}
                     parse_json('{{ tojson(exposure.owner) | replace("'","\\'") }}'), {# owner #}
                     '{{ exposure.maturity }}', {# maturity #}

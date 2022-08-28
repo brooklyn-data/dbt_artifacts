@@ -10,7 +10,7 @@ models:
           - unique
 
 exposures:
-  - name: imaginary
+  - name: "ceo's imaginary dashboard"
     type: dashboard
     maturity: high
     description: "ceo's favourite dashboard"
