@@ -219,18 +219,19 @@
         )
         select
             command_invocation_id,
-            [],
+            array_agg(output_feeds), {#- Here we un-flatten the transformation originally done -#}
             null,
-            maturity,
+            any_value(maturity) as maturity,
             name,
             node_id,
             null, {#- v0 is a string, v1 is a variant -#}
-            package_name,
+            any_value(package_name) as package_name,
             null,
-            type,
+            any_value(type) as type,
             null,
-            artifact_generated_at
+            any_value(artifact_generated_at) as artifact_generated_at
         from {{old_database}}.{{old_schema}}.dim_dbt__exposures
+        group by command_invocation_id, node_id, name, artifact_generated_at
     {% endset %}
 
     {{ log("Migrating exposures", info=True) }}
