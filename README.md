@@ -28,7 +28,7 @@ See the generated [dbt docs site](https://brooklyn-data.github.io/dbt_artifacts/
 ```
 packages:
   - package: brooklyn-data/dbt_artifacts
-    version: 1.1.2
+    version: 1.2.0
 ```
 
 2. Run `dbt deps` to install the package
