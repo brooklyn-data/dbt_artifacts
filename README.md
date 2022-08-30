@@ -56,6 +56,7 @@ models:
     +schema: your_destination_schema # optional, default is your target database
     staging:
       +schema: your_destination_schema # optional, default is your target schema
+  ...
 ```
 
 Note that the model materializations are defined in this package's `dbt_project.yml`, so do not set them in your project.
@@ -145,6 +146,7 @@ pipx install tox
 ```
 tox -e integration_snowflake # For the Snowflake tests
 tox -e integration_databricks # For the Databricks tests
+tox -e integration_bigquery # For the BigQuery tests
 ```
 
 The Spark tests require installing the [ODBC driver](https://www.databricks.com/spark/odbc-drivers-download). On a Mac, DBT_ENV_SPARK_DRIVER_PATH should be set to `/Library/simba/spark/lib/libsparkodbc_sbu.dylib`. Spark tests have not yet been added to the integration tests.

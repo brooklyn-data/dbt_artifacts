@@ -162,4 +162,3 @@ jobs:
           title: "SQLFluff Lint"
           input: "./annotations.json"
 
-
