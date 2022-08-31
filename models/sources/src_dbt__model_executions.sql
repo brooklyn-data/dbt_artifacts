@@ -14,6 +14,9 @@ select
     cast(null as {{ type_timestamp() }}) query_completed_at,
     cast(null as {{ type_float() }}) total_node_runtime,
     cast(null as {{ type_int() }}) rows_affected,
+    {% if target.type == 'bigquery' %}
+        cast(null as {{ type_int() }}) bytes_processed,
+    {% endif %}
     cast(null as {{ type_string() }}) materialization,
     cast(null as {{ type_string() }}) schema,
     cast(null as {{ type_string() }}) name
