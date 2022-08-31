@@ -1,7 +1,7 @@
 with base as (
 
     select *
-    from {{ source('dbt_artifacts', 'snapshot_executions') }}
+    from {{ ref('src_dbt__snapshot_executions') }}
 
 ),
 

@@ -42,20 +42,18 @@ packages:
 
 ## Configuration
 
-The following configuration can be used to specify where the raw data is uploaded, and where the dbt models are created:
+The following configuration can be used to specify where the raw (sources) data is uploaded, and where the dbt models are created:
 
 ```yml
-vars:
-  dbt_artifacts_database: your_db # optional, default is your target database
-  dbt_artifacts_schema: your_schema # optional, default is your target schema
-  dbt_artifacts_create_schema: true|false # optional, set to false if you don't have privileges to create schema, default is true
-
 models:
   ...
   dbt_artifacts:
     +schema: your_destination_schema # optional, default is your target database
     staging:
       +schema: your_destination_schema # optional, default is your target schema
+    sources:
+        +database: your_sources_database # optional, default is your target database
+        +schema: your sources_database # optional, default is your target schema
   ...
 ```
 
