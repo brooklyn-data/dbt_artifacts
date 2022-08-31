@@ -22,3 +22,16 @@ exposures:
     owner:
       name: Claire from Data
       email: data@jaffleshop.com
+
+  - name: "CIO dashboard"
+    type: dashboard
+    maturity: high
+    description: '{{ doc("clickstream") }}'
+    url: https://bi.tool/dashboards/1
+
+    depends_on:
+      - ref('incremental')
+
+    owner:
+      name: Henry from IT
+      email: henry@jaffleshop.com
