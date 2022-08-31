@@ -48,12 +48,14 @@ The following configuration can be used to specify where the raw (sources) data 
 models:
   ...
   dbt_artifacts:
-    +schema: your_destination_schema # optional, default is your target database
+    +database: your_destination_database # optional, default is your target database
+    +schema: your_destination_schema # optional, default is your target schema
     staging:
+      +database: your_destination_database # optional, default is your target database
       +schema: your_destination_schema # optional, default is your target schema
     sources:
-        +database: your_sources_database # optional, default is your target database
-        +schema: your sources_database # optional, default is your target schema
+      +database: your_sources_database # optional, default is your target database
+      +schema: your sources_database # optional, default is your target schema
   ...
 ```
 
