@@ -9,7 +9,7 @@ select
     cast(null as {{ type_timestamp() }}) as run_started_at,
     cast(null as {{ type_string() }}) as name,
     cast(null as {{ type_string() }}) as type,
-    cast(null as {{ type_string() }}) as owner,
+    cast(null as {{ type_json() }}) as owner,
     cast(null as {{ type_string() }}) as maturity,
     cast(null as {{ type_string() }}) as path,
     cast(null as {{ type_string() }}) as description,
