@@ -22,4 +22,4 @@ final as (
 
 )
 
-select * from base
+select * from final
