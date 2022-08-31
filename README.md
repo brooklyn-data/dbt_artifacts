@@ -60,7 +60,9 @@ models:
       +schema: your sources_database # optional, default is your target schema
 ```
 
-Note that the model materializations are defined in this package's `dbt_project.yml`, so do not set them in your project.
+Note that model materializations and `on_schema_change` configs are defined in this package's `dbt_project.yml`, so do not set them globally in your `dbt_project.yml` ([see docs on configuring packages](https://docs.getdbt.com/docs/building-a-dbt-project/package-management#configuring-packages)):
+
+> Configurations made in your dbt_project.yml file will override any configurations in a package (either in the dbt_project.yml file of the package, or in config blocks).
 
 ### Environment Variables
 
