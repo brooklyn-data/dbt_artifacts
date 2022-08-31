@@ -58,7 +58,6 @@ models:
     sources:
       +database: your_sources_database # optional, default is your target database
       +schema: your sources_database # optional, default is your target schema
-  ...
 ```
 
 Note that the model materializations are defined in this package's `dbt_project.yml`, so do not set them in your project.
@@ -93,6 +92,28 @@ vars:
     '...'
   ]
 ```
+
+## Upgrading from 1.x to >=2.0.0
+If you were using the following variables:
+
+```yml
+vars:
+  dbt_artifacts_database: your_db
+  dbt_artifacts_schema: your_schema
+```
+
+You must now move these to the following model configs:
+
+```yml
+models:
+  ...
+  dbt_artifacts:
+    sources:
+      +database: your_db
+      +schema: your your_schema
+```
+
+That's because the raw tables are now managed as dbt models.
 
 ## Migrating From <1.0.0 to >=1.0.0
 To migrate your existing data from the `dbt-artifacts` versions <=0.8.0, a helper macro and guide is provided. This migration uses the old `fct_*` and `dim_*` models' data to populate the new sources. The steps to use the macro are as follows:
