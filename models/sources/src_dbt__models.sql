@@ -1,3 +1,8 @@
+/* Bigquery won't let us `where` without `from` so we use this workaround */
+with dummy_cte as (
+    select 1 as foo
+)
+
 select
     cast(null as {{ type_string() }}) command_invocation_id,
     cast(null as {{ type_string() }}) node_id,
@@ -10,4 +15,5 @@ select
     cast(null as {{ type_string() }}) path,
     cast(null as {{ type_string() }}) checksum,
     cast(null as {{ type_string() }}) materialization
+from dummy_cte
 where 1 = 0

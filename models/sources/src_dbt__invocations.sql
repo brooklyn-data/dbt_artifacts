@@ -1,3 +1,8 @@
+/* Bigquery won't let us `where` without `from` so we use this workaround */
+with dummy_cte as (
+    select 1 as foo
+)
+
 select
     cast(null as {{ type_string() }}) as command_invocation_id,
     cast(null as {{ type_string() }}) as dbt_version,
@@ -16,4 +21,5 @@ select
     cast(null as {{ type_string() }}) as dbt_cloud_run_reason,
     cast(null as {{ type_json() }}) as env_vars,
     cast(null as {{ type_json() }}) dbt_vars
+from dummy_cte
 where 1 = 0

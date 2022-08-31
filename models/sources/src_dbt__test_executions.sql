@@ -1,3 +1,8 @@
+/* Bigquery won't let us `where` without `from` so we use this workaround */
+with dummy_cte as (
+    select 1 as foo
+)
+
 select
     cast(null as {{ type_string() }}) as command_invocation_id,
     cast(null as {{ type_string() }}) as node_id,
@@ -10,4 +15,5 @@ select
     cast(null as {{ type_float() }}) as total_node_runtime,
     cast(null as {{ type_int() }}) as rows_affected,
     cast(null as {{ type_int() }}) as failures
+from dummy_cte
 where 1 = 0

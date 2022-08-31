@@ -1,3 +1,8 @@
+/* Bigquery won't let us `where` without `from` so we use this workaround */
+with dummy_cte as (
+    select 1 as foo
+)
+
 select
     cast(null as {{ type_string() }}) as command_invocation_id,
     cast(null as {{ type_string() }}) as node_id,
@@ -11,4 +16,5 @@ select
     cast(null as {{ type_string() }}) as url,
     cast(null as {{ type_string() }}) as package_name,
     cast(null as {{ type_string() }}) as depends_on_nodes
+from dummy_cte
 where 1 = 0
