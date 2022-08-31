@@ -61,7 +61,7 @@
                     parse_json('{{ tojson(exposure.owner) | replace("'","\\'") }}'), {# owner #}
                     '{{ exposure.maturity }}', {# maturity #}
                     '{{ exposure.original_file_path | replace('\\', '\\\\') }}', {# path #}
-                    '{{ exposure.description | replace("'","\\'") }}', {# description #}
+                    """{{ exposure.description | replace("'","\\'") }}""", {# description #}
                     '{{ exposure.url }}', {# url #}
                     '{{ exposure.package_name }}', {# package_name #}
                     {{ tojson(exposure.depends_on.nodes) }} {# depends_on_nodes #}
