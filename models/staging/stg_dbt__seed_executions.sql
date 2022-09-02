@@ -1,7 +1,7 @@
 with base as (
 
     select *
-    from {{ ref('src_dbt__seed_executions') }}
+    from {{ ref('seed_executions') }}
 
 ),
 
