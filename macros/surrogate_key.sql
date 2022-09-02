@@ -1,7 +1,7 @@
 {#
     Since folks commonly install dbt_artifacts alongside a myriad of other packages,
     we copy the dbt_utils implementation of the surrogate_key macro so we don't have
-    any depdendencies to make conflicts worse!
+    any dependencies to make conflicts worse!
 #}
 
 {%- macro surrogate_key(field_list) -%}
