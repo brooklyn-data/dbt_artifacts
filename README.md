@@ -112,7 +112,7 @@ models:
   dbt_artifacts:
     sources:
       +database: your_db
-      +schema: your your_schema
+      +schema: your_schema
 ```
 
 That's because the raw tables are now managed as dbt models.
