@@ -115,7 +115,7 @@ models:
       +schema: your_schema
 ```
 
-That's because the raw tables are now managed as dbt models.
+That's because the raw tables are now managed as dbt models. Be aware of any impact that [generate_database_name](https://docs.getdbt.com/docs/building-a-dbt-project/building-models/using-custom-databases#generate_database_name) and [generate_schema_name](https://docs.getdbt.com/docs/building-a-dbt-project/building-models/using-custom-schemas#how-does-dbt-generate-a-models-schema-name) macros may have on the final database/schema.
 
 ## Migrating From <1.0.0 to >=1.0.0
 To migrate your existing data from the `dbt-artifacts` versions <=0.8.0, a helper macro and guide is provided. This migration uses the old `fct_*` and `dim_*` models' data to populate the new sources. The steps to use the macro are as follows:
