@@ -142,18 +142,18 @@ final as (
       , seed_executions.compile_execution_time as compile_execution_time_seeds
       , seed_executions.query_execution_time as query_execution_time_seeds
       , seed_executions.execution_time as execution_time_seeds
-      , model_executions.compile_execution_time +
-        test_executions.compile_execution_time +
-        snapshot_executions.compile_execution_time +
-        seed_executions.compile_execution_time as compile_execution_time
-      , model_executions.query_execution_time +
-        test_executions.query_execution_time +
-        snapshot_executions.query_execution_time +
-        seed_executions.query_execution_time as query_execution_time
-      , model_executions.execution_time +
-        test_executions.execution_time +
-        snapshot_executions.execution_time +
-        seed_executions.execution_time as execution_time
+      , zeroifnull(model_executions.compile_execution_time) +
+        zeroifnull(test_executions.compile_execution_time) +
+        zeroifnull(snapshot_executions.compile_execution_time) +
+        zeroifnull(seed_executions.compile_execution_time) as compile_execution_time
+      , zeroifnull(model_executions.query_execution_time) +
+        zeroifnull(test_executions.query_execution_time) +
+        zeroifnull(snapshot_executions.query_execution_time) +
+        zeroifnull(seed_executions.query_execution_time) as query_execution_time
+      , zeroifnull(model_executions.execution_time) +
+        zeroifnull(test_executions.execution_time) +
+        zeroifnull(snapshot_executions.execution_time) +
+        zeroifnull(seed_executions.execution_time) as execution_time
 
     from invocations
     left join last_query_at
