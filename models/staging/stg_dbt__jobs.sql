@@ -32,7 +32,7 @@ with data_table as (
         ('e5c6c01d58e904d89d1929d2193da101','Whitney local dev'),
         ('edd4b90229084f9b5b42d84b91c69c6b','Org Signup local test'),
         ('b5d4ed6284cf404f7ad152f36da76e6b','Michael local dev')
-    ) as table (job_sk, name)
+    ) as _table (job_sk, name)
 
 )
 
