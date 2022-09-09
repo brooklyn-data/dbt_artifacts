@@ -20,7 +20,7 @@ with base as (
         and run_started_at > dateadd('day', -10, current_date)
     
     {% elif is_incremental() %}
-        and run_started_at > (select max(run_started_at) from {{ this }})
+        and run_started_at > (select dateadd('day', -1, max(started_at)) from {{ this }})
     
     {% endif %}
 
@@ -29,13 +29,13 @@ with base as (
 executions as (
 
     select
-        executions__aggregated.*
+        executions__invocation_aggregated.*
 
     from
-        {{ ref('executions__aggregated') }}
+        {{ ref('executions__invocation_aggregated') }}
     inner join
         base
-        on executions__aggregated.command_invocation_id = base.command_invocation_id
+        on executions__invocation_aggregated.command_invocation_id = base.command_invocation_id
 
 ),
 
@@ -45,23 +45,30 @@ invocations as (
         base.command_invocation_id,
         base.job_id,
         base.job_sk,
+        base.run_id,
+        base.run_sk,
+        base.dbt_cloud_project_id,
+        base.dbt_cloud_job_id,
+        base.dbt_cloud_run_id,
+        base.core_job_id,
+        base.core_run_id,
         base.dbt_version,
         base.project_name,
-        base.run_started_at,
-        executions.run_ended_at,
+        base.run_started_at as started_at,
+        executions.run_ended_at as ended_at,
+        datediff('microsecond', started_at, ended_at) / 1000000 as total_duration,
+        executions.compile_execution_time,
+        executions.query_execution_time,
+        executions.execution_time,
         base.dbt_command,
-        base.full_refresh_flag,
+        base.has_full_refresh_flag,
         base.target_profile_name,
         base.target_name,
         base.target_database,
         base.target_schema,
         base.target_threads,
-        base.dbt_cloud_project_id,
-        base.dbt_cloud_job_id,
-        base.dbt_cloud_run_id,
         base.dbt_cloud_run_reason_category,
         base.dbt_cloud_run_reason,
-        base.job_name,
         base.env_vars,
         base.dbt_vars,
         base.selected_resources,
@@ -69,9 +76,7 @@ invocations as (
         executions.tests,
         executions.snapshots,
         executions.seeds,
-        executions.compile_execution_time,
-        executions.query_execution_time,
-        executions.execution_time
+        base.run_order
 
     from
         base

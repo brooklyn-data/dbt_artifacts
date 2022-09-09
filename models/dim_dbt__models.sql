@@ -20,7 +20,7 @@ with base as (
         and run_started_at > dateadd('day', -10, current_date)
     
     {% elif is_incremental() %}
-        and run_started_at > (select max(run_started_at) from {{ this }})
+        and run_started_at > (select dateadd('day', -1, max(run_started_at)) from {{ this }})
     
     {% endif %}
 

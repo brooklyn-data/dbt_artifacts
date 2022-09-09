@@ -1,0 +1,1 @@
+{{ executions__aggregated(granularity_field='run_sk') }}
