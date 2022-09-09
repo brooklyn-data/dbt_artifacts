@@ -22,7 +22,8 @@
         nullif({{ adapter.dispatch('column_identifier', 'dbt_artifacts')(17) }}, ''),
         {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(18)) }},
         {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(19)) }},
-        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(20)) }}
+        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(20)) }},
+        nullif({{ adapter.dispatch('column_identifier', 'dbt_artifacts')(21) }}, '')
     from values
     (
         '{{ invocation_id }}', {# command_invocation_id #}
@@ -65,7 +66,8 @@
             null, {# dbt_vars #}
         {% endif %}
 
-        '{{ tojson(selected_resources) }}' {# selected_resources #}
+        '{{ tojson(selected_resources) }}', {# selected_resources #}
+        '{{ var('run_id', '') }}' {# run_id #}
     )
     {% endset %}
 

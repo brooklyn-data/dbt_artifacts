@@ -37,7 +37,8 @@
         job_name STRING,
         env_vars VARIANT,
         dbt_vars VARIANT,
-        selected_resources VARIANT
+        selected_resources VARIANT,
+        run_id STRING
     )
 {%- endmacro %}
 
@@ -62,6 +63,7 @@
         job_name STRING,
         env_vars STRING,
         dbt_vars STRING,
-        selected_resources STRING
+        selected_resources STRING,
+        run_id STRING
     )
 {%- endmacro %}
