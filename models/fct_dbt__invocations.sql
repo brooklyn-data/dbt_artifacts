@@ -76,7 +76,8 @@ invocations as (
         executions.tests,
         executions.snapshots,
         executions.seeds,
-        base.run_order
+        base.run_order,
+        executions.is_successful
 
     from
         base

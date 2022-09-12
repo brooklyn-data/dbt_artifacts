@@ -60,6 +60,7 @@ final as (
       , executions.tests
       , executions.snapshots
       , executions.seeds
+      , executions.is_successful
 
     from base
     left join executions

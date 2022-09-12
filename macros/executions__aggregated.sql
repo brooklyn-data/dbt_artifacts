@@ -55,6 +55,8 @@ model_executions as (
       , sum(models.query_execution_time) as query_execution_time
       , sum(models.execution_time) as execution_time
       , max(models.query_completed_at) as last_query_completed_at
+      , array_agg(distinct models.status) within group (order by models.status) as status_array
+
 
     from
         {{ ref('stg_dbt__model_executions') }} as models
@@ -75,6 +77,7 @@ seed_executions as (
       , sum(seeds.query_execution_time) as query_execution_time
       , sum(seeds.execution_time) as execution_time
       , max(seeds.query_completed_at) as last_query_completed_at
+      , array_agg(distinct seeds.status) within group (order by seeds.status) as status_array
 
     from {{ ref('stg_dbt__seed_executions') }} as seeds
     inner join
@@ -94,6 +97,7 @@ snapshot_executions as (
       , sum(snapshots.query_execution_time) as query_execution_time
       , sum(snapshots.execution_time) as execution_time
       , max(snapshots.query_completed_at) as last_query_completed_at
+      , array_agg(distinct snapshots.status) within group (order by snapshots.status) as status_array
 
     from {{ ref('stg_dbt__snapshot_executions') }} as snapshots
     inner join
@@ -113,6 +117,7 @@ test_executions as (
       , sum(tests.query_execution_time) as query_execution_time
       , sum(tests.execution_time) as execution_time
       , max(tests.query_completed_at) as last_query_completed_at
+      , array_agg(distinct tests.status) within group (order by tests.status) as status_array
 
     from {{ ref('stg_dbt__seed_executions') }} as tests
     inner join
@@ -194,6 +199,12 @@ final as (
         zeroifnull(test_executions.execution_time) +
         zeroifnull(snapshot_executions.execution_time) +
         zeroifnull(seed_executions.execution_time) as execution_time
+      , iff(
+            array_contains('success'::variant, array_cat(model_executions.status_array, array_cat(test_executions.status_array(array_cat(seed_executions.status_array, snapshot_executions.status_array))))
+            and array_size(status_array) = 1,
+            True,
+            False
+        )::boolean as is_successful
 
     from base
     left join run_start
