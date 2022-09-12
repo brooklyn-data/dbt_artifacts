@@ -72,8 +72,15 @@ invocations as (
         base.env_vars,
         base.dbt_vars,
         base.selected_resources,
-        executions.models,
-        executions.tests,
+      , executions.models
+      , executions.model_successes
+      , executions.model_errors
+      , executions.model_skips
+      , executions.tests
+      , executions.test_passes
+      , executions.test_fails
+      , executions.test_skips
+      , executions.test_errors
         executions.snapshots,
         executions.seeds,
         base.run_order,

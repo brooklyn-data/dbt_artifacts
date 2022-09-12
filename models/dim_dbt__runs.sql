@@ -57,7 +57,14 @@ final as (
       , executions.execution_time
       , executions.invocations
       , executions.models
+      , executions.model_successes
+      , executions.model_errors
+      , executions.model_skips
       , executions.tests
+      , executions.test_passes
+      , executions.test_fails
+      , executions.test_skips
+      , executions.test_errors
       , executions.snapshots
       , executions.seeds
       , executions.is_successful
