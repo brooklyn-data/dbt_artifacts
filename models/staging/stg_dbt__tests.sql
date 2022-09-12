@@ -29,7 +29,7 @@ with base as (
 enhanced as (
 
     select
-        {{ dbt_utils.surrogate_key(['command_invocation_id', 'test:node_id::string']) }} as test_execution_id,
+        {{ dbt_utils.surrogate_key(['command_invocation_id', 'test:unique_id::string']) }} as test_execution_id,
         command_invocation_id,
         test:unique_id::string as node_id,
         test:test_metadata:name::string as test_name,
