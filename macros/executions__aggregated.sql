@@ -51,9 +51,9 @@ model_executions as (
     select
         invocations.{{ granularity_field }}
       , count(distinct models.node_id) as models
-      , sum(case when models.status = 'success' then 1 end) as model_successes
-      , sum(case when models.status = 'error' then 1 end) as model_errors
-      , sum(case when models.status = 'skipped' then 1 end) as model_skips
+      , ifnull(sum(case when models.status = 'success' then 1 end), 0) as model_successes
+      , ifnull(sum(case when models.status = 'error' then 1 end), 0) as model_errors
+      , ifnull(sum(case when models.status = 'skipped' then 1 end), 0) as model_skips
       , sum(models.compile_execution_time) as compile_execution_time
       , sum(models.query_execution_time) as query_execution_time
       , sum(models.execution_time) as execution_time
@@ -115,10 +115,10 @@ test_executions as (
     select
         invocations.{{ granularity_field }}
       , count(distinct tests.node_id) as tests
-      , sum(case when tests.status = 'pass' then 1 end) as test_passes
-      , sum(case when tests.status = 'fail' then 1 end) as test_fails
-      , sum(case when tests.status = 'warn' then 1 end) as test_skips
-      , sum(case when tests.status = 'error' then 1 end) as test_errors
+      , ifnull(sum(case when tests.status = 'pass' then 1 end), 0) as test_passes
+      , ifnull(sum(case when tests.status = 'fail' then 1 end), 0) as test_fails
+      , ifnull(sum(case when tests.status = 'warn' then 1 end), 0) as test_skips
+      , ifnull(sum(case when tests.status = 'error' then 1 end), 0) as test_errors
       , sum(tests.compile_execution_time) as compile_execution_time
       , sum(tests.query_execution_time) as query_execution_time
       , sum(tests.execution_time) as execution_time
