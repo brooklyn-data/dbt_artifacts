@@ -51,11 +51,13 @@ model_executions as (
     select
         invocations.{{ granularity_field }}
       , count(distinct models.node_id) as models
+      , sum(case when models.status = 'success' then 1 end) as model_successes
+      , sum(case when models.status = 'error' then 1 end) as model_errors
+      , sum(case when models.status = 'skipped' then 1 end) as model_skips
       , sum(models.compile_execution_time) as compile_execution_time
       , sum(models.query_execution_time) as query_execution_time
       , sum(models.execution_time) as execution_time
       , max(models.query_completed_at) as last_query_completed_at
-      , array_agg(distinct models.status) within group (order by models.status) as status_array
 
 
     from
@@ -113,6 +115,10 @@ test_executions as (
     select
         invocations.{{ granularity_field }}
       , count(distinct tests.node_id) as tests
+      , sum(case when tests.status = 'pass' then 1 end) as test_passes
+      , sum(case when tests.status = 'fail' then 1 end) as test_fails
+      , sum(case when tests.status = 'warn' then 1 end) as test_skips
+      , sum(case when tests.status = 'error' then 1 end) as test_errors
       , sum(tests.compile_execution_time) as compile_execution_time
       , sum(tests.query_execution_time) as query_execution_time
       , sum(tests.execution_time) as execution_time
@@ -172,7 +178,14 @@ final as (
       , run_end.run_ended_at
       , max_run_order.invocations
       , model_executions.models
+      , model_executions.model_successes
+      , model_executions.model_errors
+      , model_executions.model_skips
       , test_executions.tests
+      , test_executions.test_passes
+      , test_executions.test_fails
+      , test_executions.test_skips
+      , test_executions.test_errors
       , snapshot_executions.snapshots
       , seed_executions.seeds
       , model_executions.compile_execution_time as compile_execution_time_models
@@ -199,12 +212,12 @@ final as (
         zeroifnull(test_executions.execution_time) +
         zeroifnull(snapshot_executions.execution_time) +
         zeroifnull(seed_executions.execution_time) as execution_time
-      , iff(
-            array_contains('success'::variant, array_cat(model_executions.status_array, array_cat(test_executions.status_array(array_cat(seed_executions.status_array, snapshot_executions.status_array)))))
-            and array_size(status_array) = 1,
+      , iff(model_executions.model_errors = 0
+            and model_executions.model_skips = 0
+            and test_executions.test_fails = 0
+            and test_executions.test_errors = 0,
             True,
-            False
-        )::boolean as is_successful
+            False)::boolean as is_successful
 
     from base
     left join run_start
