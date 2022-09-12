@@ -200,7 +200,7 @@ final as (
         zeroifnull(snapshot_executions.execution_time) +
         zeroifnull(seed_executions.execution_time) as execution_time
       , iff(
-            array_contains('success'::variant, array_cat(model_executions.status_array, array_cat(test_executions.status_array(array_cat(seed_executions.status_array, snapshot_executions.status_array))))
+            array_contains('success'::variant, array_cat(model_executions.status_array, array_cat(test_executions.status_array(array_cat(seed_executions.status_array, snapshot_executions.status_array)))))
             and array_size(status_array) = 1,
             True,
             False
