@@ -1,14 +1,14 @@
 with base as (
 
     select *
-    from {{ source('dbt_artifacts', 'tests') }}
+    from {{ ref('tests') }}
 
 ),
 
 enhanced as (
 
     select
-        {{ dbt_utils.surrogate_key(['command_invocation_id', 'node_id']) }} as test_execution_id,
+        {{ dbt_artifacts.surrogate_key(['command_invocation_id', 'node_id']) }} as test_execution_id,
         command_invocation_id,
         node_id,
         run_started_at,

@@ -1,5 +1,4 @@
 {% macro upload_snapshot_executions(results) -%}
-    {% set src_dbt_snapshot_executions = source('dbt_artifacts', 'snapshot_executions') %}
     {% set snapshots = [] %}
     {% for result in results  %}
         {% if result.node.resource_type == "snapshot" %}

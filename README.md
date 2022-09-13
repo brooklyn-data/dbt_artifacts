@@ -36,30 +36,33 @@ packages:
 3. Add an on-run-end hook to your `dbt_project.yml`: `on-run-end: "{{ dbt_artifacts.upload_results(results) }}"`
 (We recommend adding a conditional here so that the upload only occurs in your production environment, such as `on-run-end: "{% if target.name == 'prod' %}{{ dbt_artifacts.upload_results(results) }}{% endif %}"`)
 
-4. Create the tables dbt_artifacts uploads to with `dbt run-operation create_dbt_artifacts_tables`
+4. If you are using [selectors](https://docs.getdbt.com/reference/node-selection/syntax), be sure to include the `dbt_artifacts` models in your dbt invocation step.
 
 5. Run your project!
 
+> :construction_worker: Always run the dbt_artifacts models in every dbt invocation which uses the `upload_results` macro. This ensures that the source models always have the correct fields in case of an update.
+
 ## Configuration
 
-The following configuration can be used to specify where the raw data is uploaded, and where the dbt models are created:
+The following configuration can be used to specify where the raw (sources) data is uploaded, and where the dbt models are created:
 
 ```yml
-vars:
-  dbt_artifacts_database: your_db # optional, default is your target database
-  dbt_artifacts_schema: your_schema # optional, default is your target schema
-  dbt_artifacts_create_schema: true|false # optional, set to false if you don't have privileges to create schema, default is true
-
 models:
   ...
   dbt_artifacts:
-    +schema: your_destination_schema # optional, default is your target database
+    +database: your_destination_database # optional, default is your target database
+    +schema: your_destination_schema # optional, default is your target schema
     staging:
+      +database: your_destination_database # optional, default is your target database
       +schema: your_destination_schema # optional, default is your target schema
-  ...
+    sources:
+      +database: your_sources_database # optional, default is your target database
+      +schema: your sources_database # optional, default is your target schema
 ```
 
-Note that the model materializations are defined in this package's `dbt_project.yml`, so do not set them in your project.
+Note that model materializations and `on_schema_change` configs are defined in this package's `dbt_project.yml`, so do not set them globally in your `dbt_project.yml` ([see docs on configuring packages](https://docs.getdbt.com/docs/building-a-dbt-project/package-management#configuring-packages)):
+
+> Configurations made in your dbt_project.yml file will override any configurations in a package (either in the dbt_project.yml file of the package, or in config blocks).
 
 ### Environment Variables
 
@@ -91,6 +94,28 @@ vars:
     '...'
   ]
 ```
+
+## Upgrading from 1.x to >=2.0.0
+If you were using the following variables:
+
+```yml
+vars:
+  dbt_artifacts_database: your_db
+  dbt_artifacts_schema: your_schema
+```
+
+You must now move these to the following model configs:
+
+```yml
+models:
+  ...
+  dbt_artifacts:
+    sources:
+      +database: your_db
+      +schema: your_schema
+```
+
+That's because the raw tables are now managed as dbt models. Be aware of any impact that [generate_database_name](https://docs.getdbt.com/docs/building-a-dbt-project/building-models/using-custom-databases#generate_database_name) and [generate_schema_name](https://docs.getdbt.com/docs/building-a-dbt-project/building-models/using-custom-schemas#how-does-dbt-generate-a-models-schema-name) macros may have on the final database/schema.
 
 ## Migrating From <1.0.0 to >=1.0.0
 To migrate your existing data from the `dbt-artifacts` versions <=0.8.0, a helper macro and guide is provided. This migration uses the old `fct_*` and `dim_*` models' data to populate the new sources. The steps to use the macro are as follows:
