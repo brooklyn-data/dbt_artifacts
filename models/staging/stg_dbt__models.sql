@@ -19,7 +19,9 @@ enhanced as (
         package_name,
         path,
         checksum,
-        materialization
+        materialization,
+        tags,
+        meta
     from base
 
 )
