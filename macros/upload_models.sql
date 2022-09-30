@@ -66,7 +66,7 @@
                     '{{ model.original_file_path | replace('\\', '\\\\') }}', {# path #}
                     '{{ model.checksum.checksum }}', {# checksum #}
                     '{{ model.config.materialized }}', {# materialization #}
-                    '{{ tojson(model.tags) }}', {# tags #}
+                    {{ tojson(model.tags) }}, {# tags #}
                     '{{ tojson(model.config.meta) }}' {# meta #}
                 )
                 {%- if not loop.last %},{%- endif %}
