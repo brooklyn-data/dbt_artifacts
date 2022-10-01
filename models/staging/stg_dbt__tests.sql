@@ -13,7 +13,12 @@ enhanced as (
         node_id,
         run_started_at,
         name,
+        short_name,
+        test_type,
+        test_severity_config,
         depends_on_nodes,
+        model_refs,
+        source_refs,
         package_name,
         test_path,
         tags

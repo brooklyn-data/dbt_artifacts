@@ -8,6 +8,8 @@ models:
     description: '{{ doc("command_invocation_id") }}'
   - name: depends_on_nodes
     description: '{{ doc("depends_on_nodes") }}'
+  - name: model_refs
+    description: '{{ doc("model_refs") }}'
   - name: name
     description: '{{ doc("name") }}'
   - name: node_id
@@ -16,9 +18,17 @@ models:
     description: '{{ doc("package_name") }}'
   - name: run_started_at
     description: '{{ doc("run_started_at") }}'
+  - name: short_name
+    description: '{{ doc("short_name") }}'
+  - name: source_refs
+    description: '{{ doc("source_refs") }}'
   - name: tags
     description: '{{ doc("tags") }}'
   - name: test_execution_id
     description: '{{ doc("test_execution_id") }}'
   - name: test_path
     description: '{{ doc("test_path") }}'
+  - name: test_severity_config
+    description: '{{ doc("test_severity_config") }}'
+  - name: test_type
+    description: '{{ doc("test_type") }}'
