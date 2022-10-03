@@ -370,3 +370,9 @@ Number of bytes processed by the node's last run.
 Total time spent executing the node's last run (seconds).
 
 {% enddocs %}
+
+{% docs meta %}
+
+The meta field of the config associated with the node.
+
+{% enddocs %}

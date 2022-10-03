@@ -14,6 +14,8 @@ select
     cast(null as {{ type_string() }}) as package_name,
     cast(null as {{ type_string() }}) as path,
     cast(null as {{ type_string() }}) as checksum,
-    cast(null as {{ type_string() }}) as materialization
+    cast(null as {{ type_string() }}) as materialization,
+    cast(null as {{ type_array() }}) as tags,
+    cast(null as {{ type_json() }}) as meta
 from dummy_cte
 where 1 = 0
