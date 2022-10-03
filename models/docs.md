@@ -383,6 +383,12 @@ A comma delimited string of the models related to this node, as defined in the e
 
 {% enddocs %}
 
+{% docs source_refs %}
+
+A comma delimited string of the sources related to this node, as defined in the execution graph.
+
+{% enddocs %}
+
 {% docs test_severity_config %}
 
 Configuration for test severity. For example 'ERROR' or 'WARN'. 
