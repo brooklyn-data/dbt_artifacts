@@ -21,7 +21,9 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(8) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(9) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }}
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(12)) }},
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(13)) }}
         from values
         {% for model in models -%}
             (
@@ -35,7 +37,9 @@
                 '{{ model.package_name }}', {# package_name #}
                 '{{ model.original_file_path | replace('\\', '\\\\') }}', {# path #}
                 '{{ model.checksum.checksum }}', {# checksum #}
-                '{{ model.config.materialized }}' {# materialization #}
+                '{{ model.config.materialized }}', {# materialization #}
+                '{{ tojson(model.tags) }}', {# tags #}
+                '{{ tojson(model.config.meta) }}' {# meta #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -61,7 +65,9 @@
                     '{{ model.package_name }}', {# package_name #}
                     '{{ model.original_file_path | replace('\\', '\\\\') }}', {# path #}
                     '{{ model.checksum.checksum }}', {# checksum #}
-                    '{{ model.config.materialized }}' {# materialization #}
+                    '{{ model.config.materialized }}', {# materialization #}
+                    {{ tojson(model.tags) }}, {# tags #}
+                    parse_json('{{ tojson(model.config.meta) }}') {# meta #}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}
