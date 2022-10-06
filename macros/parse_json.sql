@@ -7,10 +7,9 @@
 {%- endmacro %}
 
 {% macro snowflake__parse_json(field) -%}
-    parse_json({{ field }})
+    try_parse_json({{ field }})
 {%- endmacro %}
 
 {% macro bigquery__parse_json(field) -%}
     parse_json({{ field }})
 {%- endmacro %}
-
