@@ -186,7 +186,7 @@
                 {% endif %}
 
                 {{ model.execution_time }}, {# total_node_runtime #}
-                '{{ model.adapter_response.rows_affected }}', {# rows_affected #}
+                try_cast('{{ model.adapter_response.rows_affected }}' as int), {# rows_affected #}
                 '{{ model.node.config.materialized }}', {# materialization #}
                 '{{ model.node.schema }}', {# schema #}
                 '{{ model.node.name }}' {# name #}
