@@ -376,3 +376,9 @@ Total time spent executing the node's last run (seconds).
 The meta field of the config associated with the node.
 
 {% enddocs %}
+
+{% docs invocation_args %}
+
+Key-value pairs of args passed to invocation.
+
+{% enddocs %}

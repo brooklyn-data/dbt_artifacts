@@ -21,7 +21,8 @@
         nullif({{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }}, ''),
         nullif({{ adapter.dispatch('column_identifier', 'dbt_artifacts')(15) }}, ''),
         {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(16)) }},
-        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(17)) }}
+        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(17)) }},
+        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(18)) }}
     from values
     (
         '{{ invocation_id }}', {# command_invocation_id #}
@@ -56,10 +57,17 @@
             {% for dbt_var in var('dbt_vars') %}
                 {% do dbt_vars_dict.update({dbt_var: var(dbt_var)}) %}
             {% endfor %}
-            '{{ tojson(dbt_vars_dict) }}' {# dbt_vars #}
+            '{{ tojson(dbt_vars_dict) }}', {# dbt_vars #}
         {% else %}
-            null {# dbt_vars #}
+            null, {# dbt_vars #}
         {% endif %}
+        
+        {% set invocation_args = {} %}
+        {% for arg, value in invocation_args_dict.items() %}
+            {% do invocation_args.update({arg: value}) %}
+        {% endfor %}
+        '{{ tojson(invocation_args) }}' {# invocation_args #}
+        
     )
     {% endset %}
     {{ invocation_values }}
@@ -101,10 +109,17 @@
             {% for dbt_var in var('dbt_vars') %}
                 {% do dbt_vars_dict.update({dbt_var: var(dbt_var)}) %}
             {% endfor %}
-            parse_json('{{ tojson(dbt_vars_dict) }}') {# dbt_vars #}
+            parse_json('{{ tojson(dbt_vars_dict) }}'), {# dbt_vars #}
         {% else %}
-            null {# dbt_vars #}
+            null, {# dbt_vars #}
         {% endif %}
+
+        {% set invocation_args = {} %}
+        {% for arg, value in invocation_args_dict.items() %}
+            {% do invocation_args.update({arg: value}) %}
+        {% endfor %}
+        parse_json('{{ tojson(invocation_args) }}') {# invocation_args #}
+        
         )
     {% endset %}
     {{ invocation_values }}
