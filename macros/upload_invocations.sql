@@ -62,7 +62,7 @@
             null, {# dbt_vars #}
         {% endif %}
         
-        '{{ tojson(invocation_args) }}' {# invocation_args #}
+        '{{ tojson(invocation_args_dict) }}' {# invocation_args #}
         
     )
     {% endset %}
@@ -110,7 +110,7 @@
             null, {# dbt_vars #}
         {% endif %}
 
-        parse_json('{{ tojson(invocation_args) }}') {# invocation_args #}
+        parse_json('{{ tojson(invocation_args_dict) }}') {# invocation_args #}
         
         )
     {% endset %}
