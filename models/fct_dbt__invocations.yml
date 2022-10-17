@@ -38,3 +38,5 @@ models:
     description: '{{ doc("env_vars") }}'
   - name: dbt_vars
     description: '{{ doc("dbt_vars") }}'
+  - name: invocation_args
+    description: '{{ doc("invocation_args") }}'
