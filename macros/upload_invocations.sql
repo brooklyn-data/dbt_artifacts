@@ -61,9 +61,9 @@
         {% else %}
             null, {# dbt_vars #}
         {% endif %}
-        
+
         '{{ tojson(invocation_args_dict) }}' {# invocation_args #}
-        
+
     )
     {% endset %}
     {{ invocation_values }}
@@ -111,7 +111,7 @@
         {% endif %}
 
         parse_json('{{ tojson(invocation_args_dict) }}') {# invocation_args #}
-        
+
         )
     {% endset %}
     {{ invocation_values }}
