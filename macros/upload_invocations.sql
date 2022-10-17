@@ -62,10 +62,6 @@
             null, {# dbt_vars #}
         {% endif %}
         
-        {% set invocation_args = {} %}
-        {% for arg, value in invocation_args_dict.items() %}
-            {% do invocation_args.update({arg: value}) %}
-        {% endfor %}
         '{{ tojson(invocation_args) }}' {# invocation_args #}
         
     )
@@ -114,10 +110,6 @@
             null, {# dbt_vars #}
         {% endif %}
 
-        {% set invocation_args = {} %}
-        {% for arg, value in invocation_args_dict.items() %}
-            {% do invocation_args.update({arg: value}) %}
-        {% endfor %}
         parse_json('{{ tojson(invocation_args) }}') {# invocation_args #}
         
         )
