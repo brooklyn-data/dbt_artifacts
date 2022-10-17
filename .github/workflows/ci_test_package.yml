@@ -109,7 +109,7 @@ jobs:
       name: Approve Integration Tests
 
     steps:
-      - name: Checkout branch
+      - name: Checkout Branch
         uses: actions/checkout@v2
         with:
           ref: ${{ github.event.pull_request.head.sha }} # Check out the code of the PR
