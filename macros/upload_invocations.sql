@@ -36,11 +36,11 @@
         '{{ target.schema }}', {# target_schema #}
         {{ target.threads }}, {# target_threads #}
 
-        '{{ env_var('DBT_CLOUD_PROJECT_ID', '') }}', {# dbt_cloud_project_id #}
-        '{{ env_var('DBT_CLOUD_JOB_ID', '') }}', {# dbt_cloud_job_id #}
-        '{{ env_var('DBT_CLOUD_RUN_ID', '') }}', {# dbt_cloud_run_id #}
-        '{{ env_var('DBT_CLOUD_RUN_REASON_CATEGORY', '') }}', {# dbt_cloud_run_reason_category #}
-        '{{ env_var('DBT_CLOUD_RUN_REASON', '') }}', {# dbt_cloud_run_reason #}
+        "{{ env_var('DBT_CLOUD_PROJECT_ID', '') }}", {# dbt_cloud_project_id #}
+        "{{ env_var('DBT_CLOUD_JOB_ID', '') }}", {# dbt_cloud_job_id #}
+        "{{ env_var('DBT_CLOUD_RUN_ID', '') }}", {# dbt_cloud_run_id #}
+        "{{ env_var('DBT_CLOUD_RUN_REASON_CATEGORY', '') }}", {# dbt_cloud_run_reason_category #}
+        "{{ env_var('DBT_CLOUD_RUN_REASON', '') }}", {# dbt_cloud_run_reason #}
 
         {% if var('env_vars', none) %}
             {% set env_vars_dict = {} %}
