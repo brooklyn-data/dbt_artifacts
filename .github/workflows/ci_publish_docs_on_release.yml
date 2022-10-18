@@ -3,6 +3,7 @@ name: Publish dbt Documentation on Release
 # triggers for the workflow
 on:
   # See https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#release
+  workflow_dispatch:
   release:
     types: [published]
 
