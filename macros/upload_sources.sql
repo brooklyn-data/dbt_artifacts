@@ -7,8 +7,6 @@
 {%- endmacro %}
 
 {% macro default__get_sources_dml_sql(sources) -%}
-    {{log(sources[5].source_meta, info=true)}}
-    {{log(sources[5], info=true)}}
 
     {% if sources != [] %}
         {% set source_values %}
