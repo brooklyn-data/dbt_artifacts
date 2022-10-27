@@ -21,7 +21,8 @@ sources as (
         identifier,
         loaded_at_field,
         freshness,
-        source_meta
+        source_meta,
+        meta
     from base
 
 )

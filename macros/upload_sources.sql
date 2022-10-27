@@ -25,7 +25,8 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
             {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(12)) }},
-            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(13)) }}
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(13)) }},
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(14)) }}
         from values
         {% for source in sources -%}
             (
@@ -41,7 +42,8 @@
                 '{{ source.identifier }}', {# identifier #}
                 '{{ source.loaded_at_field | replace("'","\\'") }}', {# loaded_at_field #}
                 '{{ tojson(source.freshness) | replace("'","\\'") }}', {# freshness #}
-                '{{ tojson(source.source_meta) | replace("'","\\'") }}' {# source_meta #}
+                '{{ tojson(source.source_meta) | replace("'","\\'") }}', {# source_meta #}
+                '{{ tojson(source.meta) | replace("'","\\'") }}' {# meta #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -69,7 +71,8 @@
                     '{{ source.identifier }}', {# identifier #}
                     '{{ source.loaded_at_field | replace("'","\\'") }}', {# loaded_at_field #}
                     parse_json('{{ tojson(source.freshness) | replace("'","\\'") }}'),  {# freshness #}
-                    parse_json('{{ tojson(source.source_meta) | replace("'","\\'") }}')  {# source_meta #}
+                    parse_json('{{ tojson(source.source_meta) | replace("'","\\'") }}'),  {# source_meta #}
+                    parse_json('{{ tojson(source.meta) | replace("'","\\'") }}')  {# meta #}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}
