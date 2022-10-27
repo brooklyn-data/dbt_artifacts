@@ -7,6 +7,8 @@
 {%- endmacro %}
 
 {% macro default__get_sources_dml_sql(sources) -%}
+    {{log(sources[5].source_meta, info=true)}}
+    {{log(sources[5], info=true)}}
 
     {% if sources != [] %}
         {% set source_values %}
@@ -21,7 +23,9 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(8) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(9) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
-            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(11)) }}
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(12)) }},
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(13)) }}
         from values
         {% for source in sources -%}
             (
@@ -31,11 +35,13 @@
                 '{{ source.database }}', {# database #}
                 '{{ source.schema }}', {# schema #}
                 '{{ source.source_name }}', {# source_name #}
+                '{{ source.source_description | replace("'","\\'") }}', {# source_description #}
                 '{{ source.loader }}', {# loader #}
                 '{{ source.name }}', {# name #}
                 '{{ source.identifier }}', {# identifier #}
                 '{{ source.loaded_at_field | replace("'","\\'") }}', {# loaded_at_field #}
-                '{{ tojson(source.freshness) | replace("'","\\'") }}' {# freshness #}
+                '{{ tojson(source.freshness) | replace("'","\\'") }}', {# freshness #}
+                '{{ tojson(source.source_meta) | replace("'","\\'") }}' {# source_meta #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -57,11 +63,13 @@
                     '{{ source.database }}', {# database #}
                     '{{ source.schema }}', {# schema #}
                     '{{ source.source_name }}', {# source_name #}
+                    '{{ source.source_description }}', {# source_description #}
                     '{{ source.loader }}', {# loader #}
                     '{{ source.name }}', {# name #}
                     '{{ source.identifier }}', {# identifier #}
                     '{{ source.loaded_at_field | replace("'","\\'") }}', {# loaded_at_field #}
-                    parse_json('{{ tojson(source.freshness) | replace("'","\\'") }}')  {# freshness #}
+                    parse_json('{{ tojson(source.freshness) | replace("'","\\'") }}'),  {# freshness #}
+                    parse_json('{{ tojson(source.source_meta) | replace("'","\\'") }}')  {# source_meta #}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}

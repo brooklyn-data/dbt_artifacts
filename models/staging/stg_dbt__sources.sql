@@ -15,11 +15,13 @@ enhanced as (
         database,
         schema,
         source_name,
+        source_description,
         loader,
         name,
         identifier,
         loaded_at_field,
-        freshness
+        freshness,
+        source_meta
     from base
 
 )
