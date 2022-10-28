@@ -64,7 +64,7 @@
         {% endif %}
 
         '{{ tojson(invocation_args_dict) }}', {# invocation_args #}
-        '{{ tojson(dbt_metadata_envs) }}' {# dbt_metadata_envs #}
+        '{{ tojson(dbt_metadata_envs) }}' {# dbt_custom_envs #}
 
     )
     {% endset %}
@@ -113,7 +113,7 @@
         {% endif %}
 
         parse_json('{{ tojson(invocation_args_dict) }}'), {# invocation_args #}
-        parse_json('{{ tojson(dbt_metadata_envs) }}') {# dbt_metadata_envs #}
+        parse_json('{{ tojson(dbt_metadata_envs) }}') {# dbt_custom_envs #}
 
         )
     {% endset %}

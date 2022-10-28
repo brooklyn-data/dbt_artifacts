@@ -383,7 +383,7 @@ Key-value pairs of args passed to invocation.
 
 {% enddocs %}
 
-{% docs dbt_metadata_envs %}
+{% docs dbt_custom_envs %}
 
 Key-value pairs of environment variables passed to invocation that have the prefix DBT_ENV_CUSTOM_ENV_
 
