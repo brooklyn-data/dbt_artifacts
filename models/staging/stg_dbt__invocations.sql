@@ -25,7 +25,8 @@ enhanced as (
         dbt_cloud_run_reason,
         env_vars,
         dbt_vars,
-        invocation_args
+        invocation_args,
+        dbt_custom_envs
     from base
 
 )

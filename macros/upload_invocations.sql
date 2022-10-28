@@ -22,7 +22,8 @@
         nullif({{ adapter.dispatch('column_identifier', 'dbt_artifacts')(15) }}, ''),
         {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(16)) }},
         {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(17)) }},
-        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(18)) }}
+        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(18)) }},
+        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(19)) }}
     from values
     (
         '{{ invocation_id }}', {# command_invocation_id #}
@@ -62,7 +63,8 @@
             null, {# dbt_vars #}
         {% endif %}
 
-        '{{ tojson(invocation_args_dict) }}' {# invocation_args #}
+        '{{ tojson(invocation_args_dict) }}', {# invocation_args #}
+        '{{ tojson(dbt_metadata_envs) }}' {# dbt_custom_envs #}
 
     )
     {% endset %}
@@ -110,7 +112,8 @@
             null, {# dbt_vars #}
         {% endif %}
 
-        parse_json('{{ tojson(invocation_args_dict) }}') {# invocation_args #}
+        parse_json('{{ tojson(invocation_args_dict) }}'), {# invocation_args #}
+        parse_json('{{ tojson(dbt_metadata_envs) }}') {# dbt_custom_envs #}
 
         )
     {% endset %}
