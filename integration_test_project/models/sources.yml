@@ -10,3 +10,4 @@ sources:
     loaded_at_field: convert_timezone('UTC', load_timestamp)
     tables:
       - name: doesnt_exist
+      - name: '"GROUP"'
