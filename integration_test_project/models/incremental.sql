@@ -5,6 +5,8 @@
     )
 }}
 
+-- {{ source('dummy_source', '"GROUP"') }}
+
 select
 
 {% if is_incremental() %}
