@@ -23,6 +23,7 @@ env:
   # Env vars to test invocations model
   DBT_CLOUD_PROJECT_ID: 123
   DBT_CLOUD_JOB_ID: ABC
+  DBT_CLOUD_RUN_REASON: "String with 'quotes' !"
   TEST_ENV_VAR_1: TEST_VALUE
 
 
