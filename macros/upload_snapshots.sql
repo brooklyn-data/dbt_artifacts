@@ -65,7 +65,7 @@
                     '{{ snapshot.original_file_path | replace('\\', '\\\\') }}', {# path #}
                     '{{ snapshot.checksum.checksum }}', {# checksum #}
                     '{{ snapshot.config.strategy }}', {# strategy #}
-                    '{{ tojson(snapshot.config.meta) }}' {# meta #}
+                    {{ tojson(snapshot.config.meta) }} {# meta #}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}

@@ -58,7 +58,7 @@
                     '{{ seed.package_name }}', {# package_name #}
                     '{{ seed.original_file_path | replace('\\', '\\\\') }}', {# path #}
                     '{{ seed.checksum.checksum }}', {# checksum #}
-                    '{{ tojson(seed.config.meta) }}' {# meta #}
+                    {{ tojson(seed.config.meta) }} {# meta #}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}
