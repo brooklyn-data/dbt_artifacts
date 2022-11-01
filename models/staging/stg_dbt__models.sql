@@ -15,6 +15,7 @@ enhanced as (
         database,
         schema,
         name,
+        alias,
         depends_on_nodes,
         package_name,
         path,

@@ -20,7 +20,8 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(7) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(8) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(9) }},
-            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(10)) }}
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(11)) }}
         from values
         {% for seed in seeds -%}
             (
@@ -30,6 +31,7 @@
                 '{{ seed.database }}', {# database #}
                 '{{ seed.schema }}', {# schema #}
                 '{{ seed.name }}', {# name #}
+                '{{ seed.alias }}', {# alias #}
                 '{{ seed.package_name }}', {# package_name #}
                 '{{ seed.original_file_path | replace('\\', '\\\\') }}', {# path #}
                 '{{ seed.checksum.checksum }}', {# checksum #}
@@ -55,6 +57,7 @@
                     '{{ seed.database }}', {# database #}
                     '{{ seed.schema }}', {# schema #}
                     '{{ seed.name }}', {# name #}
+                    '{{ seed.alias }}', {# alias #}
                     '{{ seed.package_name }}', {# package_name #}
                     '{{ seed.original_file_path | replace('\\', '\\\\') }}', {# path #}
                     '{{ seed.checksum.checksum }}', {# checksum #}
