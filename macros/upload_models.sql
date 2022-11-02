@@ -33,7 +33,7 @@
                 '{{ model.database }}', {# database #}
                 '{{ model.schema }}', {# schema #}
                 '{{ model.name }}', {# name #}
-                '{{ tojson(model.depends_on.nodes) }}', {# depends_on_nodes #}
+                '{{ tojson(model.depends_on.nodes) | replace('\\', '\\\\') }}', {# depends_on_nodes #}
                 '{{ model.package_name }}', {# package_name #}
                 '{{ model.original_file_path | replace('\\', '\\\\') }}', {# path #}
                 '{{ model.checksum.checksum }}', {# checksum #}
