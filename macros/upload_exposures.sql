@@ -62,14 +62,14 @@
                     '{{ run_started_at }}', {# run_started_at #}
                     '{{ exposure.name | replace("'","\\'") }}', {# name #}
                     '{{ exposure.type }}', {# type #}
-                    '{{ tojson(exposure.owner) | replace("'","\\'") }}', {# owner #}
+                    parse_json('{{ tojson(exposure.owner) | replace("'","\\'") }}'), {# owner #}
                     '{{ exposure.maturity }}', {# maturity #}
                     '{{ exposure.original_file_path | replace('\\', '\\\\') }}', {# path #}
                     '{{ exposure.description | replace("'","\\'") }}', {# description #}
                     '{{ exposure.url }}', {# url #}
                     '{{ exposure.package_name }}', {# package_name #}
                     '{{ tojson(exposure.depends_on.nodes) }}', {# depends_on_nodes #}
-                    '{{ tojson(exposure.meta) | replace("'","\\'") }}' {# meta #}
+                    parse_json('{{ tojson(exposure.meta) | replace("'","\\'") }}') {# meta #}
 
                 )
                 {%- if not loop.last %},{%- endif %}

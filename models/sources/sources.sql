@@ -15,14 +15,12 @@ select
     cast(null as {{ type_string() }}) as name,
     cast(null as {{ type_string() }}) as identifier,
     cast(null as {{ type_string() }}) as loaded_at_field,
-    {% if target.type == 'snowflake'%}
+    {% if target.type == 'snowflake' %}
         cast(null as {{ type_array() }}) as freshness,
-        cast(null as {{ type_array() }}) as source_meta,
-        cast(null as {{ type_array() }}) as meta
     {% else %}
         cast(null as {{ type_json() }}) as freshness,
+    {% endif %}
         cast(null as {{ type_json() }}) as source_meta,
         cast(null as {{ type_json() }}) as meta   
-    {% endif %}
 from dummy_cte
 where 1 = 0

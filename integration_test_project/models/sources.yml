@@ -8,5 +8,10 @@ sources:
       error_after: {count: 24, period: hour}
       filter: dayname(updatedat) not in ('Sunday', 'Monday')
     loaded_at_field: convert_timezone('UTC', load_timestamp)
+    meta: 
+      real_name: facebook
+    
     tables:
       - name: doesnt_exist
+        meta:
+          type: ['mermaid', 'unicorn', 'santa claus']
