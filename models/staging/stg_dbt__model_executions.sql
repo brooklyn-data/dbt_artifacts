@@ -24,7 +24,8 @@ enhanced as (
         {% endif %}
         materialization,
         schema, -- noqa
-        name
+        name,
+        alias
     from base
 
 )

@@ -20,7 +20,8 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(7) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(8) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(9) }},
-            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(10)) }}
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(10)) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }}
         from values
         {% for seed in seeds -%}
             (
@@ -33,7 +34,8 @@
                 '{{ seed.package_name }}', {# package_name #}
                 '{{ seed.original_file_path | replace('\\', '\\\\') }}', {# path #}
                 '{{ seed.checksum.checksum }}', {# checksum #}
-                '{{ tojson(seed.config.meta) }}' {# meta #}
+                '{{ tojson(seed.config.meta) }}', {# meta #}
+                '{{ seed.alias }}' {# alias #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -58,7 +60,8 @@
                     '{{ seed.package_name }}', {# package_name #}
                     '{{ seed.original_file_path | replace('\\', '\\\\') }}', {# path #}
                     '{{ seed.checksum.checksum }}', {# checksum #}
-                    parse_json('{{ tojson(seed.config.meta) }}') {# meta #}
+                    parse_json('{{ tojson(seed.config.meta) }}'), {# meta #}
+                    '{{ seed.alias }}' {# alias #}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}

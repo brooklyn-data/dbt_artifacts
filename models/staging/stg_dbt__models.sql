@@ -21,7 +21,8 @@ enhanced as (
         checksum,
         materialization,
         tags,
-        meta
+        meta,
+        alias
     from base
 
 )

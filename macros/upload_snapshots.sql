@@ -23,7 +23,8 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(9) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
-            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(12)) }}
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(12)) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }}
         from values
         {% for snapshot in snapshots -%}
             (
@@ -38,7 +39,8 @@
                 '{{ snapshot.original_file_path | replace('\\', '\\\\') }}', {# path #}
                 '{{ snapshot.checksum.checksum }}', {# checksum #}
                 '{{ snapshot.config.strategy }}', {# strategy #}
-                '{{ tojson(snapshot.config.meta) }}' {# meta #}
+                '{{ tojson(snapshot.config.meta) }}', {# meta #}
+                '{{ snapshot.alias }}' {# alias #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -65,7 +67,8 @@
                     '{{ snapshot.original_file_path | replace('\\', '\\\\') }}', {# path #}
                     '{{ snapshot.checksum.checksum }}', {# checksum #}
                     '{{ snapshot.config.strategy }}', {# strategy #}
-                    parse_json('{{ tojson(snapshot.config.meta) }}') {# meta #}
+                    parse_json('{{ tojson(snapshot.config.meta) }}'), {# meta #}
+                    '{{ snapshot.alias }}' {# alias #}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}

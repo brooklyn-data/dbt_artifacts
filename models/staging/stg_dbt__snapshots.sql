@@ -20,7 +20,8 @@ enhanced as (
         path,
         checksum,
         strategy,
-        meta
+        meta,
+        alias
     from base
 
 )

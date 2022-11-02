@@ -24,7 +24,8 @@ model_executions as (
         {% endif %}
         materialization,
         schema, -- noqa
-        name
+        name,
+        alias
     from base
 
 )

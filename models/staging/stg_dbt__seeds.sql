@@ -18,7 +18,8 @@ enhanced as (
         package_name,
         path,
         checksum,
-        meta
+        meta,
+        alias
     from base
 
 )

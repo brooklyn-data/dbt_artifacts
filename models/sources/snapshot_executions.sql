@@ -16,6 +16,7 @@ select
     cast(null as {{ type_int() }}) as rows_affected,
     cast(null as {{ type_string() }}) as materialization,
     cast(null as {{ type_string() }}) as schema,
-    cast(null as {{ type_string() }}) as name
+    cast(null as {{ type_string() }}) as name,
+    cast(null as {{ type_string() }}) as alias
 from dummy_cte
 where 1 = 0
