@@ -19,7 +19,8 @@ enhanced as (
         package_name,
         path,
         checksum,
-        strategy
+        strategy,
+        meta
     from base
 
 )
