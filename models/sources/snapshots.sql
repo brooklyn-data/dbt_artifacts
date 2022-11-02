@@ -10,12 +10,12 @@ select
     cast(null as {{ type_string() }}) as database,
     cast(null as {{ type_string() }}) as schema,
     cast(null as {{ type_string() }}) as name,
-    cast(null as {{ type_string() }}) as alias,
     cast(null as {{ type_array() }}) as depends_on_nodes,
     cast(null as {{ type_string() }}) as package_name,
     cast(null as {{ type_string() }}) as path,
     cast(null as {{ type_string() }}) as checksum,
     cast(null as {{ type_string() }}) as strategy,
-    cast(null as {{ type_json() }}) as meta
+    cast(null as {{ type_json() }}) as meta,
+    cast(null as {{ type_string() }}) as alias
 from dummy_cte
 where 1 = 0

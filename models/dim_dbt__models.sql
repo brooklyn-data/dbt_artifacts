@@ -15,14 +15,14 @@ models as (
         database,
         schema,
         name,
-        alias,
         depends_on_nodes,
         package_name,
         path,
         checksum,
         materialization,
         tags,
-        meta
+        meta,
+        alias
     from base
 
 )

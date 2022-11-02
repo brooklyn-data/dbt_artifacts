@@ -16,12 +16,6 @@ Name of the node.
 
 {% enddocs %}
 
-{% docs alias %}
-
-Alias of the node.
-
-{% enddocs %}
-
 {% docs schema %}
 
 Configured schema for the node.
@@ -392,5 +386,11 @@ Key-value pairs of args passed to invocation.
 {% docs dbt_custom_envs %}
 
 Key-value pairs of environment variables passed to invocation that have the prefix DBT_ENV_CUSTOM_ENV_
+
+{% enddocs %}
+
+{% docs alias %}
+
+Alias of the node.
 
 {% enddocs %}

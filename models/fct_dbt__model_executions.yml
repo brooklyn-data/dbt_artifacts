@@ -14,8 +14,6 @@ models:
     description: '{{ doc("model_execution_id") }}'
   - name: name
     description: '{{ doc("name") }}'
-  - name: alias
-    description: '{{ doc("alias") }}'
   - name: node_id
     description: '{{ doc("node_id") }}'
   - name: query_completed_at
@@ -34,3 +32,5 @@ models:
     description: '{{ doc("total_node_runtime") }}'
   - name: was_full_refresh
     description: '{{ doc("was_full_refresh") }}'
+  - name: alias
+    description: '{{ doc("alias") }}'

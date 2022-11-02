@@ -18,13 +18,13 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(4) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(5) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(6) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(7) }},
-            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(8)) }},
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(7)) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(8) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(9) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }},
-            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(13)) }}
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(12)) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }}
         from values
         {% for snapshot in snapshots -%}
             (
@@ -34,13 +34,13 @@
                 '{{ snapshot.database }}', {# database #}
                 '{{ snapshot.schema }}', {# schema #}
                 '{{ snapshot.name }}', {# name #}
-                '{{ snapshot.alias }}', {# alias #}
                 '{{ tojson(snapshot.depends_on.nodes) }}', {# depends_on_nodes #}
                 '{{ snapshot.package_name }}', {# package_name #}
                 '{{ snapshot.original_file_path | replace('\\', '\\\\') }}', {# path #}
                 '{{ snapshot.checksum.checksum }}', {# checksum #}
                 '{{ snapshot.config.strategy }}', {# strategy #}
-                '{{ tojson(snapshot.config.meta) }}' {# meta #}
+                '{{ tojson(snapshot.config.meta) }}', {# meta #}
+                '{{ snapshot.alias }}' {# alias #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -62,13 +62,13 @@
                     '{{ snapshot.database }}', {# database #}
                     '{{ snapshot.schema }}', {# schema #}
                     '{{ snapshot.name }}', {# name #}
-                    '{{ snapshot.alias }}', {# alias #}
                     {{ tojson(snapshot.depends_on.nodes) }}, {# depends_on_nodes #}
                     '{{ snapshot.package_name }}', {# package_name #}
                     '{{ snapshot.original_file_path | replace('\\', '\\\\') }}', {# path #}
                     '{{ snapshot.checksum.checksum }}', {# checksum #}
                     '{{ snapshot.config.strategy }}', {# strategy #}
-                    parse_json('{{ tojson(snapshot.config.meta) }}') {# meta #}
+                    parse_json('{{ tojson(snapshot.config.meta) }}'), {# meta #}
+                    '{{ snapshot.alias }}' {# alias #}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}

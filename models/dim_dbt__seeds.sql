@@ -15,11 +15,11 @@ seeds as (
         database,
         schema,
         name,
-        alias,
         package_name,
         path,
         checksum,
-        meta
+        meta,
+        alias
     from base
 
 )
