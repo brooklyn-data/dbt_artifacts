@@ -21,7 +21,8 @@ seed_executions as (
         rows_affected,
         materialization,
         schema,
-        name
+        name,
+        alias
     from base
 
 )

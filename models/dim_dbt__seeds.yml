@@ -24,3 +24,5 @@ models:
     description: '{{ doc("schema") }}'
   - name: seed_execution_id
     description: '{{ doc("seed_execution_id") }}'
+  - name: alias
+    description: '{{ doc("alias") }}'

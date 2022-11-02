@@ -15,6 +15,7 @@ select
     cast(null as {{ type_string() }}) as path,
     cast(null as {{ type_string() }}) as checksum,
     cast(null as {{ type_string() }}) as strategy,
-    cast(null as {{ type_json() }}) as meta
+    cast(null as {{ type_json() }}) as meta,
+    cast(null as {{ type_string() }}) as alias
 from dummy_cte
 where 1 = 0
