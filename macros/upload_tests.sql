@@ -26,7 +26,23 @@
             {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(13)) }}
         from values
         {% for test in tests -%}
-            {{ get_metadata() }}
+            {%- set test_name = '' -%}
+            {%- set test_type = '' -%}
+            {%- set column_name = '' -%}
+
+            {%- if test.test_metadata is defined -%}
+                {%- set test_name = test.test_metadata.name -%}
+                {%- set test_type = 'generic' -%}
+                {%- if test_name == 'relationships' -%}
+                    {%- set column_name = test.test_metadata.kwargs.field ~ ',' ~ test.test_metadata.kwargs.column_name -%}
+                {%- else -%}
+                    {%- set column_name = test.test_metadata.kwargs.column_name -%}
+                {%- endif -%}
+            
+            {%- elif test.name is defined -%}
+                {%- set test_name = test.name -%}
+                {%- set test_type = 'singular' -%}
+            {%- endif %}
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
                 '{{ test.unique_id }}', {# node_id #}
@@ -55,7 +71,23 @@
     {% if tests != [] %}
         {% set test_values %}
             {% for test in tests -%}
-                {{ get_metadata() }}
+                {%- set test_name = '' -%}
+                {%- set test_type = '' -%}
+                {%- set column_name = '' -%}
+
+                {%- if test.test_metadata is defined -%}
+                    {%- set test_name = test.test_metadata.name -%}
+                    {%- set test_type = 'generic' -%}
+                    {%- if test_name == 'relationships' -%}
+                        {%- set column_name = test.test_metadata.kwargs.field ~ ',' ~ test.test_metadata.kwargs.column_name -%}
+                    {%- else -%}
+                        {%- set column_name = test.test_metadata.kwargs.column_name -%}
+                    {%- endif -%}
+                
+                {%- elif test.name is defined -%}
+                    {%- set test_name = test.name -%}
+                    {%- set test_type = 'singular' -%}
+                {%- endif %}
                 (
                     '{{ invocation_id }}', {# command_invocation_id #}
                     '{{ test.unique_id }}', {# node_id #}
@@ -82,30 +114,13 @@
 
 /*
   helper macro for above:
-  logic for test_name and test_type
-*/
-{% macro get_metadata() %}
-    {%- if test.test_metadata is defined -%}
-        {%- set test_name = test.test_metadata.name -%}
-        {%- set test_type = 'generic' -%}
-        {%- if test_name == 'relationships' -%}
-            {%- set column_name = test.test_metadata.kwargs.field ~ ',' ~ test.test_metadata.kwargs.column_name -%}
-        {%- else -%}
-            {%- set column_name = test.test_metadata.kwargs.column_name -%}
-        {%- endif -%}
-    {%- elif test.name is defined -%}
-        {%- set test_name = test.name -%}
-        {%- set test_type = 'singular' -%}
-    {%- endif %}
-{% endmacro %}
-/*
-  helper macro for above:
   return a comma delimited string of the models or sources were related to the test.
     e.g. dim_customers,fct_orders
   behaviour changes slightly with the is_src flag because:
     - models come through as [['model'], ['model_b']]
     - srcs come through as [['source','table'], ['source_b','table_b']]
 */
+
 {% macro process_refs( ref_list, is_src=false ) %}
   {% set refs = [] %}
 
