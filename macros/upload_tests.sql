@@ -23,7 +23,8 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }},
-            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(13)) }}
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }},
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(14)) }}
         from values
         {% for test in tests -%}
             {%- set test_name = '' -%}
@@ -54,6 +55,7 @@
                 '{{ tojson(test.depends_on.nodes) }}', {# depends_on_nodes #}
                 '{{ process_refs(test.refs) }}', {# model_refs #}
                 '{{ process_refs(test.sources, is_src=true) }}', {# source_refs #}
+                '{{ column_name|escape }}', {# column_names #}
                 '{{ test.package_name }}', {# package_name #}
                 '{{ test.original_file_path | replace('\\', '\\\\') }}', {# test_path #}
                 '{{ tojson(test.tags) }}' {# tags #}
@@ -99,6 +101,7 @@
                     {{ tojson(test.depends_on.nodes) }}, {# depends_on_nodes #}
                     '{{ process_refs(test.refs) }}', {# model_refs #}
                     '{{ process_refs(test.sources, is_src=true) }}', {# source_refs #}
+                    '{{ column_name|escape }}', {# column_names #}
                     '{{ test.package_name }}', {# package_name #}
                     '{{ test.original_file_path | replace('\\', '\\\\') }}', {# test_path #}
                     {{ tojson(test.tags) }} {# tags #}

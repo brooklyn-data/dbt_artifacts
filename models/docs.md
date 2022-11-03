@@ -406,3 +406,9 @@ Type of test. For example 'singular' or 'generic'
 The meta field of the config associated with the node.
 
 {% enddocs %}
+
+{% docs column_names %}
+
+Comma separated string of column names tested by a dbt test.
+
+{% enddocs %}

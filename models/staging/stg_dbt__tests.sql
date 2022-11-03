@@ -19,6 +19,7 @@ enhanced as (
         depends_on_nodes,
         model_refs,
         source_refs,
+        column_names,
         package_name,
         test_path,
         tags
