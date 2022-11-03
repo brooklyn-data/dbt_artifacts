@@ -21,7 +21,8 @@ enhanced as (
         rows_affected,
         materialization,
         schema, -- noqa
-        name
+        name,
+        alias
     from base
 
 )

@@ -30,3 +30,5 @@ models:
     description: '{{ doc("total_node_runtime") }}'
   - name: was_full_refresh
     description: '{{ doc("was_full_refresh") }}'
+  - name: alias
+    description: '{{ doc("alias") }}'

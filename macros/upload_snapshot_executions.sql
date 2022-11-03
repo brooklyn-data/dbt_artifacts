@@ -24,6 +24,7 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }}
         from values
         {% for model in snapshots -%}
@@ -66,7 +67,8 @@
                 null, -- rows_affected not available {# Only available in Snowflake #}
                 '{{ model.node.config.materialized }}', {# materialization #}
                 '{{ model.node.schema }}', {# schema #}
-                '{{ model.node.name }}' {# name #}
+                '{{ model.node.name }}', {# name #}
+                '{{ model.node.alias }}' {# alias #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -120,7 +122,8 @@
                 null, -- rows_affected not available {# Databricks #}
                 '{{ model.node.config.materialized }}', {# materialization #}
                 '{{ model.node.schema }}', {# schema #}
-                '{{ model.node.name }}' {# name #}
+                '{{ model.node.name }}', {# name #}
+                '{{ model.node.alias }}' {# alias #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -147,7 +150,8 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }}
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }}
         from values
         {% for model in snapshots -%}
             (
@@ -186,10 +190,11 @@
                 {% endif %}
 
                 {{ model.execution_time }}, {# total_node_runtime #}
-                '{{ model.adapter_response.rows_affected }}', {# rows_affected #}
+                try_cast('{{ model.adapter_response.rows_affected }}' as int), {# rows_affected #}
                 '{{ model.node.config.materialized }}', {# materialization #}
                 '{{ model.node.schema }}', {# schema #}
-                '{{ model.node.name }}' {# name #}
+                '{{ model.node.name }}', {# name #}
+                '{{ model.node.alias }}' {# alias #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}

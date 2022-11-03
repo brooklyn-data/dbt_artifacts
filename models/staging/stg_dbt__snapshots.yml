@@ -28,3 +28,5 @@ models:
     description: '{{ doc("snapshot_execution_id") }}'
   - name: strategy
     description: '{{ doc("strategy") }}'
+  - name: alias
+    description: '{{ doc("alias") }}'

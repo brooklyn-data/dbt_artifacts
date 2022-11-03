@@ -412,3 +412,21 @@ The meta field of the config associated with the node.
 Comma separated string of column names tested by a dbt test.
 
 {% enddocs %}
+
+{% docs invocation_args %}
+
+Key-value pairs of args passed to invocation.
+
+{% enddocs %}
+
+{% docs dbt_custom_envs %}
+
+Key-value pairs of environment variables passed to invocation that have the prefix DBT_ENV_CUSTOM_ENV_
+
+{% enddocs %}
+
+{% docs alias %}
+
+Alias of the node.
+
+{% enddocs %}

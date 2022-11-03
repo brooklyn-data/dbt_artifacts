@@ -17,7 +17,9 @@ seeds as (
         name,
         package_name,
         path,
-        checksum
+        checksum,
+        meta,
+        alias
     from base
 
 )
