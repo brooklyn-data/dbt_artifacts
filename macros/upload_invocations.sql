@@ -63,7 +63,7 @@
             null, {# dbt_vars #}
         {% endif %}
 
-        '{{ tojson(invocation_args_dict) }}', {# invocation_args #}
+        '{{ tojson(invocation_args_dict) | replace('\\', '\\\\') }}', {# invocation_args #}
         '{{ tojson(dbt_metadata_envs) }}' {# dbt_custom_envs #}
 
     )
