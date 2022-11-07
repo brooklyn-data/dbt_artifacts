@@ -12,8 +12,6 @@ models:
     description: '{{ doc("database") }}'
   - name: name
     description: '{{ doc("name") }}'
-  - name: alias
-    description: '{{ doc("alias") }}'
   - name: node_id
     description: '{{ doc("node_id") }}'
   - name: package_name

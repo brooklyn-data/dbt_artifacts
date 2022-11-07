@@ -23,9 +23,8 @@ model_executions as (
             bytes_processed,
         {% endif %}
         materialization,
-        schema, -- noqa
-        name,
-        alias
+        {{ adapter.dispatch('quote_reserved_keywords', 'dbt_artifacts')('schema') }}, -- noqa
+        name
     from base
 
 )

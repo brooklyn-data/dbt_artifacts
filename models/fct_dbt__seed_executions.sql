@@ -20,9 +20,8 @@ seed_executions as (
         total_node_runtime,
         rows_affected,
         materialization,
-        schema,
-        name,
-        alias
+        {{ adapter.dispatch('quote_reserved_keywords', 'dbt_artifacts')('schema') }},
+        name
     from base
 
 )
