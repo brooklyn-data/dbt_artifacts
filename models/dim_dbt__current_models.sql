@@ -39,9 +39,9 @@ latest_models_runs as (
 latest_model_stats as (
     select
         node_id
-        , max(case when was_full_refresh then query_completed_at end) as last_full_refresh_run_completed_at
-        , max(case when was_full_refresh then total_node_runtime end) as last_full_refresh_run_total_runtime
-        , max(case when was_full_refresh then rows_affected end) as last_full_refresh_run_rows_affected
+        , max(case when was_full_refresh {% if target.type == 'sqlserver' %}= 1{% endif %} then query_completed_at end) as last_full_refresh_run_completed_at
+        , max(case when was_full_refresh {% if target.type == 'sqlserver' %}= 1{% endif %} then total_node_runtime end) as last_full_refresh_run_total_runtime
+        , max(case when was_full_refresh {% if target.type == 'sqlserver' %}= 1{% endif %} then rows_affected end) as last_full_refresh_run_rows_affected
         {% if target.type == 'bigquery' %}
         , max(case when was_full_refresh then bytes_processed end) as last_full_refresh_run_bytes_processed
         {% endif %}
@@ -53,7 +53,12 @@ latest_model_stats as (
         {% endif %}
     from latest_models_runs
     where run_idx = 1
-    group by 1
+    group by
+        {% if target.type == 'sqlserver' -%}
+            node_id
+        {%- else -%}
+            1
+        {%- endif %}
 ),
 
 final as (

@@ -23,9 +23,8 @@ enhanced as (
             bytes_processed,
         {% endif %}
         materialization,
-        schema, -- noqa
-        name,
-        alias
+        "schema", -- noqa
+        "name"
     from base
 
 )

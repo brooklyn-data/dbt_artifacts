@@ -389,8 +389,4 @@ Key-value pairs of environment variables passed to invocation that have the pref
 
 {% enddocs %}
 
-{% docs alias %}
 
-Alias of the node.
-
-{% enddocs %}

@@ -32,5 +32,3 @@ models:
     description: '{{ doc("tags") }}'
   - name: meta
     description: '{{ doc("meta") }}'
-  - name: alias
-    description: '{{ doc("alias") }}'

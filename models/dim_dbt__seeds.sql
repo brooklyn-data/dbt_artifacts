@@ -12,14 +12,13 @@ seeds as (
         command_invocation_id,
         node_id,
         run_started_at,
-        database,
-        schema,
+        {{ adapter.dispatch('quote_reserved_keywords', 'dbt_artifacts')('database') }},
+        {{ adapter.dispatch('quote_reserved_keywords', 'dbt_artifacts')('schema') }},
         name,
         package_name,
         path,
         checksum,
-        meta,
-        alias
+        meta
     from base
 
 )

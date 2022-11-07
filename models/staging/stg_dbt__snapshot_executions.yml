@@ -12,8 +12,6 @@ models:
     description: '{{ doc("materialization") }}'
   - name: name
     description: '{{ doc("name") }}'
-  - name: alias
-    description: '{{ doc("alias") }}'
   - name: node_id
     description: '{{ doc("node_id") }}'
   - name: query_completed_at

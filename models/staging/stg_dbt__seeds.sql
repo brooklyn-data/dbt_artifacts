@@ -12,14 +12,13 @@ enhanced as (
         command_invocation_id,
         node_id,
         run_started_at,
-        database,
-        schema,
-        name,
+        "database",
+        "schema",
+        "name",
         package_name,
         path,
         checksum,
-        meta,
-        alias
+        meta
     from base
 
 )

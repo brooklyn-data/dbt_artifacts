@@ -20,9 +20,8 @@ enhanced as (
         total_node_runtime,
         rows_affected,
         materialization,
-        schema, -- noqa
-        name,
-        alias
+        "schema", -- noqa
+        "name"
     from base
 
 )
