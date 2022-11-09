@@ -20,7 +20,7 @@ snapshot_executions as (
         total_node_runtime,
         rows_affected,
         materialization,
-        schema,
+        {{ adapter.dispatch('quote_reserved_keywords', 'dbt_artifacts')('schema') }},
         name,
         alias
     from base

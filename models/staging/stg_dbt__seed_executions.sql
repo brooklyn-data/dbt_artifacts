@@ -20,7 +20,7 @@ enhanced as (
         total_node_runtime,
         rows_affected,
         materialization,
-        schema, -- noqa
+        {{ adapter.dispatch('quote_reserved_keywords', 'dbt_artifacts')('schema') }}, -- noqa
         name,
         alias
     from base
