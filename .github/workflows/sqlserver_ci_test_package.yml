@@ -1,4 +1,4 @@
-name: CI test package
+name: SQL CI test package
 
 on:
   workflow_dispatch:
