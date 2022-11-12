@@ -29,6 +29,9 @@ on:
 
 jobs:
   integration-sqlserver:
+    runs-on: ubuntu-latest
+    environment:
+      name: Approve Integration Tests
     strategy:
       matrix:
         sqlserver-version: [2019, 2017]
