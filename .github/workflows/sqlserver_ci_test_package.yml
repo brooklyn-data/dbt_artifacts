@@ -25,6 +25,9 @@ jobs:
     - name: Install SQL Server
       run: docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=1StrongPwd!!" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2019-latest
 
+    - name: Install Microsoft ODBC
+      run: sudo ACCEPT_EULA=Y apt-get install msodbcsql18 -y
+
     - name: Install tox
       run: python3 -m pip install tox
 
