@@ -38,10 +38,10 @@ jobs:
         accept-eula: true
         sqlserver-version: ${{ matrix.sqlserver-version }}
 
-  integration-snowflake:
-    runs-on: ubuntu-latest
-    environment:
-      name: Approve Integration Tests
+        #  integration-snowflake:
+        #    runs-on: ubuntu-latest
+        #    environment:
+        #      name: Approve Integration Tests
 
         #    steps:
         #      - name: Checkout
