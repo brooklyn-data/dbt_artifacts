@@ -45,10 +45,13 @@ dbt_artifacts:
       retries: 1
     sqlserver:
       type: sqlserver
-      schema: dbt_artifacts_test_commit_{{ env_var('GITHUB_SHA_OVERRIDE', '') if env_var('GITHUB_SHA_OVERRIDE', '') else env_var('GITHUB_SHA') }}
+        #schema: dbt_artifacts_test_commit_{{ env_var('GITHUB_SHA_OVERRIDE', '') if env_var('GITHUB_SHA_OVERRIDE', '') else env_var('GITHUB_SHA') }}
+      schema: dbttest
       driver: 'ODBC Driver 18 for SQL Server' # (The ODBC Driver installed on your system)
       server: localhost
       port: 1433
       database: master
       user: sa
       password: 1StrongPwd!!
+      encrypt: True
+      trust_cert: True
