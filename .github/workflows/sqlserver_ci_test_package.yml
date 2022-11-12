@@ -17,4 +17,16 @@ jobs:
       with:
         ref: ${{ github.ref }}
 
-    - run: docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=1StrongPwd!!" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2019-latest
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.8.x'
+        architecture: 'x64'
+
+    - name: Install SQL Server
+      run: docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=1StrongPwd!!" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2019-latest
+
+    - name: Install tox
+      run: python3 -m pip install tox
+
+    - name: Run Databricks Tests
+      run: tox -e integration_databricks
