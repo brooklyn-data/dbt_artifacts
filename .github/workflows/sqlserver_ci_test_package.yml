@@ -12,4 +12,9 @@ jobs:
     steps:
     - name: my-step
       run: echo "Hello World!"
+
+    - uses: actions/checkout@master
+      with:
+        ref: ${{ github.ref }}
+
     - run: docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=1StrongPwd!!" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2019-latest
