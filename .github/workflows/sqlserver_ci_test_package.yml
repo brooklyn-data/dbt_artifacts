@@ -28,5 +28,5 @@ jobs:
     - name: Install tox
       run: python3 -m pip install tox
 
-    - name: Run Databricks Tests
-      run: tox -e integration_databricks
+    - name: Run SQL Server Tests
+      run: tox -e integration_sqlserver
