@@ -394,3 +394,9 @@ Key-value pairs of environment variables passed to invocation that have the pref
 Alias of the node.
 
 {% enddocs %}
+
+{% docs config %}
+
+Config object for the node.
+
+{% enddocs %}
