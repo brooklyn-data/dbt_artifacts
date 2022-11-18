@@ -73,7 +73,7 @@
                     {{ tojson(model.tags) }}, {# tags #}
                     parse_json('{{ tojson(model.config.meta) }}'), {# meta #}
                     '{{ model.alias }}' {# alias #},
-                    {{ tojson(model.config) }} {# config #}
+                    parse_json('{{ tojson(model.config) }}') {# config #}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}
