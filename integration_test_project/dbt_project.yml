@@ -30,8 +30,8 @@ vars:
 
 models:
   +persist_docs:
-    relation: true
-    columns: true
+    relation: "{{ false if target.name == 'sqlserver' else true }}"
+    columns: "{{ false if target.name == 'sqlserver' else true }}"
 seeds:
   +quote_columns: false
 

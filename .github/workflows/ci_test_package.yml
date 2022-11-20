@@ -6,26 +6,25 @@ on:
   # will run in the context of the target branch of a PR
   pull_request_target:
 
-env:
-  # These are configured in GitHub secrets
-  DBT_PROFILES_DIR: /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/integration_test_project
-  GITHUB_SHA_OVERRIDE: ${{ github.event.pull_request.head.sha }} # We need the commit hash of the pull request branch's head, the GITHUB_SHA env var is always the base branch in a pull_request_target trigger
-  DBT_ENV_SECRET_SNOWFLAKE_TEST_ACCOUNT: ${{ secrets.SNOWFLAKE_TEST_ACCOUNT }}
-  DBT_ENV_SECRET_SNOWFLAKE_TEST_USER: ${{ secrets.SNOWFLAKE_TEST_USER }}
-  DBT_ENV_SECRET_SNOWFLAKE_TEST_PASSWORD: ${{ secrets.SNOWFLAKE_TEST_PASSWORD }}
-  DBT_ENV_SECRET_SNOWFLAKE_TEST_ROLE: ${{ secrets.SNOWFLAKE_TEST_ROLE }}
-  DBT_ENV_SECRET_SNOWFLAKE_TEST_DATABASE: ${{ secrets.SNOWFLAKE_TEST_DATABASE }}
-  DBT_ENV_SECRET_SNOWFLAKE_TEST_WAREHOUSE: ${{ secrets.SNOWFLAKE_TEST_WAREHOUSE }}
-  DBT_ENV_SECRET_DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-  DBT_ENV_SECRET_DATABRICKS_HTTP_PATH: ${{ secrets.DATABRICKS_HTTP_PATH }}
-  DBT_ENV_SECRET_DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-  DBT_ENV_SECRET_GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
-  # Env vars to test invocations model
-  DBT_CLOUD_PROJECT_ID: 123
-  DBT_CLOUD_JOB_ID: ABC
-  DBT_CLOUD_RUN_REASON: "String with 'quotes' !"
-  TEST_ENV_VAR_1: TEST_VALUE
-  DBT_ENV_CUSTOM_ENV_FAVOURITE_DBT_PACKAGE: dbt_artifacts
+# These are configured in GitHub secrets
+DBT_PROFILES_DIR: /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/integration_test_project
+GITHUB_SHA_OVERRIDE: ${{ github.event.pull_request.head.sha }} # We need the commit hash of the pull request branch's head, the GITHUB_SHA env var is always the base branch in a pull_request_target trigger
+DBT_ENV_SECRET_SNOWFLAKE_TEST_ACCOUNT: ${{ secrets.SNOWFLAKE_TEST_ACCOUNT }}
+DBT_ENV_SECRET_SNOWFLAKE_TEST_USER: ${{ secrets.SNOWFLAKE_TEST_USER }}
+DBT_ENV_SECRET_SNOWFLAKE_TEST_PASSWORD: ${{ secrets.SNOWFLAKE_TEST_PASSWORD }}
+DBT_ENV_SECRET_SNOWFLAKE_TEST_ROLE: ${{ secrets.SNOWFLAKE_TEST_ROLE }}
+DBT_ENV_SECRET_SNOWFLAKE_TEST_DATABASE: ${{ secrets.SNOWFLAKE_TEST_DATABASE }}
+DBT_ENV_SECRET_SNOWFLAKE_TEST_WAREHOUSE: ${{ secrets.SNOWFLAKE_TEST_WAREHOUSE }}
+DBT_ENV_SECRET_DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+DBT_ENV_SECRET_DATABRICKS_HTTP_PATH: ${{ secrets.DATABRICKS_HTTP_PATH }}
+DBT_ENV_SECRET_DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+DBT_ENV_SECRET_GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
+# Env vars to test invocations model
+DBT_CLOUD_PROJECT_ID: 123
+DBT_CLOUD_JOB_ID: ABC
+DBT_CLOUD_RUN_REASON: "String with 'quotes' !"
+TEST_ENV_VAR_1: TEST_VALUE
+DBT_ENV_CUSTOM_ENV_FAVOURITE_DBT_PACKAGE: dbt_artifacts
 
 
 jobs:
@@ -103,6 +102,40 @@ jobs:
 
       - name: Run BigQuery Tests
         run: tox -e integration_bigquery
+
+  integration-sqlserver:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }} # Check out the code of the PR
+
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8.x'
+          architecture: 'x64'
+
+      - name: Install SQL Server
+        run: docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=1StrongPwd!!" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2019-latest
+
+      - name: Install Microsoft ODBC
+        run: sudo ACCEPT_EULA=Y apt-get install msodbcsql18 -y
+
+      - name: Install tox
+        run: python3 -m pip install tox
+  
+      - name: Run SQL Server Tests
+        run: tox -e integration_sqlserver
+      
+      - name: Upload logfile
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: dbt.log
+          path: /home/runner/work/dbt_artifacts/dbt_artifacts/integration_test_project/logs/
 
   sqlfluff-lint-models:
     name: Lint dbt models using SQLFluff

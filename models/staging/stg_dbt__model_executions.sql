@@ -23,7 +23,7 @@ enhanced as (
             bytes_processed,
         {% endif %}
         materialization,
-        schema, -- noqa
+        {{ adapter.dispatch('quote_reserved_keywords', 'dbt_artifacts')('schema') }}, -- noqa
         name,
         alias
     from base

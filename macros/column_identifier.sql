@@ -13,3 +13,7 @@
 {% macro spark__column_identifier(column_index) -%}
     col{{ column_index }}
 {%- endmacro %}
+
+{% macro sqlserver__column_identifier(column_index) -%}
+    col{{ column_index }}
+{%- endmacro %}
