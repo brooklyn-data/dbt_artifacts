@@ -7,7 +7,7 @@ The package currently supports
 
 - Databricks :white_check_mark:
 - Spark :white_check_mark:
-- Snowflake adapters :white_check_mark:
+- Snowflake :white_check_mark:
 - Google BigQuery :white_check_mark:
 
 Models included:
