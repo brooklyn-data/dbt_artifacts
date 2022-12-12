@@ -10,10 +10,10 @@ models:
           - unique
 
 exposures:
-  - name: "ceo's imaginary dashboard"
+  - name: "ceos_imaginary_dashboard"
     type: dashboard
     maturity: high
-    description: "ceo's favourite dashboard"
+    description: "ceos favourite dashboard"
     url: https://bi.tool/dashboards/1
 
     depends_on:
@@ -23,7 +23,7 @@ exposures:
       name: Claire from Data
       email: data@jaffleshop.com
 
-  - name: "CIO dashboard"
+  - name: "CIO_dashboard"
     type: dashboard
     maturity: high
     description: '{{ doc("clickstream") }}'
