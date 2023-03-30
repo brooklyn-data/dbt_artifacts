@@ -14,6 +14,7 @@ select
     cast(null as {{ type_timestamp() }}) as query_completed_at,
     cast(null as {{ type_float() }}) as total_node_runtime,
     cast(null as {{ type_int() }}) as rows_affected,
-    cast(null as {{ type_int() }}) as failures
+    cast(null as {{ type_int() }}) as failures,
+    cast(null as {{ type_string() }}) as message
 from dummy_cte
 where 1 = 0
