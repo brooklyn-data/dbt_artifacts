@@ -70,7 +70,7 @@
                 '{{ model.node.schema }}', {# schema #}
                 '{{ model.node.name }}', {# name #}
                 '{{ model.node.alias }}', {# alias #}
-                '{{ model.message }}' {# test #}
+                '{{ model.message }}' {# message #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -126,7 +126,7 @@
                 '{{ model.node.schema }}', {# schema #}
                 '{{ model.node.name }}', {# name #}
                 '{{ model.node.alias }}', {# alias #}
-                '{{ model.message }}' {# test #}
+                '{{ model.message }}' {# message #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -199,7 +199,7 @@
                 '{{ model.node.schema }}', {# schema #}
                 '{{ model.node.name }}', {# name #}
                 '{{ model.node.alias }}', {# alias #}
-                '{{ model.message }}' {# test #}
+                '{{ model.message }}' {# message #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}

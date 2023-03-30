@@ -64,7 +64,7 @@
                 {{ test.execution_time }}, {# total_node_runtime #}
                 null, {# rows_affected not available in Databricks #}
                 {{ 'null' if test.failures is none else test.failures }}, {# failures #}
-                '{{ test.message }}' {# test #}
+                '{{ test.message }}' {# message #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -117,7 +117,7 @@
                 {{ test.execution_time }}, {# total_node_runtime #}
                 null, {# rows_affected not available in Databricks #}
                 {{ 'null' if test.failures is none else test.failures }}, {# failures #}
-                '{{ test.message }}' {# test #}
+                '{{ test.message }}' {# message #}
             )
             {%- if not loop.last %},{%- endif %}
 
