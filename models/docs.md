@@ -394,3 +394,9 @@ Key-value pairs of environment variables passed to invocation that have the pref
 Alias of the node.
 
 {% enddocs %}
+
+{% docs message %}
+
+Result report, based on information returned from the database
+
+{% enddocs %}
