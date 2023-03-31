@@ -25,7 +25,8 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }}
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(15) }}
         from values
         {% for model in snapshots -%}
             (
@@ -68,7 +69,8 @@
                 '{{ model.node.config.materialized }}', {# materialization #}
                 '{{ model.node.schema }}', {# schema #}
                 '{{ model.node.name }}', {# name #}
-                '{{ model.node.alias }}' {# alias #}
+                '{{ model.node.alias }}', {# alias #}
+                '{{ model.message }}' {# message #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -123,7 +125,8 @@
                 '{{ model.node.config.materialized }}', {# materialization #}
                 '{{ model.node.schema }}', {# schema #}
                 '{{ model.node.name }}', {# name #}
-                '{{ model.node.alias }}' {# alias #}
+                '{{ model.node.alias }}', {# alias #}
+                '{{ model.message }}' {# message #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -151,7 +154,8 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }}
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(15) }}
         from values
         {% for model in snapshots -%}
             (
@@ -194,7 +198,8 @@
                 '{{ model.node.config.materialized }}', {# materialization #}
                 '{{ model.node.schema }}', {# schema #}
                 '{{ model.node.name }}', {# name #}
-                '{{ model.node.alias }}' {# alias #}
+                '{{ model.node.alias }}', {# alias #}
+                '{{ model.message }}' {# message #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}

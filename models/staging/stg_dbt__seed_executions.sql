@@ -22,7 +22,8 @@ enhanced as (
         materialization,
         schema, -- noqa
         name,
-        alias
+        alias,
+        message
     from base
 
 )

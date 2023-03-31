@@ -22,7 +22,8 @@ seed_executions as (
         materialization,
         schema,
         name,
-        alias
+        alias,
+        message
     from base
 
 )

@@ -25,7 +25,8 @@ model_executions as (
         materialization,
         schema, -- noqa
         name,
-        alias
+        alias,
+        message
     from base
 
 )
