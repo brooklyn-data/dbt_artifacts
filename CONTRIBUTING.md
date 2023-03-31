@@ -72,7 +72,7 @@ Tox will take care of installing the dependencies for each environment, so you d
    . ./env.sh
    ```
 
-5. From the root directory, run
+5. From the root directory, run the tests for the databases you have access to below:
 
     ```
     tox -e integration_snowflake # For the Snowflake tests
