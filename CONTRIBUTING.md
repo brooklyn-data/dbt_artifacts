@@ -18,7 +18,7 @@ your changes. If you need help with either of these steps, please let us know!
 
 ## Contributing Code :computer:
 
-The high-level flow for contributing code to the dbt Artifacts Package is as follows:
+The high-level flow for contributing code to the dbt Artifacts Package is as follows (see below for details of each stage):
 
 1. Fork the dbt Artifacts Package repository
 2. Clone your fork locally
