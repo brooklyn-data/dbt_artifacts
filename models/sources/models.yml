@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: models
+    description: Staging model that contains metadata about model executions. One row per node per run.
+    columns:
+      - name: checksum
+        description: '{{ doc("checksum") }}'
+      - name: command_invocation_id
+        description: '{{ doc("command_invocation_id") }}'
+      - name: database
+        description: '{{ doc("database") }}'
+      - name: depends_on_nodes
+        description: '{{ doc("depends_on_nodes") }}'
+      - name: materialization
+        description: '{{ doc("materialization") }}'
+      - name: name
+        description: '{{ doc("name") }}'
+      - name: alias
+        description: '{{ doc("alias") }}'
+      - name: node_id
+        description: '{{ doc("node_id") }}'
+      - name: package_name
+        description: '{{ doc("package_name") }}'
+      - name: path
+        description: '{{ doc("path") }}'
+      - name: run_started_at
+        description: '{{ doc("run_started_at") }}'
+      - name: schema
+        description: '{{ doc("schema") }}'
+      - name: tags
+        description: '{{ doc("tags") }}'
+      - name: meta
+        description: '{{ doc("meta") }}'

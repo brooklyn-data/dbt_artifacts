@@ -1,0 +1,44 @@
+version: 2
+
+models:
+  - name: invocations
+    description: Base model for data about the invocations of dbt. One row per run.
+    columns:
+      - name: command_invocation_id
+        description: '{{ doc("command_invocation_id") }}'
+      - name: dbt_version
+        description: '{{ doc("dbt_version") }}'
+      - name: project_name
+        description: '{{ doc("project_name") }}'
+      - name: run_started_at
+        description: '{{ doc("run_started_at") }}'
+      - name: dbt_command
+        description: '{{ doc("dbt_command") }}'
+      - name: full_refresh_flag
+        description: '{{ doc("full_refresh_flag") }}'
+      - name: target_profile_name
+        description: '{{ doc("target_profile_name") }}'
+      - name: target_name
+        description: '{{ doc("target_name") }}'
+      - name: target_schema
+        description: '{{ doc("target_schema") }}'
+      - name: target_threads
+        description: '{{ doc("target_threads") }}'
+      - name: dbt_cloud_project_id
+        description: '{{ doc("dbt_cloud_project_id") }}'
+      - name: dbt_cloud_job_id
+        description: '{{ doc("dbt_cloud_job_id") }}'
+      - name: dbt_cloud_run_id
+        description: '{{ doc("dbt_cloud_run_id") }}'
+      - name: dbt_cloud_run_reason_category
+        description: '{{ doc("dbt_cloud_run_reason_category") }}'
+      - name: dbt_cloud_run_reason
+        description: '{{ doc("dbt_cloud_run_reason") }}'
+      - name: env_vars
+        description: '{{ doc("env_vars") }}'
+      - name: dbt_vars
+        description: '{{ doc("dbt_vars") }}'
+      - name: invocation_args
+        description: '{{ doc("invocation_args") }}'
+      - name: dbt_custom_envs
+        description: '{{ doc("dbt_custom_envs") }}'
