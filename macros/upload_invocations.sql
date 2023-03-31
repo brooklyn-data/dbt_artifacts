@@ -112,6 +112,12 @@
             null, {# dbt_vars #}
         {% endif %}
 
+        {% if invocation_args_dict.vars %}
+            {# BigQuery does not handle the yaml-string from "--vars" well, when passed to "parse_json". Workaround is to parse the string, and then "tojson" will properly format the dict as a json-object. #}
+            {% set parsed_inv_args_vars = fromyaml(invocation_args_dict.vars) %}
+            {% do invocation_args_dict.update({'vars': parsed_inv_args_vars}) %}
+        {% endif %}
+
         parse_json('{{ tojson(invocation_args_dict) }}'), {# invocation_args #}
         parse_json('{{ tojson(dbt_metadata_envs) }}') {# dbt_custom_envs #}
 
