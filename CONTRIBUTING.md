@@ -84,6 +84,8 @@ The Spark tests require installing the [ODBC driver](https://www.databricks.com/
 DBT_ENV_SPARK_DRIVER_PATH should be set to `/Library/simba/spark/lib/libsparkodbc_sbu.dylib`. Spark tests have not yet
 been added to the integration tests.
 
+If you don't have access to a particular database type, this isn't a problem. Test on the one you do have, and let us know in the PR.
+
 #### SQLFluff
 
 We use SQLFluff to keep SQL style consistent. A GitHub action automatically tests pull requests and adds annotations
