@@ -16,6 +16,7 @@ select
     cast(null as {{ type_string() }}) as checksum,
     cast(null as {{ type_string() }}) as strategy,
     cast(null as {{ type_json() }}) as meta,
-    cast(null as {{ type_string() }}) as alias
+    cast(null as {{ type_string() }}) as alias,
+    cast(null as {{ type_json() }}) as all_results
 from dummy_cte
 where 1 = 0
