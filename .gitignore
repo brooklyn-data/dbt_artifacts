@@ -13,3 +13,5 @@ env.sh
 .python_version
 .vscode
 .venv
+
+.DS_Store

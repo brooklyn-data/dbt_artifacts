@@ -1,6 +1,10 @@
 # dbt Artifacts Package
 This package builds a mart of tables and views describing the project it is installed in. In pre V1 versions of the package, the artifacts dbt produces were uploaded to the warehouse, hence the name of the package. That's no longer the case, but the name has stuck!
 
+## Contributing
+
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for more information.
+
 ## Supported Data Warehouses
 
 The package currently supports
@@ -153,71 +157,3 @@ Thank you to [Tails.com](https://tails.com/gb/careers/) for initial development 
 The macros in the early versions package were adapted from code shared by [Kevin Chan](https://github.com/KevinC-wk) and [Jonathan Talmi](https://github.com/jtalmi) of [Snaptravel](snaptravel.com).
 
 Thank you for sharing your work with the community!
-
-## Contributing
-
-### Running the tests
-
-1. Install pipx
-```bash
-pip install pipx
-pipx ensurepath
-```
-
-2. Install tox
-```bash
-pipx install tox
-```
-
-3. Copy and paste the `integration_test_project/example-env.sh` file and save as `env.sh`. Fill in the missing values.
-
-4. Source the file in your current shell context with the command: `. ./env.sh`.
-
-5. From this directory, run
-
-```
-tox -e integration_snowflake # For the Snowflake tests
-tox -e integration_databricks # For the Databricks tests
-tox -e integration_bigquery # For the BigQuery tests
-```
-
-The Spark tests require installing the [ODBC driver](https://www.databricks.com/spark/odbc-drivers-download). On a Mac, DBT_ENV_SPARK_DRIVER_PATH should be set to `/Library/simba/spark/lib/libsparkodbc_sbu.dylib`. Spark tests have not yet been added to the integration tests.
-
-### SQLFluff
-
-We use SQLFluff to keep SQL style consistent. A GitHub action automatically tests pull requests and adds annotations where there are failures. SQLFluff can also be run locally with `tox`. To install tox, we recommend using `pipx`.
-
-Install pipx:
-```bash
-pip install pipx
-pipx ensurepath
-```
-
-Install tox:
-```bash
-pipx install tox
-```
-
-Lint all models in the /models directory:
-```bash
-tox
-```
-
-Fix all models in the /models directory:
-```bash
-tox -e fix_all
-```
-
-Lint (or subsitute lint to fix) a specific model:
-```bash
-tox -e lint -- models/path/to/model.sql
-```
-
-Lint (or subsitute lint to fix) a specific directory:
-```bash
-tox -e lint -- models/path/to/directory
-```
-
-#### Rules
-
-Enforced rules are defined within `tox.ini`. To view the full list of available rules and their configuration, see the [SQLFluff documentation](https://docs.sqlfluff.com/en/stable/rules.html).
