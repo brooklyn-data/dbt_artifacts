@@ -14,7 +14,7 @@ select
     cast(null as {{ type_string() }}) as name,
     cast(null as {{ type_string() }}) as identifier,
     cast(null as {{ type_string() }}) as loaded_at_field,
-    {% if target.type == 'snowflake'%}
+    {% if target.type == 'snowflake' %}
         cast(null as {{ type_array() }}) as freshness,
     {% else %}
         cast(null as {{ type_json() }}) as freshness,
