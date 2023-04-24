@@ -51,10 +51,10 @@
                     '{{ test.unique_id }}', {# node_id #}
                     '{{ run_started_at }}', {# run_started_at #}
                     '{{ test.name }}', {# name #}
-                    parse_json('{{ tojson(test.depends_on.nodes) }}'), {# depends_on_nodes #}
+                    {{ tojson(test.depends_on.nodes) }}, {# depends_on_nodes #}
                     '{{ test.package_name }}', {# package_name #}
                     '{{ test.original_file_path | replace('\\', '\\\\') }}', {# test_path #}
-                    parse_json('{{ tojson(test.tags) }}'), {# tags #}
+                    {{ tojson(test.tags) }}, {# tags #}
                     parse_json('{{ tojson(test) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}') {# all_fields #}
                 )
                 {%- if not loop.last %},{%- endif %}

@@ -66,7 +66,7 @@
                     """{{ exposure.description | replace("'","\\'") }}""", {# description #}
                     '{{ exposure.url }}', {# url #}
                     '{{ exposure.package_name }}', {# package_name #}
-                    parse_json('{{ tojson(exposure.depends_on.nodes) }}'), {# depends_on_nodes #}
+                    {{ tojson(exposure.depends_on.nodes) }}, {# depends_on_nodes #}
                     parse_json('{{ tojson(exposure) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}') {# all_fields #}
                 )
                 {%- if not loop.last %},{%- endif %}
