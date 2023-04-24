@@ -117,8 +117,8 @@
             {% set parsed_inv_args_vars = fromyaml(invocation_args_dict.vars) %}
             {% do invocation_args_dict.update({'vars': parsed_inv_args_vars}) %}
         {% endif %}
-
-        parse_json('{{ tojson(invocation_args_dict) }}'), {# invocation_args #}
+        {# invocation_args_dict.vars, in the absence of any vars, results in the value "{}\n" as a string which results in an error. safe.parse_json accomodates for this gracefully. #}
+        safe.parse_json('{{ tojson(invocation_args_dict) }}'), {# invocation_args #}
         parse_json('{{ tojson(dbt_metadata_envs) }}') {# dbt_custom_envs #}
 
         )
