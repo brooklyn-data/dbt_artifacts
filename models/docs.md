@@ -400,3 +400,9 @@ Alias of the node.
 Result report, based on information returned from the database
 
 {% enddocs %}
+
+{% docs adapter_response %}
+
+Response provided by the adapter as JSON.
+
+{% enddocs %}
