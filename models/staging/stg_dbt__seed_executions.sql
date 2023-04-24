@@ -23,7 +23,8 @@ enhanced as (
         schema, -- noqa
         name,
         alias,
-        message
+        message,
+        adapter_response
     from base
 
 )
