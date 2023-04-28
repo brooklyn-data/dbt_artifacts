@@ -44,21 +44,33 @@
     {% if tests != [] %}
         {% set test_values %}
             {% for test in tests -%}
-                (
-                    '{{ invocation_id }}', {# command_invocation_id #}
-                    '{{ test.unique_id }}', {# node_id #}
-                    '{{ run_started_at }}', {# run_started_at #}
-                    '{{ test.name }}', {# name #}
-                    {{ tojson(test.depends_on.nodes) }}, {# depends_on_nodes #}
-                    '{{ test.package_name }}', {# package_name #}
-                    '{{ test.original_file_path | replace('\\', '\\\\') }}', {# test_path #}
-                    {{ tojson(test.tags) }} {# tags #}
+                struct(
+                    '{{ invocation_id }}' as command_invocation_id, {# command_invocation_id #}
+                    '{{ test.unique_id }}' as node_id, {# node_id #}
+                    '{{ run_started_at }}' as run_started_at, {# run_started_at #}
+                    '{{ test.name }}' as name, {# name #}
+                    {{ tojson(test.depends_on.nodes) }} as depends_on_nodes, {# depends_on_nodes #}
+                    '{{ test.package_name }}' as package_name, {# package_name #}
+                    '{{ test.original_file_path | replace('\\', '\\\\') }}' as test_path, {# test_path #}
+                    {{ tojson(test.tags) }} as tags {# tags #}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}
         {% endset %}
-        {{ test_values }}
+        select
+            data.command_invocation_id,
+            data.node_id,
+            cast(data.run_started_at as timestamp),
+            data.name,
+            data.depends_on_nodes,
+            data.package_name,
+            data.test_path,
+            data.tags
+        from unnest([{{ test_values }}]) as data
     {% else %}
         {{ return("") }}
     {% endif %}
 {%- endmacro %}
+
+
+
