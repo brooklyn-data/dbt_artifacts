@@ -204,6 +204,7 @@
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
         {% endset %}
+        values
         {{ snapshot_execution_values }}
     {% else %}
         {{ return("") }}

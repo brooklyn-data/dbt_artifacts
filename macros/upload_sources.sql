@@ -66,6 +66,7 @@
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}
         {% endset %}
+        values
         {{ source_values }}
     {% else %}
         {{ return("") }}

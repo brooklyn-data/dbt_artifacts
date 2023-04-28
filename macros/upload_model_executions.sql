@@ -133,6 +133,7 @@
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
         {% endset %}
+        values
         {{ model_execution_values }}
     {% else %}
         {{ return("") }}

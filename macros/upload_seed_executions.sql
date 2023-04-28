@@ -131,6 +131,7 @@
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
         {% endset %}
+        values
         {{ seed_execution_values }}
     {% else %}
         {{ return("") }}

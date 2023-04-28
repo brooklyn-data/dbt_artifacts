@@ -73,6 +73,7 @@
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}
         {% endset %}
+        values
         {{ snapshot_values }}
     {% else %}
         {{ return("") }}

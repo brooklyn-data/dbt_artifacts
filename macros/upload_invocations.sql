@@ -123,6 +123,7 @@
 
         )
     {% endset %}
+    values
     {{ invocation_values }}
 
 {% endmacro -%}

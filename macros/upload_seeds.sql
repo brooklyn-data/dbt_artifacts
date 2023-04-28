@@ -66,6 +66,7 @@
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}
         {% endset %}
+        values
         {{ seed_values }}
     {% else %}
         {{ return("") }}

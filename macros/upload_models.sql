@@ -75,6 +75,7 @@
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}
         {% endset %}
+        values
         {{ model_values }}
     {% else %}
         {{ return("") }}

@@ -69,6 +69,7 @@
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}
         {% endset %}
+        values
         {{ exposure_values }}
     {% else %}
         {{ return("") }}
