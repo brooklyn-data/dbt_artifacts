@@ -8,7 +8,7 @@ with base as (
 enhanced as (
 
     select
-        {{ dbt_artifacts.surrogate_key(['command_invocation_id', 'node_id']) }} as exposure_execution_id,
+        {{ dbt_artifacts.generate_surrogate_key(['command_invocation_id', 'node_id']) }} as exposure_execution_id,
         command_invocation_id,
         node_id,
         run_started_at,
