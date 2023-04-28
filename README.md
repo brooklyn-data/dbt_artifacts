@@ -1,4 +1,5 @@
 # dbt Artifacts Package
+
 This package builds a mart of tables and views describing the project it is installed in. In pre V1 versions of the package, the artifacts dbt produces were uploaded to the warehouse, hence the name of the package. That's no longer the case, but the name has stuck!
 
 ## Contributing
@@ -36,22 +37,38 @@ See the generated [dbt docs site](https://brooklyn-data.github.io/dbt_artifacts/
 ## Quickstart
 
 1. Add this package to your `packages.yml`:
+
 ```
 packages:
   - package: brooklyn-data/dbt_artifacts
     version: 2.3.0
 ```
 
+:contruction-worker: Make sure to fix at least the **minor** version, to avoid issues when a new release is open. See the notes on upgrading below for more detail.
+
 2. Run `dbt deps` to install the package
 
 3. Add an on-run-end hook to your `dbt_project.yml`: `on-run-end: "{{ dbt_artifacts.upload_results(results) }}"`
 (We recommend adding a conditional here so that the upload only occurs in your production environment, such as `on-run-end: "{% if target.name == 'prod' %}{{ dbt_artifacts.upload_results(results) }}{% endif %}"`)
 
-4. If you are using [selectors](https://docs.getdbt.com/reference/node-selection/syntax), be sure to include the `dbt_artifacts` models in your dbt invocation step.
+4. Run the tables!
 
-5. Run your project!
+    ```
+    dbt run --select dbt_artifacts
+    ```
 
-> :construction_worker: Always run the dbt_artifacts models in every dbt invocation which uses the `upload_results` macro. This ensures that the source models always have the correct fields in case of an update.
+### Notes on upgrading
+
+Due to the structure of the project, when additional fields are added, the package needs to be re-run to ensure the tables include the new field, or it will simply error on the hook. These changes will always be implemented within a new **minor** version, so make sure that the version you use in `packages.yml` reflects this.
+
+To upgrade and re-build, update the version number within `packages.yml` and then run:
+
+```
+dbt deps
+dbt run --select dbt_artifacts
+```
+
+Make sure this is updated in any database that you use your code base in.
 
 ## Configuration
 
@@ -77,7 +94,8 @@ Note that model materializations and `on_schema_change` configs are defined in t
 
 ### Environment Variables
 
-If the project is running in dbt Cloud, the following five columns (https://docs.getdbt.com/docs/dbt-cloud/using-dbt-cloud/cloud-environment-variables#special-environment-variables) will be automatically populated in the fct_dbt__invocations model:
+If the project is running in dbt Cloud, the following five columns (<https://docs.getdbt.com/docs/dbt-cloud/using-dbt-cloud/cloud-environment-variables#special-environment-variables>) will be automatically populated in the fct_dbt__invocations model:
+
 - dbt_cloud_project_id
 - dbt_cloud_job_id
 - dbt_cloud_run_id
@@ -85,6 +103,7 @@ If the project is running in dbt Cloud, the following five columns (https://docs
 - dbt_cloud_run_reason
 
 To capture other environment variables in the fct_dbt__invocations model in the `env_vars` column, add them to the `env_vars` variable in your `dbt_project.yml`. Note that environment variables with secrets (`DBT_ENV_SECRET_`) can't be logged.
+
 ```yml
 vars:
   env_vars: [
@@ -97,6 +116,7 @@ vars:
 ### dbt Variables
 
 To capture dbt variables in the fct_dbt__invocations model in the `dbt_vars` column, add them to the `dbt_vars` variable in your `dbt_project.yml`.
+
 ```yml
 vars:
   dbt_vars: [
@@ -107,6 +127,7 @@ vars:
 ```
 
 ## Upgrading from 1.x to >=2.0.0
+
 If you were using the following variables:
 
 ```yml
@@ -129,6 +150,7 @@ models:
 That's because the raw tables are now managed as dbt models. Be aware of any impact that [generate_database_name](https://docs.getdbt.com/docs/building-a-dbt-project/building-models/using-custom-databases#generate_database_name) and [generate_schema_name](https://docs.getdbt.com/docs/building-a-dbt-project/building-models/using-custom-schemas#how-does-dbt-generate-a-models-schema-name) macros may have on the final database/schema.
 
 ## Migrating From <1.0.0 to >=1.0.0
+
 To migrate your existing data from the `dbt-artifacts` versions <=0.8.0, a helper macro and guide is provided. This migration uses the old `fct_*` and `dim_*` models' data to populate the new sources. The steps to use the macro are as follows:
 
 1. If not already completed, run `dbt run-operation create_dbt_artifacts_tables` to make your source tables.
@@ -137,21 +159,23 @@ To migrate your existing data from the `dbt-artifacts` versions <=0.8.0, a helpe
 4. Manually delete any database objects (sources, staging models, tables/views) from the previous `dbt-artifacts` version.
 
 The arguments for `migrate_from_v0_to_v1` are as follows:
-| argument     	| description                                              	|
-|--------------	|----------------------------------------------------------	|
-| `old_database` 	| the database of the <1.0.0 output (`fct_`/`dim_`) models 	|
-| `old_schema`   	| the schema of the <1.0.0 output (`fct_`/`dim_`) models   	|
-| `new_database` 	| the target database that the artifact sources are in     	|
-| `new_schema`   	| the target schema that the artifact sources are in       	|
+| argument      | description                                               |
+|-------------- |---------------------------------------------------------- |
+| `old_database`  | the database of the <1.0.0 output (`fct_`/`dim_`) models  |
+| `old_schema`    | the schema of the <1.0.0 output (`fct_`/`dim_`) models    |
+| `new_database`  | the target database that the artifact sources are in      |
+| `new_schema`    | the target schema that the artifact sources are in        |
 
 The old and new database/schemas *do not* have to be different, but it is explicitly defined for flexible support.
 
 An example operation is as follows:
+
 ```bash
 dbt run-operation migrate_from_v0_to_v1 --args '{old_database: analytics, old_schema: dbt_artifacts, new_database: analytics, new_schema: artifact_sources}'
 ```
 
 ## Acknowledgements
+
 Thank you to [Tails.com](https://tails.com/gb/careers/) for initial development and maintenance of this package. On 2021/12/20, the repository was transferred from the Tails.com GitHub organization to Brooklyn Data Co.
 
 The macros in the early versions package were adapted from code shared by [Kevin Chan](https://github.com/KevinC-wk) and [Jonathan Talmi](https://github.com/jtalmi) of [Snaptravel](snaptravel.com).
