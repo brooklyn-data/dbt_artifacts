@@ -16,6 +16,12 @@ Name of the node.
 
 {% enddocs %}
 
+{% docs short_name %}
+
+Short Name for a test, for example 'unique'.
+
+{% enddocs %}
+
 {% docs schema %}
 
 Configured schema for the node.
@@ -371,9 +377,39 @@ Total time spent executing the node's last run (seconds).
 
 {% enddocs %}
 
+{% docs model_refs %}
+
+A comma delimited string of the models related to this node, as defined in the execution graph.
+
+{% enddocs %}
+
+{% docs source_refs %}
+
+A comma delimited string of the sources related to this node, as defined in the execution graph.
+
+{% enddocs %}
+
+{% docs test_severity_config %}
+
+Configuration for test severity. For example 'ERROR' or 'WARN'. 
+
+{% enddocs %}
+
+{% docs test_type %}
+
+Type of test. For example 'singular' or 'generic'
+
+{% enddocs %}
+
 {% docs meta %}
 
 The meta field of the config associated with the node.
+
+{% enddocs %}
+
+{% docs column_names %}
+
+Comma separated string of column names tested by a dbt test.
 
 {% enddocs %}
 
