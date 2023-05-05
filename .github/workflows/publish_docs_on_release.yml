@@ -9,7 +9,7 @@ on:
 
 env:
   # These are configured in GitHub secrets
-  DBT_PROFILES_DIR: /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/integration_test_project
+  DBT_PROFILES_DIR: ${{ github.workspace }}/integration_test_project
   DBT_ENV_SECRET_SNOWFLAKE_TEST_ACCOUNT: ${{ secrets.SNOWFLAKE_TEST_ACCOUNT }}
   DBT_ENV_SECRET_SNOWFLAKE_TEST_USER: ${{ secrets.SNOWFLAKE_TEST_USER }}
   DBT_ENV_SECRET_SNOWFLAKE_TEST_PASSWORD: ${{ secrets.SNOWFLAKE_TEST_PASSWORD }}
@@ -23,16 +23,16 @@ jobs:
   generate-dbt-docs:
     name: Generate dbt docs
     runs-on: ubuntu-latest
-    
+
     # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
     permissions:
-      pages: write      # to deploy to Pages
-      id-token: write   # to verify the deployment originates from an appropriate source
+      pages: write # to deploy to Pages
+      id-token: write # to verify the deployment originates from an appropriate source
 
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    
+
     steps:
       - name: Checkout Branch
         uses: actions/checkout@v3
@@ -53,13 +53,12 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v2
-      
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: 'target'
-      
+          path: "target"
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
-

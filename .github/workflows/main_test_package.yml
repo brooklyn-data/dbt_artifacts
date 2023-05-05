@@ -9,7 +9,7 @@ on:
 
 env:
   # These are configured in GitHub secrets
-  DBT_PROFILES_DIR: /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/integration_test_project
+  DBT_PROFILES_DIR: ${{ github.workspace }}/integration_test_project
   DBT_ENV_SECRET_SNOWFLAKE_TEST_ACCOUNT: ${{ secrets.SNOWFLAKE_TEST_ACCOUNT }}
   DBT_ENV_SECRET_SNOWFLAKE_TEST_USER: ${{ secrets.SNOWFLAKE_TEST_USER }}
   DBT_ENV_SECRET_SNOWFLAKE_TEST_PASSWORD: ${{ secrets.SNOWFLAKE_TEST_PASSWORD }}
@@ -37,8 +37,8 @@ jobs:
 
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.8.x'
-          architecture: 'x64'
+          python-version: "3.8.x"
+          architecture: "x64"
 
       - name: Install tox
         run: python3 -m pip install tox
@@ -55,8 +55,8 @@ jobs:
 
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.8.x'
-          architecture: 'x64'
+          python-version: "3.8.x"
+          architecture: "x64"
 
       - name: Install tox
         run: python3 -m pip install tox
@@ -67,8 +67,8 @@ jobs:
   integration-bigquery:
     runs-on: ubuntu-latest
     permissions:
-      contents: 'read'
-      id-token: 'write'
+      contents: "read"
+      id-token: "write"
 
     steps:
       - name: Checkout
@@ -76,8 +76,8 @@ jobs:
 
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.8.x'
-          architecture: 'x64'
+          python-version: "3.8.x"
+          architecture: "x64"
 
       - name: Install tox
         run: python3 -m pip install tox
