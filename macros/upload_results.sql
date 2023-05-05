@@ -82,11 +82,11 @@
         {% for node in graph.nodes.values() | selectattr("resource_type", "equalto", "test") %}
             {% do tests_set.append(node) %}
         {% endfor %}
-        {# upload tests in chunks of 5000 tests, or less #}
-        {% set upload_limit = 5000 %}
+        {# upload tests in chunks of 5000 tests (750 for BigQuery), or less #}
+        {% set upload_limit = 750 if target.type == 'bigquery' else 5000 %}
         {% set n = (tests_set|length/upload_limit)|round(0, 'ceil')|int %}
-        {% for i in range(n) -%}
-            {% set content_tests = upload_tests(tests_set, i+1, upload_limit) %}
+        {% for i in range(0, tests_set | length, upload_limit) -%}
+            {% set content_tests = upload_tests(tests_set[i: i + upload_limit]) %}
             {{ dbt_artifacts.insert_into_metadata_table(
                 database_name=tests.database,
                 schema_name=tests.schema,
