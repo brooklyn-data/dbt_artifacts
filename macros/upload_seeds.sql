@@ -37,7 +37,7 @@
                 '{{ seed.checksum.checksum }}', {# checksum #}
                 '{{ tojson(seed.config.meta) }}', {# meta #}
                 '{{ seed.alias }}', {# alias #}
-                '{{ tojson(seed) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}' {# all_fields #}
+                '{{ tojson(seed) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}' {# all_results #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -64,7 +64,7 @@
                     '{{ seed.checksum.checksum }}', {# checksum #}
                     parse_json('{{ tojson(seed.config.meta) }}'), {# meta #}
                     '{{ seed.alias }}', {# alias #}
-                    parse_json('{{ tojson(seed) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}') {# all_fields #}
+                    parse_json('''{{ tojson(seed) }}''') {# all_results #}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}

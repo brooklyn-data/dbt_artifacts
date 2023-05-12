@@ -43,7 +43,7 @@
                 '{{ tojson(model.tags) }}', {# tags #}
                 '{{ tojson(model.config.meta) }}', {# meta #}
                 '{{ model.alias }}', {# alias #}
-                '{{ tojson(model) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}' {# all_fields #}
+                '{{ tojson(model) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}' {# all_results #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -73,7 +73,7 @@
                     {{ tojson(model.tags) }}, {# tags #}
                     parse_json('{{ tojson(model.config.meta) }}'), {# meta #}
                     '{{ model.alias }}', {# alias #}
-                    parse_json('{{ tojson(model) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}') {# all_fields #}
+                    parse_json('''{{ tojson(model) }}''') {# all_results #}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}

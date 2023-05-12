@@ -42,7 +42,7 @@
                 '{{ snapshot.config.strategy }}', {# strategy #}
                 '{{ tojson(snapshot.config.meta) }}', {# meta #}
                 '{{ snapshot.alias }}', {# alias #}
-                '{{ tojson(snapshot) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}' {# all_fields #}
+                '{{ tojson(snapshot) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}' {# all_results #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -71,7 +71,7 @@
                     '{{ snapshot.config.strategy }}', {# strategy #}
                     parse_json('{{ tojson(snapshot.config.meta) }}'), {# meta #}
                     '{{ snapshot.alias }}', {# alias #}
-                    parse_json('{{ tojson(snapshot) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}') {# all_fields #}
+                    parse_json('''{{ tojson(snapshot) }}''') {# all_results #}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}
