@@ -1,4 +1,4 @@
-name: Main branch test package
+name: Main branch lint package
 
 # triggers for the workflow
 on:
