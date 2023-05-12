@@ -6,25 +6,25 @@ models:
     columns:
       - name: command_invocation_id
         description: '{{ doc("command_invocation_id") }}'
-      - name: depends_on_nodes
-        description: '{{ doc("depends_on_nodes") }}'
-      - name: description
-        description: '{{ doc("description") }}'
-      - name: maturity
-        description: '{{ doc("maturity") }}'
-      - name: name
-        description: '{{ doc("name") }}'
       - name: node_id
         description: '{{ doc("node_id") }}'
-      - name: owner
-        description: '{{ doc("owner") }}'
-      - name: package_name
-        description: '{{ doc("package_name") }}'
-      - name: path
-        description: '{{ doc("path") }}'
       - name: run_started_at
         description: '{{ doc("run_started_at") }}'
+      - name: name
+        description: '{{ doc("name") }}'
       - name: type
         description: '{{ doc("type") }}'
+      - name: owner
+        description: '{{ doc("owner") }}'
+      - name: maturity
+        description: '{{ doc("maturity") }}'
+      - name: path
+        description: '{{ doc("path") }}'
+      - name: description
+        description: '{{ doc("description") }}'
       - name: url
         description: '{{ doc("url") }}'
+      - name: package_name
+        description: '{{ doc("package_name") }}'
+      - name: depends_on_nodes
+        description: '{{ doc("depends_on_nodes") }}'

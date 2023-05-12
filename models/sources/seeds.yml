@@ -4,23 +4,25 @@ models:
   - name: seeds
     description: Base model for metadata about seed executions. One row per node per run.
     columns:
-      - name: checksum
-        description: '{{ doc("checksum") }}'
       - name: command_invocation_id
         description: '{{ doc("command_invocation_id") }}'
-      - name: database
-        description: '{{ doc("database") }}'
-      - name: name
-        description: '{{ doc("name") }}'
-      - name: alias
-        description: '{{ doc("alias") }}'
       - name: node_id
         description: '{{ doc("node_id") }}'
+      - name: run_started_at
+        description: '{{ doc("run_started_at") }}'
+      - name: database
+        description: '{{ doc("database") }}'
+      - name: schema
+        description: '{{ doc("schema") }}'
+      - name: name
+        description: '{{ doc("name") }}'
       - name: package_name
         description: '{{ doc("package_name") }}'
       - name: path
         description: '{{ doc("path") }}'
-      - name: run_started_at
-        description: '{{ doc("run_started_at") }}'
-      - name: schema
-        description: '{{ doc("schema") }}'
+      - name: checksum
+        description: '{{ doc("checksum") }}'
+      - name: meta
+        description: '{{ doc("meta") }}'
+      - name: alias
+        description: '{{ doc("alias") }}'
