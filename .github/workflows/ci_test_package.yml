@@ -8,7 +8,7 @@ on:
 
 env:
   # These are configured in GitHub secrets
-  DBT_PROFILES_DIR: /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/integration_test_project
+  DBT_PROFILES_DIR: ${{ github.workspace }}/integration_test_project
   GITHUB_SHA_OVERRIDE: ${{ github.event.pull_request.head.sha }} # We need the commit hash of the pull request branch's head, the GITHUB_SHA env var is always the base branch in a pull_request_target trigger
   DBT_ENV_SECRET_SNOWFLAKE_TEST_ACCOUNT: ${{ secrets.SNOWFLAKE_TEST_ACCOUNT }}
   DBT_ENV_SECRET_SNOWFLAKE_TEST_USER: ${{ secrets.SNOWFLAKE_TEST_USER }}
@@ -31,51 +31,10 @@ env:
   DBT_ENV_CUSTOM_ENV_FAVOURITE_DBT_PACKAGE: dbt_artifacts
 
 jobs:
-  integration-snowflake:
-    runs-on: ubuntu-latest
-    environment:
-      name: Approve Integration Tests
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.sha }} # Check out the code of the PR
-
-      - uses: actions/setup-python@v2
-        with:
-          python-version: "3.8.x"
-          architecture: "x64"
-
-      - name: Install tox
-        run: python3 -m pip install tox
-
-      - name: Run Snowflake Tests
-        run: tox -e integration_snowflake
-
-  integration-databricks:
-    runs-on: ubuntu-latest
-    environment:
-      name: Approve Integration Tests
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.sha }} # Check out the code of the PR
-
-      - uses: actions/setup-python@v2
-        with:
-          python-version: "3.8.x"
-          architecture: "x64"
-
-      - name: Install tox
-        run: python3 -m pip install tox
-
-      - name: Run Databricks Tests
-        run: tox -e integration_databricks
-
-  integration-bigquery:
+  integration:
+    strategy:
+      matrix:
+        warehouse: ["snowflake", "databricks", "bigquery"]
     runs-on: ubuntu-latest
     environment:
       name: Approve Integration Tests
@@ -84,12 +43,20 @@ jobs:
       id-token: "write"
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.sha }} # Check out the code of the PR
+      - name: Get latest release
+        uses: rez0n/actions-github-release@main
+        id: latest_release
+        env:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          type: "stable"
 
-      - uses: actions/setup-python@v2
+      - name: Checkout latest release
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ steps.latest_release.outputs.release }}
+
+      - uses: actions/setup-python@v4
         with:
           python-version: "3.8.x"
           architecture: "x64"
@@ -98,13 +65,22 @@ jobs:
         run: python3 -m pip install tox
 
       - id: auth
-        uses: google-github-actions/auth@v0.4.0
+        if: ${{ matrix.warehouse == 'bigquery' }}
+        uses: google-github-actions/auth@v1
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
-      - name: Run BigQuery Tests
-        run: tox -e integration_bigquery
+      - name: Run Tests on latest release
+        run: tox -e integration_${{ matrix.warehouse }}
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }} # Check out the code of the PR
+
+      - name: Run Tests on PR
+        run: tox -e integration_${{ matrix.warehouse }}
 
   sqlfluff-lint-models:
     name: Lint dbt models using SQLFluff
@@ -114,7 +90,7 @@ jobs:
 
     steps:
       - name: Checkout Branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }} # Check out the code of the PR
 
@@ -138,7 +114,7 @@ jobs:
         shell: bash -l {0}
         run: |
           # Set the command in the $() brackets as an output to use in later steps
-          echo "::set-output name=lintees::$(
+          echo "lintees=$(
           # Issue where grep regular expressions don't work as expected on the
           # Github Actions shell, check dbt/models/ folder
           echo \
@@ -150,17 +126,15 @@ jobs:
           tr -s ' ' '\n' |
           grep -E '^models.*[.]sql$' |
           tr -s '\n' ' ')
-          )"
+          )" >> $GITHUB_OUTPUT
 
       - name: Lint dbt models
         if: steps.get_files_to_lint.outputs.lintees != ''
         shell: bash -l {0}
-        run: |
-          sqlfluff lint --format github-annotation --annotation-level failure --nofail ${{ steps.get_files_to_lint.outputs.lintees }} > annotations.json
-          sed -i '/^\[/!d' annotations.json # see https://github.com/sqlfluff/sqlfluff/issues/2244
+        run: sqlfluff lint --format github-annotation --annotation-level failure --nofail ${{ steps.get_files_to_lint.outputs.lintees }} --write-output annotations.json
 
       - name: Annotate
-        uses: yuzutech/annotations-action@v0.3.0
+        uses: yuzutech/annotations-action@v0.4.0
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           title: "SQLFluff Lint"

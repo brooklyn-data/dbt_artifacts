@@ -30,3 +30,5 @@ models:
     description: '{{ doc("type") }}'
   - name: url
     description: '{{ doc("url") }}'
+  - name: tags
+    description: '{{ doc("tags") }}'
