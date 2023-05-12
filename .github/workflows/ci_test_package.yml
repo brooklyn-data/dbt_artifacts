@@ -33,6 +33,7 @@ env:
 jobs:
   integration:
     strategy:
+      fail-fast: false # Don't fail one DWH if the others fail
       matrix:
         warehouse: ["snowflake", "databricks", "bigquery"]
     runs-on: ubuntu-latest
