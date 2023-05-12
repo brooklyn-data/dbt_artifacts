@@ -29,82 +29,57 @@ env:
   TEST_ENV_VAR_WITH_QUOTE: "Triggered via Apache Airflow by task 'trigger_dbt_cloud_job_run' in the airtable_ingest DAG."
   DBT_ENV_CUSTOM_ENV_FAVOURITE_DBT_PACKAGE: dbt_artifacts
 
-
 jobs:
-  integration-snowflake:
-    runs-on: ubuntu-latest
-    environment:
-      name: Approve Integration Tests
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.sha }} # Check out the code of the PR
-
-      - uses: actions/setup-python@v2
-        with:
-          python-version: '3.8.x'
-          architecture: 'x64'
-
-      - name: Install tox
-        run: python3 -m pip install tox
-
-      - name: Run Snowflake Tests
-        run: tox -e integration_snowflake
-
-  integration-databricks:
-    runs-on: ubuntu-latest
-    environment:
-      name: Approve Integration Tests
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.sha }} # Check out the code of the PR
-
-      - uses: actions/setup-python@v2
-        with:
-          python-version: '3.8.x'
-          architecture: 'x64'
-
-      - name: Install tox
-        run: python3 -m pip install tox
-
-      - name: Run Databricks Tests
-        run: tox -e integration_databricks
-
-  integration-bigquery:
+  integration:
+    strategy:
+      matrix:
+        warehouse: ["snowflake", "databricks", "bigquery"]
     runs-on: ubuntu-latest
     environment:
       name: Approve Integration Tests
     permissions:
-      contents: 'read'
-      id-token: 'write'
+      contents: "read"
+      id-token: "write"
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Get latest release
+        uses: rez0n/actions-github-release@main
+        id: latest_release
+        env:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          type: "stable"
+
+      - name: Checkout latest release
+        uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.pull_request.head.sha }} # Check out the code of the PR
+          ref: ${{ steps.latest_release.outputs.release }}
 
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.8.x'
-          architecture: 'x64'
+          python-version: "3.8.x"
+          architecture: "x64"
 
       - name: Install tox
         run: python3 -m pip install tox
 
       - id: auth
+        if: ${{ matrix.warehouse == 'bigquery' }}
         uses: google-github-actions/auth@v0.4.0
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
-      - name: Run BigQuery Tests
-        run: tox -e integration_bigquery
+      - name: Run Tests on latest release
+        run: tox -e integration_${{ matrix.warehouse }}
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }} # Check out the code of the PR
+
+      - name: Run Tests on PR
+        run: tox -e integration_${{ matrix.warehouse }}
 
   sqlfluff-lint-models:
     name: Lint dbt models using SQLFluff
@@ -114,7 +89,7 @@ jobs:
 
     steps:
       - name: Checkout Branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }} # Check out the code of the PR
 
@@ -131,7 +106,7 @@ jobs:
         id: get_file_changes
         uses: trilom/file-changes-action@v1.2.4
         with:
-          output: ' '
+          output: " "
 
       - name: Get new and changed .sql files in /models to lint
         id: get_files_to_lint
@@ -165,4 +140,3 @@ jobs:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           title: "SQLFluff Lint"
           input: "./annotations.json"
-
