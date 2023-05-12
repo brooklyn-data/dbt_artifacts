@@ -100,7 +100,7 @@
         {% if var('env_vars', none) %}
             {% set env_vars_dict = {} %}
             {% for env_variable in var('env_vars') %}
-                {% do env_vars_dict.update({env_variable: (env_var(env_variable, '') | replace("'", "\\'"))}) %}
+                {% do env_vars_dict.update({env_variable: (env_var(env_variable, '') | replace("'", "\\\\'"))}) %}
             {% endfor %}
             parse_json('{{ tojson(env_vars_dict) }}'), {# env_vars #}
         {% else %}
@@ -110,7 +110,7 @@
         {% if var('dbt_vars', none) %}
             {% set dbt_vars_dict = {} %}
             {% for dbt_var in var('dbt_vars') %}
-                {% do dbt_vars_dict.update({dbt_var: (var(dbt_var, '') | replace("'", "\\'"))}) %}
+                {% do dbt_vars_dict.update({dbt_var: (var(dbt_var, '') | replace("'", "\\\\'"))}) %}
             {% endfor %}
             parse_json('{{ tojson(dbt_vars_dict) }}'), {# dbt_vars #}
         {% else %}
@@ -126,7 +126,7 @@
         safe.parse_json('{{ tojson(invocation_args_dict) }}'), {# invocation_args #}
         {% set metadata_env = {} %}
         {% for key, value in dbt_metadata_envs.items() %}
-            {% do metadata_env.update({key: (value | replace("'", "\\'"))}) %}
+            {% do metadata_env.update({key: (value | replace("'", "\\\\'"))}) %}
         {% endfor %}
         parse_json('{{ tojson(metadata_env) | replace('\\', '\\\\') }}') {# dbt_custom_envs #}
 
