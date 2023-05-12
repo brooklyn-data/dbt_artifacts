@@ -24,7 +24,9 @@ env:
   DBT_CLOUD_PROJECT_ID: 123
   DBT_CLOUD_JOB_ID: ABC
   DBT_CLOUD_RUN_REASON: "String with 'quotes' !"
-  TEST_ENV_VAR_1: TEST_VALUE
+  TEST_ENV_VAR_NUMBER: 3
+  TEST_ENV_VAR_EMPTY: ""
+  TEST_ENV_VAR_WITH_QUOTE: "Triggered via Apache Airflow by task 'trigger_dbt_cloud_job_run' in the airtable_ingest DAG."
   DBT_ENV_CUSTOM_ENV_FAVOURITE_DBT_PACKAGE: dbt_artifacts
 
 jobs:
