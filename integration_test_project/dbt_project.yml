@@ -1,8 +1,8 @@
-name: 'artifacts_integration_tests'
-version: '1.0'
+name: "artifacts_integration_tests"
+version: "1.0"
 config-version: 2
 
-profile: 'dbt_artifacts'
+profile: "dbt_artifacts"
 
 model-paths: ["models"]
 analysis-paths: ["analysis"]
@@ -18,15 +18,9 @@ vars:
   test_dbt_vars_1: dbt_vars_1
   test_dbt_vars_2: dbt_vars_2
   test_dbt_vars_3: dbt_vars_3
-  env_vars: [
-    'TEST_ENV_VAR_1'
-  ]
-  dbt_vars: [
-    'test_dbt_vars_1',
-    'test_dbt_vars_2',
-    'test_dbt_vars_3'
-  ]
-
+  env_vars:
+    ["TEST_ENV_VAR_NUMBER", "TEST_ENV_VAR_EMPTY", "TEST_ENV_VAR_WITH_QUOTE"]
+  dbt_vars: ["test_dbt_vars_1", "test_dbt_vars_2", "test_dbt_vars_3"]
 
 models:
   +persist_docs:
