@@ -26,3 +26,5 @@ models:
         description: '{{ doc("loaded_at_field") }}'
       - name: freshness
         description: '{{ doc("freshness") }}'
+      - name: all_results
+        description: '{{ doc("all_results") }}'

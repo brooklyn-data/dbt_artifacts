@@ -28,3 +28,5 @@ models:
         description: '{{ doc("package_name") }}'
       - name: depends_on_nodes
         description: '{{ doc("depends_on_nodes") }}'
+      - name: all_results
+        description: '{{ doc("all_results") }}'
