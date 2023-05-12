@@ -204,7 +204,7 @@
                 '{{ model.node.name }}', {# name #}
                 '{{ model.node.alias }}', {# alias #}
                 '{{ model.message }}', {# message #}
-                '{{ tojson(model.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}' {# adapter_response #}
+                parse_json('{{ tojson(model.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}') {# adapter_response #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
