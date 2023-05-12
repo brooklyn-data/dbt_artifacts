@@ -1,8 +1,4 @@
-{% macro upload_tests(graph) -%}
-    {% set tests = [] %}
-    {% for node in graph.nodes.values() | selectattr("resource_type", "equalto", "test") %}
-        {% do tests.append(node) %}
-    {% endfor %}
+{% macro upload_tests(tests) -%}
     {{ return(adapter.dispatch('get_tests_dml_sql', 'dbt_artifacts')(tests)) }}
 {%- endmacro %}
 
