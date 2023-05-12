@@ -33,6 +33,7 @@ env:
 jobs:
   integration:
     strategy:
+      fail-fast: false # Don't fail one DWH if the others fail
       matrix:
         warehouse: ["snowflake", "databricks", "bigquery"]
     runs-on: ubuntu-latest
@@ -64,20 +65,28 @@ jobs:
       - name: Install tox
         run: python3 -m pip install tox
 
-      - id: auth
+      - id: auth-on-release
         if: ${{ matrix.warehouse == 'bigquery' }}
         uses: google-github-actions/auth@v1
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
-      - name: Run Tests on latest release
+      - name: Build tables for latest release
         run: tox -e integration_${{ matrix.warehouse }}
 
       - name: Checkout
         uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }} # Check out the code of the PR
+
+      # Need to get the auth file again
+      - id: auth-on-pr
+        if: ${{ matrix.warehouse == 'bigquery' }}
+        uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
       - name: Run Tests on PR
         run: tox -e integration_${{ matrix.warehouse }}
