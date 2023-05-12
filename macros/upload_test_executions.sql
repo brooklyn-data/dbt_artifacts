@@ -23,7 +23,8 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(9) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }}
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }},
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(13)) }}
         from values
         {% for test in tests -%}
             (
@@ -64,7 +65,8 @@
                 {{ test.execution_time }}, {# total_node_runtime #}
                 null, {# rows_affected not available in Databricks #}
                 {{ 'null' if test.failures is none else test.failures }}, {# failures #}
-                '{{ test.message }}' {# message #}
+                '{{ test.message }}', {# message #}
+                '{{ tojson(test.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}' {# adapter_response #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -117,7 +119,9 @@
                 {{ test.execution_time }}, {# total_node_runtime #}
                 null, {# rows_affected not available in Databricks #}
                 {{ 'null' if test.failures is none else test.failures }}, {# failures #}
-                '{{ test.message }}' {# message #}
+                '{{ test.message }}', {# message #}
+                parse_json('{{ tojson(test.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}') {# adapter_response #}
+
             )
             {%- if not loop.last %},{%- endif %}
 

@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: snapshot_executions
+    description: Base model for data about snapshot executions. One row per snapshot execution.
+    columns:
+      - name: command_invocation_id
+        description: '{{ doc("command_invocation_id") }}'
+      - name: node_id
+        description: '{{ doc("node_id") }}'
+      - name: run_started_at
+        description: '{{ doc("run_started_at") }}'
+      - name: was_full_refresh
+        description: '{{ doc("was_full_refresh") }}'
+      - name: thread_id
+        description: '{{ doc("thread_id") }}'
+      - name: status
+        description: '{{ doc("status") }}'
+      - name: compile_started_at
+        description: '{{ doc("compile_started_at") }}'
+      - name: query_completed_at
+        description: '{{ doc("query_completed_at") }}'
+      - name: total_node_runtime
+        description: '{{ doc("total_node_runtime") }}'
+      - name: rows_affected
+        description: '{{ doc("rows_affected") }}'
+      - name: materialization
+        description: '{{ doc("materialization") }}'
+      - name: schema
+        description: '{{ doc("schema") }}'
+      - name: name
+        description: '{{ doc("name") }}'
+      - name: alias
+        description: '{{ doc("alias") }}'
+      - name: message
+        description: '{{ doc("message") }}'
+      - name: adapter_response
+        description: '{{ doc("adapter_response") }}'
