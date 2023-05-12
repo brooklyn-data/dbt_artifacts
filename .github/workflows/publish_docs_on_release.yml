@@ -20,7 +20,9 @@ env:
   DBT_ENV_SECRET_SNOWFLAKE_TEST_DATABASE: ${{ secrets.SNOWFLAKE_TEST_DATABASE }}
   DBT_ENV_SECRET_SNOWFLAKE_TEST_WAREHOUSE: ${{ secrets.SNOWFLAKE_TEST_WAREHOUSE }}
   # Env vars to test invocations model
-  TEST_ENV_VAR_1: TEST_VALUE
+  TEST_ENV_VAR_NUMBER: 3
+  TEST_ENV_VAR_EMPTY: ""
+  TEST_ENV_VAR_WITH_QUOTE: "Triggered via Apache Airflow by task 'trigger_dbt_cloud_job_run' in the airtable_ingest DAG."
 
 jobs:
   generate-dbt-docs:

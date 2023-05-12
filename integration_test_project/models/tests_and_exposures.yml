@@ -10,7 +10,7 @@ models:
           - unique
 
 exposures:
-  - name: "ceo's imaginary dashboard"
+  - name: ceo_imaginary_dashboard
     type: dashboard
     maturity: high
     description: "ceo's favourite dashboard"
@@ -24,7 +24,7 @@ exposures:
       name: Claire from Data
       email: data@jaffleshop.com
 
-  - name: "CIO dashboard"
+  - name: cio_dashboard
     type: dashboard
     maturity: high
     description: '{{ doc("clickstream") }}'
