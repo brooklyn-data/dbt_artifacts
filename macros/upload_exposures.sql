@@ -70,7 +70,7 @@
                     '{{ exposure.package_name }}', {# package_name #}
                     {{ tojson(exposure.depends_on.nodes) }}, {# depends_on_nodes #}
                     {{ tojson(exposure.tags) }}, {# tags #}
-                    parse_json('''{{ tojson(exposure) }}''') {# all_results #}
+                    parse_json('{{ tojson(exposure) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}') {# all_results #}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}

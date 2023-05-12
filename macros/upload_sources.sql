@@ -64,7 +64,7 @@
                     '{{ source.identifier }}', {# identifier #}
                     '{{ source.loaded_at_field | replace("'","\\'") }}', {# loaded_at_field #}
                     parse_json('{{ tojson(source.freshness) | replace("'","\\'") }}'),  {# freshness #}
-                    parse_json('''{{ tojson(source) }}''', wide_number_mode=>'round') {# all_results #}
+                    parse_json('{{ tojson(source) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}', wide_number_mode=>'round') {# all_results #}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}

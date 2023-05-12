@@ -71,7 +71,7 @@
                     '{{ snapshot.config.strategy }}', {# strategy #}
                     parse_json('{{ tojson(snapshot.config.meta) }}'), {# meta #}
                     '{{ snapshot.alias }}', {# alias #}
-                    parse_json('''{{ tojson(snapshot) }}''') {# all_results #}
+                    parse_json('{{ tojson(snapshot) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}') {# all_results #}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}
