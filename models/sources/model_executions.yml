@@ -24,10 +24,9 @@ models:
         description: '{{ doc("total_node_runtime") }}'
       - name: rows_affected
         description: '{{ doc("rows_affected") }}'
-      # BigQuery only
-      - name: bytes_processed
-        description: '{{ doc("bytes_processed") }}'
-      #################
+      # BigQuery only - dbx requires all documented fields to exist in the model
+      # - name: bytes_processed
+      #   description: '{{ doc("bytes_processed") }}'
       - name: materialization
         description: '{{ doc("materialization") }}'
       - name: schema
