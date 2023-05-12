@@ -28,3 +28,5 @@ models:
         description: '{{ doc("failures") }}'
       - name: message
         description: '{{ doc("message") }}'
+      - name: adapter_response
+        description: '{{ doc("adapter_response") }}'

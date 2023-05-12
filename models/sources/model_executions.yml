@@ -37,3 +37,5 @@ models:
         description: '{{ doc("alias") }}'
       - name: message
         description: '{{ doc("message") }}'
+      - name: adapter_response
+        description: '{{ doc("adapter_response") }}'
