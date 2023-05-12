@@ -188,6 +188,29 @@ An example operation is as follows:
 dbt run-operation migrate_from_v0_to_v1 --args '{old_database: analytics, old_schema: dbt_artifacts, new_database: analytics, new_schema: artifact_sources}'
 ```
 
+## Creating custom marts tables
+
+Multiple modelled `dim` and `fct` models have been provided for ease of use, but we recognise that some use cases may require custom ones. To this end, you can disable all but the raw sources tables using the following in your `dbt_project.yml` file:
+
+```yml
+# dbt_project.yml
+
+models:
+  dbt_artifacts:
+    +enabled: false
+    sources:
+      +enabled: true
+```
+
+In these sources tables, you will find a JSON column `all_results` which contains a JSON blob of the results object used, which you can use in your own analysis:
+
+- exposures
+- models
+- seeds
+- snapshots
+- sources
+- tests
+
 ## Acknowledgements
 
 Thank you to [Tails.com](https://tails.com/gb/careers/) for initial development and maintenance of this package. On 2021/12/20, the repository was transferred from the Tails.com GitHub organization to Brooklyn Data Co.

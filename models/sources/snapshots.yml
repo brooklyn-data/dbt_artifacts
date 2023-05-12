@@ -30,3 +30,5 @@ models:
         description: '{{ doc("meta") }}'
       - name: alias
         description: '{{ doc("alias") }}'
+      - name: all_results
+        description: '{{ doc("all_results") }}'

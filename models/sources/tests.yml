@@ -20,3 +20,5 @@ models:
         description: '{{ doc("test_path") }}'
       - name: tags
         description: '{{ doc("tags") }}'
+      - name: all_results
+        description: '{{ doc("all_results") }}'

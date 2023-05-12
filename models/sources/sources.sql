@@ -15,9 +15,10 @@ select
     cast(null as {{ type_string() }}) as identifier,
     cast(null as {{ type_string() }}) as loaded_at_field,
     {% if target.type == 'snowflake' %}
-        cast(null as {{ type_array() }}) as freshness
+        cast(null as {{ type_array() }}) as freshness,
     {% else %}
-        cast(null as {{ type_json() }}) as freshness
+        cast(null as {{ type_json() }}) as freshness,
     {% endif %}
+    cast(null as {{ type_json() }}) as all_results
 from dummy_cte
 where 1 = 0
