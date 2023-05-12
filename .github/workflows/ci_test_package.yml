@@ -91,6 +91,44 @@ jobs:
       - name: Run Tests on PR
         run: tox -e integration_${{ matrix.warehouse }}
 
+  single-run-different-versions:
+    strategy:
+      fail-fast: false # Don't fail one DWH if the others fail
+      matrix:
+        warehouse: ["snowflake", "databricks", "bigquery"]
+        version: ["~=1.3.0", "~=1.4.0", "~=1.5.0"]
+    runs-on: ubuntu-latest
+    environment:
+      name: Approve Integration Tests
+    permissions:
+      contents: "read"
+      id-token: "write"
+
+    steps:
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.8.x"
+          architecture: "x64"
+
+      - name: Install tox
+        run: python3 -m pip install tox
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }} # Check out the code of the PR
+
+      # Need to get the auth file again
+      - id: auth-on-pr
+        if: ${{ matrix.warehouse == 'bigquery' }}
+        uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Run Tests on PR
+        run: tox -e integration_${{ matrix.warehouse }}_${{ matrix.version }}
+
   sqlfluff-lint-models:
     name: Lint dbt models using SQLFluff
     runs-on: ubuntu-latest
