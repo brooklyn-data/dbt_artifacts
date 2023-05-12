@@ -25,8 +25,10 @@ env:
   DBT_CLOUD_JOB_ID: ABC
   DBT_CLOUD_RUN_REASON: "String with 'quotes' !"
   TEST_ENV_VAR_1: TEST_VALUE
+  TEST_ENV_VAR_NUMBER: 3
+  TEST_ENV_VAR_EMPTY: ""
+  TEST_ENV_VAR_WITH_QUOTE: "Triggered via Apache Airflow by task 'trigger_dbt_cloud_job_run' in the airtable_ingest DAG."
   DBT_ENV_CUSTOM_ENV_FAVOURITE_DBT_PACKAGE: dbt_artifacts
-
 
 jobs:
   integration-snowflake:
@@ -42,8 +44,8 @@ jobs:
 
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.8.x'
-          architecture: 'x64'
+          python-version: "3.8.x"
+          architecture: "x64"
 
       - name: Install tox
         run: python3 -m pip install tox
@@ -64,8 +66,8 @@ jobs:
 
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.8.x'
-          architecture: 'x64'
+          python-version: "3.8.x"
+          architecture: "x64"
 
       - name: Install tox
         run: python3 -m pip install tox
@@ -78,8 +80,8 @@ jobs:
     environment:
       name: Approve Integration Tests
     permissions:
-      contents: 'read'
-      id-token: 'write'
+      contents: "read"
+      id-token: "write"
 
     steps:
       - name: Checkout
@@ -89,8 +91,8 @@ jobs:
 
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.8.x'
-          architecture: 'x64'
+          python-version: "3.8.x"
+          architecture: "x64"
 
       - name: Install tox
         run: python3 -m pip install tox
@@ -129,7 +131,7 @@ jobs:
         id: get_file_changes
         uses: trilom/file-changes-action@v1.2.4
         with:
-          output: ' '
+          output: " "
 
       - name: Get new and changed .sql files in /models to lint
         id: get_files_to_lint
@@ -163,4 +165,3 @@ jobs:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           title: "SQLFluff Lint"
           input: "./annotations.json"
-
