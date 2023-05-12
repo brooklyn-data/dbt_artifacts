@@ -1,5 +1,5 @@
-name: 'dbt_artifacts'
-version: '2.3.0'
+name: "dbt_artifacts"
+version: "2.3.0"
 config-version: 2
 require-dbt-version: ">=1.3.0"
 profile: "dbt_artifacts"
@@ -17,3 +17,6 @@ models:
       +materialized: incremental
       +on_schema_change: append_new_columns
       +full_refresh: false
+      +persist_docs:
+        # Databricks doesn't offer column-level support for persisting docs
+        columns: '{{ target.name != "databricks" }}'
