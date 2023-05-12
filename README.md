@@ -2,6 +2,9 @@
 
 This package builds a mart of tables and views describing the project it is installed in. In pre V1 versions of the package, the artifacts dbt produces were uploaded to the warehouse, hence the name of the package. That's no longer the case, but the name has stuck!
 
+[![Main Branch](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main_test_package.yml/badge.svg)](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main_test_package.yml)
+[![Documentation](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/publish_docs_on_release.yml/badge.svg)](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/publish_docs_on_release.yml)
+
 ## Contributing
 
 Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for more information.

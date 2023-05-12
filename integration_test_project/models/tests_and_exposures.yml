@@ -15,6 +15,7 @@ exposures:
     maturity: high
     description: "ceo's favourite dashboard"
     url: https://bi.tool/dashboards/1
+    tags: ["ceo", "data"]
 
     depends_on:
       - ref('non_incremental')
@@ -28,6 +29,7 @@ exposures:
     maturity: high
     description: '{{ doc("clickstream") }}'
     url: https://bi.tool/dashboards/1
+    tags: ["cio", "it"]
 
     depends_on:
       - ref('incremental')
