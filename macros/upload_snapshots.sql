@@ -40,7 +40,7 @@
                 '{{ snapshot.original_file_path | replace('\\', '\\\\') }}', {# path #}
                 '{{ snapshot.checksum.checksum }}', {# checksum #}
                 '{{ snapshot.config.strategy }}', {# strategy #}
-                '{{ tojson(snapshot.config.meta) }}', {# meta #}
+                '{{ tojson(snapshot.config.meta) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}', {# meta #}
                 '{{ snapshot.alias }}', {# alias #}
                 '{{ tojson(snapshot) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}' {# all_results #}
             )
@@ -69,7 +69,7 @@
                     '{{ snapshot.original_file_path | replace('\\', '\\\\') }}', {# path #}
                     '{{ snapshot.checksum.checksum }}', {# checksum #}
                     '{{ snapshot.config.strategy }}', {# strategy #}
-                    parse_json('{{ tojson(snapshot.config.meta) }}'), {# meta #}
+                    parse_json('''{{ tojson(snapshot.config.meta) }}'''), {# meta #}
                     '{{ snapshot.alias }}', {# alias #}
                     parse_json('{{ tojson(snapshot) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}') {# all_results #}
                 )
