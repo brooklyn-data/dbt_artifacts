@@ -39,6 +39,7 @@
                 '{{ exposure.url }}', {# url #}
                 '{{ exposure.package_name }}', {# package_name #}
                 '{{ tojson(exposure.depends_on.nodes) }}', {# depends_on_nodes #}
+                '{{ tojson(exposure.tags) }}', {# tags #}
                 '{{ tojson(exposure) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}' {# all_fields #}
             )
             {%- if not loop.last %},{%- endif %}
@@ -67,6 +68,7 @@
                     '{{ exposure.url }}', {# url #}
                     '{{ exposure.package_name }}', {# package_name #}
                     {{ tojson(exposure.depends_on.nodes) }}, {# depends_on_nodes #}
+                    {{ tojson(exposure.tags) }}, {# tags #}
                     parse_json('{{ tojson(exposure) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}') {# all_fields #}
                 )
                 {%- if not loop.last %},{%- endif %}

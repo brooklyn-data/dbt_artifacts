@@ -20,7 +20,8 @@ exposures as (
         description,
         url,
         package_name,
-        depends_on_nodes
+        depends_on_nodes,
+        tags
     from base
 
 )
