@@ -96,7 +96,7 @@ jobs:
       fail-fast: false # Don't fail one DWH if the others fail
       matrix:
         warehouse: ["snowflake", "databricks", "bigquery"]
-        version: ["~=1.3.0", "~=1.4.0", "~=1.5.0"]
+        version: ["1.3.0", "1.4.0", "1.5.0"]
     runs-on: ubuntu-latest
     environment:
       name: Approve Integration Tests
