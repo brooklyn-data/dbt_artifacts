@@ -20,6 +20,8 @@ env:
   DBT_ENV_SECRET_DATABRICKS_HTTP_PATH: ${{ secrets.DATABRICKS_HTTP_PATH }}
   DBT_ENV_SECRET_DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
   DBT_ENV_SECRET_GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
+  # Env var to test version
+  VERSION_FOR_DOUBLE_RUN: 1.5.0
   # Env vars to test invocations model
   DBT_CLOUD_PROJECT_ID: 123
   DBT_CLOUD_JOB_ID: ABC
@@ -73,7 +75,7 @@ jobs:
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
       - name: Build tables for latest release
-        run: tox -e integration_${{ matrix.warehouse }}
+        run: tox -e integration_${{ matrix.warehouse }}_${{ env.VERSION_FOR_DOUBLE_RUN }}
 
       - name: Checkout
         uses: actions/checkout@v3
@@ -89,7 +91,7 @@ jobs:
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
       - name: Run Tests on PR
-        run: tox -e integration_${{ matrix.warehouse }}
+        run: tox -e integration_${{ matrix.warehouse }}_${{ env.VERSION_FOR_DOUBLE_RUN }}
 
   single-run-different-versions:
     strategy:
