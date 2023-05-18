@@ -96,6 +96,7 @@ jobs:
         run: tox -e integration_${{ matrix.warehouse }}_${{ env.LAST_RELEASE_SUPPORTED_DBT_VERSION }}
 
   single-run-different-versions:
+    needs: integration
     strategy:
       fail-fast: false # Don't fail one DWH if the others fail
       matrix:
