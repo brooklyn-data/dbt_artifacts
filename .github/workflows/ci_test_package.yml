@@ -33,6 +33,7 @@ env:
 jobs:
   integration:
     strategy:
+      max-parallel: 1
       fail-fast: false # Don't fail one DWH if the others fail
       matrix:
         warehouse: ["snowflake", "databricks", "bigquery"]
@@ -93,6 +94,7 @@ jobs:
 
   single-run-different-versions:
     strategy:
+      max-parallel: 1
       fail-fast: false # Don't fail one DWH if the others fail
       matrix:
         warehouse: ["snowflake", "databricks", "bigquery"]
