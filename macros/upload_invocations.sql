@@ -63,7 +63,15 @@
             null, {# dbt_vars #}
         {% endif %}
 
-        '{{ tojson(invocation_args_dict) | replace('\\', '\\\\') }}', {# invocation_args #}
+        {# Only pull the required invocation args keys to avoid non-text keys #}
+        {% set keys_to_find =  ["event_buffer_size", "indirect_selection", "no_print", "partial_parse", "printer_width", "profiles_dir", "quiet", "rpc_method", "select", "send_anonymous_usage_stats", "static_parser", "use_colors", "version_check", "which", "profile", "defer", "exclude", "full_refresh", "write_json", "resource_types", "state", "target", "cache_selected_only", "compile"] %}
+        {% set new_invoke_args = {} %}
+        {% for key in keys_to_find %}
+            {% if key in invocation_args_dict | list  %}
+                {% do new_invoke_args.update({key: invocation_args_dict[key]}) %}
+            {% endif %}
+        {% endfor %}
+        '{{ tojson(new_invoke_args) | replace('\\', '\\\\') }}', {# invocation_args #}
 
         {% set metadata_env = {} %}
         {% for key, value in dbt_metadata_envs.items() %}
