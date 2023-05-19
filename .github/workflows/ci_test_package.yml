@@ -45,7 +45,7 @@ jobs:
       contents: "read"
       id-token: "write"
     env:
-      DBT_VERSION: ${{ env.LAST_RELEASE_SUPPORTED_DBT_VERSION }}
+      DBT_VERSION: "None"
 
     steps:
       - name: Get latest release
