@@ -100,7 +100,7 @@ jobs:
     strategy:
       fail-fast: false # Don't fail one DWH if the others fail
       matrix:
-        warehouse: ["snowflake", "databricks", "bigquery"]
+        warehouse: ["snowflake", "bigquery"]
         # When supporting a new version, update the list here
         version: ["1.3.0", "1.4.0", "1.5.0"]
     runs-on: ubuntu-latest
@@ -136,3 +136,41 @@ jobs:
 
       - name: Run Tests on PR
         run: tox -e integration_${{ matrix.warehouse }}_${{ matrix.version }}
+
+  single-run-dbx-test:
+    needs: integration
+    runs-on: ubuntu-latest
+    environment:
+      name: Approve Integration Tests
+    permissions:
+      contents: "read"
+      id-token: "write"
+
+    steps:
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.8.x"
+          architecture: "x64"
+
+      - name: Install tox
+        run: python3 -m pip install tox
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }} # Check out the code of the PR
+
+      - name: Run Tests on PR (v1.3.0)
+        env:
+          DBT_VERSION: 1.3.0
+        run: tox -e integration_databricks_${{ env.DBT_VERSION }}
+
+      - name: Run Tests on PR (v1.4.0)
+        env:
+          DBT_VERSION: 1.4.0
+        run: tox -e integration_databricks_${{ env.DBT_VERSION }}
+
+      - name: Run Tests on PR (v1.5.0)
+        env:
+          DBT_VERSION: 1.5.0
+        run: tox -e integration_databricks_${{ env.DBT_VERSION }}
