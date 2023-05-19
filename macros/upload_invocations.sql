@@ -130,8 +130,17 @@
             {% set parsed_inv_args_vars = fromyaml(invocation_args_dict.vars) %}
             {% do invocation_args_dict.update({'vars': parsed_inv_args_vars}) %}
         {% endif %}
+
+        {# Only pull the required invocation args keys to avoid non-text keys #}
+        {% set keys_to_find =  ["event_buffer_size", "indirect_selection", "no_print", "partial_parse", "printer_width", "profiles_dir", "quiet", "rpc_method", "select", "send_anonymous_usage_stats", "static_parser", "use_colors", "version_check", "which", "profile", "defer", "exclude", "full_refresh", "write_json", "resource_types", "state", "target", "cache_selected_only", "compile"] %}
+        {% set new_invoke_args = {} %}
+        {% for key in keys_to_find %}
+            {% if key in invocation_args_dict | list  %}
+                {% do new_invoke_args.update({key: invocation_args_dict[key]}) %}
+            {% endif %}
+        {% endfor %}
         {# invocation_args_dict.vars, in the absence of any vars, results in the value "{}\n" as a string which results in an error. safe.parse_json accomodates for this gracefully. #}
-        safe.parse_json('''{{ tojson(invocation_args_dict) }}'''), {# invocation_args #}
+        safe.parse_json('''{{ tojson(new_invoke_args) }}'''), {# invocation_args #}
         {% set metadata_env = {} %}
         {% for key, value in dbt_metadata_envs.items() %}
             {% do metadata_env.update({key: value}) %}
