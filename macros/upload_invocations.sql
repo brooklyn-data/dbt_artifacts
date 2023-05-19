@@ -124,6 +124,14 @@
         {% else %}
             null, {# dbt_vars #}
         {% endif %}
+        {% set keys_to_find =  ["event_buffer_size", "indirect_selection", "no_print", "partial_parse", "printer_width", "profiles_dir", "quiet", "rpc_method", "select", "send_anonymous_usage_stats", "static_parser", "use_colors", "version_check", "which", "profile", "defer", "exclude", "full_refresh", "write_json", "resource_types", "state", "target", "cache_selected_only", "compile"] %}
+        {% set new_invoke_args = {} %}
+        {% for key in keys_to_find %}
+            {% if key in invocation_args_dict | list  %}
+                {% do new_invoke_args.update({key: invocation_args_dict[key]}) %}
+            {% endif %}
+        {% endfor %}
+        {% set invocation_args_dict = new_invoke_args %}
 
         {% if invocation_args_dict.vars %}
             {# BigQuery does not handle the yaml-string from "--vars" well, when passed to "parse_json". Workaround is to parse the string, and then "tojson" will properly format the dict as a json-object. #}
