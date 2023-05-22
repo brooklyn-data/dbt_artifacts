@@ -35,7 +35,7 @@ jobs:
     strategy:
       matrix:
         warehouse: ["snowflake", "databricks", "bigquery"]
-        version: ["1.3.0", "1.4.0", "1.5.0"]
+        version: ["1_3_0", "1_4_0", "1_5_0"]
     runs-on: ubuntu-latest
     permissions:
       contents: "read"
@@ -60,11 +60,7 @@ jobs:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
-      - name: Character replacement in DBT_VERSION variable for use in schema
+      - name: Run ${{ matrix.warehouse }} Tests
         env:
           DBT_VERSION: ${{ matrix.version }}
-        run: |
-          echo "DBT_VERSION=${DBT_VERSION//./_}" >> $GITHUB_ENV
-
-      - name: Run ${{ matrix.warehouse }} Tests
         run: tox -e integration_${{ matrix.warehouse }}_${{ matrix.version }}
