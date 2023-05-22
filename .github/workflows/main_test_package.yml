@@ -40,8 +40,6 @@ jobs:
     permissions:
       contents: "read"
       id-token: "write"
-    env:
-      DBT_VERSION: ${{ matrix.version }}
 
     steps:
       - name: Checkout
@@ -61,6 +59,12 @@ jobs:
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Character replacement in DBT_VERSION variable for use in schema
+        env:
+          DBT_VERSION: ${{ matrix.version }}
+        run: |
+          echo "DBT_VERSION=${DBT_VERSION//./_}" >> $GITHUB_ENV
 
       - name: Run ${{ matrix.warehouse }} Tests
         run: tox -e integration_${{ matrix.warehouse }}_${{ matrix.version }}
