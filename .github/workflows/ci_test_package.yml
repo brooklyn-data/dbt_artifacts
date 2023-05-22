@@ -76,6 +76,10 @@ jobs:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
+      - name: Character replacement in DBT_VERSION variable for use in schema
+        run: |
+          echo "DBT_VERSION=${{env.LAST_RELEASE_SUPPORTED_DBT_VERSION//./_}}" >> $GITHUB_ENV
+
       - name: Build tables for latest release
         run: tox -e integration_${{ matrix.warehouse }}_${{ env.LAST_RELEASE_SUPPORTED_DBT_VERSION }}
 
@@ -133,6 +137,10 @@ jobs:
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Character replacement in DBT_VERSION variable for use in schema
+        run: |
+          echo "DBT_VERSION=${{env.LAST_RELEASE_SUPPORTED_DBT_VERSION//./_}}" >> $GITHUB_ENV
 
       - name: Run Tests on PR
         run: tox -e integration_${{ matrix.warehouse }}_${{ matrix.version }}
