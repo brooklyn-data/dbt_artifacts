@@ -1,3 +1,4 @@
+{# Meta field to test apostrophes are handled ok #}
 {{
     config(
         materialized='incremental',
