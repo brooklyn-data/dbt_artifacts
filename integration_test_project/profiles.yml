@@ -28,7 +28,7 @@ dbt_artifacts:
     spark:
       type: spark
       method: odbc
-      schema: dbt_artifacts_test_commit_spark__{{ env_var('DBT_VERSION', '') }}_{{ env_var('GITHUB_SHA_OVERRIDE', '') if env_var('GITHUB_SHA_OVERRIDE', '') else env_var('GITHUB_SHA') }}
+      schema: dbt_artifacts_test_commit_spark_{{ env_var('DBT_VERSION', '') }}_{{ env_var('GITHUB_SHA_OVERRIDE', '') if env_var('GITHUB_SHA_OVERRIDE', '') else env_var('GITHUB_SHA') }}
       host: "{{ env_var('DBT_ENV_SECRET_DATABRICKS_HOST') }}"
       driver: "{{ env_var('DBT_ENV_SPARK_DRIVER_PATH') }}"
       endpoint: "{{ env_var('DBT_ENV_SPARK_ENDPOINT') }}"
@@ -38,7 +38,7 @@ dbt_artifacts:
       type: bigquery
       method: oauth
       project: "{{ env_var('DBT_ENV_SECRET_GCP_PROJECT') }}"
-      dataset: dbt_artifacts_test_commit__{{ env_var('DBT_VERSION', '') }}_{{ env_var('GITHUB_SHA_OVERRIDE', '') if env_var('GITHUB_SHA_OVERRIDE', '') else env_var('GITHUB_SHA') }}
+      dataset: dbt_artifacts_test_commit_{{ env_var('DBT_VERSION', '') }}_{{ env_var('GITHUB_SHA_OVERRIDE', '') if env_var('GITHUB_SHA_OVERRIDE', '') else env_var('GITHUB_SHA') }}
       threads: 8
       timeout_seconds: 300
       priority: interactive
