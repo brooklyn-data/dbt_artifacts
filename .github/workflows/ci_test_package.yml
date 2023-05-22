@@ -35,7 +35,6 @@ env:
 jobs:
   integration:
     strategy:
-      max-parallel: 1
       fail-fast: false # Don't fail one DWH if the others fail
       matrix:
         warehouse: ["snowflake", "databricks", "bigquery"]
@@ -45,6 +44,8 @@ jobs:
     permissions:
       contents: "read"
       id-token: "write"
+    env:
+      DBT_VERSION: ${{ env.LAST_RELEASE_SUPPORTED_DBT_VERSION }}
 
     steps:
       - name: Get latest release
@@ -95,8 +96,8 @@ jobs:
         run: tox -e integration_${{ matrix.warehouse }}_${{ env.LAST_RELEASE_SUPPORTED_DBT_VERSION }}
 
   single-run-different-versions:
+    needs: integration
     strategy:
-      max-parallel: 1
       fail-fast: false # Don't fail one DWH if the others fail
       matrix:
         warehouse: ["snowflake", "databricks", "bigquery"]
@@ -108,6 +109,8 @@ jobs:
     permissions:
       contents: "read"
       id-token: "write"
+    env:
+      DBT_VERSION: ${{ matrix.version }}
 
     steps:
       - uses: actions/setup-python@v4

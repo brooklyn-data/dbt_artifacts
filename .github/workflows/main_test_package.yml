@@ -35,10 +35,13 @@ jobs:
     strategy:
       matrix:
         warehouse: ["snowflake", "databricks", "bigquery"]
+        version: ["1.3.0", "1.4.0", "1.5.0"]
     runs-on: ubuntu-latest
     permissions:
       contents: "read"
       id-token: "write"
+    env:
+      DBT_VERSION: ${{ matrix.version }}
 
     steps:
       - name: Checkout
@@ -60,4 +63,4 @@ jobs:
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
       - name: Run ${{ matrix.warehouse }} Tests
-        run: tox -e integration_${{ matrix.warehouse }}
+        run: tox -e integration_${{ matrix.warehouse }}_${{ matrix.version }}
