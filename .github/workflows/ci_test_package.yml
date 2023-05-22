@@ -45,7 +45,7 @@ jobs:
       contents: "read"
       id-token: "write"
     env:
-      DBT_VERSION: ${{ env.LAST_RELEASE_SUPPORTED_DBT_VERSION }}
+      DBT_VERSION: "noversion"
 
     steps:
       - name: Get latest release
@@ -109,8 +109,6 @@ jobs:
     permissions:
       contents: "read"
       id-token: "write"
-    env:
-      DBT_VERSION: ${{ matrix.version }}
 
     steps:
       - uses: actions/setup-python@v4
@@ -135,4 +133,6 @@ jobs:
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
       - name: Run Tests on PR
+        env:
+          DBT_VERSION: ${{ matrix.version }}
         run: tox -e integration_${{ matrix.warehouse }}_${{ matrix.version }}
