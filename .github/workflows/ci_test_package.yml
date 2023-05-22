@@ -44,8 +44,6 @@ jobs:
     permissions:
       contents: "read"
       id-token: "write"
-    env:
-      DBT_VERSION: ${{ env.LAST_RELEASE_SUPPORTED_DBT_VERSION }}
 
     steps:
       - name: Get latest release
@@ -76,11 +74,9 @@ jobs:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
-      - name: Character replacement in DBT_VERSION variable for use in schema
-        run: |
-          echo "DBT_VERSION=${{env.DBT_VERSION//./_}}" >> $GITHUB_ENV
-
       - name: Build tables for latest release
+        env:
+          DBT_VERSION: "noversion"
         run: tox -e integration_${{ matrix.warehouse }}_${{ env.LAST_RELEASE_SUPPORTED_DBT_VERSION }}
 
       - name: Checkout
@@ -113,8 +109,6 @@ jobs:
     permissions:
       contents: "read"
       id-token: "write"
-    env:
-      DBT_VERSION: ${{ matrix.version }}
 
     steps:
       - uses: actions/setup-python@v4
@@ -139,6 +133,8 @@ jobs:
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
       - name: Character replacement in DBT_VERSION variable for use in schema
+        env:
+          DBT_VERSION: ${{ matrix.version }}
         run: |
           echo "DBT_VERSION=${{env.DBT_VERSION//./_}}" >> $GITHUB_ENV
 
