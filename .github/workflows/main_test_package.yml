@@ -64,7 +64,7 @@ jobs:
         env:
           DBT_VERSION: ${{ matrix.version }}
         run: |
-          echo "DBT_VERSION=${{env.DBT_VERSION//./_}}" >> $GITHUB_ENV
+          echo "DBT_VERSION=${DBT_VERSION//./_}" >> $GITHUB_ENV
 
       - name: Run ${{ matrix.warehouse }} Tests
         run: tox -e integration_${{ matrix.warehouse }}_${{ matrix.version }}

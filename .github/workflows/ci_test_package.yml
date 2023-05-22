@@ -136,7 +136,7 @@ jobs:
         env:
           DBT_VERSION: ${{ matrix.version }}
         run: |
-          echo "DBT_VERSION=${{env.DBT_VERSION//./_}}" >> $GITHUB_ENV
+          echo "DBT_VERSION=${DBT_VERSION//./_}" >> $GITHUB_ENV
 
       - name: Run Tests on PR
         run: tox -e integration_${{ matrix.warehouse }}_${{ matrix.version }}
