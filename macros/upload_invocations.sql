@@ -135,10 +135,12 @@
         {% set keys_to_find =  ["event_buffer_size", "indirect_selection", "no_print", "partial_parse", "printer_width", "profiles_dir", "quiet", "rpc_method", "select", "send_anonymous_usage_stats", "static_parser", "use_colors", "version_check", "which", "profile", "defer", "exclude", "full_refresh", "write_json", "resource_types", "state", "target", "cache_selected_only", "compile"] %}
         {% set new_invoke_args = {} %}
         {% for key in keys_to_find %}
+            {{ log(key, True) }}
             {% if key in invocation_args_dict | list  %}
                 {% do new_invoke_args.update({key: invocation_args_dict[key]}) %}
             {% endif %}
         {% endfor %}
+        {{ log(new_invoke_args, True) }}
         {# invocation_args_dict.vars, in the absence of any vars, results in the value "{}\n" as a string which results in an error. safe.parse_json accomodates for this gracefully. #}
         safe.parse_json('''{{ tojson(new_invoke_args) }}'''), {# invocation_args #}
         {% set metadata_env = {} %}
