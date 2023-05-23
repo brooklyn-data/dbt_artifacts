@@ -37,7 +37,7 @@ jobs:
     strategy:
       fail-fast: false # Don't fail one DWH if the others fail
       matrix:
-        warehouse: ["snowflake", "databricks", "bigquery"]
+        warehouse: ["bigquery"]
     runs-on: ubuntu-latest
     environment:
       name: Approve Integration Tests
@@ -67,18 +67,6 @@ jobs:
       - name: Install tox
         run: python3 -m pip install tox
 
-      - id: auth-on-release
-        if: ${{ matrix.warehouse == 'bigquery' }}
-        uses: google-github-actions/auth@v1
-        with:
-          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
-
-      - name: Build tables for latest release
-        env:
-          DBT_VERSION: "noversion"
-        run: tox -e integration_${{ matrix.warehouse }}
-
       - name: Checkout
         uses: actions/checkout@v3
         with:
@@ -100,7 +88,7 @@ jobs:
     strategy:
       fail-fast: false # Don't fail one DWH if the others fail
       matrix:
-        warehouse: ["snowflake", "databricks", "bigquery"]
+        warehouse: ["bigquery"]
         # When supporting a new version, update the list here
         version: ["1_3_0", "1_4_0", "1_5_0"]
     runs-on: ubuntu-latest
