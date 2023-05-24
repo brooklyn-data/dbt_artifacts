@@ -34,7 +34,7 @@ jobs:
   integration:
     strategy:
       matrix:
-        warehouse: ["snowflake", "databricks", "bigquery"]
+        warehouse: ["snowflake", "bigquery"]
         version: ["1_3_0", "1_4_0", "1_5_0"]
     runs-on: ubuntu-latest
     permissions:
@@ -64,3 +64,22 @@ jobs:
         env:
           DBT_VERSION: ${{ matrix.version }}
         run: tox -e integration_${{ matrix.warehouse }}_${{ matrix.version }}
+
+  # Databricks doesn't like the matrix strategy, so moving back to the old integration testing without versioning
+  integration-databricks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.8.x'
+          architecture: 'x64'
+
+      - name: Install tox
+        run: python3 -m pip install tox
+
+      - name: Run Databricks Tests
+        run: tox -e integration_databricks
