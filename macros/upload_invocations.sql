@@ -4,7 +4,17 @@
     {# warn_error_options - returns a python object in 1.5 #}
     {% if 'warn_error_options' in invocation_args_dict %}
         {% if invocation_args_dict.warn_error_options is not string %}
-            {% set warn_error_options = {'include': invocation_args_dict.warn_error_options.get('include', ''), 'exclude': invocation_args_dict.warn_error_options.get('exclude', '')} %}
+            {% if invocation_args_dict.warn_error_options.include %}
+                {% set include_options = invocation_args_dict.warn_error_options.include %}
+            {% else %}
+                {% set include_options = '' %}
+            {% endif %}
+            {% if invocation_args_dict.warn_error_options.exclude %}
+                {% set exclude_options = invocation_args_dict.warn_error_options.exclude %}
+            {% else %}
+                {% set exclude_options = '' %}
+            {% endif %}
+            {% set warn_error_options = {'include': include_options, 'exclude': exclude_options} %}
             {%- do invocation_args_dict.update({'warn_error_options': warn_error_options}) %}
         {% endif %}
     {% endif %}
