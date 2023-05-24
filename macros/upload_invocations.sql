@@ -1,13 +1,13 @@
 {% macro upload_invocations() -%}
 
     {# Need to remove keys with results that can't be handled properly #}
-    {% set keys_to_remove = ['warn_error_options'] %}
-    {# warn_error_options - returns a python object #}
-    {% for key in keys_to_remove %}
-        {% if key in invocation_args_dict %}
-            {%- do invocation_args_dict.pop(key) %}
+    {# warn_error_options - returns a python object in 1.5 #}
+    {% if 'warn_error_options' in invocation_args_dict %}
+        {% if invocation_args_dict.warn_error_options is not string %}
+            {% set warn_error_options = {'include': invocation_args_dict.warn_error_options.get('include', ''), 'exclude': invocation_args_dict.warn_error_options.get('exclude', '')} %}
+            {%- do invocation_args_dict.update({'warn_error_options': warn_error_options}) %}
         {% endif %}
-    {% endfor %}
+    {% endif %}
 
     {{ return(adapter.dispatch('get_invocations_dml_sql', 'dbt_artifacts')()) }}
 {%- endmacro %}
