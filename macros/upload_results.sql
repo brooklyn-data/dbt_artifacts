@@ -84,7 +84,6 @@
         {% endfor %}
         {# upload tests in chunks of 5000 tests (750 for BigQuery), or less #}
         {% set upload_limit = 750 if target.type == 'bigquery' else 5000 %}
-        {% set n = (tests_set|length/upload_limit)|round(0, 'ceil')|int %}
         {% for i in range(0, tests_set | length, upload_limit) -%}
             {% set content_tests = dbt_artifacts.upload_tests(tests_set[i: i + upload_limit]) %}
             {{ dbt_artifacts.insert_into_metadata_table(
@@ -109,14 +108,21 @@
 
         {% do log("Uploading models", true) %}
         {% set models = dbt_artifacts.get_relation('models') %}
-        {% set content_models = dbt_artifacts.upload_models(graph) %}
-        {{ dbt_artifacts.insert_into_metadata_table(
-            database_name=models.database,
-            schema_name=models.schema,
-            table_name=models.identifier,
-            content=content_models
-            )
-        }}
+        {% set models_set = [] %}
+        {% for node in graph.nodes.values() | selectattr("resource_type", "equalto", "model") %}
+            {% do models_set.append(node) %}
+        {% endfor %}
+        {% set upload_limit = 50 if target.type == 'bigquery' else 5000 %}
+        {% for i in range(0, models_set | length, upload_limit) -%}
+            {% set content_models = dbt_artifacts.upload_models(models_set[i: i + upload_limit]) %}
+            {{ dbt_artifacts.insert_into_metadata_table(
+                database_name=models.database,
+                schema_name=models.schema,
+                table_name=models.identifier,
+                content=content_models
+                )
+            }}
+        {%- endfor %}
 
         {% do log("Uploading sources", true) %}
         {% set sources = dbt_artifacts.get_relation('sources') %}
