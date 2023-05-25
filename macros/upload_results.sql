@@ -112,7 +112,7 @@
         {% for node in graph.nodes.values() | selectattr("resource_type", "equalto", "model") %}
             {% do models_set.append(node) %}
         {% endfor %}
-        {% set upload_limit = 50 if target.type == 'bigquery' else 5000 %}
+        {% set upload_limit = 50 if target.type == 'bigquery' else 100 %}
         {% for i in range(0, models_set | length, upload_limit) -%}
             {% set content_models = dbt_artifacts.upload_models(models_set[i: i + upload_limit]) %}
             {{ dbt_artifacts.insert_into_metadata_table(
