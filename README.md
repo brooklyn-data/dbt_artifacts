@@ -2,7 +2,8 @@
 
 This package builds a mart of tables and views describing the project it is installed in. In pre V1 versions of the package, the artifacts dbt produces were uploaded to the warehouse, hence the name of the package. That's no longer the case, but the name has stuck!
 
-[![Main Branch](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main_test_package.yml/badge.svg)](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main_test_package.yml)
+[![Main branch test package](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main_test_package.yml/badge.svg)](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main_test_package.yml)
+[![Main branch lint package](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main_lint_package.yml/badge.svg)](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main_lint_package.yml)
 [![Documentation](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/publish_docs_on_release.yml/badge.svg)](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/publish_docs_on_release.yml)
 
 ## Contributing
@@ -44,7 +45,7 @@ See the generated [dbt docs site](https://brooklyn-data.github.io/dbt_artifacts/
 ```
 packages:
   - package: brooklyn-data/dbt_artifacts
-    version: 2.3.0
+    version: 2.4.0
 ```
 
 :construction_worker: Make sure to fix at least the **minor** version, to avoid issues when a new release is open. See the notes on upgrading below for more detail.
