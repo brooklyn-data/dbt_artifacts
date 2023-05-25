@@ -1,7 +1,7 @@
 with base as (
 
     select *
-    from dbt_artifacts_ci_tests.dbt_artifacts_test_commit__fa31b83edc6e6ba2baa333663675d31d6dacd0e3.stg_dbt__seeds
+    from dbt_artifacts_ci_tests.dbt_artifacts_test_commit__0378fead257544898c29fb3ee9620c75b3b7a9cf.stg_dbt__seeds
 
 ),
 
