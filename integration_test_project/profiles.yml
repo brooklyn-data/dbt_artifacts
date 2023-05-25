@@ -24,7 +24,7 @@ dbt_artifacts:
       host: "{{ env_var('DBT_ENV_SECRET_DATABRICKS_HOST') }}"
       http_path: "{{ env_var('DBT_ENV_SECRET_DATABRICKS_HTTP_PATH') }}"
       token: "{{ env_var('DBT_ENV_SECRET_DATABRICKS_TOKEN') }}"
-      threads: 5
+      threads: 2
     spark:
       type: spark
       method: odbc
