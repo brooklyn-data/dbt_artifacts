@@ -33,8 +33,6 @@ env:
 jobs:
   integration:
     strategy:
-      max-parallel: 1
-      fail-fast: false # Don't fail one DWH if the others fail
       matrix:
         warehouse: ["snowflake", "bigquery"]
         version: ["1_3_0", "1_4_0", "1_5_0"]
