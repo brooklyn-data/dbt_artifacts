@@ -64,7 +64,7 @@
                     '{{ seed.checksum.checksum }}', {# checksum #}
                     parse_json('''{{ tojson(seed.config.meta) }}'''), {# meta #}
                     '{{ seed.alias }}', {# alias #}
-                    parse_json('{{ tojson(seed) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}') {# all_results #}
+                    parse_json('{{ tojson(seed) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}', wide_number_mode=>'round') {# all_results #}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}
