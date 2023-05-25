@@ -1,8 +1,4 @@
-{% macro upload_models(graph) -%}
-    {% set models = [] %}
-    {% for node in graph.nodes.values() | selectattr("resource_type", "equalto", "model") %}
-        {% do models.append(node) %}
-    {% endfor %}
+{% macro upload_models(models) -%}
     {{ return(adapter.dispatch('get_models_dml_sql', 'dbt_artifacts')(models)) }}
 {%- endmacro %}
 
