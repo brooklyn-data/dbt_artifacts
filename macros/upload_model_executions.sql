@@ -72,7 +72,7 @@
                 '{{ model.node.schema }}', {# schema #}
                 '{{ model.node.name }}', {# name #}
                 '{{ model.node.alias }}', {# alias #}
-                '{{ model.message }}', {# message #}
+                '{{ model.message | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}', {# message #}
                 '{{ tojson(model.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}' {# adapter_response #}
             )
             {%- if not loop.last %},{%- endif %}
@@ -130,7 +130,7 @@
             '{{ model.node.schema }}', {# schema #}
             '{{ model.node.name }}', {# name #}
             '{{ model.node.alias }}', {# alias #}
-            '{{ model.message }}', {# message #}
+            '{{ model.message | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}', {# message #}
             parse_json('{{ tojson(model.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}') {# adapter_response #}
             )
             {%- if not loop.last %},{%- endif %}
@@ -205,7 +205,7 @@
                 '{{ model.node.schema }}', {# schema #}
                 '{{ model.node.name }}', {# name #}
                 '{{ model.node.alias }}', {# alias #}
-                '{{ model.message }}', {# message #}
+                '{{ model.message | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}', {# message #}
                 '{{ tojson(model.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}' {# adapter_response #}
             )
             {%- if not loop.last %},{%- endif %}
