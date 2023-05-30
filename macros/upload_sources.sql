@@ -1,8 +1,4 @@
-{% macro upload_sources(graph) -%}
-    {% set sources = [] %}
-    {% for node in graph.sources.values() %}
-        {% do sources.append(node) %}
-    {% endfor %}
+{% macro upload_sources(sources) -%}
     {{ return(adapter.dispatch('get_sources_dml_sql', 'dbt_artifacts')(sources)) }}
 {%- endmacro %}
 

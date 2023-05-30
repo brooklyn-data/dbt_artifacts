@@ -130,8 +130,8 @@
         {% for node in graph.nodes.values() | selectattr("resource_type", "equalto", "source") %}
             {% do sources_set.append(node) %}
         {% endfor %}
-        {# upload sources in chunks of 500 sources (300 for BigQuery), or less #}
-        {% set upload_limit = 300 if target.type == 'bigquery' else 500 %}
+        {# upload sources in chunks of 5000 sources (300 for BigQuery), or less #}
+        {% set upload_limit = 300 if target.type == 'bigquery' else 5000 %}
         {% for i in range(0, sources_set | length, upload_limit) -%}
             {% set content_sources = dbt_artifacts.upload_sources(sources_set[i: i + upload_limit]) %}
             {{ dbt_artifacts.insert_into_metadata_table(
