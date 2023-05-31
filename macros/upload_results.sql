@@ -127,7 +127,7 @@
         {% do log("Uploading sources", true) %}
         {% set sources = dbt_artifacts.get_relation('sources') %}
         {% set sources_set = [] %}
-        {% for node in graph.nodes.values() | selectattr("resource_type", "equalto", "source") %}
+        {% for node in graph.sources.values() %}
             {% do sources_set.append(node) %}
         {% endfor %}
         {# upload sources in chunks of 5000 sources (300 for BigQuery), or less #}
