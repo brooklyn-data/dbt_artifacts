@@ -24,6 +24,7 @@
             {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(15)) }}
         from values
         {% for model in models -%}
+                {% do model.pop('raw_code', None) %}
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
                 '{{ model.unique_id }}', {# node_id #}
@@ -54,6 +55,7 @@
     {% if models != [] %}
         {% set model_values %}
             {% for model in models -%}
+                {% do model.pop('raw_code', None) %}
                 (
                     '{{ invocation_id }}', {# command_invocation_id #}
                     '{{ model.unique_id }}', {# node_id #}
