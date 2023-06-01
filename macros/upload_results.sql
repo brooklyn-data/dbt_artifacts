@@ -82,8 +82,8 @@
         {% for node in graph.nodes.values() | selectattr("resource_type", "equalto", "test") %}
             {% do tests_set.append(node) %}
         {% endfor %}
-        {# upload tests in chunks of 5000 tests (750 for BigQuery), or less #}
-        {% set upload_limit = 750 if target.type == 'bigquery' else 5000 %}
+        {# upload tests in chunks of 5000 tests (300 for BigQuery), or less #}
+        {% set upload_limit = 300 if target.type == 'bigquery' else 5000 %}
         {% for i in range(0, tests_set | length, upload_limit) -%}
             {% set content_tests = dbt_artifacts.upload_tests(tests_set[i: i + upload_limit]) %}
             {{ dbt_artifacts.insert_into_metadata_table(
@@ -126,14 +126,22 @@
 
         {% do log("Uploading sources", true) %}
         {% set sources = dbt_artifacts.get_relation('sources') %}
-        {% set content_sources = dbt_artifacts.upload_sources(graph) %}
-        {{ dbt_artifacts.insert_into_metadata_table(
-            database_name=sources.database,
-            schema_name=sources.schema,
-            table_name=sources.identifier,
-            content=content_sources
-            )
-        }}
+        {% set sources_set = [] %}
+        {% for node in graph.sources.values() %}
+            {% do sources_set.append(node) %}
+        {% endfor %}
+        {# upload sources in chunks of 5000 sources (300 for BigQuery), or less #}
+        {% set upload_limit = 300 if target.type == 'bigquery' else 5000 %}
+        {% for i in range(0, sources_set | length, upload_limit) -%}
+            {% set content_sources = dbt_artifacts.upload_sources(sources_set[i: i + upload_limit]) %}
+            {{ dbt_artifacts.insert_into_metadata_table(
+                database_name=sources.database,
+                schema_name=sources.schema,
+                table_name=sources.identifier,
+                content=content_sources
+                )
+            }}
+        {%- endfor %}
 
         {% do log("Uploading snapshots", true) %}
         {% set snapshots = dbt_artifacts.get_relation('snapshots') %}
