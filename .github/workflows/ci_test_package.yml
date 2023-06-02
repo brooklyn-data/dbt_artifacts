@@ -48,12 +48,10 @@ jobs:
 
     steps:
       - name: Get latest release
-        uses: rez0n/actions-github-release@main
         id: latest_release
-        env:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository }}
-          type: "stable"
+        run: |
+          output=$(git describe --tags --abbrev=0)
+          echo "::set-output name=release::$output"
 
       - name: Checkout latest release
         uses: actions/checkout@v3
