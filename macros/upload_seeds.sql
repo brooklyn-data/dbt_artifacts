@@ -34,7 +34,7 @@
                 '{{ seed.name }}', {# name #}
                 '{{ seed.package_name }}', {# package_name #}
                 '{{ seed.original_file_path | replace('\\', '\\\\') }}', {# path #}
-                '{{ seed.checksum.checksum }}', {# checksum #}
+                '{{ seed.checksum.checksum | replace('\\', '\\\\') }}', {# checksum #}
                 '{{ tojson(seed.config.meta) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}', {# meta #}
                 '{{ seed.alias }}', {# alias #}
                 '{{ tojson(seed) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}' {# all_results #}
@@ -61,7 +61,7 @@
                     '{{ seed.name }}', {# name #}
                     '{{ seed.package_name }}', {# package_name #}
                     '{{ seed.original_file_path | replace('\\', '\\\\') }}', {# path #}
-                    '{{ seed.checksum.checksum }}', {# checksum #}
+                    '{{ seed.checksum.checksum | replace('\\', '\\\\')}}', {# checksum #}
                     parse_json('''{{ tojson(seed.config.meta) }}'''), {# meta #}
                     '{{ seed.alias }}', {# alias #}
                     parse_json('{{ tojson(seed) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}', wide_number_mode=>'round') {# all_results #}
