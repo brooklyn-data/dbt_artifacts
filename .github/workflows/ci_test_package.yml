@@ -50,6 +50,8 @@ jobs:
       - name: Checkout
         id: latest_release
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - run: |
           output=$(git describe --tags --abbrev=0)
           echo "::set-output name=release::$output"
