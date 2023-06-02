@@ -38,7 +38,7 @@ jobs:
       fail-fast: false # Don't fail one DWH if the others fail
       matrix:
         warehouse: ["snowflake", "bigquery"]
-    runs-on: ubuntu-latest
+        os: [ubuntu-latest, windows-latest]
     environment:
       name: Approve Integration Tests
     permissions:
@@ -103,7 +103,7 @@ jobs:
         warehouse: ["snowflake", "bigquery"]
         # When supporting a new version, update the list here
         version: ["1_3_0", "1_4_0", "1_5_0"]
-    runs-on: ubuntu-latest
+        os: [ubuntu-latest, windows-latest]
     environment:
       name: Approve Integration Tests
     permissions:
