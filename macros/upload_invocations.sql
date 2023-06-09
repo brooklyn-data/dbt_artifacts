@@ -83,7 +83,7 @@
             null, {# dbt_vars #}
         {% endif %}
 
-        '{{ tojson(invocation_args_dict) | replace('\\', '\\\\') }}', {# invocation_args #}
+        '{{ tojson(invocation_args_dict) | replace('\\', '\\\\') | replace("'", "\\'") }}', {# invocation_args #}
 
         {% set metadata_env = {} %}
         {% for key, value in dbt_metadata_envs.items() %}
@@ -146,7 +146,7 @@
             {% endif %}
         {% endif %}
 
-        safe.parse_json('''{{ tojson(invocation_args_dict) }}'''), {# invocation_args #}
+        safe.parse_json('''{{ tojson(invocation_args_dict) | replace("'", "\\'") }}'''), {# invocation_args #}
 
         {% set metadata_env = {} %}
         {% for key, value in dbt_metadata_envs.items() %}
