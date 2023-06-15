@@ -55,15 +55,15 @@ packages:
 3. Add an on-run-end hook to your `dbt_project.yml`
 
     ```yml
-    `on-run-end:
-      - "{{ dbt_artifacts.upload_results(results) }}"`
+    on-run-end:
+      - "{{ dbt_artifacts.upload_results(results) }}"
     ```
 
     We recommend adding a conditional here so that the upload only occurs in your production environment, such as:
 
     ```yml
     on-run-end:
-      - "{% if target.name == 'prod' %}{{ dbt_artifacts.upload_results(results) }}{% endif %}"`)
+      - "{% if target.name == 'prod' %}{{ dbt_artifacts.upload_results(results) }}{% endif %}"
     ```
 
 4. Run the tables!
