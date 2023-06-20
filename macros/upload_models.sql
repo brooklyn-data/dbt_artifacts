@@ -71,7 +71,7 @@
                     {{ tojson(model.tags) }}, {# tags #}
                     parse_json('''{{ tojson(model.config.meta) }}'''), {# meta #}
                     '{{ model.alias }}', {# alias #}
-                    parse_json('{{ tojson(model) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}', wide_number_mode=>'round') {# all_results #}
+                    parse_json('{{ tojson(model) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}') {# all_results #}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}
