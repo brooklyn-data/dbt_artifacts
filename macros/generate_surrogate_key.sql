@@ -37,6 +37,19 @@
 
 {%- endfor -%}
 
-{{ dbt.hash(dbt.concat(fields)) }}
+{{ hash(dbt.concat(fields)) }}
 
+{%- endmacro -%}
+
+{%- macro hash(field) -%}
+    {{ adapter.dispatch('hash', 'dbt_artifacts')(field) }}
+{%- endmacro -%}
+
+{%- macro default__hash(field) -%}
+    {{ dbt.hash(field) }}
+{%- endmacro -%}
+
+-- FIXME: See https://github.com/dremio/dbt-dremio/issues/189
+{%- macro dremio__hash(field) -%}
+    md5(cast({{ field }} as varchar))
 {%- endmacro -%}

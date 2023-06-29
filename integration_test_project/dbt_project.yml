@@ -24,8 +24,8 @@ vars:
 
 models:
   +persist_docs:
-    relation: true
-    columns: true
+    columns: '{{ target.name != "dremio" }}'
+    relation: '{{ target.name != "dremio" }}'
 seeds:
   +quote_columns: false
 
