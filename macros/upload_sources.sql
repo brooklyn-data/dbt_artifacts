@@ -31,9 +31,9 @@
                 '{{ source.loader }}', {# loader #}
                 '{{ source.name }}', {# name #}
                 '{{ source.identifier }}', {# identifier #}
-                '{{ source.loaded_at_field | replace("'","\\'") }}', {# loaded_at_field #}
-                '{{ tojson(source.freshness) | replace("'","\\'") }}', {# freshness #}
-                '{{ tojson(source) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}' {# all_results #}
+                '{{ dbt_artifacts.escape_string(source.loaded_at_field) }}', {# loaded_at_field #}
+                '{{ dbt_artifacts.escape_string(tojson(source.freshness)) }}', {# freshness #}
+                '{{ dbt_artifacts.escape_string(tojson(source) | replace("\\", "\\\\") | replace("'", "\\'")) }}' {# all_results #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -58,9 +58,9 @@
                     '{{ source.loader }}', {# loader #}
                     '{{ source.name }}', {# name #}
                     '{{ source.identifier }}', {# identifier #}
-                    '{{ source.loaded_at_field | replace("'","\\'") }}', {# loaded_at_field #}
-                    parse_json('{{ tojson(source.freshness) | replace("'","\\'") }}'),  {# freshness #}
-                    parse_json('{{ tojson(source) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}') {# all_results #}
+                    '{{ dbt_artifacts.escape_string(source.loaded_at_field) }}', {# loaded_at_field #}
+                    parse_json('{{ dbt_artifacts.escape_string(tojson(source.freshness)) }}'),  {# freshness #}
+                    parse_json('{{ dbt_artifacts.escape_string(tojson(source) | replace("\\", "\\\\") | replace("'", "\\'")) }}') {# all_results #}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}
@@ -70,3 +70,32 @@
         {{ return("") }}
     {% endif %}
 {%- endmacro %}
+
+{% macro dremio__get_sources_dml_sql(sources) -%}
+
+    {% if sources != [] %}
+        {% set source_values %}
+        values
+        {% for source in sources -%}
+            (
+                '{{ invocation_id }}', {# command_invocation_id #}
+                '{{ source.unique_id }}', {# node_id #}
+                {{ dbt_artifacts.truncate_timestamp(run_started_at) }}, {# run_started_at #}
+                '{{ source.database }}', {# database #}
+                '{{ source.schema }}', {# schema #}
+                '{{ source.source_name }}', {# source_name #}
+                '{{ source.loader }}', {# loader #}
+                '{{ source.name }}', {# name #}
+                '{{ source.identifier }}', {# identifier #}
+                '{{ dbt_artifacts.escape_string(source.loaded_at_field) }}', {# loaded_at_field #}
+                '{{ dbt_artifacts.escape_string(tojson(source.freshness)) }}', {# freshness #}
+                '{{ dbt_artifacts.escape_string(tojson(source)) }}' {# all_results #}
+            )
+            {%- if not loop.last %},{%- endif %}
+        {%- endfor %}
+        {% endset %}
+        {{ source_values }}
+    {% else %}
+        {{ return("") }}
+    {% endif %}
+{% endmacro -%}

@@ -61,3 +61,30 @@
         {{ return("") }}
     {% endif %}
 {%- endmacro %}
+
+{% macro dremio__get_tests_dml_sql(tests) -%}
+
+    {% if tests != [] %}
+        {% set test_values %}
+        values
+        {% for test in tests -%}
+            (
+                '{{ invocation_id }}', {# command_invocation_id #}
+                '{{ test.unique_id }}', {# node_id #}
+                {{ dbt_artifacts.truncate_timestamp(run_started_at) }}, {# run_started_at #}
+                '{{ test.name }}', {# name #}
+                '{{ tojson(test.depends_on.nodes) }}', {# depends_on_nodes #}
+                '{{ test.package_name }}', {# package_name #}
+                '{{ dbt_artifacts.escape_string(test.original_file_path) }}', {# test_path #}
+                '{{ tojson(test.tags) }}', {# tags #}
+                '{{ dbt_artifacts.escape_string(tojson(test)) }}' {# all_fields #}
+            )
+            {%- if not loop.last %},{%- endif %}
+        {%- endfor %}
+        {% endset %}
+        {{ test_values }}
+    {% else %}
+        {{ return("") }}
+    {% endif %}
+{% endmacro -%}
+

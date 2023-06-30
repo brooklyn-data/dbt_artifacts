@@ -80,3 +80,34 @@
         {{ return("") }}
     {% endif %}
 {%- endmacro %}
+
+{% macro dremio__get_exposures_dml_sql(exposures) -%}
+
+    {% if exposures != [] %}
+        {% set exposure_values %}
+        values
+        {% for exposure in exposures -%}
+            (
+                '{{ invocation_id }}', {# command_invocation_id #}
+                '{{ dbt_artifacts.escape_string(exposure.unique_id) }}', {# node_id #}
+                {{ dbt_artifacts.truncate_timestamp(run_started_at) }}, {# run_started_at #}
+                '{{ dbt_artifacts.escape_string(exposure.name) }}', {# name #}
+                '{{ exposure.type }}', {# type #}
+                '{{ tojson(exposure.owner) }}', {# owner #}
+                '{{ exposure.maturity }}', {# maturity #}
+                '{{ dbt_artifacts.escape_string(exposure.original_file_path) }}', {# path #}
+                '{{ dbt_artifacts.escape_string(exposure.description) }}', {# description #}
+                '{{ exposure.url }}', {# url #}
+                '{{ exposure.package_name }}', {# package_name #}
+                '{{ tojson(exposure.depends_on.nodes) }}', {# depends_on_nodes #}
+                '{{ tojson(exposure.tags) }}', {# tags #}
+                '{{ dbt_artifacts.escape_string(tojson(exposure)) }}' {# all_results #}
+            )
+            {%- if not loop.last %},{%- endif %}
+        {%- endfor %}
+        {% endset %}
+        {{ exposure_values }}
+    {% else %}
+        {{ return("") }}
+    {% endif %}
+{% endmacro -%}

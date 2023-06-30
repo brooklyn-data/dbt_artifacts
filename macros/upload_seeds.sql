@@ -74,3 +74,32 @@
         {{ return("") }}
     {% endif %}
 {%- endmacro %}
+
+{% macro dremio__get_seeds_dml_sql(seeds) -%}
+
+    {% if seeds != [] %}
+        {% set seed_values %}
+        values
+        {% for seed in seeds -%}
+            (
+                '{{ invocation_id }}', {# command_invocation_id #}
+                '{{ seed.unique_id }}', {# node_id #}
+                {{ dbt_artifacts.truncate_timestamp(run_started_at) }}, {# run_started_at #}
+                '{{ seed.database }}', {# database #}
+                '{{ seed.schema }}', {# schema #}
+                '{{ seed.name }}', {# name #}
+                '{{ seed.package_name }}', {# package_name #}
+                '{{ dbt_artifacts.escape_string(seed.original_file_path) }}', {# path #}
+                '{{ seed.checksum.checksum }}', {# checksum #}
+                '{{ dbt_artifacts.escape_string(tojson(seed.config.meta)) }}', {# meta #}
+                '{{ seed.alias }}', {# alias #}
+                '{{ dbt_artifacts.escape_string(tojson(seed)) }}' {# all_results #}
+            )
+            {%- if not loop.last %},{%- endif %}
+        {%- endfor %}
+        {% endset %}
+        {{ seed_values }}
+    {% else %}
+        {{ return("") }}
+    {% endif %}
+{% endmacro -%}

@@ -81,3 +81,34 @@
         {{ return("") }}
     {% endif %}
 {%- endmacro %}
+
+{% macro dremio__get_snapshots_dml_sql(snapshots) -%}
+
+    {% if snapshots != [] %}
+        {% set snapshot_values %}
+        values
+        {% for snapshot in snapshots -%}
+            (
+                '{{ invocation_id }}', {# command_invocation_id #}
+                '{{ snapshot.unique_id }}', {# node_id #}
+                {{ dbt_artifacts.truncate_timestamp(run_started_at) }}, {# run_started_at #}
+                '{{ snapshot.database }}', {# database #}
+                '{{ snapshot.schema }}', {# schema #}
+                '{{ snapshot.name }}', {# name #}
+                '{{ tojson(snapshot.depends_on.nodes) }}', {# depends_on_nodes #}
+                '{{ snapshot.package_name }}', {# package_name #}
+                '{{ dbt_artifacts.escape_string(snapshot.original_file_path) }}', {# path #}
+                '{{ snapshot.checksum.checksum }}', {# checksum #}
+                '{{ snapshot.config.strategy }}', {# strategy #}
+                '{{ dbt_artifacts.escape_string(tojson(snapshot.config.meta)) }}', {# meta #}
+                '{{ snapshot.alias }}', {# alias #}
+                '{{ dbt_artifacts.escape_string(tojson(snapshot)) }}' {# all_results #}
+            )
+            {%- if not loop.last %},{%- endif %}
+        {%- endfor %}
+        {% endset %}
+        {{ snapshot_values }}
+    {% else %}
+        {{ return("") }}
+    {% endif %}
+{% endmacro -%}
