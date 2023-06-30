@@ -257,7 +257,7 @@
                     null, {# query_completed_at #}
                 {% endif %}
 
-                {{ model.execution_time }}, {# total_node_runtime #}
+                cast({{ model.execution_time }} as float), {# total_node_runtime #}
                 null, -- rows_affected not available {# Only available in Snowflake & BigQuery #}
                 '{{ model.node.config.materialized }}', {# materialization #}
                 '{{ model.node.schema }}', {# schema #}
