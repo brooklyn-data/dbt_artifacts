@@ -223,7 +223,7 @@
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
                 '{{ model.node.unique_id }}', {# node_id #}
-                {{ dbt_artifacts.truncate_timestamp(run_started_at) }},, {# run_started_at #}
+                {{ dbt_artifacts.truncate_timestamp(run_started_at) }}, {# run_started_at #}
 
                 {% set config_full_refresh = model.node.config.full_refresh %}
                 {% if config_full_refresh is none %}
