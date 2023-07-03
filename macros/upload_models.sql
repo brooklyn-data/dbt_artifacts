@@ -92,7 +92,7 @@
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
                 '{{ model.unique_id }}', {# node_id #}
-                {{ dbt_artifacts.truncate_timestamp(run_started_at) }}, {# run_started_at #}
+                {{ dbt_artifacts.cast_as_timestamp(run_started_at) }}, {# run_started_at #}
                 '{{ model.database }}', {# database #}
                 '{{ model.schema }}', {# schema #}
                 '{{ model.name }}', {# name #}

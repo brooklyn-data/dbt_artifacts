@@ -80,7 +80,7 @@
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
                 '{{ source.unique_id }}', {# node_id #}
-                {{ dbt_artifacts.truncate_timestamp(run_started_at) }}, {# run_started_at #}
+                {{ dbt_artifacts.cast_as_timestamp(run_started_at) }}, {# run_started_at #}
                 '{{ source.database }}', {# database #}
                 '{{ source.schema }}', {# schema #}
                 '{{ source.source_name }}', {# source_name #}

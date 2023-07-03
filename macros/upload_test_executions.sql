@@ -140,7 +140,7 @@
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
                 '{{ test.node.unique_id }}', {# node_id #}
-                {{ dbt_artifacts.truncate_timestamp(run_started_at) }}, {# run_started_at #}
+                {{ dbt_artifacts.cast_as_timestamp(run_started_at) }}, {# run_started_at #}
 
                 {% set config_full_refresh = test.node.config.full_refresh %}
                 {% if config_full_refresh is none %}
@@ -154,22 +154,22 @@
                 {% if test.timing != [] %}
                     {% for stage in test.timing if stage.name == "compile" %}
                         {% if loop.length == 0 %}
-                            null, {# compile_started_at #}
+                            cast(null as timestamp), {# compile_started_at #}
                         {% else %}
-                            {{ dbt_artifacts.truncate_timestamp(stage.started_at) }}, {# compile_started_at #}
+                            {{ dbt_artifacts.cast_as_timestamp(stage.started_at) }}, {# compile_started_at #}
                         {% endif %}
                     {% endfor %}
 
                     {% for stage in test.timing if stage.name == "execute" %}
                         {% if loop.length == 0 %}
-                            null, {# query_completed_at #}
+                            cast(null as timestamp), {# query_completed_at #}
                         {% else %}
-                            {{ dbt_artifacts.truncate_timestamp(stage.completed_at) }}, {# query_completed_at #}
+                            {{ dbt_artifacts.cast_as_timestamp(stage.completed_at) }}, {# query_completed_at #}
                         {% endif %}
                     {% endfor %}
                 {% else %}
-                    null, {# compile_started_at #}
-                    null, {# query_completed_at #}
+                    cast(null as timestamp), {# compile_started_at #}
+                    cast(null as timestamp), {# query_completed_at #}
                 {% endif %}
 
                 cast({{ test.execution_time }} as float), {# total_node_runtime #}

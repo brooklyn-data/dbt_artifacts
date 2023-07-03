@@ -90,7 +90,7 @@
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
                 '{{ dbt_artifacts.escape_string(exposure.unique_id) }}', {# node_id #}
-                {{ dbt_artifacts.truncate_timestamp(run_started_at) }}, {# run_started_at #}
+                {{ dbt_artifacts.cast_as_timestamp(run_started_at) }}, {# run_started_at #}
                 '{{ dbt_artifacts.escape_string(exposure.name) }}', {# name #}
                 '{{ exposure.type }}', {# type #}
                 '{{ tojson(exposure.owner) }}', {# owner #}

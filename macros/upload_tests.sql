@@ -71,7 +71,7 @@
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
                 '{{ test.unique_id }}', {# node_id #}
-                {{ dbt_artifacts.truncate_timestamp(run_started_at) }}, {# run_started_at #}
+                {{ dbt_artifacts.cast_as_timestamp(run_started_at) }}, {# run_started_at #}
                 '{{ test.name }}', {# name #}
                 '{{ tojson(test.depends_on.nodes) }}', {# depends_on_nodes #}
                 '{{ test.package_name }}', {# package_name #}

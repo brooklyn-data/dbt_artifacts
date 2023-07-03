@@ -167,7 +167,7 @@
         '{{ invocation_id }}', {# command_invocation_id #}
         '{{ dbt_version }}', {# dbt_version #}
         '{{ project_name }}', {# project_name #}
-        {{ dbt_artifacts.truncate_timestamp(run_started_at) }}, {# run_started_at #}
+        {{ dbt_artifacts.cast_as_timestamp(run_started_at) }}, {# run_started_at #}
         '{{ flags.WHICH }}', {# dbt_command #}
         '{{ flags.FULL_REFRESH }}', {# full_refresh_flag #}
         '{{ target.profile_name }}', {# target_profile_name #}
