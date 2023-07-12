@@ -74,6 +74,8 @@ jobs:
       - name: Run ${{ matrix.warehouse }} Tests
         env:
           DBT_VERSION: ${{ matrix.version }}
+          POSTGRES_HOST: postgres
+          POSTGRES_PORT: 5432
         run: tox -e integration_${{ matrix.warehouse }}_${{ matrix.version }}
 
   # Databricks doesn't like the matrix strategy, so moving back to the old integration testing without versioning
