@@ -45,10 +45,10 @@ dbt_artifacts:
       retries: 1
     postgres:
       type: postgres
-      host: localhost
+      host: "{{ env_var('POSTGRES_HOST') }}"
       user: postgres
       password: postgres
-      port: 5432
+      port: "{{ env_var('POSTGRES_PORT') }}"
       dbname: postgres
       schema: public
       threads: 8
