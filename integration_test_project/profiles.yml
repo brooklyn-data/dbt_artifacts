@@ -45,7 +45,7 @@ dbt_artifacts:
       retries: 1
     postgres:
       type: postgres
-      host: postgres
+      host: localhost
       user: postgres
       password: postgres
       port: 5432
