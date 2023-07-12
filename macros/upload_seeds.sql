@@ -74,3 +74,46 @@
         {{ return("") }}
     {% endif %}
 {%- endmacro %}
+
+{% macro postgres__get_seeds_dml_sql(seeds) -%}
+    {% if seeds != [] %}
+        {% set columns = [
+            'command_invocation_id',
+            'node_id',
+            'run_started_at',
+            'database',
+            'schema',
+            'name',
+            'package_name',
+            'path',
+            'checksum',
+            'meta',
+            'alias',
+            'all_results',
+        ] %}
+        {% set seed_values %}
+            {% for seed in seeds -%}
+                (
+                    '{{ invocation_id }}', {# command_invocation_id #}
+                    '{{ seed.unique_id }}', {# node_id #}
+                    '{{ run_started_at }}', {# run_started_at #}
+                    '{{ seed.database }}', {# database #}
+                    '{{ seed.schema }}', {# schema #}
+                    '{{ seed.name }}', {# name #}
+                    '{{ seed.package_name }}', {# package_name #}
+                    '{{ seed.original_file_path | replace('\\', '\\\\') }}', {# path #}
+                    '{{ seed.checksum.checksum }}', {# checksum #}
+                    $${{ tojson(seed.config.meta) }}$$, {# meta #}
+                    '{{ seed.alias }}', {# alias #}
+                    $${{ tojson(seed) }}$$ {# all_results #}
+                )
+                {%- if not loop.last %},{%- endif %}
+            {%- endfor %}
+        {% endset %}
+        {{ "(" ~ columns | join(', ') ~ ")"}}
+        VALUES
+        {{ seed_values }}
+    {% else %}
+        {{ return("") }}
+    {% endif %}
+{%- endmacro %}

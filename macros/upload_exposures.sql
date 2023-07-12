@@ -80,3 +80,52 @@
         {{ return("") }}
     {% endif %}
 {%- endmacro %}
+
+{% macro postgres__get_exposures_dml_sql(exposures) -%}
+    {% if exposures != [] %}
+
+        {% set columns = [
+            'command_invocation_id',
+            'node_id',
+            'run_started_at',
+            'name',
+            'type',
+            'owner',
+            'maturity',
+            'path',
+            'description',
+            'url',
+            'package_name',
+            'depends_on_nodes',
+            'tags',
+            'all_results',
+        ] %}
+
+        {% set exposure_values %}
+            {% for exposure in exposures -%}
+                (
+                    '{{ invocation_id }}', {# command_invocation_id #}
+                    $${{ exposure.unique_id }}$$, {# node_id #}
+                    '{{ run_started_at }}', {# run_started_at #}
+                    $${{ exposure.name }}$$, {# name #}
+                    '{{ exposure.type }}', {# type #}
+                    $${{ tojson(exposure.owner) }}$$, {# owner #}
+                    '{{ exposure.maturity }}', {# maturity #}
+                    $${{ exposure.original_file_path }}$$, {# path #}
+                    $${{ exposure.description }}$$, {# description #}
+                    '{{ exposure.url }}', {# url #}
+                    '{{ exposure.package_name }}', {# package_name #}
+                    $${{ tojson(exposure.depends_on.nodes) }}$$, {# depends_on_nodes #}
+                    $${{ tojson(exposure.tags) }}$$, {# tags #}
+                    $${{ tojson(exposure) }}$$ {# all_results #}
+                )
+                {%- if not loop.last %},{%- endif %}
+            {%- endfor %}
+        {% endset %}
+        {{ "(" ~ columns | join(', ') ~ ")"}}
+        VALUES
+        {{ exposure_values }}
+    {% else %}
+        {{ return("") }}
+    {% endif %}
+{%- endmacro %}

@@ -70,3 +70,46 @@
         {{ return("") }}
     {% endif %}
 {%- endmacro %}
+
+{% macro postgres__get_sources_dml_sql(sources) -%}
+    {% if sources != [] %}
+        {% set columns = [
+            'command_invocation_id',
+            'node_id',
+            'run_started_at',
+            'database',
+            'schema',
+            'source_name',
+            'loader',
+            'name',
+            'identifier',
+            'loaded_at_field',
+            'freshness',
+            'all_results',
+        ] %}
+        {% set source_values %}
+            {% for source in sources -%}
+                (
+                    '{{ invocation_id }}', {# command_invocation_id #}
+                    '{{ source.unique_id }}', {# node_id #}
+                    '{{ run_started_at }}', {# run_started_at #}
+                    '{{ source.database }}', {# database #}
+                    '{{ source.schema }}', {# schema #}
+                    '{{ source.source_name }}', {# source_name #}
+                    '{{ source.loader }}', {# loader #}
+                    '{{ source.name }}', {# name #}
+                    '{{ source.identifier }}', {# identifier #}
+                    $${{ source.loaded_at_field }}$$, {# loaded_at_field #}
+                    $${{ tojson(source.freshness) }}$$,  {# freshness #}
+                    $${{ tojson(source) }}$$ {# all_results #}
+                )
+                {%- if not loop.last %},{%- endif %}
+            {%- endfor %}
+        {% endset %}
+        {{ "(" ~ columns | join(', ') ~ ")"}}
+        VALUES
+        {{ source_values }}
+    {% else %}
+        {{ return("") }}
+    {% endif %}
+{%- endmacro %}
