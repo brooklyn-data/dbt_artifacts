@@ -278,7 +278,7 @@
                 '{{ model.node.schema }}', {# schema #}
                 '{{ model.node.name }}', {# name #}
                 '{{ model.node.alias }}', {# alias #}
-                '{{ model.message | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') | replace("\n", "\\n") }}', {# message #}
+                $${{ model.message }}$$, {# message #}
                 $${{ tojson(model.adapter_response) }}$$ {# adapter_response #}
             )
             {%- if not loop.last %},{%- endif %}
