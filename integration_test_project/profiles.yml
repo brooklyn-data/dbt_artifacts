@@ -43,3 +43,13 @@ dbt_artifacts:
       timeout_seconds: 300
       priority: interactive
       retries: 1
+    postgres:
+      type: postgres
+      host: postgres
+      user: postgres
+      password: postgres
+      port: 5432
+      dbname: postgres
+      schema: public
+      threads: 8
+
