@@ -51,6 +51,8 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        ports:
+          - 5432:5432
 
     steps:
       - name: Checkout
@@ -74,7 +76,7 @@ jobs:
       - name: Run ${{ matrix.warehouse }} Tests
         env:
           DBT_VERSION: ${{ matrix.version }}
-          POSTGRES_HOST: postgres
+          POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
         run: tox -e integration_${{ matrix.warehouse }}_${{ matrix.version }}
 
