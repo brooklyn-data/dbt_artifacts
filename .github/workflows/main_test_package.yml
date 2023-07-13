@@ -34,7 +34,7 @@ jobs:
   integration:
     strategy:
       matrix:
-        warehouse: ["postgres"]
+        warehouse: ["snowflake", "bigquery", "postgres"]
         version: ["1_3_0", "1_4_0", "1_5_0"]
     runs-on: ubuntu-latest
     permissions:
