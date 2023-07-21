@@ -69,9 +69,9 @@
                     '{{ model.checksum.checksum }}', {# checksum #}
                     '{{ model.config.materialized }}', {# materialization #}
                     {{ tojson(model.tags) }}, {# tags #}
-                    parse_json('''{{ tojson(model.config.meta) }}'''), {# meta #}
+                    {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(model.config.meta)) }}, {# meta #}
                     '{{ model.alias }}', {# alias #}
-                    parse_json('{{ tojson(model) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}') {# all_results #}
+                    {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(model) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"')) }} {# all_results #}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}
