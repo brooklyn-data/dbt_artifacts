@@ -5,7 +5,7 @@ with base as (
 
 ),
 
-"snapshots" as (
+dbt_snapshots as (
 
     select
         snapshot_execution_id,
@@ -26,4 +26,4 @@ with base as (
 
 )
 
-select * from "snapshots"
+select * from dbt_snapshots
