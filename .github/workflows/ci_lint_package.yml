@@ -44,7 +44,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }} # Check out the code of the PR
 
       - name: Install Python packages
-        run: python -m pip install dbt-snowflake~=1.5.0 sqlfluff-templater-dbt
+        run: python -m pip install dbt-snowflake~=1.6.0 sqlfluff-templater-dbt
 
       - name: Test database connection
         run: dbt debug
