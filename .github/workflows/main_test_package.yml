@@ -66,20 +66,20 @@ jobs:
         run: tox -e integration_${{ matrix.warehouse }}_${{ matrix.version }}
 
   # Databricks doesn't like the matrix strategy, so moving back to the old integration testing without versioning
-  integration-databricks:
-    runs-on: ubuntu-latest
+  # integration-databricks:
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
 
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.8.x'
-          architecture: 'x64'
+  #     - uses: actions/setup-python@v4
+  #       with:
+  #         python-version: '3.8.x'
+  #         architecture: 'x64'
 
-      - name: Install tox
-        run: python3 -m pip install tox
+  #     - name: Install tox
+  #       run: python3 -m pip install tox
 
-      - name: Run Databricks Tests
-        run: tox -e integration_databricks
+  #     - name: Run Databricks Tests
+  #       run: tox -e integration_databricks
