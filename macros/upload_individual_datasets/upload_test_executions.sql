@@ -1,10 +1,4 @@
-{% macro upload_test_executions(results) -%}
-    {% set tests = [] %}
-    {% for result in results  %}
-        {% if result.node.resource_type == "test" %}
-            {% do tests.append(result) %}
-        {% endif %}
-    {% endfor %}
+{% macro upload_test_executions(tests) -%}
     {{ return(adapter.dispatch('get_test_executions_dml_sql', 'dbt_artifacts')(tests)) }}
 {%- endmacro %}
 

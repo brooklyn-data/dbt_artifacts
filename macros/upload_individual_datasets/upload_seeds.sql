@@ -1,8 +1,4 @@
-{% macro upload_seeds(graph) -%}
-    {% set seeds = [] %}
-    {% for node in graph.nodes.values() | selectattr("resource_type", "equalto", "seed") %}
-        {% do seeds.append(node) %}
-    {% endfor %}
+{% macro upload_seeds(seeds) -%}
     {{ return(adapter.dispatch('get_seeds_dml_sql', 'dbt_artifacts')(seeds)) }}
 {%- endmacro %}
 

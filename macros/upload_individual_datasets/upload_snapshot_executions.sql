@@ -1,10 +1,4 @@
-{% macro upload_snapshot_executions(results) -%}
-    {% set snapshots = [] %}
-    {% for result in results  %}
-        {% if result.node.resource_type == "snapshot" %}
-            {% do snapshots.append(result) %}
-        {% endif %}
-    {% endfor %}
+{% macro upload_snapshot_executions(snapshots) -%}
     {{ return(adapter.dispatch('get_snapshot_executions_dml_sql', 'dbt_artifacts')(snapshots)) }}
 {%- endmacro %}
 

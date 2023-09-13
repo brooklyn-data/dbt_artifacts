@@ -86,10 +86,10 @@ macros:
     description: |
       The macro to support upload of the data to the exposures table.
     arguments:
-      - name: graph
-        type: object
+      - name: exposures
+        type: list
         description: |
-          The graph object from dbt.
+          A list of exposure objects extracted from the dbt graph
 
   - name: upload_invocations
     description: |
@@ -99,10 +99,10 @@ macros:
     description: |
       The macro to support upload of the data to the model_executions table.
     arguments:
-      - name: results
+      - name: models
         type: list
         description: |
-          The results object from dbt.
+          A list of model execution results objects extracted from the dbt result object
 
   - name: upload_models
     description: |
@@ -117,37 +117,37 @@ macros:
     description: |
       The macro to support upload of the data to the seed_executions table.
     arguments:
-      - name: results
+      - name: seeds
         type: list
         description: |
-          The results object from dbt.
+          A list of seed execution results objects extracted from the dbt result object
 
   - name: upload_seeds
     description: |
       The macro to support upload of the data to the seeds table.
     arguments:
-      - name: graph
-        type: object
+      - name: seeds
+        type: list
         description: |
-          The graph object from dbt.
+          A list of seeds objects extracted from the dbt graph
 
   - name: upload_snapshot_executions
     description: |
       The macro to support upload of the data to the snapshot_executions table.
     arguments:
-      - name: results
+      - name: snapshots
         type: list
         description: |
-          The results object from dbt.
+          A list of snapshot execution results objects extracted from the dbt result object
 
   - name: upload_snapshots
     description: |
       The macro to support upload of the data to the snapshots table.
     arguments:
-      - name: graph
-        type: object
+      - name: snapshots
+        type: list
         description: |
-          The graph object from dbt.
+          A list of snapshots objects extracted from the dbt graph
 
   - name: upload_sources
     description: |
@@ -162,10 +162,10 @@ macros:
     description: |
       The macro to support upload of the data to the test_executions table.
     arguments:
-      - name: results
+      - name: tests
         type: list
         description: |
-          The results object from dbt.
+          A list of test execution results objects extracted from the dbt result object
 
   - name: upload_tests
     description: |
@@ -177,7 +177,7 @@ macros:
           A list of test objects extracted from the dbt graph
 
   ## UPLOAD RESULTS ##
-  - name: get_column_name_lists
+  - name: get_column_name_list
     description: |
       A macro to return the list of column names for a particular dataset. Returns a comment if the dataset is not
       valid.

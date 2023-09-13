@@ -1,10 +1,4 @@
-{% macro upload_model_executions(results) -%}
-    {% set models = [] %}
-    {% for result in results  %}
-        {% if result.node.resource_type == "model" %}
-            {% do models.append(result) %}
-        {% endif %}
-    {% endfor %}
+{% macro upload_model_executions(models) -%}
     {{ return(adapter.dispatch('get_model_executions_dml_sql', 'dbt_artifacts')(models)) }}
 {%- endmacro %}
 

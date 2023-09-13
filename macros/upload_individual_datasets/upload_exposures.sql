@@ -1,8 +1,4 @@
-{% macro upload_exposures(graph) -%}
-    {% set exposures = [] %}
-    {% for node in graph.exposures.values() %}
-        {% do exposures.append(node) %}
-    {% endfor %}
+{% macro upload_exposures(exposures) -%}
     {{ return(adapter.dispatch('get_exposures_dml_sql', 'dbt_artifacts')(exposures)) }}
 {%- endmacro %}
 

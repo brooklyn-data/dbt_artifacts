@@ -1,10 +1,4 @@
-{% macro upload_seed_executions(results) -%}
-    {% set seeds = [] %}
-    {% for result in results  %}
-        {% if result.node.resource_type == "seed" %}
-            {% do seeds.append(result) %}
-        {% endif %}
-    {% endfor %}
+{% macro upload_seed_executions(seeds) -%}
     {{ return(adapter.dispatch('get_seed_executions_dml_sql', 'dbt_artifacts')(seeds)) }}
 {%- endmacro %}
 

@@ -20,23 +20,23 @@
 
                 {# Executions make use of the results object #}
                 {% if dataset == 'model_executions' %}
-                    {{ dbt_artifacts.upload_model_executions(results) }}
+                    {{ dbt_artifacts.upload_model_executions(results | selectattr("node.resource_type", "equalto", "model") | list) }}
                 {% elif dataset == 'seed_executions' %}
-                    {{ dbt_artifacts.upload_seed_executions(results) }}
+                    {{ dbt_artifacts.upload_seed_executions(results | selectattr("node.resource_type", "equalto", "seed") | list) }}
                 {% elif dataset == 'test_executions' %}
-                    {{ dbt_artifacts.upload_test_executions(results) }}
+                    {{ dbt_artifacts.upload_test_executions(results | selectattr("node.resource_type", "equalto", "test") | list) }}
                 {% elif dataset == 'snapshot_executions' %}
-                    {{ dbt_artifacts.upload_snapshot_executions(results) }}
+                    {{ dbt_artifacts.upload_snapshot_executions(results | selectattr("node.resource_type", "equalto", "snapshot") | list) }}
                 {#
                     Use the [graph](https://docs.getdbt.com/reference/dbt-jinja-functions/graph) to extract details about
                     the exposures, seeds, snapshots and invocations
                 #}
                 {% elif dataset == 'exposures' %}
-                    {{ dbt_artifacts.upload_exposures(graph) }}
+                    {{ dbt_artifacts.upload_exposures(graph.exposures.values() | list) }}
                 {% elif dataset == 'seeds' %}
-                    {{ dbt_artifacts.upload_seeds(graph) }}
+                    {{ dbt_artifacts.upload_seeds(graph.nodes.values() | selectattr("resource_type", "equalto", "seed") | list) }}
                 {% elif dataset == 'snapshots' %}
-                    {{ dbt_artifacts.upload_snapshots(graph) }}
+                    {{ dbt_artifacts.upload_snapshots(graph.nodes.values() | selectattr("resource_type", "equalto", "snapshot") | list) }}
                 {# Invocations only requires data from variables available in the macro #}
                 {% elif dataset == 'invocations' %}
                     {{ dbt_artifacts.upload_invocations() }}
@@ -63,10 +63,7 @@
 
         {% do log("Uploading sources", true) %}
         {% set sources = dbt_artifacts.get_relation('sources') %}
-        {% set sources_set = [] %}
-        {% for node in graph.sources.values() %}
-            {% do sources_set.append(node) %}
-        {% endfor %}
+        {% set sources_set = graph.sources.values() | list %}
         {% set fields_sources = dbt_artifacts.get_column_name_list('sources') %}
         {# upload sources in chunks of 5000 sources (300 for BigQuery), or less #}
         {% set upload_limit = 300 if target.type == 'bigquery' else 5000 %}
@@ -89,10 +86,7 @@
 
         {% do log("Uploading tests", true) %}
         {% set tests = dbt_artifacts.get_relation('tests') %}
-        {% set tests_set = [] %}
-        {% for node in graph.nodes.values() | selectattr("resource_type", "equalto", "test") %}
-            {% do tests_set.append(node) %}
-        {% endfor %}
+        {% set tests_set = graph.nodes.values() | selectattr("resource_type", "equalto", "test") | list %}
         {% set fields_tests = dbt_artifacts.get_column_name_list('tests') %}
         {# upload tests in chunks of 5000 tests (300 for BigQuery), or less #}
         {% set upload_limit = 300 if target.type == 'bigquery' else 5000 %}
@@ -110,10 +104,7 @@
 
         {% do log("Uploading models", true) %}
         {% set models = dbt_artifacts.get_relation('models') %}
-        {% set models_set = [] %}
-        {% for node in graph.nodes.values() | selectattr("resource_type", "equalto", "model") %}
-            {% do models_set.append(node) %}
-        {% endfor %}
+        {% set models_set = graph.nodes.values() | selectattr("resource_type", "equalto", "model") | list %}
         {% set fields_models = dbt_artifacts.get_column_name_list('models') %}
         {# upload tests in chunks of 100 models (50 for BigQuery), or less #}
         {% set upload_limit = 50 if target.type == 'bigquery' else 100 %}
