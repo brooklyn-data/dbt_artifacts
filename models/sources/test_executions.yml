@@ -22,8 +22,6 @@ models:
         description: '{{ doc("query_completed_at") }}'
       - name: total_node_runtime
         description: '{{ doc("total_node_runtime") }}'
-      - name: rows_affected
-        description: '{{ doc("rows_affected") }}'
       - name: failures
         description: '{{ doc("failures") }}'
       - name: message
