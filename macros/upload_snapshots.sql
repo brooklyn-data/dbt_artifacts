@@ -38,7 +38,7 @@
                 '{{ tojson(snapshot.depends_on.nodes) }}', {# depends_on_nodes #}
                 '{{ snapshot.package_name }}', {# package_name #}
                 '{{ snapshot.original_file_path | replace('\\', '\\\\') }}', {# path #}
-                '{{ snapshot.checksum.checksum }}', {# checksum #}
+                '{{ snapshot.checksum.checksum | replace('\\', '\\\\') }}', {# checksum #}
                 '{{ snapshot.config.strategy }}', {# strategy #}
                 '{{ tojson(snapshot.config.meta) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}', {# meta #}
                 '{{ snapshot.alias }}', {# alias #}
@@ -67,7 +67,7 @@
                     {{ tojson(snapshot.depends_on.nodes) }}, {# depends_on_nodes #}
                     '{{ snapshot.package_name }}', {# package_name #}
                     '{{ snapshot.original_file_path | replace('\\', '\\\\') }}', {# path #}
-                    '{{ snapshot.checksum.checksum }}', {# checksum #}
+                    '{{ snapshot.checksum.checksum | replace('\\', '\\\\') }}', {# checksum #}
                     '{{ snapshot.config.strategy }}', {# strategy #}
                     {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(snapshot.config.meta)) }}, {# meta #}
                     '{{ snapshot.alias }}', {# alias #}
