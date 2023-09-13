@@ -62,9 +62,9 @@
                     '{{ seed.package_name }}', {# package_name #}
                     '{{ seed.original_file_path | replace('\\', '\\\\') }}', {# path #}
                     '{{ seed.checksum.checksum | replace('\\', '\\\\')}}', {# checksum #}
-                    parse_json('''{{ tojson(seed.config.meta) }}'''), {# meta #}
+                    {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(seed.config.meta)) }}, {# meta #}
                     '{{ seed.alias }}', {# alias #}
-                    parse_json('{{ tojson(seed) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}', wide_number_mode=>'round') {# all_results #}
+                    {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(seed) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"')) }} {# all_results #}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}

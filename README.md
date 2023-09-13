@@ -45,7 +45,7 @@ See the generated [dbt docs site](https://brooklyn-data.github.io/dbt_artifacts/
 ```
 packages:
   - package: brooklyn-data/dbt_artifacts
-    version: 2.4.2
+    version: 2.5.0
 ```
 
 :construction_worker: Make sure to fix at least the **minor** version, to avoid issues when a new release is open. See the notes on upgrading below for more detail.
@@ -55,15 +55,15 @@ packages:
 3. Add an on-run-end hook to your `dbt_project.yml`
 
     ```yml
-    `on-run-end:
-      - "{{ dbt_artifacts.upload_results(results) }}"`
+    on-run-end:
+      - "{{ dbt_artifacts.upload_results(results) }}"
     ```
 
     We recommend adding a conditional here so that the upload only occurs in your production environment, such as:
 
     ```yml
     on-run-end:
-      - "{% if target.name == 'prod' %}{{ dbt_artifacts.upload_results(results) }}{% endif %}"`)
+      - "{% if target.name == 'prod' %}{{ dbt_artifacts.upload_results(results) }}{% endif %}"
     ```
 
 4. Run the tables!
