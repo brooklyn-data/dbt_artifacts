@@ -32,37 +32,7 @@
             {% for i in range(0, objects | length, upload_limit) -%}
 
                 {# Get just the objects to load on this loop #}
-                {% set objects_to_upload = objects[i: i + upload_limit] %}
-
-                {# Convert the results to data to be imported #}
-                {% set content %}
-
-                    {% if dataset == 'model_executions' %}
-                        {{ dbt_artifacts.upload_model_executions(objects_to_upload) }}
-                    {% elif dataset == 'seed_executions' %}
-                        {{ dbt_artifacts.upload_seed_executions(objects_to_upload) }}
-                    {% elif dataset == 'test_executions' %}
-                        {{ dbt_artifacts.upload_test_executions(objects_to_upload) }}
-                    {% elif dataset == 'snapshot_executions' %}
-                        {{ dbt_artifacts.upload_snapshot_executions(objects_to_upload) }}
-                    {% elif dataset == 'exposures' %}
-                        {{ dbt_artifacts.upload_exposures(objects_to_upload) }}
-                    {% elif dataset == 'models' %}
-                        {{ dbt_artifacts.upload_models(objects_to_upload) }}
-                    {% elif dataset == 'seeds' %}
-                        {{ dbt_artifacts.upload_seeds(objects_to_upload) }}
-                    {% elif dataset == 'snapshots' %}
-                        {{ dbt_artifacts.upload_snapshots(objects_to_upload) }}
-                    {% elif dataset == 'sources' %}
-                        {{ dbt_artifacts.upload_sources(objects_to_upload) }}
-                    {% elif dataset == 'tests' %}
-                        {{ dbt_artifacts.upload_tests(objects_to_upload) }}
-                    {# Invocations only requires data from variables available in the macro #}
-                    {% elif dataset == 'invocations' %}
-                        {{ dbt_artifacts.upload_invocations() }}
-                    {% endif %}
-
-                {% endset %}
+                {% set content = get_table_content_values(dataset, objects[i: i + upload_limit]) %}
 
                 {# Insert the content into the metadata table #}
                 {{ dbt_artifacts.insert_into_metadata_table(

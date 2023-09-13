@@ -196,6 +196,19 @@ macros:
         description: |
           The name of the dataset to return the data for e.g. `models`
 
+  - name: get_table_content_values
+    description: |
+      A macro to create the insert statement values required to be uploaded to the table.
+    arguments:
+      - name: dataset
+        type: string
+        description: |
+          The name of the dataset to return the column names for e.g. `models`
+      - name: objects_to_upload
+        type: list
+        description: |
+          The objects to be used to generate the insert statement values - extracted from `get_dataset_content`
+
   - name: insert_into_metadata_table
     description: |
       Dependent on the adapter type, the wrapper to insert the data into a table from a list of values. Used in the
