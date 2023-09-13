@@ -35,7 +35,7 @@
                 '{{ tojson(model.depends_on.nodes) | replace('\\', '\\\\') }}', {# depends_on_nodes #}
                 '{{ model.package_name }}', {# package_name #}
                 '{{ model.original_file_path | replace('\\', '\\\\') }}', {# path #}
-                '{{ model.checksum.checksum }}', {# checksum #}
+                '{{ model.checksum.checksum  | replace('\\', '\\\\') }}', {# checksum #}
                 '{{ model.config.materialized }}', {# materialization #}
                 '{{ tojson(model.tags) }}', {# tags #}
                 '{{ tojson(model.config.meta) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}', {# meta #}
@@ -66,7 +66,7 @@
                     {{ tojson(model.depends_on.nodes) }}, {# depends_on_nodes #}
                     '{{ model.package_name }}', {# package_name #}
                     '{{ model.original_file_path | replace('\\', '\\\\') }}', {# path #}
-                    '{{ model.checksum.checksum }}', {# checksum #}
+                    '{{ model.checksum.checksum | replace('\\', '\\\\') }}', {# checksum #}
                     '{{ model.config.materialized }}', {# materialization #}
                     {{ tojson(model.tags) }}, {# tags #}
                     {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(model.config.meta)) }}, {# meta #}

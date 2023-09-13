@@ -30,7 +30,7 @@
                 '{{ seed.name }}', {# name #}
                 '{{ seed.package_name }}', {# package_name #}
                 '{{ seed.original_file_path | replace('\\', '\\\\') }}', {# path #}
-                '{{ seed.checksum.checksum }}', {# checksum #}
+                '{{ seed.checksum.checksum | replace('\\', '\\\\') }}', {# checksum #}
                 '{{ tojson(seed.config.meta) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}', {# meta #}
                 '{{ seed.alias }}', {# alias #}
                 '{{ tojson(seed) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}' {# all_results #}
@@ -57,7 +57,7 @@
                     '{{ seed.name }}', {# name #}
                     '{{ seed.package_name }}', {# package_name #}
                     '{{ seed.original_file_path | replace('\\', '\\\\') }}', {# path #}
-                    '{{ seed.checksum.checksum }}', {# checksum #}
+                    '{{ seed.checksum.checksum | replace('\\', '\\\\')}}', {# checksum #}
                     {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(seed.config.meta)) }}, {# meta #}
                     '{{ seed.alias }}', {# alias #}
                     {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(seed) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"')) }} {# all_results #}
