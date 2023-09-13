@@ -4,135 +4,99 @@
 
     {% if execute %}
 
-        {% set standard_datasets = ['exposures', 'seeds', 'snapshots', 'invocations'] %}
+        {% set datasets_to_load = ['exposures', 'seeds', 'snapshots', 'invocations', 'sources', 'tests', 'models'] %}
         {% if results != [] %}
             {# When executing, and results are available, then upload the results #}
-            {% set standard_datasets = ['model_executions', 'seed_executions', 'test_executions', 'snapshot_executions'] + standard_datasets %}
+            {% set datasets_to_load = ['model_executions', 'seed_executions', 'test_executions', 'snapshot_executions'] + datasets_to_load %}
         {% endif %}
 
         {# Upload each data set in turn #}
-        {% for dataset in standard_datasets %}
+        {% for dataset in datasets_to_load %}
 
-            {% do log("Uploading " ~ dataset.replace("_", ""), true) %}
+            {% do log("Uploading " ~ dataset.replace("_", " "), true) %}
+
+            {# Get the relation that the results will be uploaded to #}
             {% set dataset_relation = dbt_artifacts.get_relation(dataset) %}
 
             {# Get the results that need to be uploaded #}
-            {% set objects %}
 
-                {% if dataset in ['model_executions', 'seed_executions', 'test_executions', 'snapshot_executions'] %}
-                    {{ results | selectattr("node.resource_type", "equalto", dataset.split("_")[0]) | list }}
-                {#
-                    Use the [graph](https://docs.getdbt.com/reference/dbt-jinja-functions/graph) to extract details about
-                    the exposures, seeds, snapshots and invocations
-                #}
-                {% elif dataset in ['seeds', 'snapshots'] %}
-                    {{ graph.nodes.values() | selectattr("resource_type", "equalto", dataset[:-1]) }}
-                {% elif dataset == 'exposures' %}
-                    {{ graph.exposures.values() | list }}
-                {% endif %}
-
-            {% endset %}
-
-            {# Convert the results to data to be imported #}
-            {% set content %}
-
+            {% if dataset in ['model_executions', 'seed_executions', 'test_executions', 'snapshot_executions'] %}
                 {# Executions make use of the results object #}
-                {% if dataset == 'model_executions' %}
-                    {{ dbt_artifacts.upload_model_executions(objects) }}
-                {% elif dataset == 'seed_executions' %}
-                    {{ dbt_artifacts.upload_seed_executions(objects) }}
-                {% elif dataset == 'test_executions' %}
-                    {{ dbt_artifacts.upload_test_executions(objects) }}
-                {% elif dataset == 'snapshot_executions' %}
-                    {{ dbt_artifacts.upload_snapshot_executions(objects) }}
-                {% elif dataset == 'exposures' %}
-                    {{ dbt_artifacts.upload_exposures(objects) }}
-                {% elif dataset == 'seeds' %}
-                    {{ dbt_artifacts.upload_seeds(objects) }}
-                {% elif dataset == 'snapshots' %}
-                    {{ dbt_artifacts.upload_snapshots(objects) }}
-                {# Invocations only requires data from variables available in the macro #}
-                {% elif dataset == 'invocations' %}
-                    {{ dbt_artifacts.upload_invocations() }}
-                {% endif %}
+                {% set objects = results | selectattr("node.resource_type", "equalto", dataset.split("_")[0]) | list %}
+            {% elif dataset in ['seeds', 'snapshots', 'tests', 'models'] %}
+                {# Use the nodes in the [graph](https://docs.getdbt.com/reference/dbt-jinja-functions/graph) to extract details #}
+                {% set objects = graph.nodes.values() | selectattr("resource_type", "equalto", dataset[:-1]) | list %}
+            {% elif dataset in ['exposures', 'sources'] %}
+                {# Use the [graph](https://docs.getdbt.com/reference/dbt-jinja-functions/graph) to extract details #}
+                {% set objects = graph.get(dataset).values() | list %}
+            {% elif dataset == 'invocations' %}
+                {#
+                    Invocations doesn't need anything input, but we include this so that it will still be picked up
+                    as part of the loop below - the length must be >0 to allow for an upload, hence the empty string
+                #}
+                {% set objects = [''] %}
+            {% endif %}
 
-            {% endset %}
 
-            {# Insert the content into the metadata table #}
-            {{ dbt_artifacts.insert_into_metadata_table(
-                database_name=dataset_relation.database,
-                schema_name=dataset_relation.schema,
-                table_name=dataset_relation.identifier,
-                fields=dbt_artifacts.get_column_name_list(dataset),
-                content=content
-                )
-            }}
+            {# Upload in chunks to reduce query size #}
+            {% if dataset == 'model' %}
+                {% set upload_limit = 50 if target.type == 'bigquery' else 100 %}
+            {% else %}
+                {% set upload_limit = 300 if target.type == 'bigquery' else 5000 %}
+            {% endif %}
 
+            {# Loop through each chunk in turn #}
+            {% for i in range(0, objects | length, upload_limit) -%}
+
+                {# Get just the objects to load on this loop #}
+                {% set objects_to_upload = objects[i: i + upload_limit] %}
+
+                {# Convert the results to data to be imported #}
+                {% set content %}
+
+                    {% if dataset == 'model_executions' %}
+                        {{ dbt_artifacts.upload_model_executions(objects_to_upload) }}
+                    {% elif dataset == 'seed_executions' %}
+                        {{ dbt_artifacts.upload_seed_executions(objects_to_upload) }}
+                    {% elif dataset == 'test_executions' %}
+                        {{ dbt_artifacts.upload_test_executions(objects_to_upload) }}
+                    {% elif dataset == 'snapshot_executions' %}
+                        {{ dbt_artifacts.upload_snapshot_executions(objects_to_upload) }}
+                    {% elif dataset == 'exposures' %}
+                        {{ dbt_artifacts.upload_exposures(objects_to_upload) }}
+                    {% elif dataset == 'models' %}
+                        {{ dbt_artifacts.upload_models(objects_to_upload) }}
+                    {% elif dataset == 'seeds' %}
+                        {{ dbt_artifacts.upload_seeds(objects_to_upload) }}
+                    {% elif dataset == 'snapshots' %}
+                        {{ dbt_artifacts.upload_snapshots(objects_to_upload) }}
+                    {% elif dataset == 'sources' %}
+                        {{ dbt_artifacts.upload_sources(objects_to_upload) }}
+                    {% elif dataset == 'tests' %}
+                        {{ dbt_artifacts.upload_tests(objects_to_upload) }}
+                    {# Invocations only requires data from variables available in the macro #}
+                    {% elif dataset == 'invocations' %}
+                        {{ dbt_artifacts.upload_invocations() }}
+                    {% endif %}
+
+                {% endset %}
+
+                {# Insert the content into the metadata table #}
+                {{ dbt_artifacts.insert_into_metadata_table(
+                    database_name=dataset_relation.database,
+                    schema_name=dataset_relation.schema,
+                    table_name=dataset_relation.identifier,
+                    fields=dbt_artifacts.get_column_name_list(dataset),
+                    content=content
+                    )
+                }}
+
+            {# Loop the next 'chunk' #}
+            {% endfor %}
+
+        {# Loop the next 'dataset' #}
         {% endfor %}
 
-
-        {#
-            We can also use a similar approach for sources, but we want to reduce the number uploaded each time
-        #}
-
-        {% do log("Uploading sources", true) %}
-        {% set sources = dbt_artifacts.get_relation('sources') %}
-        {% set sources_set = graph.sources.values() | list %}
-        {% set fields_sources = dbt_artifacts.get_column_name_list('sources') %}
-        {# upload sources in chunks of 5000 sources (300 for BigQuery), or less #}
-        {% set upload_limit = 300 if target.type == 'bigquery' else 5000 %}
-        {% for i in range(0, sources_set | length, upload_limit) -%}
-            {% set content_sources = dbt_artifacts.upload_sources(sources_set[i: i + upload_limit]) %}
-            {{ dbt_artifacts.insert_into_metadata_table(
-                database_name=sources.database,
-                schema_name=sources.schema,
-                table_name=sources.identifier,
-                fields=fields_sources,
-                content=content_sources
-                )
-            }}
-        {%- endfor %}
-
-        {#
-            Use the [graph](https://docs.getdbt.com/reference/dbt-jinja-functions/graph) to extract details about
-            the tests, models and sources - need to look through the nodes and select the ones we want
-        #}
-
-        {% do log("Uploading tests", true) %}
-        {% set tests = dbt_artifacts.get_relation('tests') %}
-        {% set tests_set = graph.nodes.values() | selectattr("resource_type", "equalto", "test") | list %}
-        {% set fields_tests = dbt_artifacts.get_column_name_list('tests') %}
-        {# upload tests in chunks of 5000 tests (300 for BigQuery), or less #}
-        {% set upload_limit = 300 if target.type == 'bigquery' else 5000 %}
-        {% for i in range(0, tests_set | length, upload_limit) -%}
-            {% set content_tests = dbt_artifacts.upload_tests(tests_set[i: i + upload_limit]) %}
-            {{ dbt_artifacts.insert_into_metadata_table(
-                database_name=tests.database,
-                schema_name=tests.schema,
-                table_name=tests.identifier,
-                fields=fields_tests,
-                content=content_tests
-                )
-            }}
-        {%- endfor %}
-
-        {% do log("Uploading models", true) %}
-        {% set models = dbt_artifacts.get_relation('models') %}
-        {% set models_set = graph.nodes.values() | selectattr("resource_type", "equalto", "model") | list %}
-        {% set fields_models = dbt_artifacts.get_column_name_list('models') %}
-        {# upload tests in chunks of 100 models (50 for BigQuery), or less #}
-        {% set upload_limit = 50 if target.type == 'bigquery' else 100 %}
-        {% for i in range(0, models_set | length, upload_limit) -%}
-            {% set content_models = dbt_artifacts.upload_models(models_set[i: i + upload_limit]) %}
-            {{ dbt_artifacts.insert_into_metadata_table(
-                database_name=models.database,
-                schema_name=models.schema,
-                table_name=models.identifier,
-                fields=fields_models,
-                content=content_models
-                )
-            }}
-        {%- endfor %}
-
     {% endif %}
+
 {%- endmacro %}
