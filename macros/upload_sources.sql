@@ -59,8 +59,8 @@
                     '{{ source.name }}', {# name #}
                     '{{ source.identifier }}', {# identifier #}
                     '{{ source.loaded_at_field | replace("'","\\'") }}', {# loaded_at_field #}
-                    parse_json('{{ tojson(source.freshness) | replace("'","\\'") }}'),  {# freshness #}
-                    parse_json('{{ tojson(source) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}', wide_number_mode=>'round') {# all_results #}
+                    {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(source.freshness) | replace("'","\\'")) }},  {# freshness #}
+                    {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(source) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"')) }} {# all_results #}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}

@@ -62,7 +62,7 @@
                     '{{ run_started_at }}', {# run_started_at #}
                     '{{ exposure.name | replace("'","\\'") }}', {# name #}
                     '{{ exposure.type }}', {# type #}
-                    parse_json('{{ tojson(exposure.owner) | replace("'","\\'") }}'), {# owner #}
+                    {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(exposure.owner) | replace("'","\\'")) }}, {# owner #}
                     '{{ exposure.maturity }}', {# maturity #}
                     '{{ exposure.original_file_path | replace('\\', '\\\\') }}', {# path #}
                     """{{ exposure.description | replace("'","\\'") }}""", {# description #}
@@ -70,7 +70,7 @@
                     '{{ exposure.package_name }}', {# package_name #}
                     {{ tojson(exposure.depends_on.nodes) }}, {# depends_on_nodes #}
                     {{ tojson(exposure.tags) }}, {# tags #}
-                    parse_json('{{ tojson(exposure) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}', wide_number_mode=>'round') {# all_results #}
+                    {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(exposure) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"')) }} {# all_results #}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}
