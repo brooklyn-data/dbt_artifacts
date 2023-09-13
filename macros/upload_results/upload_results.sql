@@ -16,27 +16,41 @@
             {% do log("Uploading " ~ dataset.replace("_", ""), true) %}
             {% set dataset_relation = dbt_artifacts.get_relation(dataset) %}
 
-            {% set content %}
+            {# Get the results that need to be uploaded #}
+            {% set objects %}
 
-                {# Executions make use of the results object #}
-                {% if dataset == 'model_executions' %}
-                    {{ dbt_artifacts.upload_model_executions(results | selectattr("node.resource_type", "equalto", "model") | list) }}
-                {% elif dataset == 'seed_executions' %}
-                    {{ dbt_artifacts.upload_seed_executions(results | selectattr("node.resource_type", "equalto", "seed") | list) }}
-                {% elif dataset == 'test_executions' %}
-                    {{ dbt_artifacts.upload_test_executions(results | selectattr("node.resource_type", "equalto", "test") | list) }}
-                {% elif dataset == 'snapshot_executions' %}
-                    {{ dbt_artifacts.upload_snapshot_executions(results | selectattr("node.resource_type", "equalto", "snapshot") | list) }}
+                {% if dataset in ['model_executions', 'seed_executions', 'test_executions', 'snapshot_executions'] %}
+                    {{ results | selectattr("node.resource_type", "equalto", dataset.split("_")[0]) | list }}
                 {#
                     Use the [graph](https://docs.getdbt.com/reference/dbt-jinja-functions/graph) to extract details about
                     the exposures, seeds, snapshots and invocations
                 #}
+                {% elif dataset in ['seeds', 'snapshots'] %}
+                    {{ graph.nodes.values() | selectattr("resource_type", "equalto", dataset[:-1]) }}
                 {% elif dataset == 'exposures' %}
-                    {{ dbt_artifacts.upload_exposures(graph.exposures.values() | list) }}
+                    {{ graph.exposures.values() | list }}
+                {% endif %}
+
+            {% endset %}
+
+            {# Convert the results to data to be imported #}
+            {% set content %}
+
+                {# Executions make use of the results object #}
+                {% if dataset == 'model_executions' %}
+                    {{ dbt_artifacts.upload_model_executions(objects) }}
+                {% elif dataset == 'seed_executions' %}
+                    {{ dbt_artifacts.upload_seed_executions(objects) }}
+                {% elif dataset == 'test_executions' %}
+                    {{ dbt_artifacts.upload_test_executions(objects) }}
+                {% elif dataset == 'snapshot_executions' %}
+                    {{ dbt_artifacts.upload_snapshot_executions(objects) }}
+                {% elif dataset == 'exposures' %}
+                    {{ dbt_artifacts.upload_exposures(objects) }}
                 {% elif dataset == 'seeds' %}
-                    {{ dbt_artifacts.upload_seeds(graph.nodes.values() | selectattr("resource_type", "equalto", "seed") | list) }}
+                    {{ dbt_artifacts.upload_seeds(objects) }}
                 {% elif dataset == 'snapshots' %}
-                    {{ dbt_artifacts.upload_snapshots(graph.nodes.values() | selectattr("resource_type", "equalto", "snapshot") | list) }}
+                    {{ dbt_artifacts.upload_snapshots(objects) }}
                 {# Invocations only requires data from variables available in the macro #}
                 {% elif dataset == 'invocations' %}
                     {{ dbt_artifacts.upload_invocations() }}
