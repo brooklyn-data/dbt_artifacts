@@ -14,6 +14,8 @@ models:
         description: '{{ doc("node_id") }}'
       - name: query_completed_at
         description: '{{ doc("query_completed_at") }}'
+      - name: rows_affected
+        description: '{{ doc("rows_affected") }}'
       - name: status
         description: '{{ doc("status") }}'
       - name: test_execution_id
