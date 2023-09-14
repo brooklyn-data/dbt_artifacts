@@ -15,9 +15,6 @@
 
             {% do log("Uploading " ~ dataset.replace("_", " "), true) %}
 
-            {# Get the relation that the results will be uploaded to #}
-            {% set dataset_relation = dbt_artifacts.get_relation(dataset) %}
-
             {# Get the results that need to be uploaded #}
             {% set objects = dbt_artifacts.get_dataset_content(dataset) %}
 
@@ -36,9 +33,7 @@
 
                 {# Insert the content into the metadata table #}
                 {{ dbt_artifacts.insert_into_metadata_table(
-                    database_name=dataset_relation.database,
-                    schema_name=dataset_relation.schema,
-                    table_name=dataset_relation.identifier,
+                    dataset=dataset,
                     fields=dbt_artifacts.get_column_name_list(dataset),
                     content=content
                     )

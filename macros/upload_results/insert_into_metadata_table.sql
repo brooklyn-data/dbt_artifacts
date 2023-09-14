@@ -1,15 +1,20 @@
-{% macro insert_into_metadata_table(database_name, schema_name, table_name, fields, content) -%}
+{% macro insert_into_metadata_table(dataset, fields, content) -%}
 
     {% if content != "" %}
-        {{ return(adapter.dispatch('insert_into_metadata_table', 'dbt_artifacts')(database_name, schema_name, table_name, fields, content)) }}
+
+        {# Get the relation that the results will be uploaded to #}
+        {% set dataset_relation = dbt_artifacts.get_relation(dataset) %}
+        {# Insert the data into the table #}
+        {{ return(adapter.dispatch('insert_into_metadata_table', 'dbt_artifacts')(dataset_relation, fields, content)) }}
+
     {% endif %}
 
 {%- endmacro %}
 
-{% macro spark__insert_into_metadata_table(database_name, schema_name, table_name, fields, content) -%}
+{% macro spark__insert_into_metadata_table(relation, fields, content) -%}
 
     {% set insert_into_table_query %}
-    insert into {% if database_name %}{{ database_name }}.{% endif %}{{ schema_name }}.{{ table_name }} {{ fields }}
+    insert into {{ relation }} {{ fields }}
     {{ content }}
     {% endset %}
 
@@ -17,10 +22,10 @@
 
 {%- endmacro %}
 
-{% macro snowflake__insert_into_metadata_table(database_name, schema_name, table_name, fields, content) -%}
+{% macro snowflake__insert_into_metadata_table(relation, fields, content) -%}
 
     {% set insert_into_table_query %}
-    insert into {{database_name}}.{{ schema_name }}.{{ table_name }} {{ fields }}
+    insert into {{ relation }} {{ fields }}
     {{ content }}
     {% endset %}
 
@@ -28,10 +33,10 @@
 
 {%- endmacro %}
 
-{% macro bigquery__insert_into_metadata_table(database_name, schema_name, table_name, fields, content) -%}
+{% macro bigquery__insert_into_metadata_table(relation, fields, content) -%}
 
     {% set insert_into_table_query %}
-    insert into `{{database_name}}.{{ schema_name }}.{{ table_name }}` {{ fields }}
+    insert into {{ relation }} {{ fields }}
     values
     {{ content }}
     {% endset %}
@@ -40,5 +45,5 @@
 
 {%- endmacro %}
 
-{% macro default__insert_into_metadata_table(database_name, schema_name, table_name, fields, content) -%}
+{% macro default__insert_into_metadata_table(relation, fields, content) -%}
 {%- endmacro %}
