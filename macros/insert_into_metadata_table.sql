@@ -15,7 +15,7 @@
 
 {% macro snowflake__insert_into_metadata_table(database_name, schema_name, table_name, content) -%}
     {% set insert_into_table_query %}
-    insert into {{database_name}}.{{ schema_name }}.{{ table_name }}
+    insert into {{ adapter.get_relation(database=database_name, schema=schema_name, identifier=table_name) }}
     {{ content }}
     {% endset %}
 
@@ -24,13 +24,13 @@
 
 {% macro bigquery__insert_into_metadata_table(database_name, schema_name, table_name, content) -%}
 
-        {% set insert_into_table_query %}
-        insert into `{{database_name}}.{{ schema_name }}.{{ table_name }}`
-        VALUES
-        {{ content }}
-        {% endset %}
+    {% set insert_into_table_query %}
+    insert into {{ adapter.get_relation(database=database_name, schema=schema_name, identifier=table_name) }}
+    VALUES
+    {{ content }}
+    {% endset %}
 
-        {% do run_query(insert_into_table_query) %}
+    {% do run_query(insert_into_table_query) %}
 
 {%- endmacro %}
 
