@@ -40,7 +40,11 @@
                 '{{ tojson(model.tags) }}', {# tags #}
                 '{{ tojson(model.config.meta) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}', {# meta #}
                 '{{ model.alias }}', {# alias #}
-                '{{ tojson(model) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}' {# all_results #}
+                {% if var('dbt_artifacts_exclude_all_results', false) %}
+                    null
+                {% else %}
+                    '{{ tojson(model) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}' {# all_results #}
+                {% endif %}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -71,7 +75,11 @@
                     {{ tojson(model.tags) }}, {# tags #}
                     {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(model.config.meta)) }}, {# meta #}
                     '{{ model.alias }}', {# alias #}
-                    {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(model) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"')) }} {# all_results #}
+                    {% if var('dbt_artifacts_exclude_all_results', false) %}
+                        null
+                    {% else %}
+                        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(model) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"')) }} {# all_results #}
+                    {% endif %}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}
