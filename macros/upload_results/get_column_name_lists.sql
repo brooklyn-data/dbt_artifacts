@@ -6,7 +6,6 @@
 
 {% macro get_column_name_list(dataset) -%}
 
-    {# Exposures #}
     {% if dataset == 'exposures' %}
 
         (
@@ -26,7 +25,6 @@
             all_results
         )
 
-    {# Invocations #}
     {% elif dataset == 'invocations' %}
 
         (
@@ -51,7 +49,6 @@
             dbt_custom_envs
         )
 
-    {# Model Executions #}
     {% elif dataset == 'model_executions' %}
 
         (
@@ -76,7 +73,6 @@
             adapter_response
         )
 
-    {# Models #}
     {% elif dataset == 'models' %}
 
         (
@@ -98,7 +94,6 @@
         )
 
 
-    {# Seed Executions #}
     {% elif dataset == 'seed_executions' %}
 
         (
@@ -120,7 +115,6 @@
             adapter_response
         )
 
-    {# Seeds #}
     {% elif dataset == 'seeds' %}
 
         (
@@ -138,7 +132,6 @@
             all_results
         )
 
-    {# Snapshot Executions #}
     {% elif dataset == 'snapshot_executions' %}
 
         (
@@ -160,7 +153,6 @@
             adapter_response
         )
 
-    {# Snapshots #}
     {% elif dataset == 'snapshots' %}
 
         (
@@ -180,7 +172,6 @@
             all_results
         )
 
-    {# Sources #}
     {% elif dataset == 'sources' %}
 
         (
@@ -198,7 +189,6 @@
             all_results
         )
 
-    {# Test Executions #}
     {% elif dataset == 'test_executions' %}
 
         (
@@ -217,7 +207,6 @@
             adapter_response
         )
 
-    {# Tests #}
     {% elif dataset == 'tests' %}
 
         (
