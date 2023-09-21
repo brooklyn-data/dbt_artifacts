@@ -179,6 +179,8 @@
                         {% else %}
                             '{{ stage.started_at }}', {# compile_started_at #}
                         {% endif %}
+                    { % else %}
+                        null, {# compile_started_at #}
                     {% endfor %}
 
                     {% for stage in model.timing if stage.name == "execute" %}
@@ -187,6 +189,8 @@
                         {% else %}
                             '{{ stage.completed_at }}', {# query_completed_at #}
                         {% endif %}
+                    { % else %}
+                        null, {# query_completed_at #}
                     {% endfor %}
                 {% else %}
                     null, {# compile_started_at #}
