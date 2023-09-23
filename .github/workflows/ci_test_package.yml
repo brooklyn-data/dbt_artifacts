@@ -38,7 +38,8 @@ jobs:
       fail-fast: false # Don't fail one DWH if the others fail
       matrix:
         warehouse: ["snowflake", "bigquery"]
-    runs-on: ubuntu-latest
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     environment:
       name: Approve Integration Tests
     permissions:
@@ -46,13 +47,14 @@ jobs:
       id-token: "write"
 
     steps:
-      - name: Get latest release
-        uses: rez0n/actions-github-release@main
+      - name: Checkout
         id: latest_release
-        env:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository }}
-          type: "stable"
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - run: |
+          output=$(git describe --tags --abbrev=0)
+          echo "::set-output name=release::$output"
 
       - name: Checkout latest release
         uses: actions/checkout@v3
@@ -103,7 +105,8 @@ jobs:
         warehouse: ["snowflake", "bigquery"]
         # When supporting a new version, update the list here
         version: ["1_3_0", "1_4_0", "1_5_0", "1_6_0"]
-    runs-on: ubuntu-latest
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     environment:
       name: Approve Integration Tests
     permissions:
