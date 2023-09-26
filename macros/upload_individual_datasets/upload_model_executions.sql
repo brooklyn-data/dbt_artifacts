@@ -40,21 +40,10 @@
                 '{{ model.status }}', {# status #}
 
                 {% if model.timing != [] %}
-                    {% for stage in model.timing if stage.name == "compile" %}
-                        {% if loop.length == 0 %}
-                            null, {# compile_started_at #}
-                        {% else %}
-                            '{{ stage.started_at }}', {# compile_started_at #}
-                        {% endif %}
-                    {% endfor %}
-
-                    {% for stage in model.timing if stage.name == "execute" %}
-                        {% if loop.length == 0 %}
-                            null, {# query_completed_at #}
-                        {% else %}
-                            '{{ stage.completed_at }}', {# query_completed_at #}
-                        {% endif %}
-                    {% endfor %}
+                    {% set compile_started_at = (model.timing | selectattr("name", "eq", "compile") | first | default({})).get("started_at") %}
+                    {% if compile_started_at %}'{{ compile_started_at }}'{% else %}null{% endif %}, {# compile_started_at #}
+                    {% set query_completed_at = (model.timing | selectattr("name", "eq", "execute") | first | default({})).get("completed_at") %}
+                    {% if query_completed_at %}'{{ query_completed_at }}'{% else %}null{% endif %}, {# query_completed_at #}
                 {% else %}
                     null, {# compile_started_at #}
                     null, {# query_completed_at #}
@@ -97,20 +86,10 @@
             '{{ model.status }}', {# status #}
 
             {% if model.timing != [] %}
-                {% for stage in model.timing if stage.name == "compile" %}
-                    {% if loop.length == 0 %}
-                        null, {# compile_started_at #}
-                    {% else %}
-                        '{{ stage.started_at }}', {# compile_started_at #}
-                    {% endif %}
-                {% endfor %}
-
-                {% for stage in model.timing if stage.name == "execute" %}
-                    {% if loop.length == 0 %}
-                        null, {# query_completed_at #}
-                    {% else %}
-                        '{{ stage.completed_at }}', {# query_completed_at #}
-                    {% endif %}
+                    {% set compile_started_at = (model.timing | selectattr("name", "eq", "compile") | first | default({})).get("started_at") %}
+                    {% if compile_started_at %}'{{ compile_started_at }}'{% else %}null{% endif %}, {# compile_started_at #}
+                    {% set query_completed_at = (model.timing | selectattr("name", "eq", "execute") | first | default({})).get("completed_at") %}
+                    {% if query_completed_at %}'{{ query_completed_at }}'{% else %}null{% endif %}, {# query_completed_at #}
                 {% endfor %}
             {% else %}
                 null, {# compile_started_at #}
@@ -173,25 +152,10 @@
                 '{{ model.status }}', {# status #}
 
                 {% if model.timing != [] %}
-                    {% for stage in model.timing if stage.name == "compile" %}
-                        {% if loop.length == 0 %}
-                            null, {# compile_started_at #}
-                        {% else %}
-                            '{{ stage.started_at }}', {# compile_started_at #}
-                        {% endif %}
-                    { % else %}
-                        null, {# compile_started_at #}
-                    {% endfor %}
-
-                    {% for stage in model.timing if stage.name == "execute" %}
-                        {% if loop.length == 0 %}
-                            null, {# query_completed_at #}
-                        {% else %}
-                            '{{ stage.completed_at }}', {# query_completed_at #}
-                        {% endif %}
-                    { % else %}
-                        null, {# query_completed_at #}
-                    {% endfor %}
+                    {% set compile_started_at = (model.timing | selectattr("name", "eq", "compile") | first | default({})).get("started_at") %}
+                    {% if compile_started_at %}'{{ compile_started_at }}'{% else %}null{% endif %}, {# compile_started_at #}
+                    {% set query_completed_at = (model.timing | selectattr("name", "eq", "execute") | first | default({})).get("completed_at") %}
+                    {% if query_completed_at %}'{{ query_completed_at }}'{% else %}null{% endif %}, {# query_completed_at #}
                 {% else %}
                     null, {# compile_started_at #}
                     null, {# query_completed_at #}
