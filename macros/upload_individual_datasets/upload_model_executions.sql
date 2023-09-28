@@ -90,7 +90,6 @@
                     {% if compile_started_at %}'{{ compile_started_at }}'{% else %}null{% endif %}, {# compile_started_at #}
                     {% set query_completed_at = (model.timing | selectattr("name", "eq", "execute") | first | default({})).get("completed_at") %}
                     {% if query_completed_at %}'{{ query_completed_at }}'{% else %}null{% endif %}, {# query_completed_at #}
-                {% endfor %}
             {% else %}
                 null, {# compile_started_at #}
                 null, {# query_completed_at #}
