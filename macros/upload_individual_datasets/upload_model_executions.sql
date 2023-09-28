@@ -39,15 +39,10 @@
                 '{{ model.thread_id }}', {# thread_id #}
                 '{{ model.status }}', {# status #}
 
-                {% if model.timing != [] %}
-                    {% set compile_started_at = (model.timing | selectattr("name", "eq", "compile") | first | default({})).get("started_at") %}
-                    {% if compile_started_at %}'{{ compile_started_at }}'{% else %}null{% endif %}, {# compile_started_at #}
-                    {% set query_completed_at = (model.timing | selectattr("name", "eq", "execute") | first | default({})).get("completed_at") %}
-                    {% if query_completed_at %}'{{ query_completed_at }}'{% else %}null{% endif %}, {# query_completed_at #}
-                {% else %}
-                    null, {# compile_started_at #}
-                    null, {# query_completed_at #}
-                {% endif %}
+                {% set compile_started_at = (model.timing | selectattr("name", "eq", "compile") | first | default({}))["started_at"] %}
+                {% if compile_started_at %}'{{ compile_started_at }}'{% else %}null{% endif %}, {# compile_started_at #}
+                {% set query_completed_at = (model.timing | selectattr("name", "eq", "execute") | first | default({}))["completed_at"] %}
+                {% if query_completed_at %}'{{ query_completed_at }}'{% else %}null{% endif %}, {# query_completed_at #}
 
                 {{ model.execution_time }}, {# total_node_runtime #}
                 null, -- rows_affected not available {# Only available in Snowflake & BigQuery #}
@@ -85,15 +80,10 @@
             '{{ model.thread_id }}', {# thread_id #}
             '{{ model.status }}', {# status #}
 
-            {% if model.timing != [] %}
-                    {% set compile_started_at = (model.timing | selectattr("name", "eq", "compile") | first | default({})).get("started_at") %}
-                    {% if compile_started_at %}'{{ compile_started_at }}'{% else %}null{% endif %}, {# compile_started_at #}
-                    {% set query_completed_at = (model.timing | selectattr("name", "eq", "execute") | first | default({})).get("completed_at") %}
-                    {% if query_completed_at %}'{{ query_completed_at }}'{% else %}null{% endif %}, {# query_completed_at #}
-            {% else %}
-                null, {# compile_started_at #}
-                null, {# query_completed_at #}
-            {% endif %}
+            {% set compile_started_at = (model.timing | selectattr("name", "eq", "compile") | first | default({}))["started_at"] %}
+            {% if compile_started_at %}'{{ compile_started_at }}'{% else %}null{% endif %}, {# compile_started_at #}
+            {% set query_completed_at = (model.timing | selectattr("name", "eq", "execute") | first | default({}))["completed_at"] %}
+            {% if query_completed_at %}'{{ query_completed_at }}'{% else %}null{% endif %}, {# query_completed_at #}
 
             {{ model.execution_time }}, {# total_node_runtime #}
             safe_cast('{{ model.adapter_response.rows_affected }}' as int64),
@@ -150,15 +140,10 @@
                 '{{ model.thread_id }}', {# thread_id #}
                 '{{ model.status }}', {# status #}
 
-                {% if model.timing != [] %}
-                    {% set compile_started_at = (model.timing | selectattr("name", "eq", "compile") | first | default({})).get("started_at") %}
-                    {% if compile_started_at %}'{{ compile_started_at }}'{% else %}null{% endif %}, {# compile_started_at #}
-                    {% set query_completed_at = (model.timing | selectattr("name", "eq", "execute") | first | default({})).get("completed_at") %}
-                    {% if query_completed_at %}'{{ query_completed_at }}'{% else %}null{% endif %}, {# query_completed_at #}
-                {% else %}
-                    null, {# compile_started_at #}
-                    null, {# query_completed_at #}
-                {% endif %}
+                {% set compile_started_at = (model.timing | selectattr("name", "eq", "compile") | first | default({}))["started_at"] %}
+                {% if compile_started_at %}'{{ compile_started_at }}'{% else %}null{% endif %}, {# compile_started_at #}
+                {% set query_completed_at = (model.timing | selectattr("name", "eq", "execute") | first | default({}))["completed_at"] %}
+                {% if query_completed_at %}'{{ query_completed_at }}'{% else %}null{% endif %}, {# query_completed_at #}
 
                 {{ model.execution_time }}, {# total_node_runtime #}
                 try_cast('{{ model.adapter_response.rows_affected }}' as int), {# rows_affected #}
