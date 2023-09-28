@@ -9,15 +9,15 @@ select
     cast(null as TIMESTAMP) as run_started_at,
     cast(null as TEXT) as name,
     cast(null as 
-   ARRAY
+   array
 ) as depends_on_nodes,
     cast(null as TEXT) as package_name,
     cast(null as TEXT) as test_path,
     cast(null as 
-   ARRAY
+   array
 ) as tags,
     cast(null as 
-   OBJECT
+   object
 ) as all_results
 from dummy_cte
 where 1 = 0

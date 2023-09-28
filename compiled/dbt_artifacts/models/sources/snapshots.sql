@@ -11,18 +11,18 @@ select
     cast(null as TEXT) as schema,
     cast(null as TEXT) as name,
     cast(null as 
-   ARRAY
+   array
 ) as depends_on_nodes,
     cast(null as TEXT) as package_name,
     cast(null as TEXT) as path,
     cast(null as TEXT) as checksum,
     cast(null as TEXT) as strategy,
     cast(null as 
-   OBJECT
+   object
 ) as meta,
     cast(null as TEXT) as alias,
     cast(null as 
-   OBJECT
+   object
 ) as all_results
 from dummy_cte
 where 1 = 0

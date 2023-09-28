@@ -10,7 +10,7 @@ select
     cast(null as TEXT) as name,
     cast(null as TEXT) as type,
     cast(null as 
-   OBJECT
+   object
 ) as owner,
     cast(null as TEXT) as maturity,
     cast(null as TEXT) as path,
@@ -18,13 +18,13 @@ select
     cast(null as TEXT) as url,
     cast(null as TEXT) as package_name,
     cast(null as 
-   ARRAY
+   array
 ) as depends_on_nodes,
     cast(null as 
-   ARRAY
+   array
 ) as tags,
     cast(null as 
-   OBJECT
+   object
 ) as all_results
 from dummy_cte
 where 1 = 0

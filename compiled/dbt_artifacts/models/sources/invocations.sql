@@ -20,16 +20,16 @@ select
     cast(null as TEXT) as dbt_cloud_run_reason_category,
     cast(null as TEXT) as dbt_cloud_run_reason,
     cast(null as 
-   OBJECT
+   object
 ) as env_vars,
     cast(null as 
-   OBJECT
+   object
 ) as dbt_vars,
     cast(null as 
-   OBJECT
+   object
 ) as invocation_args,
     cast(null as 
-   OBJECT
+   object
 ) as dbt_custom_envs
 from dummy_cte
 where 1 = 0

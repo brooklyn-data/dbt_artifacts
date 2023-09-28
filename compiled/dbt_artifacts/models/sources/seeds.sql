@@ -14,11 +14,11 @@ select
     cast(null as TEXT) as path,
     cast(null as TEXT) as checksum,
     cast(null as 
-   OBJECT
+   object
 ) as meta,
     cast(null as TEXT) as alias,
     cast(null as 
-   OBJECT
+   object
 ) as all_results
 from dummy_cte
 where 1 = 0

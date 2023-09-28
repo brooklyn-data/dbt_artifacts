@@ -16,11 +16,11 @@ select
     cast(null as TEXT) as loaded_at_field,
     
         cast(null as 
-   ARRAY
+   array
 ) as freshness,
     
     cast(null as 
-   OBJECT
+   object
 ) as all_results
 from dummy_cte
 where 1 = 0

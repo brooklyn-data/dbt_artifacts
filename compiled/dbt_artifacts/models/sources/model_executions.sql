@@ -21,7 +21,7 @@ select
     cast(null as TEXT) as alias,
     cast(null as TEXT) as message,
     cast(null as 
-   OBJECT
+   object
 ) as adapter_response
 from dummy_cte
 where 1 = 0
