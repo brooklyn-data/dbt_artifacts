@@ -27,7 +27,7 @@
 {% endmacro %}
 
 {%- macro dremio__type_json() -%}
-   VARCHAR
+   varchar
 {%- endmacro -%}
 
 {#- ARRAY -#}
@@ -49,5 +49,5 @@
 {% endmacro %}
 
 {%- macro dremio__type_array() -%}
-   VARCHAR
+   varchar
 {%- endmacro -%}
