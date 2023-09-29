@@ -2,8 +2,8 @@
 # You should __NEVER__ check credentials into version control. Thanks for reading :)
 
 config:
-    send_anonymous_usage_stats: False
-    use_colors: True
+  send_anonymous_usage_stats: False
+  use_colors: True
 
 dbt_artifacts:
   target: snowflake
@@ -52,4 +52,3 @@ dbt_artifacts:
       dbname: postgres
       schema: public
       threads: 8
-
