@@ -37,13 +37,26 @@ jobs:
     strategy:
       fail-fast: false # Don't fail one DWH if the others fail
       matrix:
-        warehouse: ["snowflake", "bigquery"]
+        warehouse: ["snowflake", "bigquery", "postgres"]
     runs-on: ubuntu-latest
     environment:
       name: Approve Integration Tests
     permissions:
       contents: "read"
       id-token: "write"
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
 
     steps:
       - name: Get latest release
@@ -100,7 +113,7 @@ jobs:
     strategy:
       fail-fast: false # Don't fail one DWH if the others fail
       matrix:
-        warehouse: ["snowflake", "bigquery"]
+        warehouse: ["snowflake", "bigquery", "postgres"]
         # When supporting a new version, update the list here
         version: ["1_3_0", "1_4_0", "1_5_0", "1_6_0"]
     runs-on: ubuntu-latest
@@ -109,6 +122,19 @@ jobs:
     permissions:
       contents: "read"
       id-token: "write"
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
 
     steps:
       - uses: actions/setup-python@v4
