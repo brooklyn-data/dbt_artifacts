@@ -59,9 +59,9 @@
 
 {%- endmacro %}
 
-{% macro dremio__insert_into_metadata_table(database_name, schema_name, table_name, content) -%}
+{% macro dremio__insert_into_metadata_table(relation, fields, content) -%}
     {% set insert_into_table_query %}
-    insert into {{ relation }} {{ fields }}
+    insert into {{ relation }}
     values
     {{ content }}
     {% endset %}

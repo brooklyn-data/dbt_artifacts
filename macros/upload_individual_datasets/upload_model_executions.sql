@@ -123,9 +123,9 @@
                 '{{ model.status }}', {# status #}
 
                 {% set compile_started_at = (model.timing | selectattr("name", "eq", "compile") | first | default({}))["started_at"] %}
-                {% if compile_started_at %}'{{ compile_started_at }}'{% else %}cast(null as timestamp){% endif %}, {# compile_started_at #}
+                {% if compile_started_at %}{{ dbt_artifacts.cast_as_timestamp(compile_started_at) }}{% else %}cast(null as timestamp){% endif %}, {# compile_started_at #}
                 {% set query_completed_at = (model.timing | selectattr("name", "eq", "execute") | first | default({}))["completed_at"] %}
-                {% if query_completed_at %}'{{ query_completed_at }}'{% else %}cast(null as timestamp){% endif %}, {# query_completed_at #}
+                {% if query_completed_at %}{{ dbt_artifacts.cast_as_timestamp(query_completed_at) }}{% else %}cast(null as timestamp){% endif %}, {# query_completed_at #}
 
                 cast({{ model.execution_time }} as float), {# total_node_runtime #}
                 null, -- rows_affected not available {# Only available in Snowflake & BigQuery #}
