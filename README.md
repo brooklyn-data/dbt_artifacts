@@ -19,6 +19,7 @@ The package currently supports
 - Snowflake :white_check_mark:
 - Google BigQuery :white_check_mark:
 - Dremio :white_check_mark:
+- Postgres :white_check_mark:
 
 Models included:
 
@@ -46,7 +47,7 @@ See the generated [dbt docs site](https://brooklyn-data.github.io/dbt_artifacts/
 ```
 packages:
   - package: brooklyn-data/dbt_artifacts
-    version: 2.4.2
+    version: 2.6.0
 ```
 
 :construction_worker: Make sure to fix at least the **minor** version, to avoid issues when a new release is open. See the notes on upgrading below for more detail.
@@ -142,6 +143,37 @@ vars:
   ]
 ```
 
+## Creating custom marts tables
+
+Multiple modelled `dim` and `fct` models have been provided for ease of use, but we recognise that some use cases may require custom ones. To this end, you can disable all but the raw sources tables using the following in your `dbt_project.yml` file:
+
+```yml
+# dbt_project.yml
+
+models:
+  dbt_artifacts:
+    +enabled: false
+    sources:
+      +enabled: true
+```
+
+In these sources tables, you will find a JSON column `all_results` which contains a JSON blob of the results object used, which you can use in your own analysis:
+
+- exposures
+- models
+- seeds
+- snapshots
+- sources
+- tests
+
+This column can cause queries to become too long - particularly in BigQuery. Therefore, if you want to disable this column, you can make use of the `dbt_artifacts_exclude_all_results` variable, and set this to `true` in your `dbt_project.yml` file.
+
+```
+# dbt_project.yml
+vars:
+  dbt_artifacts_exclude_all_results: true
+```
+
 ## Upgrading from 1.x to >=2.0.0
 
 If you were using the following variables:
@@ -189,29 +221,6 @@ An example operation is as follows:
 ```bash
 dbt run-operation migrate_from_v0_to_v1 --args '{old_database: analytics, old_schema: dbt_artifacts, new_database: analytics, new_schema: artifact_sources}'
 ```
-
-## Creating custom marts tables
-
-Multiple modelled `dim` and `fct` models have been provided for ease of use, but we recognise that some use cases may require custom ones. To this end, you can disable all but the raw sources tables using the following in your `dbt_project.yml` file:
-
-```yml
-# dbt_project.yml
-
-models:
-  dbt_artifacts:
-    +enabled: false
-    sources:
-      +enabled: true
-```
-
-In these sources tables, you will find a JSON column `all_results` which contains a JSON blob of the results object used, which you can use in your own analysis:
-
-- exposures
-- models
-- seeds
-- snapshots
-- sources
-- tests
 
 ## Acknowledgements
 

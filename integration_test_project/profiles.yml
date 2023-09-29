@@ -2,8 +2,8 @@
 # You should __NEVER__ check credentials into version control. Thanks for reading :)
 
 config:
-    send_anonymous_usage_stats: False
-    use_colors: True
+  send_anonymous_usage_stats: False
+  use_colors: True
 
 dbt_artifacts:
   target: snowflake
@@ -43,6 +43,15 @@ dbt_artifacts:
       timeout_seconds: 300
       priority: interactive
       retries: 1
+    postgres:
+      type: postgres
+      host: localhost
+      user: postgres
+      password: postgres
+      port: 5432
+      dbname: postgres
+      schema: public
+      threads: 8
     dremio:
       type: dremio
       user: "{{ env_var('DBT_ENV_DREMIO_USER') }}"

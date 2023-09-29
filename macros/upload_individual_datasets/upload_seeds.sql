@@ -1,8 +1,4 @@
-{% macro upload_seeds(graph) -%}
-    {% set seeds = [] %}
-    {% for node in graph.nodes.values() | selectattr("resource_type", "equalto", "seed") %}
-        {% do seeds.append(node) %}
-    {% endfor %}
+{% macro upload_seeds(seeds) -%}
     {{ return(adapter.dispatch('get_seeds_dml_sql', 'dbt_artifacts')(seeds)) }}
 {%- endmacro %}
 
@@ -34,10 +30,14 @@
                 '{{ seed.name }}', {# name #}
                 '{{ seed.package_name }}', {# package_name #}
                 '{{ seed.original_file_path | replace('\\', '\\\\') }}', {# path #}
-                '{{ seed.checksum.checksum }}', {# checksum #}
+                '{{ seed.checksum.checksum | replace('\\', '\\\\') }}', {# checksum #}
                 '{{ tojson(seed.config.meta) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}', {# meta #}
                 '{{ seed.alias }}', {# alias #}
-                '{{ tojson(seed) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}' {# all_results #}
+                {% if var('dbt_artifacts_exclude_all_results', false) %}
+                    null
+                {% else %}
+                    '{{ tojson(seed) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}' {# all_results #}
+                {% endif %}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -61,10 +61,45 @@
                     '{{ seed.name }}', {# name #}
                     '{{ seed.package_name }}', {# package_name #}
                     '{{ seed.original_file_path | replace('\\', '\\\\') }}', {# path #}
-                    '{{ seed.checksum.checksum }}', {# checksum #}
-                    parse_json('''{{ tojson(seed.config.meta) }}'''), {# meta #}
+                    '{{ seed.checksum.checksum | replace('\\', '\\\\')}}', {# checksum #}
+                    {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(seed.config.meta)) }}, {# meta #}
                     '{{ seed.alias }}', {# alias #}
-                    parse_json('{{ tojson(seed) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}') {# all_results #}
+                    {% if var('dbt_artifacts_exclude_all_results', false) %}
+                        null
+                    {% else %}
+                        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(seed) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"')) }} {# all_results #}
+                    {% endif %}
+                )
+                {%- if not loop.last %},{%- endif %}
+            {%- endfor %}
+        {% endset %}
+        {{ seed_values }}
+    {% else %}
+        {{ return("") }}
+    {% endif %}
+{%- endmacro %}
+
+{% macro postgres__get_seeds_dml_sql(seeds) -%}
+    {% if seeds != [] %}
+        {% set seed_values %}
+            {% for seed in seeds -%}
+                (
+                    '{{ invocation_id }}', {# command_invocation_id #}
+                    '{{ seed.unique_id }}', {# node_id #}
+                    '{{ run_started_at }}', {# run_started_at #}
+                    '{{ seed.database }}', {# database #}
+                    '{{ seed.schema }}', {# schema #}
+                    '{{ seed.name }}', {# name #}
+                    '{{ seed.package_name }}', {# package_name #}
+                    '{{ seed.original_file_path | replace('\\', '\\\\') }}', {# path #}
+                    '{{ seed.checksum.checksum }}', {# checksum #}
+                    $${{ tojson(seed.config.meta) }}$$, {# meta #}
+                    '{{ seed.alias }}', {# alias #}
+                    {% if var('dbt_artifacts_exclude_all_results', false) %}
+                        null
+                    {% else %}
+                        $${{ tojson(seed) }}$$ {# all_results #}
+                    {% endif %}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}

@@ -1,10 +1,4 @@
-{% macro upload_test_executions(results) -%}
-    {% set tests = [] %}
-    {% for result in results  %}
-        {% if result.node.resource_type == "test" %}
-            {% do tests.append(result) %}
-        {% endif %}
-    {% endfor %}
+{% macro upload_test_executions(tests) -%}
     {{ return(adapter.dispatch('get_test_executions_dml_sql', 'dbt_artifacts')(tests)) }}
 {%- endmacro %}
 
@@ -120,7 +114,62 @@
                 null, {# rows_affected not available in Databricks #}
                 {{ 'null' if test.failures is none else test.failures }}, {# failures #}
                 '{{ test.message | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') | replace("\n", "\\n") }}', {# message #}
-                parse_json('{{ tojson(test.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}', wide_number_mode=>'round') {# adapter_response #}
+                {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(test.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"')) }} {# adapter_response #}
+            )
+            {%- if not loop.last %},{%- endif %}
+
+        {%- endfor %}
+        {% endset %}
+        {{ test_execution_values }}
+    {% else %}
+        {{ return("") }}
+    {% endif %}
+{% endmacro -%}
+
+{% macro postgres__get_test_executions_dml_sql(tests) -%}
+    {% if tests != [] %}
+        {% set test_execution_values %}
+        {% for test in tests -%}
+            (
+                '{{ invocation_id }}', {# command_invocation_id #}
+                '{{ test.node.unique_id }}', {# node_id #}
+                '{{ run_started_at }}', {# run_started_at #}
+
+                {% set config_full_refresh = test.node.config.full_refresh %}
+                {% if config_full_refresh is none %}
+                    {% set config_full_refresh = flags.FULL_REFRESH %}
+                {% endif %}
+                {{ config_full_refresh }}, {# was_full_refresh #}
+
+                '{{ test.thread_id }}', {# thread_id #}
+                '{{ test.status }}', {# status #}
+
+                {% if test.timing != [] %}
+                    {% for stage in test.timing if stage.name == "compile" %}
+                        {% if loop.length == 0 %}
+                            null, {# compile_started_at #}
+                        {% else %}
+                            '{{ stage.started_at }}', {# compile_started_at #}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% for stage in test.timing if stage.name == "execute" %}
+                        {% if loop.length == 0 %}
+                            null, {# query_completed_at #}
+                        {% else %}
+                            '{{ stage.completed_at }}', {# query_completed_at #}
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    null, {# compile_started_at #}
+                    null, {# query_completed_at #}
+                {% endif %}
+
+                {{ test.execution_time }}, {# total_node_runtime #}
+                null, {# rows_affected not available in Databricks #}
+                {{ 'null' if test.failures is none else test.failures }}, {# failures #}
+                $${{ test.message  }}$$, {# message #}
+                $${{ tojson(test.adapter_response) }}$$ {# adapter_response #}
             )
             {%- if not loop.last %},{%- endif %}
 
