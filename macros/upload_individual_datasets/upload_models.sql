@@ -90,6 +90,42 @@
     {% endif %}
 {%- endmacro %}
 
+{% macro dremio__get_models_dml_sql(models) -%}
+
+    {% if models != [] %}
+        {% set model_values %}
+        {% for model in models -%}
+            {% do model.pop('raw_code', None) %}
+            (
+                '{{ invocation_id }}', {# command_invocation_id #}
+                '{{ model.unique_id }}', {# node_id #}
+                {{ dbt_artifacts.cast_as_timestamp(run_started_at) }}, {# run_started_at #}
+                '{{ model.database }}', {# database #}
+                '{{ model.schema }}', {# schema #}
+                '{{ model.name }}', {# name #}
+                '{{ dbt_artifacts.escape_string(tojson(model.depends_on.nodes)) }}', {# depends_on_nodes #}
+                '{{ model.package_name }}', {# package_name #}
+                '{{ dbt_artifacts.escape_string(model.original_file_path) }}', {# path #}
+                '{{ model.checksum.checksum }}', {# checksum #}
+                '{{ model.config.materialized }}', {# materialization #}
+                '{{ tojson(model.tags) }}', {# tags #}
+                '{{ dbt_artifacts.escape_string(tojson(model.config.meta)) }}', {# meta #}
+                '{{ model.alias }}', {# alias #}
+                {% if var('dbt_artifacts_exclude_all_results', false) %}
+                    null
+                {% else %}
+                    '{{ dbt_artifacts.escape_string(tojson(model)) }}' {# all_results #}
+                {% endif %}
+            )
+            {%- if not loop.last %},{%- endif %}
+        {%- endfor %}
+        {% endset %}
+        {{ model_values }}
+    {% else %}
+        {{ return("") }}
+    {% endif %}
+{% endmacro -%}
+
 {% macro postgres__get_models_dml_sql(models) -%}
     {% if models != [] %}
         {% set model_values %}
@@ -124,36 +160,3 @@
         {{ return("") }}
     {% endif %}
 {%- endmacro %}
-
-{% macro dremio__get_models_dml_sql(models) -%}
-
-    {% if models != [] %}
-        {% set model_values %}
-        values
-        {% for model in models -%}
-            {% do model.pop('raw_code', None) %}
-            (
-                '{{ invocation_id }}', {# command_invocation_id #}
-                '{{ model.unique_id }}', {# node_id #}
-                {{ dbt_artifacts.cast_as_timestamp(run_started_at) }}, {# run_started_at #}
-                '{{ model.database }}', {# database #}
-                '{{ model.schema }}', {# schema #}
-                '{{ model.name }}', {# name #}
-                '{{ dbt_artifacts.escape_string(tojson(model.depends_on.nodes)) }}', {# depends_on_nodes #}
-                '{{ model.package_name }}', {# package_name #}
-                '{{ dbt_artifacts.escape_string(model.original_file_path) }}', {# path #}
-                '{{ model.checksum.checksum }}', {# checksum #}
-                '{{ model.config.materialized }}', {# materialization #}
-                '{{ tojson(model.tags) }}', {# tags #}
-                '{{ dbt_artifacts.escape_string(tojson(model.config.meta)) }}', {# meta #}
-                '{{ model.alias }}', {# alias #}
-                '{{ dbt_artifacts.escape_string(tojson(model)) }}' {# all_results #}
-            )
-            {%- if not loop.last %},{%- endif %}
-        {%- endfor %}
-        {% endset %}
-        {{ model_values }}
-    {% else %}
-        {{ return("") }}
-    {% endif %}
-{% endmacro -%}

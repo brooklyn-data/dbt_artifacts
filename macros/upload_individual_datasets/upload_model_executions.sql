@@ -104,32 +104,14 @@
     {% endif %}
 {%- endmacro %}
 
-{% macro snowflake__get_model_executions_dml_sql(models) -%}
+{% macro dremio__get_model_executions_dml_sql(models) -%}
     {% if models != [] %}
         {% set model_execution_values %}
-        select
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(1) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(2) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(3) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(4) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(5) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(6) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(7) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(8) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(9) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(15) }},
-            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(16)) }}
-        from values
         {% for model in models -%}
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
                 '{{ model.node.unique_id }}', {# node_id #}
-                '{{ run_started_at }}', {# run_started_at #}
+                {{ dbt_artifacts.cast_as_timestamp(run_started_at) }}, {# run_started_at #}
 
                 {% set config_full_refresh = model.node.config.full_refresh %}
                 {% if config_full_refresh is none %}
@@ -140,19 +122,35 @@
                 '{{ model.thread_id }}', {# thread_id #}
                 '{{ model.status }}', {# status #}
 
-                {% set compile_started_at = (model.timing | selectattr("name", "eq", "compile") | first | default({}))["started_at"] %}
-                {% if compile_started_at %}'{{ compile_started_at }}'{% else %}null{% endif %}, {# compile_started_at #}
-                {% set query_completed_at = (model.timing | selectattr("name", "eq", "execute") | first | default({}))["completed_at"] %}
-                {% if query_completed_at %}'{{ query_completed_at }}'{% else %}null{% endif %}, {# query_completed_at #}
+                {% if model.timing != [] %}
+                    {% for stage in model.timing if stage.name == "compile" %}
+                        {% if loop.length == 0 %}
+                            cast(null as timestamp), {# compile_started_at #}
+                        {% else %}
+                            {{ dbt_artifacts.cast_as_timestamp(stage.started_at) }}, {# compile_started_at #}
+                        {% endif %}
+                    {% endfor %}
 
-                {{ model.execution_time }}, {# total_node_runtime #}
-                try_cast('{{ model.adapter_response.rows_affected }}' as int), {# rows_affected #}
+                    {% for stage in model.timing if stage.name == "execute" %}
+                        {% if loop.length == 0 %}
+                            cast(null as timestamp), {# query_completed_at #}
+                        {% else %}
+                            {{ dbt_artifacts.cast_as_timestamp(stage.completed_at) }}, {# query_completed_at #}
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    cast(null as timestamp), {# compile_started_at #}
+                    cast(null as timestamp), {# query_completed_at #}
+                {% endif %}
+
+                cast({{ model.execution_time }} as float), {# total_node_runtime #}
+                null, -- rows_affected not available {# Only available in Snowflake & BigQuery #}
                 '{{ model.node.config.materialized }}', {# materialization #}
                 '{{ model.node.schema }}', {# schema #}
                 '{{ model.node.name }}', {# name #}
                 '{{ model.node.alias }}', {# alias #}
-                '{{ model.message | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}', {# message #}
-                '{{ tojson(model.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}' {# adapter_response #}
+                '{{ dbt_artifacts.escape_string(model.message) }}', {# message #}
+                '{{ dbt_artifacts.escape_string(tojson(model.adapter_response)) }}' {# adapter_response #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -204,15 +202,32 @@
     {% endif %}
 {%- endmacro %}
 
-{% macro dremio__get_model_executions_dml_sql(models) -%}
+{% macro snowflake__get_model_executions_dml_sql(models) -%}
     {% if models != [] %}
         {% set model_execution_values %}
-        values
+        select
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(1) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(2) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(3) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(4) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(5) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(6) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(7) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(8) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(9) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(15) }},
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(16)) }}
+        from values
         {% for model in models -%}
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
                 '{{ model.node.unique_id }}', {# node_id #}
-                {{ dbt_artifacts.cast_as_timestamp(run_started_at) }}, {# run_started_at #}
+                '{{ run_started_at }}', {# run_started_at #}
 
                 {% set config_full_refresh = model.node.config.full_refresh %}
                 {% if config_full_refresh is none %}
@@ -223,35 +238,19 @@
                 '{{ model.thread_id }}', {# thread_id #}
                 '{{ model.status }}', {# status #}
 
-                {% if model.timing != [] %}
-                    {% for stage in model.timing if stage.name == "compile" %}
-                        {% if loop.length == 0 %}
-                            cast(null as timestamp), {# compile_started_at #}
-                        {% else %}
-                            {{ dbt_artifacts.cast_as_timestamp(stage.started_at) }}, {# compile_started_at #}
-                        {% endif %}
-                    {% endfor %}
+                {% set compile_started_at = (model.timing | selectattr("name", "eq", "compile") | first | default({}))["started_at"] %}
+                {% if compile_started_at %}'{{ compile_started_at }}'{% else %}null{% endif %}, {# compile_started_at #}
+                {% set query_completed_at = (model.timing | selectattr("name", "eq", "execute") | first | default({}))["completed_at"] %}
+                {% if query_completed_at %}'{{ query_completed_at }}'{% else %}null{% endif %}, {# query_completed_at #}
 
-                    {% for stage in model.timing if stage.name == "execute" %}
-                        {% if loop.length == 0 %}
-                            cast(null as timestamp), {# query_completed_at #}
-                        {% else %}
-                            {{ dbt_artifacts.cast_as_timestamp(stage.completed_at) }}, {# query_completed_at #}
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
-                    cast(null as timestamp), {# compile_started_at #}
-                    cast(null as timestamp), {# query_completed_at #}
-                {% endif %}
-
-                cast({{ model.execution_time }} as float), {# total_node_runtime #}
-                null, -- rows_affected not available {# Only available in Snowflake & BigQuery #}
+                {{ model.execution_time }}, {# total_node_runtime #}
+                try_cast('{{ model.adapter_response.rows_affected }}' as int), {# rows_affected #}
                 '{{ model.node.config.materialized }}', {# materialization #}
                 '{{ model.node.schema }}', {# schema #}
                 '{{ model.node.name }}', {# name #}
                 '{{ model.node.alias }}', {# alias #}
-                '{{ dbt_artifacts.escape_string(model.message) }}', {# message #}
-                '{{ dbt_artifacts.escape_string(tojson(model.adapter_response)) }}' {# adapter_response #}
+                '{{ model.message | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}', {# message #}
+                '{{ tojson(model.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}' {# adapter_response #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}

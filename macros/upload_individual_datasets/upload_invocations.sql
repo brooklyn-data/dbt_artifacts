@@ -162,7 +162,6 @@
 
 {% macro dremio__get_invocations_dml_sql() -%}
     {% set invocation_values %}
-    values
     (
         '{{ invocation_id }}', {# command_invocation_id #}
         '{{ dbt_version }}', {# dbt_version #}
