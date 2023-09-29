@@ -1,8 +1,4 @@
-{% macro upload_exposures(graph) -%}
-    {% set exposures = [] %}
-    {% for node in graph.exposures.values() %}
-        {% do exposures.append(node) %}
-    {% endfor %}
+{% macro upload_exposures(exposures) -%}
     {{ return(adapter.dispatch('get_exposures_dml_sql', 'dbt_artifacts')(exposures)) }}
 {%- endmacro %}
 
@@ -41,7 +37,11 @@
                 '{{ exposure.package_name }}', {# package_name #}
                 '{{ tojson(exposure.depends_on.nodes) }}', {# depends_on_nodes #}
                 '{{ tojson(exposure.tags) }}', {# tags #}
-                '{{ tojson(exposure) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}' {# all_results #}
+                {% if var('dbt_artifacts_exclude_all_results', false) %}
+                    null
+                {% else %}
+                    '{{ tojson(exposure) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}' {# all_results #}
+                {% endif %}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -62,7 +62,7 @@
                     '{{ run_started_at }}', {# run_started_at #}
                     '{{ exposure.name | replace("'","\\'") }}', {# name #}
                     '{{ exposure.type }}', {# type #}
-                    parse_json('{{ tojson(exposure.owner) | replace("'","\\'") }}'), {# owner #}
+                    {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(exposure.owner) | replace("'","\\'")) }}, {# owner #}
                     '{{ exposure.maturity }}', {# maturity #}
                     '{{ exposure.original_file_path | replace('\\', '\\\\') }}', {# path #}
                     """{{ exposure.description | replace("'","\\'") }}""", {# description #}
@@ -70,7 +70,11 @@
                     '{{ exposure.package_name }}', {# package_name #}
                     {{ tojson(exposure.depends_on.nodes) }}, {# depends_on_nodes #}
                     {{ tojson(exposure.tags) }}, {# tags #}
-                    parse_json('{{ tojson(exposure) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}') {# all_results #}
+                    {% if var('dbt_artifacts_exclude_all_results', false) %}
+                        null
+                    {% else %}
+                        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(exposure) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"')) }} {# all_results #}
+                    {% endif %}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}

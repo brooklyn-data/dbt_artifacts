@@ -1,16 +1,10 @@
-{% macro upload_seed_executions(results) -%}
-    {% set seeds = [] %}
-    {% for result in results  %}
-        {% if result.node.resource_type == "seed" %}
-            {% do seeds.append(result) %}
-        {% endif %}
-    {% endfor %}
-    {{ return(adapter.dispatch('get_seed_executions_dml_sql', 'dbt_artifacts')(seeds)) }}
+{% macro upload_snapshot_executions(snapshots) -%}
+    {{ return(adapter.dispatch('get_snapshot_executions_dml_sql', 'dbt_artifacts')(snapshots)) }}
 {%- endmacro %}
 
-{% macro default__get_seed_executions_dml_sql(seeds) -%}
-    {% if seeds != [] %}
-        {% set seed_execution_values %}
+{% macro default__get_snapshot_executions_dml_sql(snapshots) -%}
+    {% if snapshots != [] %}
+        {% set snapshot_execution_values %}
         select
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(1) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(2) }},
@@ -29,7 +23,7 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(15) }},
             {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(16)) }}
         from values
-        {% for model in seeds -%}
+        {% for model in snapshots -%}
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
                 '{{ model.node.unique_id }}', {# node_id #}
@@ -77,16 +71,16 @@
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
         {% endset %}
-        {{ seed_execution_values }}
+        {{ snapshot_execution_values }}
     {% else %}
         {{ return("") }}
     {% endif %}
 {% endmacro -%}
 
-{% macro bigquery__get_seed_executions_dml_sql(seeds) -%}
-    {% if seeds != [] %}
-        {% set seed_execution_values %}
-        {% for model in seeds -%}
+{% macro bigquery__get_snapshot_executions_dml_sql(snapshots) -%}
+    {% if snapshots != [] %}
+        {% set snapshot_execution_values %}
+        {% for model in snapshots -%}
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
                 '{{ model.node.unique_id }}', {# node_id #}
@@ -129,20 +123,20 @@
                 '{{ model.node.name }}', {# name #}
                 '{{ model.node.alias }}', {# alias #}
                 '{{ model.message | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') | replace("\n", "\\n") }}', {# message #}
-                parse_json('{{ tojson(model.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}') {# adapter_response #}
+                {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(model.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"')) }} {# adapter_response #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
         {% endset %}
-        {{ seed_execution_values }}
+        {{ snapshot_execution_values }}
     {% else %}
         {{ return("") }}
     {% endif %}
 {% endmacro -%}
 
-{% macro snowflake__get_seed_executions_dml_sql(seeds) -%}
-    {% if seeds != [] %}
-        {% set seed_execution_values %}
+{% macro snowflake__get_snapshot_executions_dml_sql(snapshots) -%}
+    {% if snapshots != [] %}
+        {% set snapshot_execution_values %}
         select
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(1) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(2) }},
@@ -161,7 +155,7 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(15) }},
             {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(16)) }}
         from values
-        {% for model in seeds -%}
+        {% for model in snapshots -%}
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
                 '{{ model.node.unique_id }}', {# node_id #}
@@ -209,14 +203,14 @@
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
         {% endset %}
-        {{ seed_execution_values }}
+        {{ snapshot_execution_values }}
     {% else %}
         {{ return("") }}
     {% endif %}
 {% endmacro -%}
 
-{% macro postgres__get_seed_executions_dml_sql(seeds) -%}
-    {% if seeds != [] %}
+{% macro postgres__get_snapshot_executions_dml_sql(snapshots) -%}
+    {% if snapshots != [] %}
         {% set columns = [
             'command_invocation_id',
             'node_id',
@@ -235,8 +229,8 @@
             'message',
             'adapter_response',
         ]%}
-        {% set seed_execution_values %}
-        {% for model in seeds -%}
+        {% set snapshot_execution_values %}
+        {% for model in snapshots -%}
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
                 '{{ model.node.unique_id }}', {# node_id #}
@@ -273,7 +267,7 @@
                 {% endif %}
 
                 {{ model.execution_time }}, {# total_node_runtime #}
-                null, -- rows_affected not available {# Databricks #}
+                null, {# rows_affected #}
                 '{{ model.node.config.materialized }}', {# materialization #}
                 '{{ model.node.schema }}', {# schema #}
                 '{{ model.node.name }}', {# name #}
@@ -286,7 +280,7 @@
         {% endset %}
         {{ "(" ~ columns | join(', ') ~ ")"}}
         VALUES
-        {{ seed_execution_values }}
+        {{ snapshot_execution_values }}
     {% else %}
         {{ return("") }}
     {% endif %}

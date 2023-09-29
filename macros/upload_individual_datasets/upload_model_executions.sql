@@ -1,10 +1,4 @@
-{% macro upload_model_executions(results) -%}
-    {% set models = [] %}
-    {% for result in results  %}
-        {% if result.node.resource_type == "model" %}
-            {% do models.append(result) %}
-        {% endif %}
-    {% endfor %}
+{% macro upload_model_executions(models) -%}
     {{ return(adapter.dispatch('get_model_executions_dml_sql', 'dbt_artifacts')(models)) }}
 {%- endmacro %}
 
@@ -45,26 +39,10 @@
                 '{{ model.thread_id }}', {# thread_id #}
                 '{{ model.status }}', {# status #}
 
-                {% if model.timing != [] %}
-                    {% for stage in model.timing if stage.name == "compile" %}
-                        {% if loop.length == 0 %}
-                            null, {# compile_started_at #}
-                        {% else %}
-                            '{{ stage.started_at }}', {# compile_started_at #}
-                        {% endif %}
-                    {% endfor %}
-
-                    {% for stage in model.timing if stage.name == "execute" %}
-                        {% if loop.length == 0 %}
-                            null, {# query_completed_at #}
-                        {% else %}
-                            '{{ stage.completed_at }}', {# query_completed_at #}
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
-                    null, {# compile_started_at #}
-                    null, {# query_completed_at #}
-                {% endif %}
+                {% set compile_started_at = (model.timing | selectattr("name", "eq", "compile") | first | default({}))["started_at"] %}
+                {% if compile_started_at %}'{{ compile_started_at }}'{% else %}null{% endif %}, {# compile_started_at #}
+                {% set query_completed_at = (model.timing | selectattr("name", "eq", "execute") | first | default({}))["completed_at"] %}
+                {% if query_completed_at %}'{{ query_completed_at }}'{% else %}null{% endif %}, {# query_completed_at #}
 
                 {{ model.execution_time }}, {# total_node_runtime #}
                 null, -- rows_affected not available {# Only available in Snowflake & BigQuery #}
@@ -102,26 +80,10 @@
             '{{ model.thread_id }}', {# thread_id #}
             '{{ model.status }}', {# status #}
 
-            {% if model.timing != [] %}
-                {% for stage in model.timing if stage.name == "compile" %}
-                    {% if loop.length == 0 %}
-                        null, {# compile_started_at #}
-                    {% else %}
-                        '{{ stage.started_at }}', {# compile_started_at #}
-                    {% endif %}
-                {% endfor %}
-
-                {% for stage in model.timing if stage.name == "execute" %}
-                    {% if loop.length == 0 %}
-                        null, {# query_completed_at #}
-                    {% else %}
-                        '{{ stage.completed_at }}', {# query_completed_at #}
-                    {% endif %}
-                {% endfor %}
-            {% else %}
-                null, {# compile_started_at #}
-                null, {# query_completed_at #}
-            {% endif %}
+            {% set compile_started_at = (model.timing | selectattr("name", "eq", "compile") | first | default({}))["started_at"] %}
+            {% if compile_started_at %}'{{ compile_started_at }}'{% else %}null{% endif %}, {# compile_started_at #}
+            {% set query_completed_at = (model.timing | selectattr("name", "eq", "execute") | first | default({}))["completed_at"] %}
+            {% if query_completed_at %}'{{ query_completed_at }}'{% else %}null{% endif %}, {# query_completed_at #}
 
             {{ model.execution_time }}, {# total_node_runtime #}
             safe_cast('{{ model.adapter_response.rows_affected }}' as int64),
@@ -131,7 +93,7 @@
             '{{ model.node.name }}', {# name #}
             '{{ model.node.alias }}', {# alias #}
             '{{ model.message | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') | replace("\n", "\\n") }}', {# message #}
-            parse_json('{{ tojson(model.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}') {# adapter_response #}
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(model.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"')) }} {# adapter_response #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -178,26 +140,10 @@
                 '{{ model.thread_id }}', {# thread_id #}
                 '{{ model.status }}', {# status #}
 
-                {% if model.timing != [] %}
-                    {% for stage in model.timing if stage.name == "compile" %}
-                        {% if loop.length == 0 %}
-                            null, {# compile_started_at #}
-                        {% else %}
-                            '{{ stage.started_at }}', {# compile_started_at #}
-                        {% endif %}
-                    {% endfor %}
-
-                    {% for stage in model.timing if stage.name == "execute" %}
-                        {% if loop.length == 0 %}
-                            null, {# query_completed_at #}
-                        {% else %}
-                            '{{ stage.completed_at }}', {# query_completed_at #}
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
-                    null, {# compile_started_at #}
-                    null, {# query_completed_at #}
-                {% endif %}
+                {% set compile_started_at = (model.timing | selectattr("name", "eq", "compile") | first | default({}))["started_at"] %}
+                {% if compile_started_at %}'{{ compile_started_at }}'{% else %}null{% endif %}, {# compile_started_at #}
+                {% set query_completed_at = (model.timing | selectattr("name", "eq", "execute") | first | default({}))["completed_at"] %}
+                {% if query_completed_at %}'{{ query_completed_at }}'{% else %}null{% endif %}, {# query_completed_at #}
 
                 {{ model.execution_time }}, {# total_node_runtime #}
                 try_cast('{{ model.adapter_response.rows_affected }}' as int), {# rows_affected #}

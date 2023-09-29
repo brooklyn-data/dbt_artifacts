@@ -19,11 +19,11 @@
 {% endmacro %}
 
 {% macro snowflake__type_json() %}
-   OBJECT
+   object
 {% endmacro %}
 
 {% macro bigquery__type_json() %}
-   JSON
+   json
 {% endmacro %}
 
 {#- ARRAY -#}
@@ -37,9 +37,9 @@
 {% endmacro %}
 
 {% macro snowflake__type_array() %}
-   ARRAY
+   array
 {% endmacro %}
 
 {% macro bigquery__type_array() %}
-   ARRAY<string>
+   array<string>
 {% endmacro %}
