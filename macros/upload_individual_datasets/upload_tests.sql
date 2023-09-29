@@ -72,17 +72,6 @@
 
 {% macro postgres__get_tests_dml_sql(tests) -%}
     {% if tests != [] %}
-        {% set columns = [
-            'command_invocation_id',
-            'node_id',
-            'run_started_at',
-            'name',
-            'depends_on_nodes',
-            'package_name',
-            'test_path',
-            'tags',
-            'all_results',
-        ] %}
         {% set test_values %}
             {% for test in tests -%}
                 (
@@ -94,13 +83,15 @@
                     '{{ test.package_name }}', {# package_name #}
                     '{{ test.original_file_path | replace('\\', '\\\\') }}', {# test_path #}
                     $${{ tojson(test.tags) }}$$, {# tags #}
-                    $${{ tojson(test) }}$$ {# all_results #}
+                    {% if var('dbt_artifacts_exclude_all_results', false) %}
+                        null
+                    {% else %}
+                        $${{ tojson(test) }}$$ {# all_results #}
+                    {% endif %}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}
         {% endset %}
-        {{ "(" ~ columns | join(', ') ~ ")"}}
-        VALUES
         {{ test_values }}
     {% else %}
         {{ return("") }}

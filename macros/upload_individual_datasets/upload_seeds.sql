@@ -81,20 +81,6 @@
 
 {% macro postgres__get_seeds_dml_sql(seeds) -%}
     {% if seeds != [] %}
-        {% set columns = [
-            'command_invocation_id',
-            'node_id',
-            'run_started_at',
-            'database',
-            'schema',
-            'name',
-            'package_name',
-            'path',
-            'checksum',
-            'meta',
-            'alias',
-            'all_results',
-        ] %}
         {% set seed_values %}
             {% for seed in seeds -%}
                 (
@@ -109,13 +95,15 @@
                     '{{ seed.checksum.checksum }}', {# checksum #}
                     $${{ tojson(seed.config.meta) }}$$, {# meta #}
                     '{{ seed.alias }}', {# alias #}
-                    $${{ tojson(seed) }}$$ {# all_results #}
+                    {% if var('dbt_artifacts_exclude_all_results', false) %}
+                        null
+                    {% else %}
+                        $${{ tojson(seed) }}$$ {# all_results #}
+                    {% endif %}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}
         {% endset %}
-        {{ "(" ~ columns | join(', ') ~ ")"}}
-        VALUES
         {{ seed_values }}
     {% else %}
         {{ return("") }}

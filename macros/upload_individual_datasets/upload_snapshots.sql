@@ -89,22 +89,6 @@
 
 {% macro postgres__get_snapshots_dml_sql(snapshots) -%}
     {% if snapshots != [] %}
-        {% set columns = [
-            'command_invocation_id',
-            'node_id',
-            'run_started_at',
-            'database',
-            'schema',
-            'name',
-            'depends_on_nodes',
-            'package_name',
-            'path',
-            'checksum',
-            'strategy',
-            'meta',
-            'alias',
-            'all_results',
-        ]%}
         {% set snapshot_values %}
             {% for snapshot in snapshots -%}
                 (
@@ -121,13 +105,15 @@
                     '{{ snapshot.config.strategy }}', {# strategy #}
                     $${{ tojson(snapshot.config.meta) }}$$, {# meta #}
                     '{{ snapshot.alias }}', {# alias #}
-                    $${{ tojson(snapshot) }}$$ {# all_results #}
+                    {% if var('dbt_artifacts_exclude_all_results', false) %}
+                        null
+                    {% else %}
+                        $${{ tojson(snapshot) }}$$ {# all_results #}
+                    {% endif %}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}
         {% endset %}
-        {{ "(" ~ columns | join(', ') ~ ")"}}
-        VALUES
         {{ snapshot_values }}
     {% else %}
         {{ return("") }}

@@ -128,21 +128,6 @@
 
 {% macro postgres__get_test_executions_dml_sql(tests) -%}
     {% if tests != [] %}
-        {% set columns = [
-            'command_invocation_id',
-            'node_id',
-            'run_started_at',
-            'was_full_refresh',
-            'thread_id',
-            'status',
-            'compile_started_at',
-            'query_completed_at',
-            'total_node_runtime',
-            'rows_affected',
-            'failures',
-            'message',
-            'adapter_response',
-        ]%}
         {% set test_execution_values %}
         {% for test in tests -%}
             (
@@ -190,8 +175,6 @@
 
         {%- endfor %}
         {% endset %}
-        {{ "(" ~ columns | join(', ') ~ ")"}}
-        VALUES
         {{ test_execution_values }}
     {% else %}
         {{ return("") }}

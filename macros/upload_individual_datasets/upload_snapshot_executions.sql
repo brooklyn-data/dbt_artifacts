@@ -211,24 +211,6 @@
 
 {% macro postgres__get_snapshot_executions_dml_sql(snapshots) -%}
     {% if snapshots != [] %}
-        {% set columns = [
-            'command_invocation_id',
-            'node_id',
-            'run_started_at',
-            'was_full_refresh',
-            'thread_id',
-            'status',
-            'compile_started_at',
-            'query_completed_at',
-            'total_node_runtime',
-            'rows_affected',
-            'materialization',
-            'schema',
-            'name',
-            'alias',
-            'message',
-            'adapter_response',
-        ]%}
         {% set snapshot_execution_values %}
         {% for model in snapshots -%}
             (
@@ -278,8 +260,6 @@
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
         {% endset %}
-        {{ "(" ~ columns | join(', ') ~ ")"}}
-        VALUES
         {{ snapshot_execution_values }}
     {% else %}
         {{ return("") }}

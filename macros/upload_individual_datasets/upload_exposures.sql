@@ -88,23 +88,6 @@
 {% macro postgres__get_exposures_dml_sql(exposures) -%}
     {% if exposures != [] %}
 
-        {% set columns = [
-            'command_invocation_id',
-            'node_id',
-            'run_started_at',
-            'name',
-            'type',
-            'owner',
-            'maturity',
-            'path',
-            'description',
-            'url',
-            'package_name',
-            'depends_on_nodes',
-            'tags',
-            'all_results',
-        ] %}
-
         {% set exposure_values %}
             {% for exposure in exposures -%}
                 (
@@ -121,13 +104,15 @@
                     '{{ exposure.package_name }}', {# package_name #}
                     $${{ tojson(exposure.depends_on.nodes) }}$$, {# depends_on_nodes #}
                     $${{ tojson(exposure.tags) }}$$, {# tags #}
-                    $${{ tojson(exposure) }}$$ {# all_results #}
+                    {% if var('dbt_artifacts_exclude_all_results', false) %}
+                        null
+                    {% else %}
+                        $${{ tojson(exposure) }}$$ {# all_results #}
+                    {% endif %}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}
         {% endset %}
-        {{ "(" ~ columns | join(', ') ~ ")"}}
-        VALUES
         {{ exposure_values }}
     {% else %}
         {{ return("") }}

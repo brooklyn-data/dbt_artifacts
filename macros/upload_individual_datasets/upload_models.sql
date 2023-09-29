@@ -92,23 +92,6 @@
 
 {% macro postgres__get_models_dml_sql(models) -%}
     {% if models != [] %}
-        {% set columns = [
-            'command_invocation_id',
-            'node_id',
-            'run_started_at',
-            'database',
-            'schema',
-            'name',
-            'depends_on_nodes',
-            'package_name',
-            'path',
-            'checksum',
-            'materialization',
-            'tags',
-            'meta',
-            'alias',
-            'all_results',
-        ] %}
         {% set model_values %}
             {% for model in models -%}
                 {% do model.pop('raw_code', None) %}
@@ -127,13 +110,15 @@
                     '{{ tojson(model.tags) }}', {# tags #}
                     $${{ model.config.meta }}$$, {# meta #}
                     '{{ model.alias }}', {# alias #}
-                    $${{ tojson(model) }}$$ {# all_results #}
+                    {% if var('dbt_artifacts_exclude_all_results', false) %}
+                        null
+                    {% else %}
+                        $${{ tojson(model) }}$$ {# all_results #}
+                    {% endif %}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}
         {% endset %}
-        {{ "(" ~ columns | join(', ') ~ ")"}}
-        VALUES
         {{ model_values }}
     {% else %}
         {{ return("") }}
