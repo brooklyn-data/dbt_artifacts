@@ -134,7 +134,7 @@
     {% endif %}
 {% endmacro -%}
 
-{% macro dremio__get_models_dml_sql(models) -%}
+{% macro dremio__get_seed_executions_dml_sql(models) -%}
 
     {% if models != [] %}
         {% set model_values %}
