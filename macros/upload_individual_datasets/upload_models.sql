@@ -35,12 +35,16 @@
                 '{{ tojson(model.depends_on.nodes) | replace('\\', '\\\\') }}', {# depends_on_nodes #}
                 '{{ model.package_name }}', {# package_name #}
                 '{{ model.original_file_path | replace('\\', '\\\\') }}', {# path #}
-                '{{ model.checksum.checksum }}', {# checksum #}
+                '{{ model.checksum.checksum  | replace('\\', '\\\\') }}', {# checksum #}
                 '{{ model.config.materialized }}', {# materialization #}
                 '{{ tojson(model.tags) }}', {# tags #}
                 '{{ tojson(model.config.meta) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}', {# meta #}
                 '{{ model.alias }}', {# alias #}
-                '{{ tojson(model) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}' {# all_results #}
+                {% if var('dbt_artifacts_exclude_all_results', false) %}
+                    null
+                {% else %}
+                    '{{ tojson(model) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}' {# all_results #}
+                {% endif %}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -66,12 +70,16 @@
                     {{ tojson(model.depends_on.nodes) }}, {# depends_on_nodes #}
                     '{{ model.package_name }}', {# package_name #}
                     '{{ model.original_file_path | replace('\\', '\\\\') }}', {# path #}
-                    '{{ model.checksum.checksum }}', {# checksum #}
+                    '{{ model.checksum.checksum | replace('\\', '\\\\') }}', {# checksum #}
                     '{{ model.config.materialized }}', {# materialization #}
                     {{ tojson(model.tags) }}, {# tags #}
-                    parse_json('''{{ tojson(model.config.meta) }}'''), {# meta #}
+                    {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(model.config.meta)) }}, {# meta #}
                     '{{ model.alias }}', {# alias #}
-                    parse_json('{{ tojson(model) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}') {# all_results #}
+                    {% if var('dbt_artifacts_exclude_all_results', false) %}
+                        null
+                    {% else %}
+                        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(model) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"')) }} {# all_results #}
+                    {% endif %}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}

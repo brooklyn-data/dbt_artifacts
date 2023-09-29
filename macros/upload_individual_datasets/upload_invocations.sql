@@ -122,7 +122,7 @@
             {% for env_variable in var('env_vars') %}
                 {% do env_vars_dict.update({env_variable: (env_var(env_variable, ''))}) %}
             {% endfor %}
-            parse_json('''{{ tojson(env_vars_dict) }}'''), {# env_vars #}
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(env_vars_dict)) }}, {# env_vars #}
         {% else %}
             null, {# env_vars #}
         {% endif %}
@@ -132,7 +132,7 @@
             {% for dbt_var in var('dbt_vars') %}
                 {% do dbt_vars_dict.update({dbt_var: (var(dbt_var, ''))}) %}
             {% endfor %}
-            parse_json('''{{ tojson(dbt_vars_dict) }}'''), {# dbt_vars #}
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(dbt_vars_dict)) }}, {# dbt_vars #}
         {% else %}
             null, {# dbt_vars #}
         {% endif %}
@@ -146,13 +146,13 @@
             {% endif %}
         {% endif %}
 
-        safe.parse_json('''{{ tojson(invocation_args_dict) | replace("'", "\\'") }}'''), {# invocation_args #}
+        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(invocation_args_dict) | replace("'", "\\'")) }}, {# invocation_args #}
 
         {% set metadata_env = {} %}
         {% for key, value in dbt_metadata_envs.items() %}
             {% do metadata_env.update({key: value}) %}
         {% endfor %}
-        parse_json('''{{ tojson(metadata_env) | replace('\\', '\\\\') }}''') {# dbt_custom_envs #}
+        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(metadata_env) | replace('\\', '\\\\')) }} {# dbt_custom_envs #}
 
         )
     {% endset %}

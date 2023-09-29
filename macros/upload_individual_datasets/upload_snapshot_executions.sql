@@ -1,10 +1,4 @@
-{% macro upload_snapshot_executions(results) -%}
-    {% set snapshots = [] %}
-    {% for result in results  %}
-        {% if result.node.resource_type == "snapshot" %}
-            {% do snapshots.append(result) %}
-        {% endif %}
-    {% endfor %}
+{% macro upload_snapshot_executions(snapshots) -%}
     {{ return(adapter.dispatch('get_snapshot_executions_dml_sql', 'dbt_artifacts')(snapshots)) }}
 {%- endmacro %}
 
@@ -129,7 +123,7 @@
                 '{{ model.node.name }}', {# name #}
                 '{{ model.node.alias }}', {# alias #}
                 '{{ model.message | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') | replace("\n", "\\n") }}', {# message #}
-                parse_json('{{ tojson(model.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}') {# adapter_response #}
+                {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(model.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"')) }} {# adapter_response #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}

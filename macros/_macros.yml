@@ -1,0 +1,246 @@
+version: 2
+
+macros:
+  ## DATABASE SPECIFIC HELPERS ##
+  - name: column_identifier
+    description: |
+      Dependent on the adapter type, return the identifier for a column using a numerical index.
+    arguments:
+      - name: column_index
+        type: integer
+        description: |
+          The index of the column to return the identifier for
+
+  - name: generate_surrogate_key
+    description: |
+      Since folks commonly install dbt_artifacts alongside a myriad of other packages,
+      we copy the dbt_utils implementation of the surrogate_key macro so we don't have
+      any dependencies to make conflicts worse!
+
+      This version is:
+      URL: https://github.com/dbt-labs/dbt-utils/blob/main/macros/sql/generate_surrogate_key.sql
+      Commit SHA: eaa0e41b033bdf252eff0ae014ec11888f37ebff
+      Date: 2023-04-28
+    arguments:
+      - name: field_list
+        type: list
+        description: |
+          A list of fields to concatenate together to form the surrogate key
+
+  - name: get_relation
+    description: |
+      Identify a relation in the graph from a relation name
+    arguments:
+      - name: get_relation_name
+        type: string
+        description: |
+          The name of the relation to return from the graph
+
+  - name: parse_json
+    description: |
+      Dependent on the adapter type, return a column which parses the JSON field.
+    arguments:
+      - name: field
+        type: string
+        description: |
+          The name of the field to parse
+
+  - name: type_array
+    description: |
+      Dependent on the adapter type, returns the native type for storing an array.
+
+  - name: type_boolean
+    description: |
+      Dependent on the adapter type, returns the native boolean type.
+
+  - name: type_json
+    description: |
+      Dependent on the adapter type, returns the native type for storing JSON.
+
+  ## MIGRATION ##
+  - name: migrate_from_v0_to_v1
+    description: |
+      A macro to assist with migrating from v0 to v1 of dbt_artifacts. See
+      https://github.com/brooklyn-data/dbt_artifacts/blob/main/README.md#migrating-from-100-to-100
+      for details on the usage.
+    arguments:
+      - name: old_database
+        type: string
+        description: |
+          The database of the <1.0.0 output (fct_/dim_) models - does not have to be different to `new_database`
+      - name: old_schema
+        type: string
+        description: |
+          The schema of the <1.0.0 output (fct_/dim_) models - does not have to be different to `new_schema`
+      - name: new_database
+        type: string
+        description: |
+          The target database that the v1 artifact sources are in - does not have to be different to `old_database`
+      - name: new_schema
+        type: string
+        description: |
+          The target schema that the v1 artifact sources are in - does not have to be different to `old_schema`
+
+  ## UPLOAD INDIVIDUAL DATASETS ##
+  - name: upload_exposures
+    description: |
+      The macro to support upload of the data to the exposures table.
+    arguments:
+      - name: exposures
+        type: list
+        description: |
+          A list of exposure objects extracted from the dbt graph
+
+  - name: upload_invocations
+    description: |
+      The macro to support upload of the data to the invocations table.
+
+  - name: upload_model_executions
+    description: |
+      The macro to support upload of the data to the model_executions table.
+    arguments:
+      - name: models
+        type: list
+        description: |
+          A list of model execution results objects extracted from the dbt result object
+
+  - name: upload_models
+    description: |
+      The macro to support upload of the data to the models table.
+    arguments:
+      - name: models
+        type: list
+        description: |
+          A list of test objects extracted from the dbt graph
+
+  - name: upload_seed_executions
+    description: |
+      The macro to support upload of the data to the seed_executions table.
+    arguments:
+      - name: seeds
+        type: list
+        description: |
+          A list of seed execution results objects extracted from the dbt result object
+
+  - name: upload_seeds
+    description: |
+      The macro to support upload of the data to the seeds table.
+    arguments:
+      - name: seeds
+        type: list
+        description: |
+          A list of seeds objects extracted from the dbt graph
+
+  - name: upload_snapshot_executions
+    description: |
+      The macro to support upload of the data to the snapshot_executions table.
+    arguments:
+      - name: snapshots
+        type: list
+        description: |
+          A list of snapshot execution results objects extracted from the dbt result object
+
+  - name: upload_snapshots
+    description: |
+      The macro to support upload of the data to the snapshots table.
+    arguments:
+      - name: snapshots
+        type: list
+        description: |
+          A list of snapshots objects extracted from the dbt graph
+
+  - name: upload_sources
+    description: |
+      The macro to support upload of the data to the sources table.
+    arguments:
+      - name: sources
+        type: list
+        description: |
+          A list of sources objects extracted from the dbt graph
+
+  - name: upload_test_executions
+    description: |
+      The macro to support upload of the data to the test_executions table.
+    arguments:
+      - name: tests
+        type: list
+        description: |
+          A list of test execution results objects extracted from the dbt result object
+
+  - name: upload_tests
+    description: |
+      The macro to support upload of the data to the tests table.
+    arguments:
+      - name: tests
+        type: list
+        description: |
+          A list of test objects extracted from the dbt graph
+
+  ## UPLOAD RESULTS ##
+  - name: get_column_name_list
+    description: |
+      A macro to return the list of column names for a particular dataset. Returns a comment if the dataset is not
+      valid.
+    arguments:
+      - name: dataset
+        type: string
+        description: |
+          The name of the dataset to return the column names for e.g. `models`
+
+  - name: get_dataset_content
+    description: |
+      A macro to extract the data to be uploaded from either the results or the graph object.
+    arguments:
+      - name: dataset
+        type: string
+        description: |
+          The name of the dataset to return the data for e.g. `models`
+
+  - name: get_table_content_values
+    description: |
+      A macro to create the insert statement values required to be uploaded to the table.
+    arguments:
+      - name: dataset
+        type: string
+        description: |
+          The name of the dataset to return the column names for e.g. `models`
+      - name: objects_to_upload
+        type: list
+        description: |
+          The objects to be used to generate the insert statement values - extracted from `get_dataset_content`
+
+  - name: insert_into_metadata_table
+    description: |
+      Dependent on the adapter type, the wrapper to insert the data into a table from a list of values. Used in the
+      `upload_results` macro, alongside the `get_column_lists` macro to generate the column names and the
+      `upload_dataset` macros to generate the data to be inserted.
+    arguments:
+      - name: database_name
+        type: string
+        description: |
+          The database name for the relation that the data is to be inserted into
+      - name: schema_name
+        type: string
+        description: |
+          The schema name for the relation that the data is to be inserted into
+      - name: table_name
+        type: string
+        description: |
+          The table name for the relation that the data is to be inserted into
+      - name: fields
+        type: string
+        description: |
+          The list of fields for the relation that the data is to be inserted into
+      - name: content
+        type: string
+        description: |
+          The data content to insert into the relation
+
+  - name: upload_results
+    description: |
+      The main macro called to upload the metadata into each of the source tables.
+    arguments:
+      - name: results
+        type: list
+        description: |
+          The results object from dbt.
