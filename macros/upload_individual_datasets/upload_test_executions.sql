@@ -35,26 +35,10 @@
                 '{{ test.thread_id }}', {# thread_id #}
                 '{{ test.status }}', {# status #}
 
-                {% if test.timing != [] %}
-                    {% for stage in test.timing if stage.name == "compile" %}
-                        {% if loop.length == 0 %}
-                            null, {# compile_started_at #}
-                        {% else %}
-                            '{{ stage.started_at }}', {# compile_started_at #}
-                        {% endif %}
-                    {% endfor %}
-
-                    {% for stage in test.timing if stage.name == "execute" %}
-                        {% if loop.length == 0 %}
-                            null, {# query_completed_at #}
-                        {% else %}
-                            '{{ stage.completed_at }}', {# query_completed_at #}
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
-                    null, {# compile_started_at #}
-                    null, {# query_completed_at #}
-                {% endif %}
+                {% set compile_started_at = (model.timing | selectattr("name", "eq", "compile") | first | default({}))["started_at"] %}
+                {% if compile_started_at %}'{{ compile_started_at }}'{% else %}null{% endif %}, {# compile_started_at #}
+                {% set query_completed_at = (model.timing | selectattr("name", "eq", "execute") | first | default({}))["completed_at"] %}
+                {% if query_completed_at %}'{{ query_completed_at }}'{% else %}null{% endif %}, {# query_completed_at #}
 
                 {{ test.execution_time }}, {# total_node_runtime #}
                 null, {# rows_affected not available in Databricks #}
@@ -89,26 +73,10 @@
                 '{{ test.thread_id }}', {# thread_id #}
                 '{{ test.status }}', {# status #}
 
-                {% if test.timing != [] %}
-                    {% for stage in test.timing if stage.name == "compile" %}
-                        {% if loop.length == 0 %}
-                            null, {# compile_started_at #}
-                        {% else %}
-                            '{{ stage.started_at }}', {# compile_started_at #}
-                        {% endif %}
-                    {% endfor %}
-
-                    {% for stage in test.timing if stage.name == "execute" %}
-                        {% if loop.length == 0 %}
-                            null, {# query_completed_at #}
-                        {% else %}
-                            '{{ stage.completed_at }}', {# query_completed_at #}
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
-                    null, {# compile_started_at #}
-                    null, {# query_completed_at #}
-                {% endif %}
+                {% set compile_started_at = (model.timing | selectattr("name", "eq", "compile") | first | default({}))["started_at"] %}
+                {% if compile_started_at %}'{{ compile_started_at }}'{% else %}null{% endif %}, {# compile_started_at #}
+                {% set query_completed_at = (model.timing | selectattr("name", "eq", "execute") | first | default({}))["completed_at"] %}
+                {% if query_completed_at %}'{{ query_completed_at }}'{% else %}null{% endif %}, {# query_completed_at #}
 
                 {{ test.execution_time }}, {# total_node_runtime #}
                 null, {# rows_affected not available in Databricks #}
