@@ -22,6 +22,6 @@ select
     , cast(null as {{ type_string() }}) as name
     , cast(null as {{ type_string() }}) as alias
     , cast(null as {{ type_string() }}) as message
-    , cast(null as {{ type_json() }}) as adapter_responss
+    , cast(null as {{ type_json() }}) as adapter_response
 from dummy_cte
 where 1 = 0
