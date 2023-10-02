@@ -6,7 +6,7 @@ with
 
     )
 
-    sources as (
+    , sources as (
 
         select
             source_execution_id

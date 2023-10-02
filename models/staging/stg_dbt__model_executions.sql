@@ -20,9 +20,9 @@ with
             , query_completed_at
             , total_node_runtime
             , rows_affected
-            , {% if target.type == 'bigquery' %}
-                  , bytes_processed
-              {% endif %}
+            {% if target.type == 'bigquery' %}
+            , bytes_processed
+            {% endif %}
             , materialization
             , schema -- noqa
             , name
