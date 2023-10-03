@@ -52,8 +52,8 @@
     {% elif dataset == 'model_executions' %}
 
         (
-            node_id,
             command_invocation_id,
+            node_id,
             run_started_at,
             was_full_refresh,
             thread_id,
@@ -76,8 +76,8 @@
     {% elif dataset == 'models' %}
 
         (
-            node_id,
             command_invocation_id,
+            node_id,
             run_started_at,
             database,
             schema,
