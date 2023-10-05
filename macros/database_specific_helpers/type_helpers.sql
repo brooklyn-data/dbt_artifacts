@@ -26,6 +26,10 @@
    json
 {% endmacro %}
 
+{%- macro dremio__type_json() -%}
+   varchar
+{%- endmacro -%}
+
 {#- ARRAY -#}
 
 {% macro type_array() %}
@@ -43,3 +47,7 @@
 {% macro bigquery__type_array() %}
    array<string>
 {% endmacro %}
+
+{%- macro dremio__type_array() -%}
+   varchar
+{%- endmacro -%}

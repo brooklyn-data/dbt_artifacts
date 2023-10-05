@@ -19,4 +19,5 @@ models:
       +full_refresh: false
       +persist_docs:
         # Databricks doesn't offer column-level support for persisting docs
-        columns: '{{ target.name != "databricks" }}'
+        columns: '{{ target.name not in ["databricks", "dremio"] }}'
+        relation: '{{ target.name not in ["dremio"] }}'
