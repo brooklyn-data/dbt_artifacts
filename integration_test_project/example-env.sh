@@ -18,6 +18,7 @@ export DBT_ENV_SPARK_DRIVER_PATH= # /Library/simba/spark/lib/libsparkodbc_sbu.dy
 export DBT_ENV_SPARK_ENDPOINT= # The endpoint ID from the Databricks HTTP path
 
 # dbt environment variables, change these
+export DBT_VERSION="1_5_0"
 export DBT_CLOUD_PROJECT_ID=
 export DBT_CLOUD_JOB_ID=
 export DBT_CLOUD_RUN_ID=
