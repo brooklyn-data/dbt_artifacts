@@ -57,6 +57,10 @@ macros:
     description: |
       Dependent on the adapter type, returns the native type for storing JSON.
 
+  - name: type_string
+    description: |
+      Dependent on the adapter type, returns the native type for storing a string.
+
   ## MIGRATION ##
   - name: migrate_from_v0_to_v1
     description: |

@@ -78,11 +78,17 @@ Tox will take care of installing the dependencies for each environment, so you d
     tox -e integration_snowflake # For the Snowflake tests
     tox -e integration_databricks # For the Databricks tests
     tox -e integration_bigquery # For the BigQuery tests
+    tox -e integration_redshift # For the Redshift testss
     ```
 
 The Spark tests require installing the [ODBC driver](https://www.databricks.com/spark/odbc-drivers-download). On a Mac,
 DBT_ENV_SPARK_DRIVER_PATH should be set to `/Library/simba/spark/lib/libsparkodbc_sbu.dylib`. Spark tests have not yet
 been added to the integration tests.
+
+The Redshift tests require your AWS credentials configured in the current environment (either as environment variables or in your credentials
+file - see [Configure the AWS cli](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)).  They are currently configured with IAM
+authorisation, so your principal will require the redshift:getClusterCredentials permission to retrieve the password for the specified redshift
+database user.
 
 If you don't have access to a particular database type, this isn't a problem. Test on the one you do have, and let us know in the PR.
 
