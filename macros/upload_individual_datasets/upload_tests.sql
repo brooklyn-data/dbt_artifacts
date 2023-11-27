@@ -97,3 +97,31 @@
         {{ return("") }}
     {% endif %}
 {%- endmacro %}
+
+{% macro athena__get_tests_dml_sql(tests) -%}
+    {% if tests != [] %}
+        {% set test_values %}
+            {% for test in tests -%}
+                (
+                    '{{ invocation_id }}', {# command_invocation_id #}
+                    '{{ test.unique_id }}', {# node_id #}
+                    cast('{{ run_started_at }}' as timestamp(6)), {# run_started_at #}
+                    '{{ test.name }}', {# name #}
+                    '{{ tojson(test.depends_on.nodes) | replace("\'", "\'\'") }}', {# depends_on_nodes #}
+                    '{{ test.package_name }}', {# package_name #}
+                    '{{ test.original_file_path | replace('\\', '\\\\') }}', {# test_path #}
+                    '{{ tojson(test.tags) | replace("\'", "\'\'") }}', {# tags #}
+                    {% if var('dbt_artifacts_exclude_all_results', false) %}
+                        cast(null as varchar)
+                    {% else %}
+                        '{{ tojson(test) | replace("\'", "\'\'") }}' {# all_results #}
+                    {% endif %}
+                )
+                {%- if not loop.last %},{%- endif %}
+            {%- endfor %}
+        {% endset %}
+        {{ test_values }}
+    {% else %}
+        {{ return("") }}
+    {% endif %}
+{%- endmacro %}
