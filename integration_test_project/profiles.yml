@@ -57,7 +57,7 @@ dbt_artifacts:
       s3_staging_dir: "{{ env_var('DBT_ENV_ATHENA_S3_STAGING') }}"
       s3_data_dir: "{{ env_var('DBT_ENV_ATHENA_S3_DATA') }}"
       s3_data_naming: schema_table_unique
-      region_name: ap-southeast-2
+      region_name: "{{ env_var('AWS_DEFAULT_REGION') }}"
       schema: public
       database: awsdatacatalog
       threads: 8
