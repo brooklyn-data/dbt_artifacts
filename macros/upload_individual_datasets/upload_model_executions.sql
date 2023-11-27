@@ -229,7 +229,7 @@
                 {% if query_completed_at %}cast('{{ query_completed_at }}' as timestamp(6)){% else %}cast(null as timestamp(6)){% endif %}, {# query_completed_at #}
 
                 {{ model.execution_time }}, {# total_node_runtime #}
-                cast(null as integer), {# rows_affected #}
+                cast({{ model.adapter_response.rows_affected }} as integer), {# rows_affected #}
                 '{{ model.node.config.materialized }}', {# materialization #}
                 '{{ model.node.schema }}', {# schema #}
                 '{{ model.node.name }}', {# name #}

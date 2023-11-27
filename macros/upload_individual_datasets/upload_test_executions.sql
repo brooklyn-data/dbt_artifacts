@@ -189,7 +189,7 @@
                 {% endif %}
 
                 {{ test.execution_time }}, {# total_node_runtime #}
-                cast(null as integer), {# rows_affected not available in Databricks #}
+                cast(null as integer), {# rows_affected #}
                 {{ 'cast(null as integer)' if test.failures is none else test.failures }}, {# failures #}
                 '{{ test.message | replace("\'", "\'\'")  }}', {# message #}
                 '{{ tojson(test.adapter_response) | replace("\'", "\'\'") }}' {# adapter_response #}

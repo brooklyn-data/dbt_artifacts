@@ -258,7 +258,7 @@
                 {% endif %}
 
                 {{ model.execution_time }}, {# total_node_runtime #}
-                cast(null as integer), -- rows_affected not available {# Databricks #}
+                cast({{ model.adapter_response.rows_affected }} as integer), {# rows_affected #}
                 '{{ model.node.config.materialized }}', {# materialization #}
                 '{{ model.node.schema }}', {# schema #}
                 '{{ model.node.name }}', {# name #}

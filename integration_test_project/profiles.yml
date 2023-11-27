@@ -60,5 +60,6 @@ dbt_artifacts:
       region_name: ap-southeast-2
       schema: public
       database: awsdatacatalog
+      threads: 8
       seed_s3_upload_args:
         ACL: bucket-owner-full-control
