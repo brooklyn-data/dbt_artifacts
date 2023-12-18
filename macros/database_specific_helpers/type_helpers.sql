@@ -43,3 +43,8 @@
 {% macro bigquery__type_array() %}
    array<string>
 {% endmacro %}
+
+{% macro trino__type_array() %}
+   array(varchar)
+{% endmacro %}
+

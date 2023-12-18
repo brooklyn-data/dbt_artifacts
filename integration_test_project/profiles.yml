@@ -64,3 +64,13 @@ dbt_artifacts:
       Encrypt: False
       user: dbt
       password: "123"
+    trino:
+      type: trino
+      method: none 
+      user: trino
+      password: password
+      host: localhost
+      database: datalake
+      schema: dbt
+      port: 8181
+      threads: 8
