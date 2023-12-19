@@ -70,7 +70,7 @@ dbt_artifacts:
       user: trino
       password: password
       host: localhost
-      database: datalake
-      schema: dbt
+      database: memory
+      schema: default
       port: 8080
       threads: 8
