@@ -280,7 +280,7 @@
                 {% endif %}
             {% endif %}
 
-            '{{ tojson(invocation_args_dict) | replace("'","''") }}', {# invocation_args #}
+            '{{ invocation_args_dict | replace("'","''") }}', {# invocation_args #}
 
             {% set metadata_env = {} %}
             {% for key, value in dbt_metadata_envs.items() %}
