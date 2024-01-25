@@ -18,8 +18,8 @@
             {# Get the results that need to be uploaded #}
             {% set objects = dbt_artifacts.get_dataset_content(dataset) %}
 
-            {# Upload in chunks to reduce query size #}
-            {% if dataset == 'model' %}
+            {# Upload in chunks to reduce the query size #}
+            {% if dataset == 'models' %}
                 {% set upload_limit = 50 if target.type == 'bigquery' else 100 %}
             {% else %}
                 {% set upload_limit = 300 if target.type == 'bigquery' else 5000 %}
