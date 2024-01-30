@@ -16,7 +16,8 @@ export DBT_ENV_SECRET_DATABRICKS_TOKEN=
 export DBT_ENV_SECRET_GCP_PROJECT=
 export DBT_ENV_SPARK_DRIVER_PATH= # /Library/simba/spark/lib/libsparkodbc_sbu.dylib on a Mac
 export DBT_ENV_SPARK_ENDPOINT= # The endpoint ID from the Databricks HTTP path
-
+export DBT_ENV_ATHENA_S3_STAGING=
+export DBT_ENV_ATHENA_S3_DATA=
 # dbt environment variables, change these
 export DBT_VERSION="1_5_0"
 export DBT_CLOUD_PROJECT_ID=

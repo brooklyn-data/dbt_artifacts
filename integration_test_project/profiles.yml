@@ -52,3 +52,14 @@ dbt_artifacts:
       dbname: postgres
       schema: public
       threads: 8
+    athena:
+      type: athena
+      s3_staging_dir: "{{ env_var('DBT_ENV_ATHENA_S3_STAGING') }}"
+      s3_data_dir: "{{ env_var('DBT_ENV_ATHENA_S3_DATA') }}"
+      s3_data_naming: schema_table_unique
+      region_name: "{{ env_var('AWS_DEFAULT_REGION') }}"
+      schema: public
+      database: awsdatacatalog
+      threads: 8
+      seed_s3_upload_args:
+        ACL: bucket-owner-full-control

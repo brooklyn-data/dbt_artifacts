@@ -118,3 +118,37 @@
         {{ return("") }}
     {% endif %}
 {%- endmacro %}
+
+{% macro athena__get_exposures_dml_sql(exposures) -%}
+    {% if exposures != [] %}
+
+        {% set exposure_values %}
+            {% for exposure in exposures -%}
+                (
+                    '{{ invocation_id }}', {# command_invocation_id #}
+                    '{{ exposure.unique_id | replace("\'", "\'\'") }}', {# node_id #}
+                    cast('{{ run_started_at }}' as timestamp(6)), {# run_started_at #}
+                    '{{ exposure.name | replace("\'", "\'\'") }}', {# name #}
+                    '{{ exposure.type }}', {# type #}
+                    '{{ tojson(exposure.owner) | replace("\'", "\'\'") }}', {# owner #}
+                    '{{ exposure.maturity }}', {# maturity #}
+                    '{{ exposure.original_file_path | replace("\'", "\'\'") }}', {# path #}
+                    '{{ exposure.description | replace("\'", "\'\'") }}', {# description #}
+                    '{{ exposure.url }}', {# url #}
+                    '{{ exposure.package_name }}', {# package_name #}
+                    '{{ tojson(exposure.depends_on.nodes) | replace("\'", "\'\'") }}', {# depends_on_nodes #}
+                    '{{ tojson(exposure.tags) | replace("\'", "\'\'") }}', {# tags #}
+                    {% if var('dbt_artifacts_exclude_all_results', false) %}
+                        cast(null as varchar)
+                    {% else %}
+                        '{{ tojson(exposure).replace("\'", "\'\'") }}' {# all_results #}
+                    {% endif %}
+                )
+                {%- if not loop.last %},{%- endif %}
+            {%- endfor %}
+        {% endset %}
+        {{ exposure_values }}
+    {% else %}
+        {{ return("") }}
+    {% endif %}
+{%- endmacro %}

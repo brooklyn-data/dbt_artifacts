@@ -8,6 +8,18 @@
    {{ return(api.Column.translate_type("boolean")) }}
 {% endmacro %}
 
+{#- TIMESTAMP -#}
+{% macro type_timestamp() %}
+    {{ return(adapter.dispatch('type_timestamp', 'dbt_artifacts')()) }}
+{% endmacro %}
+
+{% macro default__type_timestamp() %}
+   {{ return(api.Column.translate_type("timestamp")) }}
+{% endmacro %}
+
+{% macro athena__type_timestamp() %}
+    timestamp(6)
+{% endmacro %}
 {#- JSON -#}
 
 {% macro type_json() %}

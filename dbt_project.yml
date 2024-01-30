@@ -12,7 +12,9 @@ clean-targets: # folders to be removed by `dbt clean`
 models:
   dbt_artifacts:
     +materialized: view
-    +file_format: delta
+    +file_format: "{% if target.type == 'athena' %}parquet[% else %}delta{% endif %}"
+    +table_type: "{% if target.type == 'athena' %}iceberg{% endif %}"
+    +incremental_strategy: "{% if target.type == 'athena' %}append{% endif %}"
     sources:
       +materialized: incremental
       +on_schema_change: append_new_columns
@@ -20,3 +22,4 @@ models:
       +persist_docs:
         # Databricks doesn't offer column-level support for persisting docs
         columns: '{{ target.name != "databricks" }}'
+
