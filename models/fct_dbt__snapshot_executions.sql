@@ -20,7 +20,7 @@ snapshot_executions as (
         total_node_runtime,
         rows_affected,
         materialization,
-        schema,
+        "schema",
         name,
         alias,
         message
