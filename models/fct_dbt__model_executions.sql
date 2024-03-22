@@ -23,8 +23,8 @@ model_executions as (
             bytes_processed,
         {% endif %}
         materialization,
-        schema, -- noqa
-        name,
+        "schema", -- noqa
+        "name",
         alias,
         message
     from base

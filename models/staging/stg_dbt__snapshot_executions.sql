@@ -20,7 +20,7 @@ enhanced as (
         total_node_runtime,
         rows_affected,
         materialization,
-        schema, -- noqa
+        "schema", -- noqa
         name,
         alias,
         message,
