@@ -61,5 +61,5 @@ dbt_artifacts:
       threads: 8
       use_ssl: true
       dremio_space: *schema
-      object_storage_path: *schema
+      object_storage_path: "{{ env_var('DBT_ENV_OBJECT_STORAGE_PATH') }}"
       object_storage_source: "{{ env_var('DBT_ENV_OBJECT_STORAGE_SOURCE') }}"

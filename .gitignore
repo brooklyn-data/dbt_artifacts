@@ -15,3 +15,5 @@ env.sh
 .venv
 
 .DS_Store
+
+integration_test_project/package-lock.yml
