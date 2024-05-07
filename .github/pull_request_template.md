@@ -29,5 +29,5 @@
 - [ ] Snowflake
 - [ ] Google BigQuery
 - [ ] Databricks
-- [ ] Spark
+- [ ] Dremio
 - [ ] N/A

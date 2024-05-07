@@ -18,6 +18,7 @@ The package currently supports
 - Spark :white_check_mark:
 - Snowflake :white_check_mark:
 - Google BigQuery :white_check_mark:
+- Dremio :white_check_mark:
 - Postgres :white_check_mark:
 
 Models included:
