@@ -22,6 +22,7 @@ export DBT_ENV_DREMIO_SOFTWARE_HOST=
 export DBT_ENV_OBJECT_STORAGE_SOURCE=
 
 # dbt environment variables, change these
+export DBT_VERSION="1_5_0"
 export DBT_CLOUD_PROJECT_ID=
 export DBT_CLOUD_JOB_ID=
 export DBT_CLOUD_RUN_ID=
