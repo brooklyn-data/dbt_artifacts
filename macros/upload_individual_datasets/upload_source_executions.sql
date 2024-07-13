@@ -1,9 +1,9 @@
 {% macro upload_source_executions(sources) %}
-    {{ return(adapter.dispatch('get_source_executions_dml_sql', 'dbt_artifacts')(freshness_results)) }}
+    {{ return(adapter.dispatch('get_source_executions_dml_sql', 'dbt_artifacts')(sources)) }}
 {% endmacro %}
 
 {% macro default__get_source_executions_dml_sql(sources) -%}
-    {% if sources != [] and flags.source_freshness_run_project_hooks %}
+    {% if sources != [] %}
 
         {% set source_execution_values %}
         select
@@ -22,7 +22,7 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(15) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(16) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(16) }},4
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(17) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(18) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(19) }}
@@ -66,7 +66,7 @@
 
 
 {% macro bigquery__get_source_executions_dml_sql(sources) -%}
-    {% if sources != [] and flags.source_freshness_run_project_hooks %}
+    {% if sources != [] %}
 
         {% set source_execution_values %}
         {% for source in sources -%}
@@ -107,7 +107,7 @@
 
 
 {% macro postgres__get_source_executions_dml_sql(sources) -%}
-    {% if sources != [] and flags.source_freshness_run_project_hooks %}
+    {% if sources != [] %}
 
         {% set source_execution_values %}
         {% for source in sources -%}
