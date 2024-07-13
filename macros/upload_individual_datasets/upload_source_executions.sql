@@ -1,5 +1,5 @@
 {% macro upload_source_executions(sources) %}
-    {{ return(adapter.dispatch('get_source_freshness_dml_sql', 'dbt_artifacts')(freshness_results)) }}
+    {{ return(adapter.dispatch('get_source_executions_dml_sql', 'dbt_artifacts')(freshness_results)) }}
 {% endmacro %}
 
 {% macro default__get_source_executions_dml_sql(sources) -%}
