@@ -30,5 +30,8 @@ models:
 seeds:
   +quote_columns: false
 
+flags:
+  source_freshness_run_project_hooks: true
+
 on-run-end:
   - "{{ dbt_artifacts.upload_results(results) }}"
