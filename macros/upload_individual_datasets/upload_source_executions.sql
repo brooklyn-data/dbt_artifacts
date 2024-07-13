@@ -22,7 +22,7 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(13) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(15) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(16) }},4
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(16) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(17) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(18) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(19) }}
