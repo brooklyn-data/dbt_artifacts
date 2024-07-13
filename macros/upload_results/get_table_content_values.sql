@@ -10,6 +10,8 @@
         {% set content = dbt_artifacts.upload_test_executions(objects_to_upload) %}
     {% elif dataset == 'snapshot_executions' %}
         {% set content = dbt_artifacts.upload_snapshot_executions(objects_to_upload) %}
+    {% elif dataset == 'source_executions' %}
+        {% set content = dbt_artifacts.upload_source_executions(objects_to_upload) %}
     {% elif dataset == 'exposures' %}
         {% set content = dbt_artifacts.upload_exposures(objects_to_upload) %}
     {% elif dataset == 'models' %}
