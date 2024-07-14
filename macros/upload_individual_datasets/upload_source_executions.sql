@@ -25,7 +25,7 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(16) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(17) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(18) }},
-            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(19) }}
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(19) }},
             {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(20)) }}
         from values
         {% for source in sources -%}
