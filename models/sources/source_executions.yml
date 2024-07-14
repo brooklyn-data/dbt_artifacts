@@ -1,0 +1,46 @@
+version: 2
+
+models:
+  - name: source_executions
+    description: Base model for data about model executions. One row per model execution.
+    columns:
+      - name: command_invocation_id
+        description: '{{ doc("command_invocation_id") }}'
+      - name: node_id
+        description: '{{ doc("node_id") }}'
+      - name: run_started_at
+        description: '{{ doc("run_started_at") }}'
+      - name: thread_id
+        description: '{{ doc("thread_id") }}'
+      - name: status
+        description: '{{ doc("status") }}'
+      - name: compile_started_at
+        description: '{{ doc("compile_started_at") }}'
+      - name: query_completed_at
+        description: '{{ doc("query_completed_at") }}'
+      - name: total_node_runtime
+        description: '{{ doc("total_node_runtime") }}'
+      - name: schema
+        description: '{{ doc("schema") }}'
+      - name: name
+        description: '{{ doc("name") }}'
+      - name: source_name
+        description: '{{ doc("source_name") }}'
+      - name: loaded_at_field
+        description: '{{ doc("loaded_at_field") }}'
+      - name: warn_after_count
+        description: '{{ doc("warn_after_count") }}'
+      - name: warn_after_period
+        description: '{{ doc("warn_after_period") }}'
+      - name: error_after_count
+        description: '{{ doc("error_after_count") }}'
+      - name: error_after_period
+        description: '{{ doc("error_after_period") }}'
+      - name: max_loaded_at
+        description: '{{ doc("max_loaded_at") }}'
+      - name: snapshotted_at
+        description: '{{ doc("snapshotted_at") }}'
+      - name: age
+        description: '{{ doc("age") }}'
+      - name: adapter_response
+        description: '{{ doc("adapter_response") }}'
