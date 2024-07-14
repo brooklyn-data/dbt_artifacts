@@ -1,7 +1,7 @@
 with base as (
 
     select *
-    from {{ ref('model_executions') }}
+    from {{ ref('source_executions') }}
 
 ),
 
