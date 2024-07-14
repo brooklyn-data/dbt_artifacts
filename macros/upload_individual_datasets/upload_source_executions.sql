@@ -53,7 +53,7 @@
                 '{{ source.max_loaded_at }}', {# max_loaded_at #}
                 '{{ source.snapshotted_at }}', {# snapshotted_at #}
                 {{ source.age }}, {# age #}
-                '{{ tojson(model.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}' {# adapter_response #}
+                '{{ tojson(source.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}' {# adapter_response #}
             )
             {%- if not loop.last %},{%- endif %}
         {% endfor %}
