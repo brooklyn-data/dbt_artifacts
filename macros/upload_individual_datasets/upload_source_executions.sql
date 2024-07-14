@@ -50,9 +50,9 @@
                 '{{ source.node.freshness.warn_after.period }}', {# warn_after_period #}
                 {{ source.node.freshness.error_after.count }}, {# error_after_count #}
                 '{{ source.node.freshness.error_after.period }}', {# error_after_period #}
-                '{{ source.node.max_loaded_at }}', {# max_loaded_at #}
-                '{{ source.node.snapshotted_at }}', {# snapshotted_at #}
-                {{ source.node.age }}, {# age #}
+                '{{ source.max_loaded_at }}', {# max_loaded_at #}
+                '{{ source.snapshotted_at }}', {# snapshotted_at #}
+                {{ source.age }}, {# age #}
                 '{{ tojson(model.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}' {# adapter_response #}
             )
             {%- if not loop.last %},{%- endif %}
