@@ -16,7 +16,7 @@ select
     cast(null as {{ type_string() }}) as schema,
     cast(null as {{ type_string() }}) as name,
     cast(null as {{ type_string() }}) as source_name,
-    cast(null as {{ type_timestamp() }}) as loaded_at_field,
+    cast(null as {{ type_string() }}) as loaded_at_field,
     cast(null as {{ type_int() }}) as warn_after_count,
     cast(null as {{ type_string() }}) as warn_after_period,
     cast(null as {{ type_int() }}) as error_after_count,
