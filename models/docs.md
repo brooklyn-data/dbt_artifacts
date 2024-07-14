@@ -413,12 +413,6 @@ All results as a JSON blob
 
 {% enddocs %}
 
-{% docs source_name %}
-
-The name of the source
-
-{% enddocs %}
-
 {% docs warn_after_count %}
 
 Positive integer indicating a threshold to warn (used alongside warn_after_period)
