@@ -7,7 +7,6 @@ select
     cast(null as {{ type_string() }}) as command_invocation_id,
     cast(null as {{ type_string() }}) as node_id,
     cast(null as {{ type_timestamp() }}) as run_started_at,
-    cast(null as {{ type_boolean() }}) as was_full_refresh,
     cast(null as {{ type_string() }}) as thread_id,
     cast(null as {{ type_string() }}) as status,
     cast(null as {{ type_timestamp() }}) as compile_started_at,
