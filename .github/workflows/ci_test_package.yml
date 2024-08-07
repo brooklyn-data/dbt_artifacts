@@ -21,7 +21,7 @@ env:
   DBT_ENV_SECRET_DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
   DBT_ENV_SECRET_GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
   # Env var to test version
-  LAST_RELEASE_SUPPORTED_DBT_VERSION: 1_7_0 # A dbt version supported by both the last release and this one
+  LAST_RELEASE_SUPPORTED_DBT_VERSION: 1_8_0 # A dbt version supported by both the last release and this one
   # Env vars to test invocations model
   DBT_CLOUD_PROJECT_ID: 123
   DBT_CLOUD_JOB_ID: ABC
@@ -115,7 +115,7 @@ jobs:
       matrix:
         warehouse: ["snowflake", "bigquery", "postgres"]
         # When supporting a new version, update the list here
-        version: ["1_3_0", "1_4_0", "1_5_0", "1_6_0", "1_7_0"]
+        version: ["1_3_0", "1_4_0", "1_5_0", "1_6_0", "1_7_0", "1_8_0"]
     runs-on: ubuntu-latest
     environment:
       name: Approve Integration Tests
