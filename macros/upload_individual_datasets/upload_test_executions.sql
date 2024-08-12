@@ -188,7 +188,7 @@
                 {% if query_completed_at %}'{{ query_completed_at }}'{% else %}null{% endif %}, {# query_completed_at #}
 
                 {{ test.execution_time }}, {# total_node_runtime #}
-                try_cast('{{ model.adapter_response.rows_affected }}' as int), {# rows_affected #}
+                try_cast('{{ test.adapter_response.rows_affected }}' as int), {# rows_affected #}
                 {{ 'null' if test.failures is none else test.failures }}, {# failures #}
                 '{{ test.message | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}', {# message #}
                 '{{ tojson(test.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}' {# adapter_response #}
