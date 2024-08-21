@@ -32,6 +32,8 @@ seeds:
 
 flags:
   source_freshness_run_project_hooks: true
+  send_anonymous_usage_stats: false
+  use_colors: true
 
 on-run-end:
   - "{{ dbt_artifacts.upload_results(results) }}"
