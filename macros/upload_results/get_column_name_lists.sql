@@ -1,12 +1,10 @@
-
 {#
     These are the column lists used as part of the upload macros - the order here should be the same
     as the order in each individual `upload_dataset` macro.
 #}
-
 {% macro get_column_name_list(dataset) -%}
 
-    {% if dataset == 'exposures' %}
+    {% if dataset == "exposures" %}
 
         (
             command_invocation_id,
@@ -25,7 +23,7 @@
             all_results
         )
 
-    {% elif dataset == 'invocations' %}
+    {% elif dataset == "invocations" %}
 
         (
             command_invocation_id,
@@ -49,7 +47,7 @@
             dbt_custom_envs
         )
 
-    {% elif dataset == 'model_executions' %}
+    {% elif dataset == "model_executions" %}
 
         (
             command_invocation_id,
@@ -62,25 +60,24 @@
             query_completed_at,
             total_node_runtime,
             rows_affected,
-            {% if target.type == 'bigquery' %}
-                bytes_processed,
+            {% if target.type == "bigquery" %} bytes_processed,
             {% endif %}
             materialization,
-            schema,
+            "schema",
             name,
             alias,
             message,
             adapter_response
         )
 
-    {% elif dataset == 'models' %}
+    {% elif dataset == "models" %}
 
         (
             command_invocation_id,
             node_id,
             run_started_at,
-            database,
-            schema,
+            "database",
+            "schema",
             name,
             depends_on_nodes,
             package_name,
@@ -93,8 +90,7 @@
             all_results
         )
 
-
-    {% elif dataset == 'seed_executions' %}
+    {% elif dataset == "seed_executions" %}
 
         (
             command_invocation_id,
@@ -108,21 +104,21 @@
             total_node_runtime,
             rows_affected,
             materialization,
-            schema,
+            "schema",
             name,
             alias,
             message,
             adapter_response
         )
 
-    {% elif dataset == 'seeds' %}
+    {% elif dataset == "seeds" %}
 
         (
             command_invocation_id,
             node_id,
             run_started_at,
-            database,
-            schema,
+            "database",
+            "schema",
             name,
             package_name,
             path,
@@ -132,7 +128,7 @@
             all_results
         )
 
-    {% elif dataset == 'snapshot_executions' %}
+    {% elif dataset == "snapshot_executions" %}
 
         (
             command_invocation_id,
@@ -146,21 +142,21 @@
             total_node_runtime,
             rows_affected,
             materialization,
-            schema,
+            "schema",
             name,
             alias,
             message,
             adapter_response
         )
 
-    {% elif dataset == 'snapshots' %}
+    {% elif dataset == "snapshots" %}
 
         (
             command_invocation_id,
             node_id,
             run_started_at,
-            database,
-            schema,
+            "database",
+            "schema",
             name,
             depends_on_nodes,
             package_name,
@@ -172,14 +168,14 @@
             all_results
         )
 
-    {% elif dataset == 'sources' %}
+    {% elif dataset == "sources" %}
 
         (
             command_invocation_id,
             node_id,
             run_started_at,
-            database,
-            schema,
+            "database",
+            "schema",
             source_name,
             loader,
             name,
@@ -189,7 +185,7 @@
             all_results
         )
 
-    {% elif dataset == 'test_executions' %}
+    {% elif dataset == "test_executions" %}
 
         (
             command_invocation_id,
@@ -207,7 +203,7 @@
             adapter_response
         )
 
-    {% elif dataset == 'tests' %}
+    {% elif dataset == "tests" %}
 
         (
             command_invocation_id,
@@ -223,8 +219,8 @@
 
     {% else %}
 
-        /* No column list available */
-
+    /* No column list available */
     {% endif %}
 
 {%- endmacro %}
+

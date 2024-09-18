@@ -9,7 +9,7 @@
             node_id,
             query_completed_at,
             rows_affected,
-            schema,
+            "schema",
             status,
             thread_id,
             total_node_runtime,
@@ -34,9 +34,7 @@
     {% endset %}
 
     {{ log("Migrating model_executions", info=True) }}
-    {%- call statement(auto_begin=True) -%}
-        {{ migrate_model_executions }}
-    {%- endcall -%}
+    {%- call statement(auto_begin=True) -%} {{ migrate_model_executions }} {%- endcall -%}
 
     {% set migrate_tests %}
         insert into {{new_database}}.{{new_schema}}.tests (
@@ -62,9 +60,7 @@
     {% endset %}
 
     {{ log("Migrating tests", info=True) }}
-    {%- call statement(auto_begin=True) -%}
-        {{ migrate_tests }}
-    {%- endcall -%}
+    {%- call statement(auto_begin=True) -%} {{ migrate_tests }} {%- endcall -%}
 
     {% set migrate_test_executions %}
         insert into {{new_database}}.{{new_schema}}.test_executions (
@@ -96,22 +92,20 @@
     {% endset %}
 
     {{ log("Migrating test_executions", info=True) }}
-    {%- call statement(auto_begin=True) -%}
-        {{ migrate_test_executions }}
-    {%- endcall -%}
+    {%- call statement(auto_begin=True) -%} {{ migrate_test_executions }} {%- endcall -%}
 
     {% set migrate_models %}
         insert into {{new_database}}.{{new_schema}}.models (
             checksum,
             command_invocation_id,
-            database,
+            "database",
             depends_on_nodes,
             materialization,
             name,
             node_id,
             package_name,
             path,
-            schema,
+            "schema",
             run_started_at
         )
         select
@@ -130,20 +124,18 @@
     {% endset %}
 
     {{ log("Migrating models", info=True) }}
-    {%- call statement(auto_begin=True) -%}
-        {{ migrate_models }}
-    {%- endcall -%}
+    {%- call statement(auto_begin=True) -%} {{ migrate_models }} {%- endcall -%}
 
     {% set migrate_seeds %}
         insert into {{new_database}}.{{new_schema}}.seeds (
             checksum,
             command_invocation_id,
-            database,
+            "database",
             name,
             node_id,
             package_name,
             path,
-            schema,
+            "schema",
             run_started_at
         )
         select
@@ -160,9 +152,7 @@
     {% endset %}
 
     {{ log("Migrating seeds", info=True) }}
-    {%- call statement(auto_begin=True) -%}
-        {{ migrate_seeds }}
-    {%- endcall -%}
+    {%- call statement(auto_begin=True) -%} {{ migrate_seeds }} {%- endcall -%}
 
     {% set migrate_seed_executions %}
         insert into {{new_database}}.{{new_schema}}.seed_executions (
@@ -173,7 +163,7 @@
             node_id,
             query_completed_at,
             rows_affected,
-            schema,
+            "schema",
             status,
             thread_id,
             total_node_runtime,
@@ -198,9 +188,7 @@
     {% endset %}
 
     {{ log("Migrating seed_executions", info=True) }}
-    {%- call statement(auto_begin=True) -%}
-        {{ migrate_seed_executions }}
-    {%- endcall -%}
+    {%- call statement(auto_begin=True) -%} {{ migrate_seed_executions }} {%- endcall -%}
 
     {% set migrate_exposures %}
         insert into {{new_database}}.{{new_schema}}.exposures (
@@ -235,21 +223,19 @@
     {% endset %}
 
     {{ log("Migrating exposures", info=True) }}
-    {%- call statement(auto_begin=True) -%}
-        {{ migrate_exposures }}
-    {%- endcall -%}
+    {%- call statement(auto_begin=True) -%} {{ migrate_exposures }} {%- endcall -%}
 
     {% set migrate_snapshots %}
         insert into {{new_database}}.{{new_schema}}.snapshots (
             checksum,
             command_invocation_id,
-            database,
+            "database",
             depends_on_nodes,
             name,
             node_id,
             package_name,
             path,
-            schema,
+            "schema",
             strategy,
             run_started_at
         )
@@ -269,9 +255,7 @@
     {% endset %}
 
     {{ log("Migrating snapshots", info=True) }}
-    {%- call statement(auto_begin=True) -%}
-        {{ migrate_snapshots }}
-    {%- endcall -%}
+    {%- call statement(auto_begin=True) -%} {{ migrate_snapshots }} {%- endcall -%}
 
     {% set migrate_snapshot_executions %}
         insert into {{new_database}}.{{new_schema}}.snapshot_executions (
@@ -282,7 +266,7 @@
             node_id,
             query_completed_at,
             rows_affected,
-            schema,
+            "schema",
             status,
             thread_id,
             total_node_runtime,
@@ -307,21 +291,19 @@
     {% endset %}
 
     {{ log("Migrating snapshot_executions", info=True) }}
-    {%- call statement(auto_begin=True) -%}
-        {{ migrate_snapshot_executions }}
-    {%- endcall -%}
+    {%- call statement(auto_begin=True) -%} {{ migrate_snapshot_executions }} {%- endcall -%}
 
     {% set migrate_sources %}
         insert into {{new_database}}.{{new_schema}}.sources (
             command_invocation_id,
-            database,
+            "database",
             freshness,
             identifier,
             loaded_at_field,
             loader,
             name,
             node_id,
-            schema,
+            "schema",
             source_name,
             run_started_at
         )
@@ -341,9 +323,8 @@
     {% endset %}
 
     {{ log("Migrating sources", info=True) }}
-    {%- call statement(auto_begin=True) -%}
-        {{ migrate_sources }}
-    {%- endcall -%}
+    {%- call statement(auto_begin=True) -%} {{ migrate_sources }} {%- endcall -%}
 
     {{ log("Migration complete. You can now safely delete any data from before 1.0.0", info=True) }}
 {%- endmacro -%}
+

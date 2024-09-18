@@ -13,8 +13,8 @@ with
             , command_invocation_id
             , node_id
             , run_started_at
-            , database
-            , schema
+            , "database"
+            , "schema"
             , name
             , package_name
             , path

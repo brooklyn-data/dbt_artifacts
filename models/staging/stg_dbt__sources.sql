@@ -13,8 +13,8 @@ with
             , command_invocation_id
             , node_id
             , run_started_at
-            , database
-            , schema
+            , "database"
+            , "schema"
             , source_name
             , loader
             , name
