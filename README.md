@@ -19,6 +19,7 @@ The package currently supports
 - Snowflake :white_check_mark:
 - Google BigQuery :white_check_mark:
 - Postgres :white_check_mark:
+- SQL Server :white_check_mark:
 
 Models included:
 
