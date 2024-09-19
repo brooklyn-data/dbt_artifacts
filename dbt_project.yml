@@ -19,4 +19,5 @@ models:
       +persist_docs:
         # Databricks and SQL Server don't offer column-level support for persisting docs
         columns: '{{ target.name != "databricks" and target.type != "sqlserver" }}'
+        relation: '{{ target.type != "sqlserver" }}'
       +as_columnstore: False
