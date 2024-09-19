@@ -15,9 +15,8 @@ models:
     +file_format: delta
     sources:
       +materialized: incremental
-      +on_schema_change: append_new_columns
       +full_refresh: false
       +persist_docs:
         # Databricks and SQL Server don't offer column-level support for persisting docs
-        columns: '{{ target.name != "databricks" and target.name != "sqlserver" }}'
+        columns: '{{ target.name != "databricks" and target.type != "sqlserver" }}'
       +as_columnstore: False
