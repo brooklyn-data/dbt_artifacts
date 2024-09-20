@@ -37,13 +37,22 @@ with
         select
             node_id,
             max(
-                case when was_full_refresh = 1 then query_completed_at end
+                case
+                    when was_full_refresh {% if target.type == "sqlserver" %} = 1 {% endif %}
+                    then query_completed_at
+                end
             ) as last_full_refresh_run_completed_at,
             max(
-                case when was_full_refresh = 1 then total_node_runtime end
+                case
+                    when was_full_refresh {% if target.type == "sqlserver" %} = 1 {% endif %}
+                    then total_node_runtime
+                end
             ) as last_full_refresh_run_total_runtime,
             max(
-                case when was_full_refresh = 1 then rows_affected end
+                case
+                    when was_full_refresh {% if target.type == "sqlserver" %} = 1 {% endif %}
+                    then rows_affected
+                end
             ) as last_full_refresh_run_rows_affected
             {% if target.type == "bigquery" %}
                 ,
@@ -52,8 +61,9 @@ with
                 ) as last_full_refresh_run_bytes_processed
             {% endif %},
             max(case when run_idx_id_only = 1 then query_completed_at end) as last_run_completed_at,
-            max(case when run_idx_id_only = 1 then total_node_runtime end) as last_run_total_runtime
-            ,
+            max(
+                case when run_idx_id_only = 1 then total_node_runtime end
+            ) as last_run_total_runtime,
             max(case when run_idx_id_only = 1 then rows_affected end) as last_run_rows_affected
             {% if target.type == "bigquery" %}
                 ,
@@ -62,13 +72,22 @@ with
                 ) as last_run_bytes_processed
             {% endif %},
             max(
-                case when not was_full_refresh = 1 then query_completed_at end
+                case
+                    when not was_full_refresh {% if target.type == "sqlserver" %} = 1 {% endif %}
+                    then query_completed_at
+                end
             ) as last_incremental_run_completed_at,
             max(
-                case when not was_full_refresh = 1 then total_node_runtime end
+                case
+                    when not was_full_refresh {% if target.type == "sqlserver" %} = 1 {% endif %}
+                    then total_node_runtime
+                end
             ) as last_incremental_run_total_runtime,
             max(
-                case when not was_full_refresh = 1 then rows_affected end
+                case
+                    when not was_full_refresh {% if target.type == "sqlserver" %} = 1 {% endif %}
+                    then rows_affected
+                end
             ) as last_incremental_run_rows_affected
             {% if target.type == "bigquery" %}
                 ,
