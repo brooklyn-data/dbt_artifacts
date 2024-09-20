@@ -7,8 +7,12 @@ with
             command_invocation_id,
             node_id,
             run_started_at,
-            "database",
-            "schema",
+            {% if target.type == "sqlserver" %} "database"
+            {% else %} database
+            {% endif %},
+            {% if target.type == "sqlserver" %} "schema"
+            {% else %} schema
+            {% endif %},
             source_name,
             loader,
             name,

@@ -15,7 +15,9 @@ with
             total_node_runtime,
             rows_affected,
             materialization,
-            "schema",
+            {% if target.type == "sqlserver" %} "schema"
+            {% else %} schema
+            {% endif %},
             name,
             alias,
             message

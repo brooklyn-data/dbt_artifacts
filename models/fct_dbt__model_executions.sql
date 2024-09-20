@@ -16,7 +16,9 @@ with
             rows_affected
             {% if target.type == "bigquery" %}, bytes_processed {% endif %},
             materialization,
-            "schema",  -- noqa
+            {% if target.type == "sqlserver" %} "schema"
+            {% else %} schema
+            {% endif %},
             name,
             alias,
             message
