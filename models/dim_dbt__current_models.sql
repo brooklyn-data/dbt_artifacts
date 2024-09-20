@@ -7,6 +7,7 @@ with
         select * from base where run_started_at = (select max(run_started_at) from base)
 
     ),
+
     latest_models_runs as (
 
         /* Retreives all successful run information for the models present in the most
@@ -32,6 +33,7 @@ with
         where model_executions.status = 'success'
 
     ),
+
     latest_model_stats as (
 
         select
@@ -100,6 +102,7 @@ with
         group by node_id
 
     ),
+
     final as (
 
         select

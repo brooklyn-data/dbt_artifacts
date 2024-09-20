@@ -1,5 +1,6 @@
 with
     base as (select * from {{ ref("stg_dbt__snapshot_executions") }}),
+
     snapshot_executions as (
 
         select
