@@ -51,6 +51,39 @@
     {% endif %}
 {% endmacro -%}
 
+{% macro athena__get_exposures_dml_sql(exposures) -%}
+    {% if exposures != [] %}
+        {% set exposure_values %}
+            values
+            {% for exposure in exposures -%}
+                (
+                    '{{ invocation_id }}', {# command_invocation_id #}
+                    '{{ exposure.unique_id | replace("'","\\'") }}', {# node_id #}
+                    CAST('{{ run_started_at }}' AS timestamp), {# run_started_at #}
+                    '{{ exposure.name | replace("'","'''") }}', {# name #}
+                    '{{ exposure.type }}', {# type #}
+                    '{{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(exposure.owner) | replace("'","\\'")) }}', {# owner #}
+                    '{{ exposure.maturity }}', {# maturity #}
+                    '{{ exposure.original_file_path | replace('\\', '\\\\') }}', {# path #}
+                    '{{ exposure.description | replace("'","''") | replace("\n", "\\n") }}', {# description #}
+                    '{{ exposure.url }}', {# url #}
+                    '{{ exposure.package_name }}', {# package_name #}
+                    '{{ tojson(exposure.depends_on.nodes) }}', {# depends_on_nodes #}
+                    '{{ tojson(exposure.tags) }}', {# tags #}
+                    {% if var('dbt_artifacts_exclude_all_results', false) %}
+                        null
+                    {% else %}
+                        '{{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(exposure) | replace("\\", "\\\\") | replace("'", "''")) }}' {# all_results #}
+                    {% endif %}
+                )
+                {%- if not loop.last %},{%- endif %}
+            {%- endfor %}
+        {% endset %}
+        {{ exposure_values }}
+    {% else %} {{ return("") }}
+    {% endif %}
+{%- endmacro %}
+
 {% macro bigquery__get_exposures_dml_sql(exposures) -%}
     {% if exposures != [] %}
         {% set exposure_values %}
