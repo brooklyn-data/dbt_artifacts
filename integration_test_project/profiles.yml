@@ -63,4 +63,3 @@ dbt_artifacts:
       trust_cert: True
       user: dbt
       password: "123"
-      encrypt: False
