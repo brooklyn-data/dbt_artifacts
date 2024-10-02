@@ -18,8 +18,6 @@
     {{ content }}
     {% endset %}
 
-    {% do log(insert_into_table_query, true) %}
-
     {% do run_query(insert_into_table_query) %}
 
 {%- endmacro %}

@@ -41,6 +41,34 @@
     {% endif %}
 {% endmacro -%}
 
+{% macro athena__get_tests_dml_sql(tests) -%}
+    {% if tests != [] %}
+        {% set test_values %}
+            values
+            {% for test in tests -%}
+                (
+                    '{{ invocation_id }}', {# command_invocation_id #}
+                    '{{ test.unique_id }}', {# node_id #}
+                    CAST('{{ run_started_at }}' AS timestamp), {# run_started_at #}
+                    '{{ test.name }}', {# name #}
+                    '{{ tojson(test.depends_on.nodes) }}', {# depends_on_nodes #}
+                    '{{ test.package_name }}', {# package_name #}
+                    '{{ test.original_file_path | replace('\\', '\\\\') }}', {# test_path #}
+                    '{{ tojson(test.tags) }}', {# tags #}
+                    {% if var('dbt_artifacts_exclude_all_results', false) %}
+                        null
+                    {% else %}
+                        '{{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(test) | replace("\\", "\\\\") | replace("'","''")) }}' {# all_fields #}
+                    {% endif %}
+                )
+                {%- if not loop.last %},{%- endif %}
+            {%- endfor %}
+        {% endset %}
+        {{ test_values }}
+    {% else %} {{ return("") }}
+    {% endif %}
+{%- endmacro %}
+
 {% macro bigquery__get_tests_dml_sql(tests) -%}
     {% if tests != [] %}
         {% set test_values %}
