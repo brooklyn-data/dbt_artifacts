@@ -90,7 +90,7 @@ jobs:
       - name: Build tables for latest release
         env:
           DBT_VERSION: "noversion"
-        run: tox -e integration_${{ matrix.warehouse }}
+        run: tox -r -e integration_${{ matrix.warehouse }}
 
       - name: Checkout
         uses: actions/checkout@v3
