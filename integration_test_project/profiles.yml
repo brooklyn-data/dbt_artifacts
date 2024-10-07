@@ -61,5 +61,5 @@ dbt_artifacts:
       schema: dbo
       windows_login: False
       trust_cert: True
-      user: sa
+      user: dbt
       password: "123"
