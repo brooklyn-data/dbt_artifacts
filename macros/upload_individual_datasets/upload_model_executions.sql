@@ -86,8 +86,7 @@
             {% if query_completed_at %}CAST('{{ query_completed_at }}' AS timestamp){% else %}null{% endif %}, {# query_completed_at #}
 
             {{ model.execution_time }}, {# total_node_runtime #}
-            safe_cast('{{ model.adapter_response.rows_affected }}' as int64),
-            safe_cast('{{ model.adapter_response.bytes_processed }}' as int64),
+            cast('{{ model.adapter_response.rows_affected }}' as int),
             '{{ model.node.config.materialized }}', {# materialization #}
             '{{ model.node.schema }}', {# schema #}
             '{{ model.node.name }}', {# name #}
