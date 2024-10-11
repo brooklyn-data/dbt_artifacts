@@ -5,7 +5,7 @@ config:
   send_anonymous_usage_stats: False
   use_colors: True
 
-dbt_artifacts:
+integration_tests:
   target: snowflake
   outputs:
     snowflake:

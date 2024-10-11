@@ -2,7 +2,7 @@ name: "dbt_artifacts"
 version: "2.7.0"
 config-version: 2
 require-dbt-version: [">=1.3.0", "<1.9.0"]
-profile: "dbt_artifacts"
+profile: "integration_tests"
 
 clean-targets: # folders to be removed by `dbt clean`
   - "target"
