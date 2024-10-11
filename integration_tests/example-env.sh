@@ -3,6 +3,14 @@
 export DBT_PROFILES_DIR=.
 export GITHUB_SHA=local_test # used for the schema name
 
+# These are the default values
+export POSTGRES_HOST=localhost
+export POSTGRES_USER=root
+export DBT_ENV_SECRET_POSTGRES_PASS=password
+export POSTGRES_PORT=5432
+export POSTGRES_DATABASE=postgres
+export POSTGRES_SCHEMA=public
+
 # Change these
 export DBT_ENV_SECRET_SNOWFLAKE_TEST_ACCOUNT=
 export DBT_ENV_SECRET_SNOWFLAKE_TEST_USER=

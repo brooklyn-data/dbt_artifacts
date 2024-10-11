@@ -8,7 +8,7 @@ on:
 
 env:
   # These are configured in GitHub secrets
-  DBT_PROFILES_DIR: ${{ github.workspace }}/integration_test_project
+  DBT_PROFILES_DIR: ${{ github.workspace }}/integration_tests
   GITHUB_SHA_OVERRIDE: ${{ github.event.pull_request.head.sha }} # We need the commit hash of the pull request branch's head, the GITHUB_SHA env var is always the base branch in a pull_request_target trigger
   DBT_ENV_SECRET_SNOWFLAKE_TEST_ACCOUNT: ${{ secrets.SNOWFLAKE_TEST_ACCOUNT }}
   DBT_ENV_SECRET_SNOWFLAKE_TEST_USER: ${{ secrets.SNOWFLAKE_TEST_USER }}
@@ -20,6 +20,13 @@ env:
   DBT_ENV_SECRET_DATABRICKS_HTTP_PATH: ${{ secrets.DATABRICKS_HTTP_PATH }}
   DBT_ENV_SECRET_DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
   DBT_ENV_SECRET_GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
+  # These are not secrets but are used in the profiles.yml file
+  POSTGRES_HOST: "localhost"
+  POSTGRES_USER: "postgres"
+  DBT_ENV_SECRET_POSTGRES_PASS: "postgres"
+  POSTGRES_PORT: 5432
+  POSTGRES_DATABASE: "postgres"
+  POSTGRES_SCHEMA: "public"
   # Env var to test version
   LAST_RELEASE_SUPPORTED_DBT_VERSION: 1_8_0 # A dbt version supported by both the last release and this one
   # Env vars to test invocations model
@@ -127,7 +134,10 @@ jobs:
       postgres:
         image: postgres
         env:
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.DBT_ENV_SECRET_POSTGRES_PASS }}
+          POSTGRES_DB: ${{ env.POSTGRES_DATABASE }}
+          POSTGRES_HOST: ${{ env.POSTGRES_HOST }}
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
