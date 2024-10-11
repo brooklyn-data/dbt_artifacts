@@ -12,7 +12,7 @@ permissions:
 
 env:
   # These are configured in GitHub secrets
-  DBT_PROFILES_DIR: ${{ github.workspace }}/integration_test_project
+  DBT_PROFILES_DIR: ${{ github.workspace }}/integration_tests
   DBT_ENV_SECRET_SNOWFLAKE_TEST_ACCOUNT: ${{ secrets.SNOWFLAKE_TEST_ACCOUNT }}
   DBT_ENV_SECRET_SNOWFLAKE_TEST_USER: ${{ secrets.SNOWFLAKE_TEST_USER }}
   DBT_ENV_SECRET_SNOWFLAKE_TEST_PASSWORD: ${{ secrets.SNOWFLAKE_TEST_PASSWORD }}

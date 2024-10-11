@@ -58,11 +58,11 @@ Tox will take care of installing the dependencies for each environment, so you d
     pipx install tox
     ```
 
-3. Copy and paste the `integration_test_project/example-env.sh` file and save as `env.sh`. Fill in the missing values.
+3. Copy and paste the `integration_tests/example-env.sh` file and save as `env.sh`. Fill in the missing values.
    If you want to run only tests for a specific database, you can leave the other values blank.
 
     ```bash
-    cp integration_test_project/example-env.sh env.sh
+    cp integration_tests/example-env.sh env.sh
     vim env.sh
     ```
 
@@ -78,6 +78,7 @@ Tox will take care of installing the dependencies for each environment, so you d
     tox -e integration_snowflake # For the Snowflake tests
     tox -e integration_databricks # For the Databricks tests
     tox -e integration_bigquery # For the BigQuery tests
+    tox -e dbt_integration_postgres # for postgres tests - you will need to manually install dbt-postgres first
     ```
 
 The Spark tests require installing the [ODBC driver](https://www.databricks.com/spark/odbc-drivers-download). On a Mac,

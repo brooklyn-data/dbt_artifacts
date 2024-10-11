@@ -13,5 +13,6 @@ env.sh
 .python_version
 .vscode
 .venv
+env-*
 
 .DS_Store
