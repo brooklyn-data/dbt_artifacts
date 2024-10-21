@@ -34,8 +34,8 @@ jobs:
   integration:
     strategy:
       matrix:
-        warehouse: ["snowflake", "bigquery", "postgres"]
-        version: ["1_3_0", "1_4_0", "1_5_0", "1_6_0", "1_7_0"]
+        warehouse: ["snowflake", "bigquery", "postgres", "sqlserver"]
+        version: ["1_3_0", "1_4_0", "1_5_0", "1_6_0", "1_7_0", "1_8_0"]
     runs-on: ubuntu-latest
     permissions:
       contents: "read"
@@ -65,6 +65,12 @@ jobs:
 
       - name: Install tox
         run: python3 -m pip install tox
+
+      - name: Install SQL Server
+        run: docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=123" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
+
+      - name: Install Microsoft ODBC
+        run: sudo ACCEPT_EULA=Y apt-get install msodbcsql18 -y
 
       - id: auth
         if: ${{ matrix.warehouse == 'bigquery' }}

@@ -1,34 +1,32 @@
-with base as (
+with
+    base as (select * from {{ ref("stg_dbt__model_executions") }}),
 
-    select *
-    from {{ ref('stg_dbt__model_executions') }}
+    model_executions as (
 
-),
+        select
+            model_execution_id,
+            command_invocation_id,
+            node_id,
+            run_started_at,
+            was_full_refresh,
+            thread_id,
+            status,
+            compile_started_at,
+            query_completed_at,
+            total_node_runtime,
+            rows_affected
+            {% if target.type == "bigquery" %}, bytes_processed {% endif %},
+            materialization,
+            {% if target.type == "sqlserver" %} "schema"
+            {% else %} schema
+            {% endif %},
+            name,
+            alias,
+            message
+        from base
 
-model_executions as (
+    )
 
-    select
-        model_execution_id,
-        command_invocation_id,
-        node_id,
-        run_started_at,
-        was_full_refresh,
-        thread_id,
-        status,
-        compile_started_at,
-        query_completed_at,
-        total_node_runtime,
-        rows_affected,
-        {% if target.type == 'bigquery' %}
-            bytes_processed,
-        {% endif %}
-        materialization,
-        schema, -- noqa
-        name,
-        alias,
-        message
-    from base
+select *
+from model_executions
 
-)
-
-select * from model_executions
