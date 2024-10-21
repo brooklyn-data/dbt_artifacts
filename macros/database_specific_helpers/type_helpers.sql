@@ -27,13 +27,13 @@
 {% endmacro %}
 
 {% macro redshift__type_json() %}
-    varchar(max)
+   super
 {% endmacro %}
 
 {#- ARRAY -#}
 
 {% macro type_array() %}
-    {{ return(adapter.dispatch('type_array', 'dbt_artifacts')()) }}
+   {{ return(adapter.dispatch('type_array', 'dbt_artifacts')()) }}
 {% endmacro %}
 
 {% macro default__type_array() %}
@@ -49,11 +49,11 @@
 {% endmacro %}
 
 {% macro redshift__type_array() %}
-    varchar(max)
+   super
 {% endmacro %}
 
 {% macro type_string() %}
-    {{ return(adapter.dispatch('type_string', 'dbt_artifacts')()) }}
+   {{ return(adapter.dispatch('type_string', 'dbt_artifacts')()) }}
 {% endmacro %}
 
 {% macro default__type_string() %}
@@ -61,5 +61,5 @@
 {% endmacro %}
 
 {% macro redshift__type_string() %}
-    varchar(max)
+   varchar(max)
 {% endmacro %}
