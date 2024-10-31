@@ -412,3 +412,45 @@ Response provided by the adapter as JSON.
 All results as a JSON blob
 
 {% enddocs %}
+
+{% docs warn_after_count %}
+
+Positive integer indicating a threshold to warn (used alongside warn_after_period)
+
+{% enddocs %}
+
+{% docs warn_after_period %}
+
+Used alongside warn_after_count to indicate number of periods (minutes, hours, days) for a warn threshold
+
+{% enddocs %}
+
+{% docs error_after_count %}
+
+Positive integer indicating a threshold to error (used alongside error_after_period)
+
+{% enddocs %}
+
+{% docs error_after_period %}
+
+Used alongside error_after_count to indicate number of periods (minutes, hours, days) for a error threshold
+
+{% enddocs %}
+
+{% docs max_loaded_at %}
+
+Max value of loaded_at_field timestamp in the source table when queried
+
+{% enddocs %}
+
+{% docs snapshotted_at %}
+
+Current timestamp when querying
+
+{% enddocs %}
+
+{% docs age %}
+
+Interval between max_loaded_at and snapshotted_at, calculated in python to handle timezone complexity
+
+{% enddocs %}

@@ -36,6 +36,7 @@ fct_dbt__model_executions
 fct_dbt__seed_executions
 fct_dbt__snapshot_executions
 fct_dbt__test_executions
+fct_dbt__source_executions
 ```
 
 See the generated [dbt docs site](https://brooklyn-data.github.io/dbt_artifacts/#!/overview) for documentation on each model.
@@ -72,6 +73,13 @@ packages:
 
     ```
     dbt run --select dbt_artifacts
+    ```
+
+5. If you want to include results from the `dbt source freshness` command, you'll need to add the following flag in your `dbt_project.yml`.  This was recently added and made backwards-compatible to older core versions, so it's something that you have to opt into.
+
+    ```yml
+    flags:
+      source_freshness_run_project_hooks: true
     ```
 
 ### Notes on upgrading
