@@ -64,3 +64,13 @@ dbt_artifacts:
       Encrypt: False
       user: dbt
       password: "123"
+    redshift:
+      type: redshift
+      method: iam
+      threads: 8
+      host: "{{ env_var('DBT_ENV_SECRET_REDSHIFT_HOST') }}"
+      port: 5439
+      dbname: "{{ env_var('DBT_ENV_SECRET_REDSHIFT_DB') }}"
+      user: "{{ env_var('DBT_ENV_SECRET_REDSHIFT_USER') }}"
+      schema: dbt_artifacts_test_commit_{{ env_var('DBT_VERSION', '') }}_{{ env_var('GITHUB_SHA_OVERRIDE', '') if env_var('GITHUB_SHA_OVERRIDE', '') else env_var('GITHUB_SHA') }}
+      cluster_id: "{{ env_var('DBT_ENV_SECRET_REDSHIFT_CLUSTER_ID') }}"
