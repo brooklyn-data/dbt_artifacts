@@ -55,6 +55,42 @@
     {% endif %}
 {% endmacro -%}
 
+{% macro athena__get_models_dml_sql(models) -%}
+    {% if models != [] %}
+        {% set model_values %}
+            values
+            {% for model in models -%}
+                {% set model_copy = model.copy() -%}
+                {% do model_copy.pop('raw_code', None) %}
+                (
+                    '{{ invocation_id }}', {# command_invocation_id #}
+                    '{{ model_copy.unique_id }}', {# node_id #}
+                    CAST('{{ run_started_at }}' AS timestamp), {# run_started_at #}
+                    '{{ model_copy.database }}', {# database #}
+                    '{{ model_copy.schema }}', {# schema #}
+                    '{{ model_copy.name }}', {# name #}
+                    '{{ tojson(model_copy.depends_on.nodes) }}', {# depends_on_nodes #}
+                    '{{ model_copy.package_name }}', {# package_name #}
+                    '{{ model_copy.original_file_path | replace('\\', '\\\\') }}', {# path #}
+                    '{{ model_copy.checksum.checksum | replace('\\', '\\\\') }}', {# checksum #}
+                    '{{ model_copy.config.materialized }}', {# materialization #}
+                    '{{ tojson(model_copy.tags) }}', {# tags #}
+                    '{{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(model_copy.config.meta)) }}', {# meta #}
+                    '{{ model_copy.alias }}', {# alias #}
+                    {% if var('dbt_artifacts_exclude_all_results', false) %}
+                        null
+                    {% else %}
+                        '{{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(model_copy) | replace("\\", "\\\\") | replace("'","''")) }}' {# all_results #}
+                    {% endif %}
+                )
+                {%- if not loop.last %},{%- endif %}
+            {%- endfor %}
+        {% endset %}
+        {{ model_values }}
+    {% else %} {{ return("") }}
+    {% endif %}
+{%- endmacro %}
+
 {% macro bigquery__get_models_dml_sql(models) -%}
     {% if models != [] %}
         {% set model_values %}
