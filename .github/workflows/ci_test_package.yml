@@ -209,7 +209,9 @@ jobs:
       - name: Run Tests on PR
         env:
           DBT_VERSION: ${{ matrix.version }}
-        run: tox -e integration_sqlserver_${{ matrix.version }}
+        run: |
+            echo "Running tests for DBT version: ${{ matrix.version }}"
+            tox -e integration_sqlserver_${{ matrix.version }}
 
   integration-sqlserver-single-run:
     strategy:
@@ -249,4 +251,4 @@ jobs:
           DBT_VERSION: ${{ matrix.version }}
         run: |
             echo "Running tests for DBT version: ${{ matrix.version }}"
-            tox -e integration_sqlserver_${{ matrix.version }}
+            tox -e integration-sqlserver-single-run_${{ matrix.version }}
