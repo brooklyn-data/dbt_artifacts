@@ -90,7 +90,7 @@ jobs:
       - name: Build tables for latest release
         env:
           DBT_VERSION: "noversion"
-        run: tox -e integration_${{ matrix.warehouse }}
+          run: tox -e integration_${{ matrix.warehouse }}
 
       - name: Checkout
         uses: actions/checkout@v3
@@ -167,7 +167,7 @@ jobs:
       - name: Run Tests on PR
         env:
           DBT_VERSION: ${{ matrix.version }}
-        run: tox -e integration_${{ matrix.warehouse }}_${{ matrix.version }}
+          run: tox -e integration_${{ matrix.warehouse }}_${{ matrix.version }}
 
   # Databricks doesn't like the matrix strategy, so moving back to the old integration testing without versioning
   # integration-databricks:
@@ -231,7 +231,7 @@ jobs:
       - name: Run Tests on PR
         env:
           DBT_VERSION: ${{ matrix.version }}
-        run: tox -e integration_sqlserver
+          run: tox -e integration_sqlserver
 
   integration-sqlserver-single-run:
     strategy:
