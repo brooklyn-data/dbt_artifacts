@@ -249,4 +249,4 @@ jobs:
       - name: Run Tests on PR
         env:
           DBT_VERSION: ${{ matrix.version }}
-        run: tox -e integration_sqlserver_${{ matrix.version }}
+          run: tox -e integration_sqlserver_${{ matrix.version }}
