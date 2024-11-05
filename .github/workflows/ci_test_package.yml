@@ -215,7 +215,6 @@ jobs:
       matrix:
         # When supporting a new version, update the list here
         version: ["1_3_0", "1_4_0", "1_7_0", "1_8_0"]
-        run: tox -e integration_sqlserver_${{ matrix.version }}
     runs-on: ubuntu-latest
     environment:
       name: Approve Integration Tests
