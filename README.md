@@ -109,6 +109,17 @@ Note that model materializations and `on_schema_change` configs are defined in t
 
 > Configurations made in your dbt_project.yml file will override any configurations in a package (either in the dbt_project.yml file of the package, or in config blocks).
 
+### Selection of packages to upload
+
+By default, all packages are uploaded. Some users may be interested in choosing which packages to upload from non-execution datasets. Thus, we allow setting `artifacts_upload_packages` variable:
+
+```yml
+vars:
+  artifacts_upload_packages: ['my_package']
+```
+
+> Note: execution-type artifacts are not affected by this filter.
+
 ### Environment Variables
 
 If the project is running in dbt Cloud, the following five columns (<https://docs.getdbt.com/docs/dbt-cloud/using-dbt-cloud/cloud-environment-variables#special-environment-variables>) will be automatically populated in the fct_dbt__invocations model:
