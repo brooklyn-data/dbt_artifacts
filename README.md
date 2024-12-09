@@ -109,7 +109,7 @@ Note that model materializations and `on_schema_change` configs are defined in t
 
 > Configurations made in your dbt_project.yml file will override any configurations in a package (either in the dbt_project.yml file of the package, or in config blocks).
 
-### Artifact to upload
+### Selection of artifacts to upload
 
 By default, all non-execution artifacts are uploaded. Some users may be interested in choosing which datasets to upload. Thus, we allow setting `artifact_static_datasets` variable:
 
