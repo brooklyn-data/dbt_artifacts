@@ -157,3 +157,6 @@
     {% endif %}
 {% endmacro -%}
 
+{% macro clickhouse__get_snapshots_dml_sql(snapshots) -%}
+{{ return(dbt_artifacts.postgres__get_snapshots_dml_sql(snapshots)) }}
+{%- endmacro %}

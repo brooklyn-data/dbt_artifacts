@@ -296,3 +296,6 @@
 
 {% endmacro -%}
 
+{% macro clickhouse__get_invocations_dml_sql() -%}
+{{ return(dbt_artifacts.postgres__get_invocations_dml_sql()) }}
+{% endmacro -%}

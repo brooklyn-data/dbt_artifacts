@@ -143,3 +143,6 @@
     {% endif %}
 {% endmacro -%}
 
+{% macro clickhouse__get_seeds_dml_sql(seeds) -%}
+{{ return(dbt_artifacts.postgres__get_seeds_dml_sql(seeds)) }}
+{%- endmacro %}

@@ -168,3 +168,6 @@
     {% endif %}
 {% endmacro -%}
 
+{% macro clickhouse__get_models_dml_sql(models) -%}
+{{ return(dbt_artifacts.postgres__get_models_dml_sql(models)) }}
+{%- endmacro %}

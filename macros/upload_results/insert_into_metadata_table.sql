@@ -70,6 +70,10 @@
 
 {%- endmacro %}
 
+{% macro clickhouse__insert_into_metadata_table(relation, fields, content) -%}
+{{ return(dbt_artifacts.postgres__insert_into_metadata_table(relation, fields, content)) }}
+{%- endmacro %}
+
 {% macro default__insert_into_metadata_table(relation, fields, content) -%}
 {%- endmacro %}
 

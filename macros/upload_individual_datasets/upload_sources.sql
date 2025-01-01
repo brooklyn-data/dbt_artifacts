@@ -107,6 +107,9 @@
     {% endif %}
 {%- endmacro %}
 
+{% macro clickhouse__get_sources_dml_sql(sources) -%}
+{{ return(dbt_artifacts.postgres__get_sources_dml_sql(sources)) }}
+{%- endmacro %}
 
 {% macro sqlserver__get_sources_dml_sql(sources) -%}
 
