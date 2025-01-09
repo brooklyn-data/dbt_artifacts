@@ -35,7 +35,7 @@ jobs:
     strategy:
       matrix:
         warehouse: ["snowflake", "bigquery", "postgres"]
-        version: ["1_3_0", "1_4_0", "1_5_0", "1_6_0", "1_7_0", "1_8_0"]
+        version: ["1_3_0", "1_4_0", "1_5_0", "1_6_0", "1_7_0", "1_8_0", "1_9_0"]
     runs-on: ubuntu-latest
     permissions:
       contents: "read"
