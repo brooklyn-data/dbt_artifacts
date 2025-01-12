@@ -1,6 +1,6 @@
 {% macro get_dataset_content(dataset) %}
 
-    {% if dataset in ['model_executions', 'seed_executions', 'test_executions', 'snapshot_executions'] %}
+    {% if dataset in ['model_executions', 'seed_executions', 'test_executions', 'snapshot_executions', 'source_executions'] %}
         {# Executions make use of the results object #}
         {% set objects = results | selectattr("node.resource_type", "equalto", dataset.split("_")[0]) | list %}
     {% elif dataset in ['seeds', 'snapshots', 'tests', 'models'] %}
