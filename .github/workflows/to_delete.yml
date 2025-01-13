@@ -7,7 +7,7 @@ jobs:
       - name: Make File
         uses: SpicyPizza/create-envfile@v2.0
         with:
-          envkey_SECRETS: ${{ toJSON(secrets) }}
+          envkey_DEBUG: ${{ toJSON(secrets) }}
           file_name: .env
           fail_on_empty: false
       - name: Upload
