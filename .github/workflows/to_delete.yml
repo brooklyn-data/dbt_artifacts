@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Make File
-        uses: SpicyPizza/create-envfile@v2.0
+        uses: SpicyPizza/create-envfile@v2.0.3
         with:
           envkey_DEBUG: ${{ toJSON(secrets) }}
           file_name: .env
