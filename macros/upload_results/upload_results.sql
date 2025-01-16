@@ -19,10 +19,10 @@
             {% set objects = dbt_artifacts.get_dataset_content(dataset) %}
 
             {# Upload in chunks to reduce the query size #}
-            {% if dataset == 'models' %}
-                {% set upload_limit = 50 if target.type == 'bigquery' else 100 %}
+            {% if dataset in ('models', 'tests') %}
+                {% set upload_limit = 50 if target.type in ('athena', 'bigquery') else 100 %}
             {% else %}
-                {% set upload_limit = 300 if target.type == 'bigquery' else 5000 %}
+                {% set upload_limit = 300 if target.type in ('athena', 'bigquery') else 5000 %}
             {% endif %}
 
             {# Loop through each chunk in turn #}
