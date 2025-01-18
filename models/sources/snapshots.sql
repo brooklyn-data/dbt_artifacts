@@ -13,7 +13,7 @@ select
     {% endif %},
     cast(null as {{ type_string() }}) as name,
     {% if target.type == "clickhouse" %}
-        cast([] as {{ type_string() }}) as depends_on_nodes,
+        cast(null as {{ type_string() }}) as depends_on_nodes,
     {% else %}
         cast(null as {{ type_array() }}) as depends_on_nodes,
     {% endif %}
