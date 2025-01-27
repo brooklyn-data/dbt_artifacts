@@ -1,6 +1,9 @@
 with
-    base as (select * from {{ ref("models") }}),
-    enhanced as (
+    base as (
+        select * from {{ ref("models") }}
+    )
+
+    , enhanced as (
 
         select
             {{ dbt_artifacts.generate_surrogate_key(["command_invocation_id", "node_id"]) }}
