@@ -34,8 +34,8 @@ jobs:
   integration:
     strategy:
       matrix:
-        warehouse: ["snowflake", "bigquery", "postgres", "sqlserver"]
-        version: ["1_3_0", "1_4_0", "1_5_0", "1_6_0", "1_7_0", "1_8_0"]
+        warehouse: ["snowflake", "bigquery", "postgres"]
+        version: ["1_3_0", "1_4_0", "1_5_0", "1_6_0", "1_7_0", "1_8_0", "1_9_0"]
     runs-on: ubuntu-latest
     permissions:
       contents: "read"
@@ -60,7 +60,7 @@ jobs:
 
       - uses: actions/setup-python@v4
         with:
-          python-version: "3.8.x"
+          python-version: "3.9.x"
           architecture: "x64"
 
       - name: Install tox
@@ -102,3 +102,45 @@ jobs:
 
   #     - name: Run Databricks Tests
   #       run: tox -e integration_databricks
+
+  integration-sqlserver:
+    strategy:
+      fail-fast: false # Don't fail one DWH if the others fail
+      matrix:
+        # When supporting a new version, update the list here
+        version: ["1_3_0", "1_4_0", "1_7_0", "1_8_0"]
+    runs-on: ubuntu-latest
+    environment:
+      name: Approve Integration Tests
+
+    steps:
+    - uses: actions/setup-python@v4
+      with:
+        python-version: "3.9.x"
+        architecture: "x64"
+    - name: Install SQL Server
+      uses: Particular/install-sql-server-action@v1.2.0
+      with:
+        connection-string-env-var: SQL_SERVER_CONNECTION_STRING
+        catalog: dbt_artifact_integrationtests
+    - name: Create DBT User
+      shell: pwsh
+      run: |
+          echo "Create dbt login with sysadmin"
+          sqlcmd -Q "CREATE LOGIN dbt WITH PASSWORD = '123', CHECK_POLICY = OFF, CHECK_EXPIRATION = OFF" -d "dbt_artifact_integrationtests"
+          sqlcmd -Q "ALTER SERVER ROLE sysadmin ADD MEMBER dbt" -d "dbt_artifact_integrationtests"
+    - name: Install tox
+      run: python3 -m pip install tox
+
+    - name: Install Microsoft ODBC
+      run: sudo ACCEPT_EULA=Y apt-get install msodbcsql18 -y
+
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ github.event.pull_request.head.sha }} # Check out the code of the PR
+
+    - name: Run Tests on PR
+      env:
+        DBT_VERSION: ${{ matrix.version }}
+      run: tox -e integration_sqlserver_${{ matrix.version }}

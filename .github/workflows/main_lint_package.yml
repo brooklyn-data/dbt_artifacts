@@ -46,7 +46,7 @@ jobs:
           architecture: "x64"
 
       - name: Install Python packages
-        run: python -m pip install dbt-snowflake~=1.8.0 sqlfluff-templater-dbt~=3.0.0
+        run: python -m pip install dbt-snowflake~=1.9.0 sqlfluff-templater-dbt~=3.0.0
 
       - name: Test database connection
         run: dbt debug
