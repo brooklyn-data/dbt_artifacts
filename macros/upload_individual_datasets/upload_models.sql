@@ -44,7 +44,7 @@
                 {% if var('dbt_artifacts_exclude_all_results', false) %}
                     null
                 {% else %}
-                    '{{ tojson(model_copy) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}' {# all_results #}
+                    null
                 {% endif %}
             )
             {%- if not loop.last %},{%- endif %}
@@ -79,7 +79,7 @@
                     {% if var('dbt_artifacts_exclude_all_results', false) %}
                         null
                     {% else %}
-                        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(model_copy) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"')) }} {# all_results #}
+                        null
                     {% endif %}
                 )
                 {%- if not loop.last %},{%- endif %}
@@ -114,7 +114,7 @@
                     {% if var('dbt_artifacts_exclude_all_results', false) %}
                         null
                     {% else %}
-                        $${{ tojson(model_copy) }}$$ {# all_results #}
+                        null
                     {% endif %}
                 )
                 {%- if not loop.last %},{%- endif %}
@@ -154,7 +154,7 @@
                 {% if var('dbt_artifacts_exclude_all_results', false) %}
                     null
                 {% else %}
-                    '{{ tojson(model_copy) | replace("'","''") }}' {# all_results #}
+                    null
                 {% endif %}
             )
             {%- if not loop.last %},{%- endif %}
