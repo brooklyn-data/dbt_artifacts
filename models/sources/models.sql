@@ -18,6 +18,7 @@ select
     cast(null as {{ type_string() }}) as checksum,
     cast(null as {{ type_string() }}) as materialization,
     cast(null as {{ type_array() }}) as tags,
+    cast(null as {{ type_string() }}) as owner_group,
     cast(null as {{ type_json() }}) as meta,
     cast(null as {{ type_string() }}) as alias,
     cast(null as {{ type_json() }}) as all_results
