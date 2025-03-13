@@ -45,8 +45,6 @@
 
 {%- endmacro %}
 
-{%- endmacro %}
-
 {% macro postgres__insert_into_metadata_table(relation, fields, content) -%}
 
     {% set insert_into_table_query %}
