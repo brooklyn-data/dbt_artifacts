@@ -26,6 +26,11 @@
         {% for model in models -%}
                 {% set model_copy = model.copy() -%}
                 {% do model_copy.pop('raw_code', None) %}
+                {{ log(model_copy) }}
+                {% if "begin" in model_copy.config and model_copy.config.begin %}
+                        {% set _ = model_copy.config.update({"begin": model_copy.config.begin.strftime("%Y-%m-%dT%H:%M:%S.%f")}) %}
+                        {{ log(model_copy.config.begin) }}
+                {% endif %}
             (
                 '{{ invocation_id }}', {# command_invocation_id #}
                 '{{ model_copy.unique_id }}', {# node_id #}
