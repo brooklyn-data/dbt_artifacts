@@ -11,7 +11,9 @@ Pipfile.lock
 env.sh
 
 .python_version
+.python-version
 .vscode
 .venv
+pyproject.toml
 
 .DS_Store
