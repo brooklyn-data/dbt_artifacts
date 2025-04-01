@@ -5,7 +5,7 @@
 }}
 
 with
-    transactions as (
+    mb_transactions as (
         select
             {{ dbt.cast('transaction_id', api.Column.translate_type('integer') ) }} as transaction_id,
             {{ dbt.cast('transaction_date', api.Column.translate_type('date') ) }} as transaction_date,
@@ -30,16 +30,16 @@ with
                 when '08' then 1
                 else 2
             end as transaction_interval
-        from transactions
+        from mb_transactions
     )
 
-    {# do this to prevent and db errors in case we can't self reference ... #}
+    /* do this to prevent and db errors in case we can't self reference ...*/
     , base_transaction_time as (
         select
             transaction_id,
             transaction_time,
             {{ dbt.cast(dbt.current_timestamp(), api.Column.translate_type('date') ) }} as todays_date,
-        from transactions
+        from mb_transactions
     )
 
     , transaction_time as (
@@ -55,7 +55,7 @@ with
         select
             transaction_id,
             todays_date,
-            todays_date__str || ' ' || transaction_time as transaction_time__ts,
+            {{ dbt.concat(['todays_date__str', "' '", 'transaction_time']) }} as transaction_time__ts
         from transaction_time
     )
 
@@ -68,7 +68,7 @@ select
         interval='ti.transaction_interval',
         from_date_or_timestamp='tt.todays_date'
      )}} as transaction_ts__daily
-from transactions as t
+from mb_transactions as t
 left join transaction_times as tt
     on t.transaction_id = tt.transaction_id
 left join transaction_interval as ti
