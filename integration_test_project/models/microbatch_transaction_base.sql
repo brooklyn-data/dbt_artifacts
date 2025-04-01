@@ -38,7 +38,7 @@ with
         select
             transaction_id,
             transaction_time,
-            {{ dbt.cast(dbt.current_timestamp(), api.Column.translate_type('date') ) }} as todays_date,
+            {{ dbt.cast(dbt.current_timestamp(), api.Column.translate_type('date') ) }} as todays_date
         from mb_transactions
     )
 
