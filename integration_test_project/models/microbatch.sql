@@ -4,7 +4,7 @@
     incremental_strategy = 'microbatch',
     unique_key = 'transaction_id',
     event_time = 'transaction_ts',
-    begin = (modules.datetime.datetime.now().replace(hour=6, minute=0, second=0)).isoformat(),
+    begin = (modules.datetime.datetime.now().replace(hour=6, minute=0, second=0) - modules.datetime.timedelta(2)).isoformat(),
     batch_size = 'day'
     )
 }}

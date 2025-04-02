@@ -27,14 +27,14 @@ with
             transaction_id,
             case left(transaction_time, 2)
                 when '07' then 0
-                when '08' then 1
-                else 2
+                when '08' then -1
+                else -2
             end as transaction_interval
         from mb_transactions
     )
 
     /* do this to prevent and db errors in case we can't self reference ...*/
-    , base_transaction_time as (
+    , transaction_time_today as (
         select
             transaction_id,
             transaction_time,
@@ -42,13 +42,13 @@ with
         from mb_transactions
     )
 
-    , transaction_time as (
+    , transaction_time_today_string as (
         select
             transaction_id,
             transaction_time,
             todays_date,
             {{ dbt.cast('todays_date', api.Column.translate_type('string') ) }} as todays_date__str
-        from base_transaction_time
+        from transaction_time_today
     )
 
     , transaction_times as (
@@ -56,7 +56,7 @@ with
             transaction_id,
             todays_date,
             {{ dbt.concat(['todays_date__str', "' '", 'transaction_time']) }} as transaction_time__ts
-        from transaction_time
+        from transaction_time_today_string
     )
 
 select
