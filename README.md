@@ -109,6 +109,24 @@ Note that model materializations and `on_schema_change` configs are defined in t
 
 > Configurations made in your dbt_project.yml file will override any configurations in a package (either in the dbt_project.yml file of the package, or in config blocks).
 
+### Selection of artifacts to upload
+
+By default, all non-execution artifacts are uploaded. Some users may be interested in choosing which datasets to upload. Thus, we allow setting `artifact_static_datasets` variable:
+
+```yml
+vars: 
+  artifacts_static_datasets: ['exposures', 'seeds', 'snapshots', 'invocations', 'sources', 'tests', 'models']
+```
+
+> Note: execution-type arficats are always uploaded.
+
+It is possible to upload different sets of datasets depending on which dbt command is run. For example, upload all datasets on `dbt run`, upload only execution-type artifacts for other dbt invocations:
+
+```yml
+vars:
+  artifacts_static_datasets: "{{ 'all' if invocation_args_dict.which == 'run' else [] }}"
+```
+
 ### Environment Variables
 
 If the project is running in dbt Cloud, the following five columns (<https://docs.getdbt.com/docs/dbt-cloud/using-dbt-cloud/cloud-environment-variables#special-environment-variables>) will be automatically populated in the fct_dbt__invocations model:
