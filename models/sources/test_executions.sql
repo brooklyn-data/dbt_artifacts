@@ -1,3 +1,9 @@
+{{
+    config(
+        materialized='incremental',
+        on_schema_change='append_new_columns'
+    )
+}}
 /* Bigquery won't let us `where` without `from` so we use this workaround */
 with
     dummy_cte as (
