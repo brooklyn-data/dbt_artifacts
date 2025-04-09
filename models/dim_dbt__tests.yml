@@ -22,3 +22,5 @@ models:
     description: '{{ doc("test_execution_id") }}'
   - name: test_path
     description: '{{ doc("test_path") }}'
+  - name: description
+    description: '{{ doc("test_description") }}'

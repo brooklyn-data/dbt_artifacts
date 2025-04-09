@@ -224,7 +224,8 @@
             package_name,
             test_path,
             tags,
-            all_results
+            all_results,
+            description
         )
 
     {% else %}

@@ -18,6 +18,7 @@ with
             , package_name
             , test_path
             , tags
+            , description
         from base
 
     )
