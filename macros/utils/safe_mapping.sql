@@ -13,19 +13,9 @@
     {{ return(updated_dict) }}
 {% endmacro %}
 
-{% macro safe_copy_mapping(mapping_to_validate, parent_key='') %}
-    {% set is_dev = var('is_development', false) | as_bool %}
-    {{ log("Checking: " ~ mapping_to_validate.name, is_dev) }}
-    {% if not mapping_to_validate.name == 'microbatch' and is_dev %}
-        {% if mapping_to_validate != dbt_artifacts.update_nested_dict(mapping_to_validate) %}
-            {{ exceptions.raise_compiler_error("Original mapping and copied mapping do not align!") }}
-        {% endif %}
-    {% endif %}
-    {{ log("ORIGINAL !!! ___ !!!") }}
-    {{ log(mapping_to_validate) }}
-    {{ log("COPY !!! ___ !!!") }}
-    {{ log(dbt_artifacts.update_nested_dict(mapping_to_validate)) }}
-    {{ return(dbt_artifacts.update_nested_dict(mapping_to_validate)) }}
+{% macro safe_copy_mapping(dictionary) %}
+    {{ dbt_artifacts.raise_equality_warning(dictionary) }}
+    {{ return(dbt_artifacts.update_nested_dict(dictionary)) }}
 {% endmacro %}
 
 {% macro type_handler(val) %}
@@ -40,7 +30,7 @@
             {#- there's a real scenario where we attempt this and it just goes sideways -#}
             {% if _val.strftime is not none %}
                 {#- convert to string explicitly -#}
-                {{ return(_val.strftime("%Y-%m-%dT%H:%M:%S.%f") ) }}
+                {{ return(_val.strftime(dbt_artifacts.get_strftime_format()) ) }}
             {% else %}
                 {#- just send it -#}
                 {{ return(_val | as_text ) }}
@@ -62,5 +52,18 @@
         {{ return(true) }}
     {% else %}
         {{ return(false) }}
+    {% endif %}
+{% endmacro %}
+
+{% macro raise_equality_warning(dictionary) %}
+    {% set is_dev = var('is_development', false) | as_bool %}
+    {% if is_dev %}
+        {% if dictionary != dbt_artifacts.update_nested_dict(dictionary) %}
+             {{ log("Caught on: " ~ dictionary.name, is_dev) }}
+            {{ log("ORIGINAL !!! SEE BELOW !!!\n" ~ dictionary) }}
+            {{ log("COPY !!! SEE BELOW !!!\n" ~ dbt_artifacts.update_nested_dict(dictionary)) }}
+
+            {{ exceptions.warn("Original mapping and copied mapping do not align! Please validate and disregard if expected.") }}
+        {% endif %}
     {% endif %}
 {% endmacro %}
