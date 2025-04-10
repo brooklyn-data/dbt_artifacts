@@ -89,6 +89,46 @@ macros:
       - name: model
         type: Node
         description: A node object from the dbt graph
+  - name: update_nested_dict
+    description: |
+      A macro that walks through a mapping object (dictionary) and recursively converts types to
+      something that can be JSON serialized.
+    arguments:
+      - name: dictionary
+        type: mapping
+        description: A mapping object to walk through
+  - name: safe_copy_mapping
+    description: |
+      A macro that safely copies a mapping object (dictionary), using the `update_nested_dict` macro to ensure that the types are JSON serializable.
+    arguments:
+      - name: dictionary
+        type: mapping
+        description: A mapping object to copy
+  - name: type_handler
+    description: |
+      Handles the conversion of a value to a JSON serializable type. Notable manages our conversion
+      from datetime to string.
+    arguments:
+      - name: val
+        type: any
+        description: A value to convert to a JSON serializable type
+  - name: is_serializable
+    description: |
+      A macro that checks if a value is JSON serializable.
+    arguments:
+      - name: val
+        type: any
+        description: A value to check if it is JSON serializable
+  - name: raise_equality_warning
+    description: |
+      A macro to check for the equality of a particular mapping object pre/post conversion.
+      We expect some warnings to be thrown, but meant to alert the user in case there's some
+      unexpected warnings. Logs can be searched for the '!!! SEE BELOW !!!' string to find the
+      pre/post conversion values.
+    arguments:
+      - name: dictionary
+        type: mapping
+        description: A mapping object to validate
 
   ## UPLOAD INDIVIDUAL DATASETS ##
   - name: upload_exposures

@@ -22,6 +22,7 @@ vars:
     ["TEST_ENV_VAR_NUMBER", "TEST_ENV_VAR_EMPTY", "TEST_ENV_VAR_WITH_QUOTE"]
   dbt_vars: ["test_dbt_vars_1", "test_dbt_vars_2", "test_dbt_vars_3"]
   dbt_artifacts_exclude_all_results: true
+  is_development: '{{ env_var("IS_DEVELOPMENT", false) | as_bool }}'
 
 models:
   +persist_docs:
