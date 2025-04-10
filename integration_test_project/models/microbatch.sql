@@ -1,11 +1,16 @@
 {{
   config(
-    materialized = 'incremental',
-    incremental_strategy = 'microbatch',
-    unique_key = 'transaction_id',
-    event_time = 'transaction_ts',
-    begin = (modules.datetime.datetime.now().replace(hour=6, minute=0, second=0) - modules.datetime.timedelta(2)).isoformat(),
-    batch_size = 'day'
+        materialized = 'incremental',
+        incremental_strategy = 'microbatch',
+        event_time = 'transaction_ts',
+        begin = (modules.datetime.datetime.now().replace(hour=6, minute=0, second=0) - modules.datetime.timedelta(2)).isoformat(),
+        batch_size = 'day',
+
+        unique_key = 'transaction_id',
+        partition_by = {
+            'field': 'store_name',
+            'data_type': 'text',
+        }
     )
 }}
 
