@@ -11,3 +11,12 @@ sources:
     tables:
       - name: doesnt_exist
       - name: '"GROUP"'
+
+  - name: freshness_check
+    database: "{% if target.type not in ('spark', 'databricks') %}{{ var('dbt_artifacts_database', target.database) }}{% endif %}"
+    schema: "{{ target.schema }}"
+    freshness:
+      error_after: {count: 1, period: hour}
+    loaded_at_field: load_timestamp
+    tables:
+      - name: freshness

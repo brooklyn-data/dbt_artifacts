@@ -14,6 +14,10 @@ env.sh
 .python-version
 .vscode
 .venv
+.env
+.secrets
+*.lock
+**/*/package-lock.yml
 pyproject.toml
 
 .DS_Store
