@@ -15,7 +15,8 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(6) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(7) }},
             {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(8)) }},
-            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(9)) }}
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(9)) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }}
         from values
         {% for test in tests -%}
             (
@@ -28,10 +29,11 @@
                 '{{ test.original_file_path | replace('\\', '\\\\') }}', {# test_path #}
                 '{{ tojson(test.tags) }}', {# tags #}
                 {% if var('dbt_artifacts_exclude_all_results', false) %}
-                    null
+                    null,
                 {% else %}
-                    '{{ tojson(test) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}' {# all_fields #}
+                    '{{ tojson(test) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}', {# all_fields #}
                 {% endif %}
+                '{{ test.description }}' {# description #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -55,10 +57,11 @@
                     '{{ test.original_file_path | replace('\\', '\\\\') }}', {# test_path #}
                     {{ tojson(test.tags) }}, {# tags #}
                     {% if var('dbt_artifacts_exclude_all_results', false) %}
-                        null
+                        null,
                     {% else %}
-                        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(test) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"')) }} {# all_fields #}
+                        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(test) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"')) }}, {# all_fields #}
                     {% endif %}
+                    '{{ test.description }}' {# description #}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}
@@ -82,10 +85,11 @@
                     '{{ test.original_file_path | replace('\\', '\\\\') }}', {# test_path #}
                     $${{ tojson(test.tags) }}$$, {# tags #}
                     {% if var('dbt_artifacts_exclude_all_results', false) %}
-                        null
+                        null,
                     {% else %}
-                        $${{ tojson(test) }}$$ {# all_results #}
+                        $${{ tojson(test) }}$$, {# all_results #}
                     {% endif %}
+                    '{{ test.description }}' {# description #}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}
@@ -114,10 +118,11 @@
                 '{{ test.original_file_path }}', {# test_path #}
                 '{{ tojson(test.tags) }}', {# tags #}
                 {% if var('dbt_artifacts_exclude_all_results', false) %}
-                    null
+                    null,
                 {% else %}
-                    '{{ tojson(test) | replace("'","''") }}' {# all_fields #}
+                    '{{ tojson(test) | replace("'","''") }}', {# all_fields #}
                 {% endif %}
+                '{{ test.description }}' {# description #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
