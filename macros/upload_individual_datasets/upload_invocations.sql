@@ -17,6 +17,18 @@
         {% endif %}
     {% endif %}
 
+    {% if "event_time_start" in invocation_args_dict and invocation_args_dict.strftime is not none %}
+        {% do invocation_args_dict.update(
+            {"event_time_start": invocation_args_dict.event_time_start.strftime(dbt_artifacts.get_strftime_format())}
+        ) %}
+    {% endif %}
+    {% if "event_time_end" in invocation_args_dict and invocation_args_dict.strftime is not none %}
+        {% do invocation_args_dict.update(
+            {"event_time_end": invocation_args_dict.event_time_end.strftime(dbt_artifacts.get_strftime_format())}
+        ) %}
+    {% endif %}
+
+    {{ log(invocation_args_dict) }}
     {{ return(adapter.dispatch("get_invocations_dml_sql", "dbt_artifacts")()) }}
 {%- endmacro %}
 

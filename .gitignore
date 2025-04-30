@@ -11,7 +11,13 @@ Pipfile.lock
 env.sh
 
 .python_version
+.python-version
 .vscode
 .venv
+.env
+.secrets
+*.lock
+**/*/package-lock.yml
+pyproject.toml
 
 .DS_Store
