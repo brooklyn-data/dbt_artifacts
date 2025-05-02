@@ -269,7 +269,7 @@
                 
                 {{ test.execution_time }}, {# total_node_runtime #}
 
-                {% if test.adapter_response.rows_affected is none %}
+                {% if test.adapter_response.rows_affected is none or test.adapter_response.rows_affected is not defined %}
                     null
                 {% else %}
                     {{ test.adapter_response.rows_affected }}
