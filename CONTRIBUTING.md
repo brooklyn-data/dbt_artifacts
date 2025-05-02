@@ -1,7 +1,11 @@
 # Contributing to the dbt Artifacts Package
 
 Thank you for your interest in contributing to the dbt Artifacts Package! We welcome contributions of all kinds,
-including bug reports, feature requests, and pull requests. Please read this document to learn how to contribute.
+including bug reports, feature requests, and pull requests.
+
+Please read this document to learn how to contribute. Following these guidelines helps to communicate that you respect the time of the developers managing and developing
+this open source project. In return, they should reciprocate that respect in addressing your issue, assessing changes,
+and helping you finalize your pull requests.
 
 ## Reporting Bugs :bug:
 
@@ -16,25 +20,34 @@ please [open an issue](https://github.com/brooklyn-data/dbt_artifacts/issues/new
 If you are able to implement the feature, please [open a pull request](https://github.com/github/docs/pulls) with
 your changes. If you need help with either of these steps, please let us know!
 
+## New Contributor Guide
+- To get an overview of the project, read the [README](https://github.com/brooklyn-data/dbt_artifacts/blob/main/README.md) file.
+- Look for issues labeled as "good first issue" - these are issues which would be good for newcomers.
+
 ## Contributing Code :computer:
 
 The high-level flow for contributing code to the dbt Artifacts Package is as follows (see below for details of each stage):
 
+### Make Changes
 1. Fork the dbt Artifacts Package repository
+   - The first step to contributing code is
+to [fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo) the dbt Artifacts Package
+repository. Once you have a fork, you can clone it locally and begin making changes.
 2. Clone your fork locally
 3. Create a new branch
 4. Make your changes
-5. Run the tests
-6. Open a pull request against the `main` branch
-7. Make sure your pull request passes all checks
-8. Address any review feedback
-9. Merge your pull request
+5. [Run the tests](https://github.com/brooklyn-data/dbt_artifacts/blob/main/CONTRIBUTING.md#running-the-tests)
 
-The first step to contributing code is
-to [fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo) the dbt Artifacts Package
-repository. Once you have a fork, you can clone it locally and begin making changes.
+### Pull Request
+1. Open a pull request against the `main` branch
+   - Fill out the PR template. This template helps reviewers understand your changes as well as the purpose of your pull request.
+   - Don't forget to link PR to issue if you are solving one.
+2. Make sure your pull request passes all checks
+3. Address any review feedback
+   - As you update your PR and apply changes, mark each conversation as resolved. 
+4. Merge your pull request :tada:
 
-### Setting up your development environment
+## Setting up your development environment
 
 #### Running the tests
 
