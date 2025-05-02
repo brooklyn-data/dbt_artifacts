@@ -286,7 +286,7 @@ null, -- rows_affected not available {# Only available in Snowflake #}
                 
                 {{ model.execution_time }}, {# total_node_runtime #}
 
-                {% if model.adapter_response.rows_affected is none %}
+                {% if model.adapter_response.rows_affected is none or model.adapter_response.rows_affected is not defined %}
                     null
                 {% else %}
                     {{ model.adapter_response.rows_affected }}
