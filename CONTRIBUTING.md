@@ -22,7 +22,7 @@ your changes. If you need help with either of these steps, please let us know!
 
 ## New Contributor Guide
 - To get an overview of the project, read the [README](https://github.com/brooklyn-data/dbt_artifacts/blob/main/README.md) file.
-- Look for issues labeled as "good first issue" - these are issues which would be good for newcomers.
+- Look for [issues](https://github.com/brooklyn-data/dbt_artifacts/issues) labeled as "good first issue" - these are issues which would be good for newcomers.
 
 ## Contributing Code :computer:
 
