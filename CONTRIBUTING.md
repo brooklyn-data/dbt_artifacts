@@ -36,7 +36,7 @@ repository. Once you have a fork, you can clone it locally and begin making chan
 2. Clone your fork locally
 3. Create a new branch
 4. Make your changes
-5. [Run the tests](https://github.com/brooklyn-data/dbt_artifacts/blob/main/CONTRIBUTING.md#running-the-tests)
+5. [Run the tests](#running-the-tests)
 
 ### Pull Request
 1. Open a pull request against the `main` branch
