@@ -20,6 +20,7 @@ The package currently supports
 - Google BigQuery :white_check_mark:
 - Postgres :white_check_mark:
 - SQL Server :white_check_mark:
+- Clickhouse :white_check_mark:
 
 Models included:
 

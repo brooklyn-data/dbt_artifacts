@@ -78,6 +78,7 @@ Tox will take care of installing the dependencies for each environment, so you d
     tox -e integration_snowflake # For the Snowflake tests
     tox -e integration_databricks # For the Databricks tests
     tox -e integration_bigquery # For the BigQuery tests
+    tox -e integration_clickhouse # For the Clickhouse tests
     ```
 
 The Spark tests require installing the [ODBC driver](https://www.databricks.com/spark/odbc-drivers-download). On a Mac,

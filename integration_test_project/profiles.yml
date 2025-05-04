@@ -64,3 +64,11 @@ dbt_artifacts:
       Encrypt: False
       user: dbt
       password: "123"
+    clickhouse:
+      type: clickhouse
+      host: "{{ env_var('DBT_ENV_SECRET_CLICKHOUSE_HOST') }}"
+      port: 8123
+      user: "{{ env_var('DBT_ENV_SECRET_CLICKHOUSE_USER') }}"
+      password: "{{ env_var('DBT_ENV_SECRET_CLICKHOUSE_PASSWORD') }}"
+      schema: dbt_artifacts_test_commit_{{ env_var('DBT_VERSION', '') }}_{{ env_var('GITHUB_SHA_OVERRIDE', '') if env_var('GITHUB_SHA_OVERRIDE', '') else env_var('GITHUB_SHA') }}
+      threads: 8

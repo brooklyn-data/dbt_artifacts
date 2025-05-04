@@ -14,7 +14,10 @@ with
             , node_id
             , run_started_at
             , was_full_refresh
-            , {{ split_part('thread_id', "'-'", 2) }} as thread_id
+            ,
+            {% if target.type == "clickhouse" %} {{ split_part("coalesce(thread_id, '')", "'-'", 2) }} as thread_id
+            {% else %} {{ split_part("thread_id", "'-'", 2) }} as thread_id
+            {% endif %}
             , status
             , compile_started_at
             , query_completed_at
