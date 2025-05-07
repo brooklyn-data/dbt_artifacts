@@ -24,7 +24,7 @@
             {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(16)) }}
         from values
         {% for model in snapshots -%}
-                    (
+            (
                 '{{ invocation_id }}', {# command_invocation_id #}
                 '{{ model.node.unique_id }}', {# node_id #}
                 '{{ run_started_at }}', {# run_started_at #}
@@ -33,18 +33,18 @@
                 {% if config_full_refresh is none %}
                     {% set config_full_refresh = flags.FULL_REFRESH %}
                 {% endif %}
-'{{ config_full_refresh }}', {# was_full_refresh #}
-                
-                                '{{ model.thread_id }}', {# thread_id #}
+                '{{ config_full_refresh }}', {# was_full_refresh #}
+
+                '{{ model.thread_id }}', {# thread_id #}
                 '{{ model.status }}', {# status #}
-                
+
                 {% set compile_started_at = (model.timing | selectattr("name", "eq", "compile") | first | default({}))["started_at"] %}
                 {% if compile_started_at %}'{{ compile_started_at }}'{% else %}null{% endif %}, {# compile_started_at #}
                 {% set query_completed_at = (model.timing | selectattr("name", "eq", "execute") | first | default({}))["completed_at"] %}
                 {% if query_completed_at %}'{{ query_completed_at }}'{% else %}null{% endif %}, {# query_completed_at #}
-                
+
                 {{ model.execution_time }}, {# total_node_runtime #}
-null, -- rows_affected not available {# Only available in Snowflake #}
+                null, -- rows_affected not available {# Only available in Snowflake #}
                 '{{ model.node.config.materialized }}', {# materialization #}
                 '{{ model.node.schema }}', {# schema #}
                 '{{ model.node.name }}', {# name #}
@@ -259,7 +259,6 @@ null, -- rows_affected not available {# Only available in Snowflake #}
     {% else %} {{ return("") }}
     {% endif %}
 {% endmacro -%}
-
 
 {% macro trino__get_snapshot_executions_dml_sql(snapshots) -%}
     {% if snapshots != [] %}
