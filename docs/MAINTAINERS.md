@@ -194,7 +194,7 @@ Make sure to check “Approve Integration Tests” and then click “Approve and
 
 ## How to release
 - Use [semantic versioning](https://semver.org/) to work out whether it’s a patch, minor or major change. If it contains breaking changes (including new fields), then it should be at least a minor change. 
-- Do a find and replace of the current version (2.2.1) with the new version (2.2.2)
+- Do a find and replace of the current version (e.g. `2.2.1`) with the new version (e.g. `2.2.2`)
 - Merge a PR which applies that change 
 - Make a new release: [Releases · brooklyn-data/dbt_artifacts](https://github.com/brooklyn-data/dbt_artifacts/releases)
   - This will automatically update the documentation through a GH action 
