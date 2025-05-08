@@ -79,13 +79,13 @@ Navigate to http://localhost:9047/signup and you should see a Dremio sign up scr
   that there is a default one at the top, and then any adapter specific ones below that. If you are wanting to make changes to tables
   it is likely to be in these files. If you are adding columns, these should be done in the same order as the columns appear in 
   the `macros/upload_results/get_column_name_lists.sql` file.
-  ![img.png](img.png)
+  ![img.png](/docs/images/img.png)
 - Models in the `sources` folder creates empty tables with the correct field names and types. These get run as part of the
   `dbt run` to ensure that there are empty tables to upload results to. These are materialised as tables. You’ll notice that
   it makes use of `type_` macros to ensure types are accurate across each warehouse. The fields in here also need to be the
   same order as the fields in the `macros/upload_results/get_column_name_lists.sql` file, and any new fields must be added
   AT THE BOTTOM of the table.
-  ![img_1.png](img_1.png)
+  ![img_1.png](/docs/images/img_1.png)
 - Models in the `staging` and outer folder create views which tidy these source tables up as in a standard dbt project. These
   are also run as part of `dbt run`.
 - Once all tables have been built, they need to get updated by a hook - this is why in the instructions, people need to add
@@ -99,19 +99,19 @@ Navigate to http://localhost:9047/signup and you should see a Dremio sign up scr
 
 ## Integration Tests
 When you create a PR it will need to pass CI. To get the integration tests to run on your PR you need to approve them. Scroll to the bottom of the PR to find this section:
-![img_2.png](img_2.png)
+![img_2.png](/docs/images/img_2.png)
 
-Click on “Show environments”
-![img_3.png](img_3.png)
+Click on “Show environments”:
+![img_3.png](/docs/images/img_3.png)
 
-Click on the blue link (here it is `integration-snowflake #352) and it will open up the action. Look for this section:
-![img_4.png](img_4.png)
+Click on the blue link (i.e. integration-snowflake #352) and it will open up the action. Look for this section:
+![img_4.png](/docs/images/img_4.png)
 
-Click on “Review deployments:
-![img_5.png](img_5.png)
+Click on “Review deployments":
+![img_5.png](/docs/images/img_5.png)
 
 Make sure to check “Approve Integration Tests” and then click “Approve and deploy”. If you head back to the PR you should see the tests are now running:
-![img_6.png](img_6.png)
+![img_6.png](/docs/images/img_6.png)
 (If you notice the checks are still in status “Waiting” you may have to “Approve and deploy” again)
 
 ## How to test / verify issues locally
