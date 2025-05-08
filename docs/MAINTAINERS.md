@@ -193,3 +193,9 @@ Make sure to check “Approve Integration Tests” and then click “Approve and
 > If you don’t want to keep adding `--target bigquery` to your dbt commands, you can temporarily set it as the default in the `integration_test_project/profiles.yml` file by changing the target to `bigquery` at the top of the `dbt_artifacts` definition.
 
 ## How to release
+- Use [semantic versioning](https://semver.org/) to work out whether it’s a patch, minor or major change. If it contains breaking changes (including new fields), then it should be at least a minor change. 
+- Do a find and replace of the current version (2.2.1) with the new version (2.2.2)
+- Merge a PR which applies that change 
+- Make a new release: [Releases · brooklyn-data/dbt_artifacts](https://github.com/brooklyn-data/dbt_artifacts/releases)
+  - This will automatically update the documentation through a GH action 
+  - Per the [dbt guidance](https://docs.getdbt.com/guides/legacy/building-packages), the repo ([GitHub - dbt-labs/hubcap](https://github.com/dbt-labs/hubcap)) that adds releases to dbt Hub will run every hour and pick up any new versions. It will only pick up full versions, so use the guidance if you want to create a pre-release.
