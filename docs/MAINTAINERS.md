@@ -99,19 +99,25 @@ Navigate to http://localhost:9047/signup and you should see a Dremio sign up scr
 
 ## Integration Tests
 When you create a PR it will need to pass CI. To get the integration tests to run on your PR you need to approve them. Scroll to the bottom of the PR to find this section:
+
 ![img_2.png](/docs/images/img_2.png)
 
 Click on “Show environments”:
+
 ![img_3.png](/docs/images/img_3.png)
 
 Click on the blue link (i.e. integration-snowflake #352) and it will open up the action. Look for this section:
+
 ![img_4.png](/docs/images/img_4.png)
 
 Click on “Review deployments":
+
 ![img_5.png](/docs/images/img_5.png)
 
 Make sure to check “Approve Integration Tests” and then click “Approve and deploy”. If you head back to the PR you should see the tests are now running:
+
 ![img_6.png](/docs/images/img_6.png)
+
 (If you notice the checks are still in status “Waiting” you may have to “Approve and deploy” again)
 
 ## How to test / verify issues locally
