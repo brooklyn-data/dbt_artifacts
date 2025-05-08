@@ -44,7 +44,8 @@ repository. Once you have a fork, you can clone it locally and begin making chan
    - Don't forget to link PR to issue if you are solving one.
 2. Make sure your pull request passes all checks
 3. Address any review feedback
-   - As you update your PR and apply changes, mark each conversation as resolved. 
+   - As you update your PR and apply changes, mark each conversation as resolved.
+   - Enable the checkbox to [allow maintainer edits](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/allowing-changes-to-a-pull-request-branch-created-from-a-fork) so the branch can be updated for a merge. Once you submit your PR, a maintainer will review your proposal. We may ask questions or request additional information.
 4. Merge your pull request :tada:
 
 ## Setting up your development environment
