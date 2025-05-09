@@ -8,7 +8,7 @@ This package builds a mart of tables and views describing the project it is inst
 
 ## Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for more information.
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) and [MAINTAINERS.md](docs/MAINTAINERS.md) for more information.
 
 ## Supported Data Warehouses
 
@@ -20,6 +20,7 @@ The package currently supports
 - Google BigQuery :white_check_mark:
 - Postgres :white_check_mark:
 - SQL Server :white_check_mark:
+- Trino :white_check_mark:
 
 Models included:
 

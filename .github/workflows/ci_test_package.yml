@@ -37,7 +37,7 @@ jobs:
     strategy:
       fail-fast: false # Don't fail one DWH if the others fail
       matrix:
-        warehouse: ["snowflake", "bigquery", "postgres"]
+        warehouse: ["snowflake", "bigquery", "postgres", "trino"]
     runs-on: ubuntu-latest
     environment:
       name: Approve Integration Tests
@@ -57,6 +57,11 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
+
+      trino:
+        image: trinodb/trino
+        ports:
+          - 8080:8080
 
     steps:
       - name: Get latest release
@@ -113,7 +118,7 @@ jobs:
     strategy:
       fail-fast: false # Don't fail one DWH if the others fail
       matrix:
-        warehouse: ["snowflake", "bigquery", "postgres", "sqlserver"]
+        warehouse: ["snowflake", "bigquery", "postgres", "sqlserver", "trino"]
         # When supporting a new version, update the list here
         version: ["1_3_0", "1_4_0", "1_5_0", "1_6_0", "1_7_0", "1_8_0", "1_9_0"]
     runs-on: ubuntu-latest
@@ -135,6 +140,11 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
+
+      trino:
+        image: trinodb/trino
+        ports:
+          - 8080:8080
 
     steps:
       - uses: actions/setup-python@v4
