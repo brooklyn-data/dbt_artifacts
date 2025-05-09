@@ -21,7 +21,8 @@ If you are able to implement the feature, please [open a pull request](https://g
 your changes. If you need help with either of these steps, please let us know!
 
 ## New Contributor Guide
-- To get an overview of the project, read the [README](https://github.com/brooklyn-data/dbt_artifacts/blob/main/README.md) file.
+- To get an overview of the project, read our [README](README.md).
+- There's a fair bit of infrastructure to set up for integration testing, read more in [MAINTAINERS.md](docs/MAINTAINERS.md)
 - Look for [issues](https://github.com/brooklyn-data/dbt_artifacts/issues) labeled as "good first issue" - these are issues which would be good for newcomers.
 
 ## Contributing Code :computer:

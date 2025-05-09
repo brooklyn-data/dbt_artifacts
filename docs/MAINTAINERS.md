@@ -1,5 +1,9 @@
 # Contributing to the dbt Artifacts Package as a Maintainer
 
+> [!IMPORTANT]
+> This guide was written for Brooklyn Data engineers and contains details that are specific to the Brooklyn Data workplace (i.e., Slack channel names), but much of this
+> will be useful for all contributors, internal or external to Brooklyn Data. 
+
 ## General Guidance
 - You can create your own branches in the repo - no need to fork. Make sure to ask in the #_dbt_artifacts Slack channel
   if you need to be given permissions to contribute.
