@@ -22,3 +22,5 @@ models:
         description: '{{ doc("tags") }}'
       - name: all_results
         description: '{{ doc("all_results") }}'
+      - name: description
+        description: '{{ doc("test_description") }}'

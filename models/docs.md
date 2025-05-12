@@ -407,8 +407,8 @@ Response provided by the adapter as JSON.
 
 {% enddocs %}
 
-{% docs all_results %}
+{% docs test_description %}
 
-All results as a JSON blob
+Test description
 
 {% enddocs %}
