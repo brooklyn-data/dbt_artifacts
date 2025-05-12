@@ -17,15 +17,19 @@
         {% endif %}
     {% endif %}
 
-    {% if "event_time_start" in invocation_args_dict and invocation_args_dict.strftime is not none %}
-        {% do invocation_args_dict.update(
-            {"event_time_start": invocation_args_dict.event_time_start.strftime(dbt_artifacts.get_strftime_format())}
-        ) %}
+    {% if "event_time_start" in invocation_args_dict %}
+        {% if invocation_args_dict.event_time_start is not string %}
+            {% do invocation_args_dict.update(
+                {"event_time_start": invocation_args_dict.event_time_start.strftime(dbt_artifacts.get_strftime_format())}
+            ) %}
+        {% endif%}
     {% endif %}
-    {% if "event_time_end" in invocation_args_dict and invocation_args_dict.strftime is not none %}
-        {% do invocation_args_dict.update(
-            {"event_time_end": invocation_args_dict.event_time_end.strftime(dbt_artifacts.get_strftime_format())}
-        ) %}
+    {% if "event_time_end" in invocation_args_dict %}
+        {% if invocation_args_dict.event_time_end is not string %}
+            {% do invocation_args_dict.update(
+                {"event_time_end": invocation_args_dict.event_time_end.strftime(dbt_artifacts.get_strftime_format())}
+            ) %}
+        {% endif%}
     {% endif %}
 
     {{ log(invocation_args_dict) }}
@@ -229,7 +233,7 @@
         )
     {% endset %}
     {{ invocation_values }}
-    
+
 {% endmacro -%}
 
 {% macro trino__get_invocations_dml_sql() -%}
@@ -251,7 +255,7 @@
             '{{ env_var("DBT_CLOUD_RUN_ID", "") }}', {# dbt_cloud_run_id #}
             '{{ env_var("DBT_CLOUD_RUN_REASON_CATEGORY", "") }}', {# dbt_cloud_run_reason_category #}
             '{{ env_var('DBT_CLOUD_RUN_REASON', '') | replace("'","''") }}', {# dbt_cloud_run_reason #}
-            
+
             {% if var('env_vars', none) %}
                 {% set env_vars_dict = {} %}
                 {% for env_variable in var('env_vars') %}

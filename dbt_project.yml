@@ -12,7 +12,7 @@ clean-targets: # folders to be removed by `dbt clean`
 models:
   dbt_artifacts:
     +materialized: view
-    +file_format: delta
+    +file_format: '{{ "delta" if target.name == "databricks" else "" }}'
     sources:
       +materialized: incremental
       +full_refresh: false

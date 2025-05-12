@@ -15,7 +15,7 @@ with
             {{ dbt.cast('store_id', api.Column.translate_type('integer') ) }} as store_id,
             {{ dbt.cast('store_location', api.Column.translate_type('string') ) }} as store_location,
             {{ dbt.cast('product_id', api.Column.translate_type('integer') ) }} as product_id,
-            {{ dbt.cast('unit_price', api.Column.translate_type('numeric') ) }} as unit_price,
+            {{ dbt.cast('unit_price', dbt_artifacts.type_numeric() ) }} as unit_price,
             {{ dbt.cast('product_category', api.Column.translate_type('string') ) }} as product_category,
             {{ dbt.cast('product_type', api.Column.translate_type('string') ) }} as product_type,
             {{ dbt.cast('product_detail', api.Column.translate_type('string') ) }} as product_detail
@@ -25,9 +25,9 @@ with
     , transaction_interval as (
         select
             transaction_id,
-            case left(transaction_time, 2)
-                when '07' then 0
-                when '08' then -1
+            case
+                when {{ dbt_artifacts.str_left('transaction_time', 2) }} = '07' then 0
+                when {{ dbt_artifacts.str_left('transaction_time', 2) }} = '08' then -1
                 else -2
             end as transaction_interval
         from mb_transactions

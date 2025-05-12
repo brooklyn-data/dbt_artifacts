@@ -58,7 +58,7 @@ jobs:
         image: trinodb/trino
         ports:
           - 8080:8080
-          
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -132,7 +132,7 @@ jobs:
       shell: pwsh
       run: |
           echo "Create dbt login with sysadmin"
-          sqlcmd -Q "CREATE LOGIN dbt WITH PASSWORD = '123', CHECK_POLICY = OFF, CHECK_EXPIRATION = OFF" -d "dbt_artifact_integrationtests"
+          sqlcmd -Q "CREATE LOGIN dbt WITH PASSWORD = '123Administrator', CHECK_POLICY = OFF, CHECK_EXPIRATION = OFF" -d "dbt_artifact_integrationtests"
           sqlcmd -Q "ALTER SERVER ROLE sysadmin ADD MEMBER dbt" -d "dbt_artifact_integrationtests"
     - name: Install tox
       run: python3 -m pip install tox

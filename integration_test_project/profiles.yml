@@ -63,10 +63,10 @@ dbt_artifacts:
       trust_cert: True
       Encrypt: False
       user: dbt
-      password: "123"
+      password: "123Administrator"
     trino:
       type: trino
-      method: none 
+      method: none
       user: trino
       password: password
       host: localhost
