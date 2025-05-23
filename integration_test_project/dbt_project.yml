@@ -25,8 +25,8 @@ vars:
 
 models:
   +persist_docs:
-    relation: true
-    columns: true
+    relation: '{{ target.name != "sqlserver" }}' # sqlserver-adapter doesn't support this
+    columns: '{{ target.name != "sqlserver" }}' # sqlserver-adapter doesn't support this
 seeds:
   +quote_columns: false
 

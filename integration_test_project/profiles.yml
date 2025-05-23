@@ -48,3 +48,25 @@ dbt_artifacts:
       dbname: postgres
       schema: public
       threads: 8
+    sqlserver:
+      type: sqlserver
+      driver: 'ODBC Driver 18 for SQL Server'
+      server: localhost
+      port: 1433
+      database: dbt_artifact_integrationtests
+      schema: dbo
+      windows_login: False
+      trust_cert: True
+      Encrypt: False
+      user: dbt
+      password: "123Administrator"
+    trino:
+      type: trino
+      method: none
+      user: trino
+      password: password
+      host: localhost
+      database: memory
+      schema: default
+      port: 8080
+      threads: 8

@@ -2,24 +2,38 @@
 
     {# Need to remove keys with results that can't be handled properly #}
     {# warn_error_options - returns a python object in 1.5 #}
-    {% if 'warn_error_options' in invocation_args_dict %}
+    {% if "warn_error_options" in invocation_args_dict %}
         {% if invocation_args_dict.warn_error_options is not string %}
             {% if invocation_args_dict.warn_error_options.include %}
                 {% set include_options = invocation_args_dict.warn_error_options.include %}
-            {% else %}
-                {% set include_options = '' %}
+            {% else %} {% set include_options = "" %}
             {% endif %}
             {% if invocation_args_dict.warn_error_options.exclude %}
                 {% set exclude_options = invocation_args_dict.warn_error_options.exclude %}
-            {% else %}
-                {% set exclude_options = '' %}
+            {% else %} {% set exclude_options = "" %}
             {% endif %}
-            {% set warn_error_options = {'include': include_options, 'exclude': exclude_options} %}
-            {%- do invocation_args_dict.update({'warn_error_options': warn_error_options}) %}
+            {% set warn_error_options = {"include": include_options, "exclude": exclude_options} %}
+            {%- do invocation_args_dict.update({"warn_error_options": warn_error_options}) %}
         {% endif %}
     {% endif %}
 
-    {{ return(adapter.dispatch('get_invocations_dml_sql', 'dbt_artifacts')()) }}
+    {% if "event_time_start" in invocation_args_dict %}
+        {% if invocation_args_dict.event_time_start is not string %}
+            {% do invocation_args_dict.update(
+                {"event_time_start": invocation_args_dict.event_time_start.strftime(dbt_artifacts.get_strftime_format())}
+            ) %}
+        {% endif%}
+    {% endif %}
+    {% if "event_time_end" in invocation_args_dict %}
+        {% if invocation_args_dict.event_time_end is not string %}
+            {% do invocation_args_dict.update(
+                {"event_time_end": invocation_args_dict.event_time_end.strftime(dbt_artifacts.get_strftime_format())}
+            ) %}
+        {% endif%}
+    {% endif %}
+
+    {{ log(invocation_args_dict) }}
+    {{ return(adapter.dispatch("get_invocations_dml_sql", "dbt_artifacts")()) }}
 {%- endmacro %}
 
 {% macro default__get_invocations_dml_sql() -%}
@@ -221,3 +235,141 @@
     {{ invocation_values }}
 
 {% endmacro -%}
+
+{% macro trino__get_invocations_dml_sql() -%}
+    {% set invocation_values %}
+        (
+            '{{ invocation_id }}', {# command_invocation_id #}
+            '{{ dbt_version }}', {# dbt_version #}
+            '{{ project_name }}', {# project_name #}
+            TIMESTAMP '{{ run_started_at }}', {# run_started_at #}
+            '{{ flags.WHICH }}', {# dbt_command #}
+            {{ flags.FULL_REFRESH }}, {# full_refresh_flag #}
+            '{{ target.profile_name }}', {# target_profile_name #}
+            '{{ target.name }}', {# target_name #}
+            '{{ target.schema }}', {# target_schema #}
+            {{ target.threads }}, {# target_threads #}
+
+            '{{ env_var("DBT_CLOUD_PROJECT_ID", "") }}', {# dbt_cloud_project_id #}
+            '{{ env_var("DBT_CLOUD_JOB_ID", "") }}', {# dbt_cloud_job_id #}
+            '{{ env_var("DBT_CLOUD_RUN_ID", "") }}', {# dbt_cloud_run_id #}
+            '{{ env_var("DBT_CLOUD_RUN_REASON_CATEGORY", "") }}', {# dbt_cloud_run_reason_category #}
+            '{{ env_var('DBT_CLOUD_RUN_REASON', '') | replace("'","''") }}', {# dbt_cloud_run_reason #}
+
+            {% if var('env_vars', none) %}
+                {% set env_vars_dict = {} %}
+                {% for env_variable in var('env_vars') %}
+                    {% do env_vars_dict.update({env_variable: (env_var(env_variable, ''))}) %}
+                {% endfor %}
+                '{{ tojson(env_vars_dict) | replace("'","''") }}', {# env_vars #}
+            {% else %}
+                null, {# env_vars #}
+            {% endif %}
+
+            {% if var('dbt_vars', none) %}
+                {% set dbt_vars_dict = {} %}
+                {% for dbt_var in var('dbt_vars') %}
+                    {% do dbt_vars_dict.update({dbt_var: (var(dbt_var, ''))}) %}
+                {% endfor %}
+                '{{ tojson(dbt_vars_dict) | replace("'","''") }}', {# dbt_vars #}
+            {% else %}
+                null, {# dbt_vars #}
+            {% endif %}
+
+            {% if invocation_args_dict.vars %}
+                {# vars - different format for pre v1.5 (yaml vs list) #}
+                {% if invocation_args_dict.vars is string %}
+                    {% set parsed_inv_args_vars = fromyaml(invocation_args_dict.vars) %}
+                    {% do invocation_args_dict.update({'vars': parsed_inv_args_vars}) %}
+                {% endif %}
+            {% endif %}
+
+            '{{ invocation_args_dict | replace("'","''") }}', {# invocation_args #}
+
+            {% set metadata_env = {} %}
+            {% for key, value in dbt_metadata_envs.items() %}
+                {% do metadata_env.update({key: value}) %}
+            {% endfor %}
+            '{{ tojson(metadata_env) | replace("'","''") }}' {# dbt_custom_envs #}
+        )
+    {% endset %}
+    {{ invocation_values }}
+
+{% endmacro -%}
+
+
+{% macro sqlserver__get_invocations_dml_sql() -%}
+    {% set invocation_values %}
+    select
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        nullif("11", ''),
+        nullif("12", ''),
+        nullif("13", ''),
+        nullif("14", ''),
+        nullif("15", ''),
+        "16",
+        "17",
+        "18",
+        "19"
+    from (values
+    (
+        '{{ invocation_id }}', {# command_invocation_id #}
+        '{{ dbt_version }}', {# dbt_version #}
+        '{{ project_name }}', {# project_name #}
+        '{{ run_started_at }}', {# run_started_at #}
+        '{{ flags.WHICH }}', {# dbt_command #}
+        '{{ flags.FULL_REFRESH }}', {# full_refresh_flag #}
+        '{{ target.profile_name }}', {# target_profile_name #}
+        '{{ target.name }}', {# target_name #}
+        '{{ target.schema }}', {# target_schema #}
+        {{ target.threads }}, {# target_threads #}
+
+        '{{ env_var('DBT_CLOUD_PROJECT_ID', '') }}', {# dbt_cloud_project_id #}
+        '{{ env_var('DBT_CLOUD_JOB_ID', '') }}', {# dbt_cloud_job_id #}
+        '{{ env_var('DBT_CLOUD_RUN_ID', '') }}', {# dbt_cloud_run_id #}
+        '{{ env_var('DBT_CLOUD_RUN_REASON_CATEGORY', '') }}', {# dbt_cloud_run_reason_category #}
+        '{{ env_var('DBT_CLOUD_RUN_REASON', '') | replace("'","''") }}', {# dbt_cloud_run_reason #}
+        {% if var('env_vars', none) %}
+            {% set env_vars_dict = {} %}
+            {% for env_variable in var('env_vars') %}
+                {% do env_vars_dict.update({env_variable: (env_var(env_variable, '') | replace("'", "''"))}) %}
+            {% endfor %}
+            '{{ tojson(env_vars_dict) }}', {# env_vars #}
+        {% else %}
+            null, {# env_vars #}
+        {% endif %}
+        {% if var('dbt_vars', none) %}
+            {% set dbt_vars_dict = {} %}
+            {% for dbt_var in var('dbt_vars') %}
+                {% do dbt_vars_dict.update({dbt_var: (var(dbt_var, '') | replace("'", "''"))}) %}
+            {% endfor %}
+            '{{ tojson(dbt_vars_dict) }}', {# dbt_vars #}
+        {% else %}
+            null, {# dbt_vars #}
+        {% endif %}
+        '{{ tojson(invocation_args_dict)  | replace("'", "''") }}', {# invocation_args #}
+
+        {% set metadata_env = {} %}
+        {% for key, value in dbt_metadata_envs.items() %}
+            {% do metadata_env.update({key: (value | replace("'", "''"))}) %}
+        {% endfor %}
+        '{{ tojson(metadata_env) }}' {# dbt_custom_envs #}
+
+    )
+
+        ) v ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19")
+
+    {% endset %}
+    {{ invocation_values }}
+
+{% endmacro -%}
+

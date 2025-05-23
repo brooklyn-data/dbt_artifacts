@@ -80,6 +80,15 @@ macros:
         type: string
         description: |
           The target schema that the v1 artifact sources are in - does not have to be different to `old_schema`
+  ## UTILS ##
+  - name: copy_model
+    description: |
+      A macro to help encapsulate model copying, specifically for the upload_model macro. Namely, this macro is helpful as the
+      contract for the graph nodes is prone to change without warning. This macro makes handling for these changes easier and more DRY.
+    arguments:
+      - name: model
+        type: Node
+        description: A node object from the dbt graph
 
   ## UPLOAD INDIVIDUAL DATASETS ##
   - name: upload_exposures
