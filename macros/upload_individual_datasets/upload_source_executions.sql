@@ -46,10 +46,10 @@
                 '{{ source.node.name }}', {# name #}
                 '{{ source.node.source_name }}', {# source_name #}
                 '{{ source.node.loaded_at_field }}', {# loaded_at_field #}
-                {{ source.node.freshness.warn_after.count }}, {# warn_after_count #}
-                '{{ source.node.freshness.warn_after.period }}', {# warn_after_period #}
-                {{ source.node.freshness.error_after.count }}, {# error_after_count #}
-                '{{ source.node.freshness.error_after.period }}', {# error_after_period #}
+                {% if source.node.freshness.warn_after.count is not none %}{{ source.node.freshness.warn_after.count }}{% else %}null{% endif %}, {# warn_after_count #}
+                {% if source.node.freshness.warn_after.period is not none %}'{{ source.node.freshness.warn_after.period }}'{% else %}null{% endif %}, {# warn_after_period #}
+                {% if source.node.freshness.error_after.count is not none %}{{ source.node.freshness.error_after.count }}{% else %}null{% endif %}, {# error_after_count #}
+                {% if source.node.freshness.error_after.period is not none %}'{{ source.node.freshness.error_after.period }}'{% else %}null{% endif %}, {# error_after_period #}
                 '{{ source.max_loaded_at }}', {# max_loaded_at #}
                 '{{ source.snapshotted_at }}', {# snapshotted_at #}
                 {{ source.age }}, {# age #}
@@ -150,10 +150,10 @@
                 '{{ source.node.name }}', {# name #}
                 '{{ source.node.source_name }}', {# source_name #}
                 '{{ source.node.loaded_at_field }}', {# loaded_at_field #}
-                {{ source.node.freshness.warn_after.count }}, {# warn_after_count #}
-                '{{ source.node.freshness.warn_after.period }}', {# warn_after_period #}
-                {{ source.node.freshness.error_after.count }}, {# error_after_count #}
-                '{{ source.node.freshness.error_after.period }}', {# error_after_period #}
+                {% if source.node.freshness.warn_after.count is not none %}{{ source.node.freshness.warn_after.count }}{% else %}null{% endif %}, {# warn_after_count #}
+                {% if source.node.freshness.warn_after.period is not none %}'{{ source.node.freshness.warn_after.period }}'{% else %}null{% endif %}, {# warn_after_period #}
+                {% if source.node.freshness.error_after.count is not none %}{{ source.node.freshness.error_after.count }}{% else %}null{% endif %}, {# error_after_count #}
+                {% if source.node.freshness.error_after.period is not none %}'{{ source.node.freshness.error_after.period }}'{% else %}null{% endif %}, {# error_after_period #}
                 '{{ source.max_loaded_at }}', {# max_loaded_at #}
                 '{{ source.snapshotted_at }}', {# snapshotted_at #}
                 {{ source.age }}, {# age #}
