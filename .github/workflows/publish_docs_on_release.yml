@@ -39,7 +39,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install Python packages
-        run: python -m pip install dbt-snowflake~=1.8.0
+        run: python -m pip install dbt-snowflake~=1.9.0
 
       - name: Test database connection
         run: dbt debug
