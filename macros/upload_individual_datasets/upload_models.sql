@@ -168,3 +168,38 @@
     {% endif %}
 {% endmacro -%}
 
+
+{% macro trino__get_models_dml_sql(models) -%}
+    {% if models != [] %}
+        {% set model_values %}
+            {% for model in models -%}
+                {% do model.pop('raw_code', None) %}
+                (
+                    '{{ invocation_id }}', {# command_invocation_id #}
+                    '{{ model.unique_id }}', {# node_id #}
+                    TIMESTAMP '{{ run_started_at }}', {# run_started_at #}
+                    '{{ model.database }}', {# database #}
+                    '{{ model.schema }}', {# schema #}
+                    '{{ model.name }}', {# name #}
+                    ARRAY {{ model.depends_on.nodes }}, {# depends_on_nodes #}
+                    '{{ model.package_name }}', {# package_name #}
+                    '{{ model.original_file_path }}', {# path #}
+                    '{{ model.checksum.checksum }}', {# checksum #}
+                    '{{ model.config.materialized }}', {# materialization #}
+                    ARRAY {{ model.tags }}, {# tags #}
+                    '{{ tojson(model.config.meta) | replace("'", "''") }}', {# meta #}
+                    '{{ model.alias }}', {# alias #}
+                    {% if var('dbt_artifacts_exclude_all_results', false) %}
+                        null
+                    {% else %}
+                        '{{ tojson(model) | replace("'", "''") }}' {# all_results #}
+                    {% endif %}
+                )
+                {%- if not loop.last %},{%- endif %}
+            {%- endfor %}
+        {% endset %}
+        {{ model_values }}
+    {% else %}
+        {{ return("") }}
+    {% endif %}
+{%- endmacro %}
