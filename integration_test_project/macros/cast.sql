@@ -25,6 +25,14 @@
       'snowflake': 'DATE',
       'databricks': 'DATE',
       'trino': 'DATE'
+    },
+    'timestamp': {
+      'postgres': 'TIMESTAMP',
+      'sqlserver': 'DATETIME2',
+      'bigquery': 'TIMESTAMP',
+      'snowflake': 'TIMESTAMP',
+      'databricks': 'TIMESTAMP',
+      'trino': 'TIMESTAMP'
     }
   } %}
 
@@ -38,5 +46,6 @@
     {% set resolved_type = sql_type_or_logical %}
   {% endif %}
 
-  CAST({{ field }} AS {{ resolved_type }})
+  cast({{ field }} as {{ resolved_type }})
+
 {% endmacro %}
