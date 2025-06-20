@@ -4,10 +4,6 @@ sources:
   - name: dummy_source
     database: "{% if target.type not in ('spark', 'databricks') %}{{ var('dbt_artifacts_database', target.database) }}{% endif %}"
     schema: "{{ target.schema }}"
-    freshness:
-      error_after: {count: 24, period: hour}
-      filter: dayname(updatedat) not in ('Sunday', 'Monday')
-    loaded_at_field: convert_timezone('UTC', load_timestamp)
     tables:
       - name: doesnt_exist
       - name: '"GROUP"'
@@ -16,7 +12,8 @@ sources:
     database: "{% if target.type not in ('spark', 'databricks') %}{{ var('dbt_artifacts_database', target.database) }}{% endif %}"
     schema: "{{ target.schema }}"
     freshness:
-      error_after: {count: 1, period: hour}
+      error_after: {count: 3, period: day}
+      warn_after: {count: 1, period: day}
     loaded_at_field: load_timestamp
     tables:
       - name: freshness
