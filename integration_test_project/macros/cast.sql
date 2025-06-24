@@ -10,7 +10,7 @@
       'databricks': 'STRING',
       'trino': 'VARCHAR'
     },
-    'numeric': {
+    'integer': {
       'postgres': 'NUMERIC',
       'sqlserver': 'FLOAT',
       'bigquery': 'FLOAT64',
