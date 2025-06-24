@@ -7,18 +7,18 @@
 with
     mb_transactions as (
         select
-            {{ safe_cast('transaction_id', 'integer') }} as transaction_id,
-            {{ safe_cast('transaction_date','date') }} as transaction_date,
-            {{ safe_cast('transaction_time', 'string') }} as transaction_time,
-            {{ safe_cast('transaction_ts', 'timestamp') }} as transaction_ts,
-            {{ safe_cast('transaction_qty', 'integer') }} as transaction_qty,
-            {{ safe_cast('store_id', 'integer') }} as store_id,
-            {{ safe_cast('store_location', 'string') }} as store_location,
-            {{ safe_cast('product_id', 'integer') }} as product_id,
-            {{ safe_cast('unit_price', dbt_artifacts.type_numeric() ) }} as unit_price,
-            {{ safe_cast('product_category', 'string') }} as product_category,
-            {{ safe_cast('product_type', 'string') }} as product_type,
-            {{ safe_cast('product_detail', 'string') }} as product_detail
+            {{ dbt_artifacts.safe_cast('transaction_id', 'integer') }} as transaction_id,
+            {{ dbt_artifacts.safe_cast('transaction_date','date') }} as transaction_date,
+            {{ dbt_artifacts.safe_cast('transaction_time', 'string') }} as transaction_time,
+            {{ dbt_artifacts.safe_cast('transaction_ts', 'timestamp') }} as transaction_ts,
+            {{ dbt_artifacts.safe_cast('transaction_qty', 'integer') }} as transaction_qty,
+            {{ dbt_artifacts.safe_cast('store_id', 'integer') }} as store_id,
+            {{ dbt_artifacts.safe_cast('store_location', 'string') }} as store_location,
+            {{ dbt_artifacts.safe_cast('product_id', 'integer') }} as product_id,
+            {{ dbt_artifacts.safe_cast('unit_price', dbt_artifacts.type_numeric() ) }} as unit_price,
+            {{ dbt_artifacts.safe_cast('product_category', 'string') }} as product_category,
+            {{ dbt_artifacts.safe_cast('product_type', 'string') }} as product_type,
+            {{ dbt_artifacts.safe_cast('product_detail', 'string') }} as product_detail
         from {{ ref('microbatch_seed') }}
     )
 
@@ -38,7 +38,7 @@ with
         select
             transaction_id,
             transaction_time,
-            {{ safe_cast(dbt.current_timestamp(), 'date') }} as todays_date
+            {{ dbt_artifacts.safe_cast(dbt.current_timestamp(), 'date') }} as todays_date
         from mb_transactions
     )
 
@@ -47,7 +47,7 @@ with
             transaction_id,
             transaction_time,
             todays_date,
-            {{ safe_cast('todays_date', 'string') }} as todays_date__str
+            {{ dbt_artifacts.safe_cast('todays_date', 'string') }} as todays_date__str
         from transaction_time_today
     )
 
@@ -55,13 +55,13 @@ with
         select
             transaction_id,
             todays_date,
-            {{ safe_concat(['todays_date__str', "' '", 'transaction_time']) }} as transaction_time__ts
+            {{ dbt_artifacts.safe_concat(['todays_date__str', "' '", 'transaction_time']) }} as transaction_time__ts
         from transaction_time_today_string
     )
 
 select
     t.*,
-    {{ safe_cast('tt.transaction_time__ts', 'timestamp') }} as transaction_ts__hourly,
+    {{ dbt_artifacts.safe_cast('tt.transaction_time__ts', 'timestamp') }} as transaction_ts__hourly,
 
     {{ dbt.dateadd(
         datepart='day',
