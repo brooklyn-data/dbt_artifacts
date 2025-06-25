@@ -55,7 +55,7 @@ with
         select
             transaction_id,
             todays_date,
-            {{ dbt_artifacts.safe_concat(['todays_date__str', "' '", 'transaction_time']) }} as transaction_time__ts
+            {{ dbt.concat(['todays_date__str', "' '", 'transaction_time']) }} as transaction_time__ts
         from transaction_time_today_string
     )
 
