@@ -12,7 +12,7 @@ select
     cast(null as {{ type_timestamp() }}) as compile_started_at,
     cast(null as {{ type_timestamp() }}) as query_completed_at,
     cast(null as {{ type_float() }}) as total_node_runtime,
-    cast(null as {{ type_string() }}) as schema,
+    cast(null as {{ type_string() }}) as {{ quote_column('schema') }},
     cast(null as {{ type_string() }}) as name,
     cast(null as {{ type_string() }}) as source_name,
     cast(null as {{ type_string() }}) as loaded_at_field,
