@@ -17,7 +17,9 @@ source_executions as (
         compile_started_at,
         query_completed_at,
         total_node_runtime,
-        schema, -- noqa
+        {% if target.type == "sqlserver" %} "schema"
+            {% else %} schema
+        {% endif %},
         name,
         source_name,
         loaded_at_field,
