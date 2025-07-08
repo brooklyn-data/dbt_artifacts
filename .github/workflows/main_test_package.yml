@@ -34,7 +34,7 @@ jobs:
   integration:
     strategy:
       matrix:
-        warehouse: ["snowflake", "bigquery", "postgres"]
+        warehouse: ["snowflake", "bigquery", "postgres", "trino"]
         version: ["1_3_0", "1_4_0", "1_5_0", "1_6_0", "1_7_0", "1_8_0", "1_9_0"]
     runs-on: ubuntu-latest
     permissions:
@@ -53,6 +53,11 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
+
+      trino:
+        image: trinodb/trino
+        ports:
+          - 8080:8080
 
     steps:
       - name: Checkout
@@ -109,7 +114,7 @@ jobs:
       matrix:
         # When supporting a new version, update the list here
         version: ["1_3_0", "1_4_0", "1_7_0", "1_8_0"]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     environment:
       name: Approve Integration Tests
 
@@ -127,7 +132,7 @@ jobs:
       shell: pwsh
       run: |
           echo "Create dbt login with sysadmin"
-          sqlcmd -Q "CREATE LOGIN dbt WITH PASSWORD = '123', CHECK_POLICY = OFF, CHECK_EXPIRATION = OFF" -d "dbt_artifact_integrationtests"
+          sqlcmd -Q "CREATE LOGIN dbt WITH PASSWORD = '123Administrator', CHECK_POLICY = OFF, CHECK_EXPIRATION = OFF" -d "dbt_artifact_integrationtests"
           sqlcmd -Q "ALTER SERVER ROLE sysadmin ADD MEMBER dbt" -d "dbt_artifact_integrationtests"
     - name: Install tox
       run: python3 -m pip install tox
