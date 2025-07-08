@@ -128,3 +128,32 @@
     {% endif %}
 {% endmacro -%}
 
+
+
+{% macro trino__get_tests_dml_sql(tests) -%}
+    {% if tests != [] %}
+        {% set test_values %}
+            {% for test in tests -%}
+                (
+                    '{{ invocation_id }}', {# command_invocation_id #}
+                    '{{ test.unique_id }}', {# node_id #}
+                    TIMESTAMP '{{ run_started_at }}', {# run_started_at #}
+                    '{{ test.name }}', {# name #}
+                    ARRAY {{ test.depends_on.nodes }}, {# depends_on_nodes #}
+                    '{{ test.package_name }}', {# package_name #}
+                    '{{ test.original_file_path }}', {# test_path #}
+                    ARRAY {{ test.tags }}, {# tags #}
+                    {% if var('dbt_artifacts_exclude_all_results', false) %}
+                        null
+                    {% else %}
+                        '{{ tojson(test) | replace("'", "''") }}' {# all_results #}
+                    {% endif %}
+                )
+                {%- if not loop.last %},{%- endif %}
+            {%- endfor %}
+        {% endset %}
+        {{ test_values }}
+    {% else %}
+        {{ return("") }}
+    {% endif %}
+{%- endmacro %}

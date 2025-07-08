@@ -1,7 +1,7 @@
 name: "dbt_artifacts"
-version: "2.9.2"
+version: "2.9.3"
 config-version: 2
-require-dbt-version: [">=1.3.0", "<1.10.0"]
+require-dbt-version: [">=1.3.0", "<1.11.0"]
 profile: "dbt_artifacts"
 
 clean-targets: # folders to be removed by `dbt clean`
@@ -12,7 +12,7 @@ clean-targets: # folders to be removed by `dbt clean`
 models:
   dbt_artifacts:
     +materialized: view
-    +file_format: delta
+    +file_format: '{{ "delta" if target.name == "databricks" else "" }}'
     sources:
       +materialized: incremental
       +full_refresh: false
