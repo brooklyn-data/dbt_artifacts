@@ -221,7 +221,7 @@
 
 {% endmacro -%}
 
-{% macro trino__get_invocations_dml_sql() -%}
+{% macro trino__get_invocations_dml_sql(invocation_args=invocation_args_dict) -%}
     {% set invocation_values %}
         (
             '{{ invocation_id }}', {# command_invocation_id #}
