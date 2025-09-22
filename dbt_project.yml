@@ -12,6 +12,7 @@ clean-targets: # folders to be removed by `dbt clean`
 models:
   dbt_artifacts:
     +materialized: view
+    +schema: "{{ var('dbt_artifacts_schema') }}"
     +file_format: '{{ "delta" if target.name == "databricks" else "" }}'
     sources:
       +materialized: incremental
@@ -21,3 +22,5 @@ models:
         columns: '{{ target.name != "databricks" and target.type != "sqlserver" }}'
         relation: '{{ target.type != "sqlserver" }}'
       +as_columnstore: False
+vars:
+  dbt_artifacts_schema: 
