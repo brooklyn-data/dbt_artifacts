@@ -63,6 +63,7 @@
 {% macro redshift__type_string() %}
    varchar(max)
 {% endmacro %}
+    
 {% macro trino__type_array() %}
    array(varchar)
 {% endmacro %}
