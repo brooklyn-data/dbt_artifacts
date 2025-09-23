@@ -16,7 +16,7 @@ with
             total_node_runtime,
             rows_affected,
             materialization,
-            {% if target.type == "sqlserver" %} "schema"
+            {% if target.type == "sqlserver" or target.type == "synapse" or target.type == "fabric" %} "schema"
             {% else %} schema
             {% endif %},  -- noqa
             name,

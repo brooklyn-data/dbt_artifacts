@@ -201,7 +201,7 @@
 {%- endmacro %}
 
 
-{% macro sqlserver__get_model_executions_dml_sql(models) -%}
+{% macro fabric__get_model_executions_dml_sql(models) -%}
     {% if models != [] %}
         {% set model_execution_values %}
         select

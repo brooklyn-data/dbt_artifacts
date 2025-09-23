@@ -298,7 +298,7 @@
 {% endmacro -%}
 
 
-{% macro sqlserver__get_invocations_dml_sql() -%}
+{% macro fabric__get_invocations_dml_sql() -%}
     {% set invocation_values %}
     select
         "1",

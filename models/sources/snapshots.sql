@@ -5,10 +5,10 @@ select
     cast(null as {{ type_string() }}) as command_invocation_id,
     cast(null as {{ type_string() }}) as node_id,
     cast(null as {{ type_timestamp() }}) as run_started_at,
-    cast(null as {{ type_string() }}) as {% if target.type == "sqlserver" %} "database"
+    cast(null as {{ type_string() }}) as {% if target.type == "sqlserver" or target.type == "synapse" or target.type == "fabric" %} "database"
     {% else %} database
     {% endif %},
-    cast(null as {{ type_string() }}) as {% if target.type == "sqlserver" %} "schema"
+    cast(null as {{ type_string() }}) as {% if target.type == "sqlserver" or target.type == "synapse" or target.type == "fabric" %} "schema"
     {% else %} schema
     {% endif %},
     cast(null as {{ type_string() }}) as name,

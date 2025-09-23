@@ -107,7 +107,7 @@
     {% endif %}
 {%- endmacro %}
 
-{% macro sqlserver__get_seeds_dml_sql(seeds) -%}
+{% macro fabric__get_seeds_dml_sql(seeds) -%}
 
     {% if seeds != [] %}
         {% set seed_values %}
