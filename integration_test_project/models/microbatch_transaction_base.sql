@@ -33,7 +33,7 @@ with
         from mb_transactions
     )
 
-    /* do this to prevent and db errors in case we can't self reference ...*/
+    {# do this to prevent and db errors in case we can't self reference ...#}
     , transaction_time_today as (
         select
             transaction_id,
