@@ -96,7 +96,7 @@
 {%- endmacro %}
 
 
-{% macro sqlserver__get_tests_dml_sql(tests) -%}
+{% macro fabric__get_tests_dml_sql(tests) -%}
 
     {% if tests != [] %}
         {% set test_values %}

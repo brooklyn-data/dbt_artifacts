@@ -5,6 +5,8 @@
     'string': {
       'postgres': 'TEXT',
       'sqlserver': 'VARCHAR',
+      'synapse': 'VARCHAR',
+      'fabric': 'VARCHAR',
       'bigquery': 'STRING',
       'snowflake': 'VARCHAR',
       'databricks': 'STRING',
@@ -13,6 +15,8 @@
     'integer': {
       'postgres': 'NUMERIC',
       'sqlserver': 'FLOAT',
+      'synapse': 'FLOAT',
+      'fabric': 'FLOAT',
       'bigquery': 'FLOAT64',
       'snowflake': 'FLOAT',
       'databricks': 'DOUBLE',
@@ -21,6 +25,8 @@
     'date': {
       'postgres': 'DATE',
       'sqlserver': 'DATE',
+      'synapse': 'DATE',
+      'fabric': 'DATE',
       'bigquery': 'DATE',
       'snowflake': 'DATE',
       'databricks': 'DATE',
@@ -29,6 +35,8 @@
     'timestamp': {
       'postgres': 'TIMESTAMP',
       'sqlserver': 'DATETIME2',
+      'synapse': 'DATETIME2',
+      'fabric': 'DATETIME2',
       'bigquery': 'TIMESTAMP',
       'snowflake': 'TIMESTAMP',
       'databricks': 'TIMESTAMP',

@@ -126,7 +126,7 @@
 {%- endmacro %}
 
 
-{% macro sqlserver__get_models_dml_sql(models) -%}
+{% macro fabric__get_models_dml_sql(models) -%}
 
     {% if models != [] %}
         {% set model_values %}

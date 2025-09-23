@@ -16,7 +16,7 @@ select
         cast(null as {{ type_int() }}) as bytes_processed,
     {% endif %}
     cast(null as {{ type_string() }}) as materialization,
-    cast(null as {{ type_string() }}) as {% if target.type == "sqlserver" %} "schema"
+    cast(null as {{ type_string() }}) as {% if target.type == "sqlserver" or target.type == "synapse" or target.type == "fabric" %} "schema"
     {% else %} schema
     {% endif %},
     cast(null as {{ type_string() }}) as name,

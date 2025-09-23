@@ -13,7 +13,7 @@ select
     cast(null as {{ type_float() }}) as total_node_runtime,
     cast(null as {{ type_int() }}) as rows_affected,
     cast(null as {{ type_string() }}) as materialization,
-    cast(null as {{ type_string() }}) as {% if target.type == "sqlserver" %} "schema"
+    cast(null as {{ type_string() }}) as {% if target.type == "sqlserver" or target.type == "synapse" or target.type == "fabric" %} "schema"
     {% else %} schema
     {% endif %},
     cast(null as {{ type_string() }}) as name,

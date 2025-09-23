@@ -40,19 +40,19 @@ with
             node_id,
             max(
                 case
-                    when was_full_refresh {% if target.type == "sqlserver" %} = 1 {% endif %}
+                    when was_full_refresh {% if target.type == "sqlserver" or target.type == "synapse" or target.type == "fabric" %} = 1 {% endif %}
                     then query_completed_at
                 end
             ) as last_full_refresh_run_completed_at,
             max(
                 case
-                    when was_full_refresh {% if target.type == "sqlserver" %} = 1 {% endif %}
+                    when was_full_refresh {% if target.type == "sqlserver" or target.type == "synapse" or target.type == "fabric" %} = 1 {% endif %}
                     then total_node_runtime
                 end
             ) as last_full_refresh_run_total_runtime,
             max(
                 case
-                    when was_full_refresh {% if target.type == "sqlserver" %} = 1 {% endif %}
+                    when was_full_refresh {% if target.type == "sqlserver" or target.type == "synapse" or target.type == "fabric" %} = 1 {% endif %}
                     then rows_affected
                 end
             ) as last_full_refresh_run_rows_affected
@@ -75,19 +75,19 @@ with
             {% endif %},
             max(
                 case
-                    when not was_full_refresh {% if target.type == "sqlserver" %} = 1 {% endif %}
+                    when not was_full_refresh {% if target.type == "sqlserver" or target.type == "synapse" or target.type == "fabric" %} = 1 {% endif %}
                     then query_completed_at
                 end
             ) as last_incremental_run_completed_at,
             max(
                 case
-                    when not was_full_refresh {% if target.type == "sqlserver" %} = 1 {% endif %}
+                    when not was_full_refresh {% if target.type == "sqlserver" or target.type == "synapse" or target.type == "fabric" %} = 1 {% endif %}
                     then total_node_runtime
                 end
             ) as last_incremental_run_total_runtime,
             max(
                 case
-                    when not was_full_refresh {% if target.type == "sqlserver" %} = 1 {% endif %}
+                    when not was_full_refresh {% if target.type == "sqlserver" or target.type == "synapse" or target.type == "fabric" %} = 1 {% endif %}
                     then rows_affected
                 end
             ) as last_incremental_run_rows_affected
