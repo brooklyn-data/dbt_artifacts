@@ -114,7 +114,7 @@ jobs:
       matrix:
         # When supporting a new version, update the list here
         version: ["1_3_0", "1_4_0", "1_7_0", "1_8_0"]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     environment:
       name: Approve Integration Tests
 
