@@ -3,6 +3,8 @@ version: 2
 models:
 - name: dim_dbt__seeds
   description: Dimension model that contains data about seeds.
+  config:
+    alias: adt_dim_seeds
   columns:
   - name: checksum
     description: '{{ doc("checksum") }}'

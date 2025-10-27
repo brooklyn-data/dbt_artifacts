@@ -3,6 +3,8 @@ version: 2
 models:
   - name: models
     description: Staging model that contains metadata about model executions. One row per node per run.
+    config:
+      alias: adt_raw_models
     columns:
       - name: command_invocation_id
         description: '{{ doc("command_invocation_id") }}'

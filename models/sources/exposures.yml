@@ -3,6 +3,8 @@ version: 2
 models:
   - name: exposures
     description: Base model for data about exposure exections. One row per node per run.
+    config:
+      alias: adt_raw_exposures
     columns:
       - name: command_invocation_id
         description: '{{ doc("command_invocation_id") }}'

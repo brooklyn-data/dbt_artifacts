@@ -3,6 +3,8 @@ version: 2
 models:
   - name: stg_dbt__seed_executions
     description: Staging model that contains data about seed executions. One row per seed execution.
+    config:
+      alias: adt_stg_seed_executions
     columns:
       - name: command_invocation_id
         description: '{{ doc("command_invocation_id") }}'

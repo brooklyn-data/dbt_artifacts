@@ -3,6 +3,8 @@ version: 2
 models:
 - name: stg_dbt__tests
   description: Staging model that contains metadata about test executions. One row per node per run.
+  config:
+    alias: adt_stg_tests
   columns:
   - name: command_invocation_id
     description: '{{ doc("command_invocation_id") }}'

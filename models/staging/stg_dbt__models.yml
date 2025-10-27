@@ -3,6 +3,8 @@ version: 2
 models:
 - name: stg_dbt__models
   description: Staging model that contains metadata about model executions. One row per node per run.
+  config:
+    alias: adt_stg_models
   columns:
   - name: checksum
     description: '{{ doc("checksum") }}'

@@ -3,6 +3,8 @@ version: 2
 models:
   - name: invocations
     description: Base model for data about the invocations of dbt. One row per run.
+    config:
+      alias: adt_raw_invocations
     columns:
       - name: command_invocation_id
         description: '{{ doc("command_invocation_id") }}'

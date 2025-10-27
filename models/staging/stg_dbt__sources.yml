@@ -3,6 +3,8 @@ version: 2
 models:
 - name: stg_dbt__sources
   description: Staging model that contains data about sources. One row per node per execution.
+  config:
+    alias: adt_stg_sources
   columns:
   - name: command_invocation_id
     description: '{{ doc("command_invocation_id") }}'

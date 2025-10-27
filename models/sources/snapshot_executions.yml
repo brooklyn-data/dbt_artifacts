@@ -3,6 +3,8 @@ version: 2
 models:
   - name: snapshot_executions
     description: Base model for data about snapshot executions. One row per snapshot execution.
+    config:
+      alias: adt_raw_snapshot_executions
     columns:
       - name: command_invocation_id
         description: '{{ doc("command_invocation_id") }}'

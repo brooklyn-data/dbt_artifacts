@@ -3,6 +3,8 @@ version: 2
 models:
   - name: fct_dbt__model_executions
     description: Fact model that contains data about model executions.
+    config:
+      alias: adt_fact_model_executions
     columns:
       - name: command_invocation_id
         description: '{{ doc("command_invocation_id") }}'

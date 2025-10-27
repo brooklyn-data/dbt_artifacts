@@ -3,6 +3,8 @@ version: 2
 models:
   - name: tests
     description: Base model for metadata about test executions. One row per node per run.
+    config:
+      alias: adt_raw_tests
     columns:
       - name: command_invocation_id
         description: '{{ doc("command_invocation_id") }}'

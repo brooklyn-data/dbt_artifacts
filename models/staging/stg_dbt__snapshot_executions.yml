@@ -3,6 +3,8 @@ version: 2
 models:
   - name: stg_dbt__snapshot_executions
     description: Staging model that contains data about snapshot executions. One row per snapshot execution.
+    config:
+      alias: adt_stg_snapshot_executions
     columns:
       - name: command_invocation_id
         description: '{{ doc("command_invocation_id") }}'

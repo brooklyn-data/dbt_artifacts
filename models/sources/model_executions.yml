@@ -3,6 +3,8 @@ version: 2
 models:
   - name: model_executions
     description: Base model for data about model executions. One row per model execution.
+    config:
+      alias: adt_raw_model_executions
     columns:
       - name: command_invocation_id
         description: '{{ doc("command_invocation_id") }}'

@@ -3,6 +3,8 @@ version: 2
 models:
 - name: stg_dbt__snapshots
   description: Staging model that contains metadata about seed executions. One row per node per run.
+  config:
+    alias: adt_stg_snapshots
   columns:
   - name: checksum
     description: '{{ doc("checksum") }}'

@@ -3,6 +3,8 @@ version: 2
 models:
 - name: stg_dbt__exposures
   description: Staging model that contains data about exposure exections. One row per node per run.
+  config:
+    alias: adt_stg_exposures
   columns:
   - name: command_invocation_id
     description: '{{ doc("command_invocation_id") }}'

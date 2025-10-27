@@ -3,6 +3,8 @@ version: 2
 models:
 - name: stg_dbt__invocations
   description: Staging model that contains data about the invocations of dbt. One row per run.
+  config:
+    alias: adt_stg_invocations
   columns:
   - name: command_invocation_id
     description: '{{ doc("command_invocation_id") }}'

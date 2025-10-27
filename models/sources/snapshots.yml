@@ -3,6 +3,8 @@ version: 2
 models:
   - name: snapshots
     description: Base model for metadata about seed executions. One row per node per run.
+    config:
+      alias: adt_raw_snapshots
     columns:
       - name: command_invocation_id
         description: '{{ doc("command_invocation_id") }}'
