@@ -75,6 +75,28 @@ packages:
     dbt run --select dbt_artifacts
     ```
 
+### Selective uploads (static vs execution)
+
+This package now includes two helper macros to separate static metadata uploads from execution result uploads:
+
+- `dbt_artifacts.upload_static_artifacts()` uploads: exposures, seeds, snapshots, invocations, sources, tests, and models.
+- `dbt_artifacts.upload_execution_results(results)` uploads: model_executions, seed_executions, test_executions, and snapshot_executions.
+
+The default `dbt_artifacts.upload_results(results)` macro delegates to both (execution only if `results` is non-empty), preserving backward compatibility.
+
+Examples:
+
+```yml
+# Only execution results (e.g., every run)
+on-run-end:
+  - "{% if target.name == 'prod' %}{{ dbt_artifacts.upload_execution_results(results) }}{% endif %}"
+```
+
+```bash
+# Only static artifacts (e.g., in CI when changes detected)
+dbt run-operation upload_static_artifacts
+```
+
 ### Notes on upgrading
 
 Due to the structure of the project, when additional fields are added, the package needs to be re-run to ensure the tables include the new field, or it will simply error on the hook. These changes will always be implemented within a new **minor** version, so make sure that the version you use in `packages.yml` reflects this.

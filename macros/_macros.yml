@@ -253,3 +253,16 @@ macros:
         type: list
         description: |
           The results object from dbt.
+
+  - name: upload_static_artifacts
+    description: |
+      Upload only static artifact datasets: exposures, seeds, snapshots, invocations, sources, tests, and models.
+
+  - name: upload_execution_results
+    description: |
+      Upload only execution result datasets: model_executions, seed_executions, test_executions, and snapshot_executions.
+    arguments:
+      - name: results
+        type: list
+        description: |
+          The results object from dbt.
