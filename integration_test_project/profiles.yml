@@ -52,6 +52,10 @@ dbt_artifacts:
       dbname: postgres
       schema: public
       threads: 8
+    duckdb:
+      type: duckdb
+      path: "test.duckdb"
+      threads: 1
     sqlserver:
       type: sqlserver
       driver: 'ODBC Driver 18 for SQL Server'

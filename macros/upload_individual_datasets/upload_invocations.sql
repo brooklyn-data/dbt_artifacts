@@ -236,6 +236,10 @@
 
 {% endmacro -%}
 
+{% macro duckdb__get_invocations_dml_sql() -%}
+    {{ dbt_artifacts.postgres__get_invocations_dml_sql() }}
+{%- endmacro %}
+
 {% macro trino__get_invocations_dml_sql() -%}
     {% set invocation_values %}
         (

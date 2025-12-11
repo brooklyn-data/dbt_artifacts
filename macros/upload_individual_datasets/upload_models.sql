@@ -122,6 +122,9 @@
     {% endif %}
 {%- endmacro %}
 
+{% macro duckdb__get_models_dml_sql(models) -%}
+    {{ dbt_artifacts.postgres__get_models_dml_sql(models) }}
+{% endmacro %}
 
 {% macro sqlserver__get_models_dml_sql(models) -%}
 

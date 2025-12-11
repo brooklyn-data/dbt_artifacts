@@ -214,6 +214,10 @@
     {% endif %}
 {% endmacro -%}
 
+{% macro duckdb__get_snapshot_executions_dml_sql(snapshots) -%}
+    {{ dbt_artifacts.postgres__get_snapshot_executions_dml_sql(snapshots) }}
+{% endmacro -%}
+
 {% macro sqlserver__get_snapshot_executions_dml_sql(snapshots) -%}
     {% if snapshots != [] %}
         {% set snapshot_execution_values %}

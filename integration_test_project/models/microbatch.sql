@@ -10,7 +10,8 @@
         partition_by = {
             'field': 'store_name',
             'data_type': 'text',
-        }
+        },
+        tags = ['microbatch']
     )
 }}
 

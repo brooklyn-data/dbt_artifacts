@@ -1,6 +1,7 @@
 {{
   config(
     materialized = 'view',
+    tags = ['microbatch']
     )
 }}
 

@@ -95,6 +95,9 @@
     {% endif %}
 {%- endmacro %}
 
+{% macro duckdb__get_tests_dml_sql(tests) -%}
+    {{ dbt_artifacts.postgres__get_tests_dml_sql(tests) }}
+{% endmacro %}
 
 {% macro sqlserver__get_tests_dml_sql(tests) -%}
 
