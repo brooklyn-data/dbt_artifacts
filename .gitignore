@@ -22,3 +22,4 @@ env.sh
 pyproject.toml
 
 .DS_Store
+*.duckdb

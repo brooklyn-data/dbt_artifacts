@@ -57,6 +57,18 @@
 
 {%- endmacro %}
 
+{% macro duckdb__insert_into_metadata_table(relation, fields, content) -%}
+
+    {% set insert_into_table_query %}
+    insert into {{ relation }} {{ fields }}
+    values
+    {{ content }}
+    {% endset %}
+
+    {% do run_query(insert_into_table_query) %}
+
+{%- endmacro %}
+
 {% macro sqlserver__insert_into_metadata_table(relation, fields, content) -%}
 
     {% set insert_into_table_query %}
