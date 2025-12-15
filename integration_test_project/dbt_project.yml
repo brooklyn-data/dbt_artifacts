@@ -10,16 +10,13 @@ test-paths: ["tests"]
 seed-paths: ["seeds"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
-
-target-path: "target"
 clean-targets: ["target", "dbt_packages"]
 
 vars:
   test_dbt_vars_1: dbt_vars_1
   test_dbt_vars_2: dbt_vars_2
   test_dbt_vars_3: dbt_vars_3
-  env_vars:
-    ["TEST_ENV_VAR_NUMBER", "TEST_ENV_VAR_EMPTY", "TEST_ENV_VAR_WITH_QUOTE"]
+  env_vars: ["TEST_ENV_VAR_NUMBER", "TEST_ENV_VAR_EMPTY", "TEST_ENV_VAR_WITH_QUOTE"]
   dbt_vars: ["test_dbt_vars_1", "test_dbt_vars_2", "test_dbt_vars_3"]
   dbt_artifacts_exclude_all_results: true
 
