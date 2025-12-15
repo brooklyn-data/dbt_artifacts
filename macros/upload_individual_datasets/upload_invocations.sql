@@ -16,11 +16,12 @@
             {%- do invocation_args_dict.update({"warn_error_options": warn_error_options}) %}
         {% endif %}
     {% endif %}
+    {% set converted_invocation_args_dict = dbt_artifacts.safe_copy_mapping(invocation_args_dict) %}
 
-    {{ return(adapter.dispatch("get_invocations_dml_sql", "dbt_artifacts")()) }}
+    {{ return(adapter.dispatch("get_invocations_dml_sql", "dbt_artifacts")(converted_invocation_args_dict)) }}
 {%- endmacro %}
 
-{% macro default__get_invocations_dml_sql() -%}
+{% macro default__get_invocations_dml_sql(invocation_args=invocation_args_dict) -%}
     {% set invocation_values %}
     select
         {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(1) }},
@@ -81,7 +82,7 @@
             null, {# dbt_vars #}
         {% endif %}
 
-        '{{ tojson(invocation_args_dict) | replace('\\', '\\\\') | replace("'", "\\'") }}', {# invocation_args #}
+        '{{ tojson(invocation_args) | replace('\\', '\\\\') | replace("'", "\\'") }}', {# invocation_args #}
 
         {% set metadata_env = {} %}
         {% for key, value in dbt_metadata_envs.items() %}
@@ -95,7 +96,7 @@
 
 {% endmacro -%}
 
-{% macro bigquery__get_invocations_dml_sql() -%}
+{% macro bigquery__get_invocations_dml_sql(invocation_args=invocation_args_dict) -%}
     {% set invocation_values %}
         (
         '{{ invocation_id }}', {# command_invocation_id #}
@@ -135,16 +136,16 @@
             null, {# dbt_vars #}
         {% endif %}
 
-        {% if invocation_args_dict.vars %}
+        {% if invocation_args.vars %}
             {# vars - different format for pre v1.5 (yaml vs list) #}
-            {% if invocation_args_dict.vars is string %}
+            {% if invocation_args.vars is string %}
                 {# BigQuery does not handle the yaml-string from "--vars" well, when passed to "parse_json". Workaround is to parse the string, and then "tojson" will properly format the dict as a json-object. #}
-                {% set parsed_inv_args_vars = fromyaml(invocation_args_dict.vars) %}
-                {% do invocation_args_dict.update({'vars': parsed_inv_args_vars}) %}
+                {% set parsed_inv_args_vars = fromyaml(invocation_args.vars) %}
+                {% do invocation_args.update({'vars': parsed_inv_args_vars}) %}
             {% endif %}
         {% endif %}
 
-        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(invocation_args_dict) | replace("'", "\\'")) }}, {# invocation_args #}
+        {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(invocation_args) | replace("'", "\\'")) }}, {# invocation_args #}
 
         {% set metadata_env = {} %}
         {% for key, value in dbt_metadata_envs.items() %}
@@ -158,7 +159,7 @@
 
 {% endmacro -%}
 
-{% macro postgres__get_invocations_dml_sql() -%}
+{% macro postgres__get_invocations_dml_sql(invocation_args=invocation_args_dict) -%}
     {% set invocation_values %}
         (
             '{{ invocation_id }}', {# command_invocation_id #}
@@ -198,16 +199,16 @@
                 null, {# dbt_vars #}
             {% endif %}
 
-            {% if invocation_args_dict.vars %}
+            {% if invocation_args.vars %}
                 {# vars - different format for pre v1.5 (yaml vs list) #}
-                {% if invocation_args_dict.vars is string %}
+                {% if invocation_args.vars is string %}
                     {# BigQuery does not handle the yaml-string from "--vars" well, when passed to "parse_json". Workaround is to parse the string, and then "tojson" will properly format the dict as a json-object. #}
-                    {% set parsed_inv_args_vars = fromyaml(invocation_args_dict.vars) %}
-                    {% do invocation_args_dict.update({'vars': parsed_inv_args_vars}) %}
+                    {% set parsed_inv_args_vars = fromyaml(invocation_args.vars) %}
+                    {% do invocation_args.update({'vars': parsed_inv_args_vars}) %}
                 {% endif %}
             {% endif %}
 
-            $${{ tojson(invocation_args_dict) }}$$, {# invocation_args #}
+            $${{ tojson(invocation_args) }}$$, {# invocation_args #}
 
             {% set metadata_env = {} %}
             {% for key, value in dbt_metadata_envs.items() %}
@@ -220,8 +221,69 @@
 
 {% endmacro -%}
 
+{% macro trino__get_invocations_dml_sql(invocation_args=invocation_args_dict) -%}
+    {% set invocation_values %}
+        (
+            '{{ invocation_id }}', {# command_invocation_id #}
+            '{{ dbt_version }}', {# dbt_version #}
+            '{{ project_name }}', {# project_name #}
+            TIMESTAMP '{{ run_started_at }}', {# run_started_at #}
+            '{{ flags.WHICH }}', {# dbt_command #}
+            {{ flags.FULL_REFRESH }}, {# full_refresh_flag #}
+            '{{ target.profile_name }}', {# target_profile_name #}
+            '{{ target.name }}', {# target_name #}
+            '{{ target.schema }}', {# target_schema #}
+            {{ target.threads }}, {# target_threads #}
 
-{% macro sqlserver__get_invocations_dml_sql() -%}
+            '{{ env_var("DBT_CLOUD_PROJECT_ID", "") }}', {# dbt_cloud_project_id #}
+            '{{ env_var("DBT_CLOUD_JOB_ID", "") }}', {# dbt_cloud_job_id #}
+            '{{ env_var("DBT_CLOUD_RUN_ID", "") }}', {# dbt_cloud_run_id #}
+            '{{ env_var("DBT_CLOUD_RUN_REASON_CATEGORY", "") }}', {# dbt_cloud_run_reason_category #}
+            '{{ env_var('DBT_CLOUD_RUN_REASON', '') | replace("'","''") }}', {# dbt_cloud_run_reason #}
+
+            {% if var('env_vars', none) %}
+                {% set env_vars_dict = {} %}
+                {% for env_variable in var('env_vars') %}
+                    {% do env_vars_dict.update({env_variable: (env_var(env_variable, ''))}) %}
+                {% endfor %}
+                '{{ tojson(env_vars_dict) | replace("'","''") }}', {# env_vars #}
+            {% else %}
+                null, {# env_vars #}
+            {% endif %}
+
+            {% if var('dbt_vars', none) %}
+                {% set dbt_vars_dict = {} %}
+                {% for dbt_var in var('dbt_vars') %}
+                    {% do dbt_vars_dict.update({dbt_var: (var(dbt_var, ''))}) %}
+                {% endfor %}
+                '{{ tojson(dbt_vars_dict) | replace("'","''") }}', {# dbt_vars #}
+            {% else %}
+                null, {# dbt_vars #}
+            {% endif %}
+
+            {% if invocation_args_dict.vars %}
+                {# vars - different format for pre v1.5 (yaml vs list) #}
+                {% if invocation_args_dict.vars is string %}
+                    {% set parsed_inv_args_vars = fromyaml(invocation_args_dict.vars) %}
+                    {% do invocation_args_dict.update({'vars': parsed_inv_args_vars}) %}
+                {% endif %}
+            {% endif %}
+
+            '{{ invocation_args_dict | replace("'","''") }}', {# invocation_args #}
+
+            {% set metadata_env = {} %}
+            {% for key, value in dbt_metadata_envs.items() %}
+                {% do metadata_env.update({key: value}) %}
+            {% endfor %}
+            '{{ tojson(metadata_env) | replace("'","''") }}' {# dbt_custom_envs #}
+        )
+    {% endset %}
+    {{ invocation_values }}
+
+{% endmacro -%}
+
+
+{% macro sqlserver__get_invocations_dml_sql(invocation_args=invocation_args_dict) -%}
     {% set invocation_values %}
     select
         "1",
@@ -279,7 +341,7 @@
         {% else %}
             null, {# dbt_vars #}
         {% endif %}
-        '{{ tojson(invocation_args_dict)  | replace("'", "''") }}', {# invocation_args #}
+        '{{ tojson(invocation_args)  | replace("'", "''") }}', {# invocation_args #}
 
         {% set metadata_env = {} %}
         {% for key, value in dbt_metadata_envs.items() %}

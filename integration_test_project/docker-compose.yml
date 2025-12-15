@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  trino:
+    image: trinodb/trino:latest
+    ports:
+      - "8080:8080"
+    environment:
+      DBT_FILE_FORMAT: csv
+    volumes:
+      - ./.trino-config:/etc/trino
+
+#  sqlserver:
+#    image: mcr.microsoft.com/mssql/server:2022-latest
+#    environment:
+#      ACCEPT_EULA: "Y"
+#      SA_PASSWORD: "123Administrator"
+#      MSSQL_PID: "Developer"
+#      DOCKER_DEFAULT_PLATFORM: "linux/amd64"
+#    ports:
+#      - "1433:1433"
+#    volumes:
+#      - sqlserver_data:/var/opt/mssql
+
+volumes:
+  postgres_data:
+#  sqlserver_data:
