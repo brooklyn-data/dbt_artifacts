@@ -1,0 +1,130 @@
+version: '3'
+
+vars:
+
+tasks:
+  default:
+    cmds:
+      - uv run --env-file .env tox -e lint_all
+      - uv run --env-file .env tox -e integration_snowflake
+
+  lint-all:
+    desc: Lints all models.
+    cmds:
+      - uv run --env-file .env tox -e lint_all
+
+  fix-all:
+    desc: Fixes all models.
+    cmds:
+      - uv run --env-file .env tox -e fix_all
+
+  snowflake-latest:
+    desc: Runs latest supported Snowflake integration test.
+    cmds:
+      - uv run --env-file .env tox -e integration_snowflake
+
+  snowflake:
+    desc: Runs all supported Snowflake integration tests.
+    cmds:
+      - uv run --env-file .env tox -e integration_snowflake_1_9_0
+      - uv run --env-file .env tox -e integration_snowflake_1_8_0
+      - uv run --env-file .env tox -e integration_snowflake_1_7_0
+      - uv run --env-file .env tox -e integration_snowflake_1_6_0
+      - uv run --env-file .env tox -e integration_snowflake_1_5_0
+      - uv run --env-file .env tox -e integration_snowflake_1_4_0
+      - uv run --env-file .env tox -e integration_snowflake_1_3_0
+
+  bigquery-latest:
+    desc: Runs the latest supported BigQuery integration test.
+    cmds:
+      - uv run --env-file .env tox -e integration_bigquery
+
+  bigquery:
+    desc: Runs all supported BigQuery integration tests.
+    cmds:
+      - uv run --env-file .env tox -e integration_bigquery_1_9_0
+      - uv run --env-file .env tox -e integration_bigquery_1_8_0
+      - uv run --env-file .env tox -e integration_bigquery_1_7_0
+      - uv run --env-file .env tox -e integration_bigquery_1_6_0
+      - uv run --env-file .env tox -e integration_bigquery_1_5_0
+      - uv run --env-file .env tox -e integration_bigquery_1_4_0
+      - uv run --env-file .env tox -e integration_bigquery_1_3_0
+
+  databricks-latest:
+    desc: Runs the latest supported Databricks integration test.
+    cmds:
+      - uv run --env-file .env tox -e integration_databricks
+
+  databricks:
+    desc: Runs all supported Databricks integration tests.
+    cmds:
+      - uv run --env-file .env tox -e integration_databricks_1_9_0
+      - uv run --env-file .env tox -e integration_databricks_1_8_0
+      - uv run --env-file .env tox -e integration_databricks_1_7_0
+      - uv run --env-file .env tox -e integration_databricks_1_6_0
+      - uv run --env-file .env tox -e integration_databricks_1_5_0
+      - uv run --env-file .env tox -e integration_databricks_1_4_0
+      - uv run --env-file .env tox -e integration_databricks_1_3_0
+
+  postgres-latest:
+    desc: Runs latest supported Postgres integration test.
+    cmds:
+      - docker compose up -d postgres
+      - bash init-scripts/progress.sh
+      - uv run --env-file .env tox -e integration_postgres
+      - docker compose down
+
+  postgres:
+    desc: Runs all supported Postgres integration tests.
+    cmds:
+      - docker compose up -d postgres
+      - bash init-scripts/progress.sh
+      - uv run --env-file .env tox -e integration_postgres_1_9_0
+      - uv run --env-file .env tox -e integration_postgres_1_8_0
+      - uv run --env-file .env tox -e integration_postgres_1_7_0
+      - uv run --env-file .env tox -e integration_postgres_1_6_0
+      - uv run --env-file .env tox -e integration_postgres_1_5_0
+      - uv run --env-file .env tox -e integration_postgres_1_4_0
+      - uv run --env-file .env tox -e integration_postgres_1_3_0
+      - docker compose down
+
+  trino-latest:
+    desc: Runs latest supported Trino integration test.
+    cmds:
+      - docker compose up -d trino
+      - bash init-scripts/progress.sh
+      - uv run --env-file .env tox -e integration_trino
+      - docker compose down
+
+  trino:
+    desc: Runs all supported Trino integration tests.
+    cmds:
+      - docker compose up -d trino
+      - bash init-scripts/progress.sh
+      - uv run --env-file .env tox -e integration_trino_1_7_0
+      - uv run --env-file .env tox -e integration_trino_1_6_0
+      - uv run --env-file .env tox -e integration_trino_1_5_0
+      - uv run --env-file .env tox -e integration_trino_1_4_0
+      - uv run --env-file .env tox -e integration_trino_1_3_0
+      - docker compose down
+
+  sqlserver-latest:
+    desc: Runs latest supported SQL Server integration tests.
+    cmds:
+      - docker compose up --build -d sqlserver sqlserver.configurator
+      - bash init-scripts/progress.sh
+      - bash init-scripts/progress.sh
+      - uv run --env-file .env tox -e integration_sqlserver
+      - docker compose down
+
+  sqlserver:
+    desc: Runs all supported SQL Server integration tests.
+    cmds:
+      - docker compose up --build -d sqlserver sqlserver.configurator
+      - bash init-scripts/progress.sh
+      - bash init-scripts/progress.sh
+      - uv run --env-file .env tox -e integration_sqlserver_1_8_0
+      - uv run --env-file .env tox -e integration_sqlserver_1_7_0
+      - uv run --env-file .env tox -e integration_sqlserver_1_4_0
+      - uv run --env-file .env tox -e integration_sqlserver_1_3_0
+      - docker compose down

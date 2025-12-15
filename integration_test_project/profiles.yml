@@ -55,7 +55,7 @@ dbt_artifacts:
     sqlserver:
       type: sqlserver
       driver: 'ODBC Driver 18 for SQL Server'
-      server: localhost
+      server: 127.0.0.1
       port: 1433
       database: dbt_artifact_integrationtests
       schema: dbo

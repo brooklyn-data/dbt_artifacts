@@ -1,0 +1,63 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  trino:
+    image: trinodb/trino:latest
+    ports:
+      - "8080:8080"
+    environment:
+      DBT_FILE_FORMAT: csv
+    volumes:
+      - ./.trino-config:/etc/trino
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    user: root
+    platform: linux/amd64
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "123Administrator"
+      MSSQL_PID: "DeveloperStandard"
+      DOCKER_DEFAULT_PLATFORM: "linux/amd64"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+      - ./init-scripts/sqlserver:/setup
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S 127.0.0.1,1433 -U sa -P ${MSSQL_SA_PASSWORD:-123Administrator} -No -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      retries: 10
+      start_period: 30s
+      timeout: 10s
+    post_start:
+      - command: apt-get update
+        user: root
+      - command: apt-get install msodbcsql18
+        user: root
+  sqlserver.configurator:
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    platform: linux/amd64
+    volumes:
+      - ./init-scripts/sqlserver:/docker-entrypoint-initdb.d
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    command: >
+      bash -c '
+      /opt/mssql-tools18/bin/sqlcmd -S sqlserver -U sa -P ${MSSQL_SA_PASSWORD:-123Administrator} -No -d master -i docker-entrypoint-initdb.d/init.sql
+      && echo "All done!";
+      '
+volumes:
+  postgres_data:
+  sqlserver_data:
