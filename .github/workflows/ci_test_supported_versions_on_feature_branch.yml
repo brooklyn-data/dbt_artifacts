@@ -1,0 +1,198 @@
+name: Test supported versions on feature branch
+
+# all PRs
+# important to note that `pull_request_target` workflows
+# will run in the context of the target branch of a PR
+on:
+  workflow_dispatch:
+  pull_request_target:
+
+env:
+  # These are configured in GitHub secrets
+  DBT_PROFILES_DIR: ${{ github.workspace }}/integration_test_project
+  GITHUB_SHA_OVERRIDE: ${{ github.event.pull_request.head.sha }} # We need the commit hash of the pull request branch's head, the GITHUB_SHA env var is always the base branch in a pull_request_target trigger
+  DBT_ENV_SECRET_SNOWFLAKE_TEST_ACCOUNT: ${{ secrets.SNOWFLAKE_TEST_ACCOUNT }}
+  DBT_ENV_SECRET_SNOWFLAKE_TEST_USER: ${{ secrets.SNOWFLAKE_TEST_USER }}
+  DBT_ENV_SECRET_SNOWFLAKE_TEST_PASSWORD: ${{ secrets.SNOWFLAKE_TEST_PASSWORD }}
+  DBT_ENV_SECRET_SNOWFLAKE_TEST_ROLE: ${{ secrets.SNOWFLAKE_TEST_ROLE }}
+  DBT_ENV_SECRET_SNOWFLAKE_TEST_DATABASE: ${{ secrets.SNOWFLAKE_TEST_DATABASE }}
+  DBT_ENV_SECRET_SNOWFLAKE_TEST_WAREHOUSE: ${{ secrets.SNOWFLAKE_TEST_WAREHOUSE }}
+  DBT_ENV_SECRET_DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+  DBT_ENV_SECRET_DATABRICKS_HTTP_PATH: ${{ secrets.DATABRICKS_HTTP_PATH }}
+  DBT_ENV_SECRET_DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+  DBT_ENV_SECRET_GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
+  # Env var to test version
+  LAST_RELEASE_SUPPORTED_DBT_VERSION: 1_9_0 # A dbt version supported by both the last release and this one
+  # Env vars to test invocations model
+  DBT_CLOUD_PROJECT_ID: 123
+  DBT_CLOUD_JOB_ID: ABC
+  DBT_CLOUD_RUN_REASON: "String with 'quotes' !"
+  TEST_ENV_VAR_1: TEST_VALUE
+  TEST_ENV_VAR_NUMBER: 3
+  TEST_ENV_VAR_EMPTY: ""
+  TEST_ENV_VAR_WITH_QUOTE: "Triggered via Apache Airflow by task 'trigger_dbt_cloud_job_run' in the airtable_ingest DAG."
+  DBT_ENV_CUSTOM_ENV_FAVOURITE_DBT_PACKAGE: dbt_artifacts
+
+jobs:
+  snowflake:
+    strategy:
+      fail-fast: false
+
+    runs-on: ubuntu-latest
+    environment:
+      name: Approve Snowflake Integration Tests for Incoming Feature Branch
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version-file: pyproject.toml
+
+      - name: Install UV
+        uses: astral-sh/setup-uv@v7
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Snowflake | Build tables against feature branch
+        run: uv run task snowflake
+
+  bigquery:
+    strategy:
+      fail-fast: false
+
+    runs-on: ubuntu-latest
+    environment:
+      name: Approve BigQuery Integration Tests for Incoming Feature Branch
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version-file: pyproject.toml
+
+      - name: Install UV
+        uses: astral-sh/setup-uv@v7
+
+      - id: auth-on-release
+        if: ${{ matrix.warehouse == 'bigquery' }}
+        uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: BigQuery | Build tables against feature branch
+        run: uv run task bigquery
+
+  postgres:
+    strategy:
+      fail-fast: false
+
+    runs-on: ubuntu-latest
+    environment:
+      name: Approve Postgres Integration Tests for Incoming Feature Branch
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version-file: pyproject.toml
+
+      - name: Install UV
+        uses: astral-sh/setup-uv@v7
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Postgres | Build tables against feature branch
+        run: uv run task postgres
+
+  trino:
+    strategy:
+      fail-fast: false
+
+    runs-on: ubuntu-latest
+    environment:
+      name: Approve Trino Integration Tests for Incoming Feature Branch
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version-file: pyproject.toml
+
+      - name: Install UV
+        uses: astral-sh/setup-uv@v7
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Trino | Build tables against feature branch
+        run: uv run task trino
+
+  sqlserver:
+    strategy:
+      fail-fast: false
+
+    runs-on: ubuntu-latest
+    environment:
+      name: Approve SQL Server Integration Tests for Incoming Feature Branch
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version-file: pyproject.toml
+
+      - name: Install UV
+        uses: astral-sh/setup-uv@v7
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: SQL Server | Build tables against feature branch
+        run: uv run task sqlserver
