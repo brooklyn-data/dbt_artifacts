@@ -38,8 +38,7 @@ dbt_artifacts:
       type: bigquery
       method: oauth
       project: "{{ env_var('DBT_ENV_SECRET_GCP_PROJECT') }}"
-      # dataset: dbt_artifacts_test_commit_{{ env_var('DBT_VERSION', '') }}_{{ env_var('GITHUB_SHA_OVERRIDE', '') if env_var('GITHUB_SHA_OVERRIDE', '') else env_var('GITHUB_SHA') }}
-      dataset: "mdp_test_osc"
+      dataset: dbt_artifacts_test_commit_{{ env_var('DBT_VERSION', '') }}_{{ env_var('GITHUB_SHA_OVERRIDE', '') if env_var('GITHUB_SHA_OVERRIDE', '') else env_var('GITHUB_SHA') }}
       threads: 8
       timeout_seconds: 300
       priority: interactive
