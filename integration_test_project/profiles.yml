@@ -43,7 +43,6 @@ dbt_artifacts:
       timeout_seconds: 300
       priority: interactive
       retries: 1
-      location: "europe-west4"
     postgres:
       type: postgres
       host: localhost
