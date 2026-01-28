@@ -82,7 +82,7 @@ dbt_artifacts:
       schema: "{{ env_var('DBT_ENV__REDSHIFT__SCHEMA', 'public') }}"
       connect_timeout: "{{ env_var('DBT_ENV__REDSHIFT__CONNECT_TIMEOUT', 100) | int }}"
       sslmode: "{{ env_var('DBT_ENV__REDSHIFT__SSL_MODE', 'prefer') }}"
-      ra3_node: "{{ env_var('DBT_ENV__REDSHIFT__RA3_NODE', True) | as_bool }}"
+      ra3_node: "{{ env_var('DBT_ENV__REDSHIFT__RA3_NODE', False) | as_bool }}"
       threads: "{{ env_var('DBT_ENV__REDSHIFT__THREADS', 8) | int }}"
       user: "{{ env_var('DBT_ENV__REDSHIFT__USER') }}"
       password: "{{ env_var('DBT_ENV__REDSHIFT__PASSWORD') }}"
