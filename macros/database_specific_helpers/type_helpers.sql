@@ -26,6 +26,10 @@
    json
 {% endmacro %}
 
+{% macro redshift__type_json() %}
+   varchar(max)
+{% endmacro %}
+
 {#- ARRAY -#}
 
 {% macro type_array() %}
@@ -48,7 +52,11 @@
    array(varchar)
 {% endmacro %}
 
-{#- NUMERIC -#}%}
+{% macro redshift__type_array() %}
+   varchar(max)
+{% endmacro %}
+
+{#- NUMERIC -#}
 
 {% macro type_numeric() %}
     {{ return(adapter.dispatch('type_numeric', 'dbt_artifacts')()) }}
@@ -60,4 +68,16 @@
 
 {% macro trino__type_numeric() %}
    double
+{% endmacro %}
+
+{% macro type_string() %}
+   {{ return(adapter.dispatch('type_string', 'dbt_artifacts')()) }}
+{% endmacro %}
+
+{% macro default__type_string() %}
+   {{ return(api.Column.translate_type("string")) }}
+{% endmacro %}
+
+{% macro redshift__type_string() %}
+   varchar(max)
 {% endmacro %}

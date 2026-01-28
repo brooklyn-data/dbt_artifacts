@@ -74,3 +74,15 @@ dbt_artifacts:
       schema: default
       port: 8080
       threads: 8
+    redshift:
+      type: redshift
+      host: "{{ env_var('DBT_ENV__REDSHIFT__HOST') }}"
+      port: "{{ env_var('DBT_ENV__REDSHIFT__PORT', 5439) | int }}"
+      dbname: "{{ env_var('DBT_ENV__REDSHIFT__DBNAME', 'main') }}"
+      schema: "{{ env_var('DBT_ENV__REDSHIFT__SCHEMA', 'public') }}"
+      connect_timeout: "{{ env_var('DBT_ENV__REDSHIFT__CONNECT_TIMEOUT', 3600) | int }}"
+      ssl_mode: "{{ env_var('DBT_ENV__REDSHIFT__SSL_MODE', 'prefer') }}"
+      ra3_node: "{{ env_var('DBT_ENV__REDSHIFT__RA3_NODE', True) | as_bool }}"
+      threads: "{{ env_var('DBT_ENV__REDSHIFT__THREADS', 8) | int }}"
+      user: "{{ env_var('DBT_ENV__REDSHIFT__USER') }}"
+      password: "{{ env_var('DBT_ENV__REDSHIFT__PASSWORD') }}"

@@ -21,6 +21,7 @@ The package currently supports
 - Postgres :white_check_mark:
 - SQL Server :white_check_mark:
 - Trino :white_check_mark:
+- Redshift :white_check_mark:
 
 Models included:
 

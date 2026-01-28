@@ -14,3 +14,11 @@
     safe.parse_json("""{{ field }}""", wide_number_mode=>'round')
 {%- endmacro %}
 
+{% macro redshift__parse_json(field) %}
+    case
+        when can_json_parse({{ field }})
+            then json_parse({{ field }})
+        else
+            {{ field }}
+    end 
+{%- endmacro %}
