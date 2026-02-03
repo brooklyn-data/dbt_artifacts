@@ -88,6 +88,7 @@
             checksum,
             materialization,
             tags,
+            owner_group,
             meta,
             alias,
             all_results
