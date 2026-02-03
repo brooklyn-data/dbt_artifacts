@@ -16,6 +16,14 @@
             {%- do invocation_args_dict.update({"warn_error_options": warn_error_options}) %}
         {% endif %}
     {% endif %}
+    {# sample - returns a SampleWindow python object that's not JSON serializable #}
+    {% if "sample" in invocation_args_dict %}
+        {% if invocation_args_dict.sample is not string and invocation_args_dict.sample is not none %}
+            {% set sample_window = invocation_args_dict.sample %}
+            {% set sample_dict = {"start": sample_window.start | string, "end": sample_window.end | string} %}
+            {%- do invocation_args_dict.update({"sample": sample_dict}) %}
+        {% endif %}
+    {% endif %}
     {% set converted_invocation_args_dict = dbt_artifacts.safe_copy_mapping(invocation_args_dict) %}
 
     {{ return(adapter.dispatch("get_invocations_dml_sql", "dbt_artifacts")(converted_invocation_args_dict)) }}
