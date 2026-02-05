@@ -16,7 +16,9 @@ with
             total_node_runtime,
             rows_affected,
             failures,
-            message
+            message,
+            compiled_sql,
+            audit_table_name
         from base
 
     )
