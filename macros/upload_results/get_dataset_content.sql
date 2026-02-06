@@ -6,6 +6,10 @@
     {% elif dataset in ['seeds', 'snapshots', 'tests', 'models'] %}
         {# Use the nodes in the [graph](https://docs.getdbt.com/reference/dbt-jinja-functions/graph) to extract details #}
         {% set objects = graph.nodes.values() | selectattr("resource_type", "equalto", dataset[:-1]) | list %}
+        {# Optionally, filter by package_name #}
+        {% if var("artifacts_upload_packages", "all") != "all" %}
+            {% set objects = (objects | selectattr("package_name", "in", var("artifacts_upload_packages")) | list) %}
+        {% endif %}
     {% elif dataset in ['exposures', 'sources'] %}
         {# Use the [graph](https://docs.getdbt.com/reference/dbt-jinja-functions/graph) to extract details #}
         {% set objects = graph.get(dataset).values() | list %}
