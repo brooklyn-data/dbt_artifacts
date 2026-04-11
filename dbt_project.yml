@@ -12,12 +12,12 @@ clean-targets: # folders to be removed by `dbt clean`
 models:
   dbt_artifacts:
     +materialized: view
-    +file_format: '{{ "delta" if target.name == "databricks" else "" }}'
+    +file_format: '{{ "delta" if target.name == "databricks" else "iceberg" if target.type == "athena" else "" }}'
     sources:
       +materialized: incremental
       +full_refresh: false
       +persist_docs:
         # Databricks and SQL Server don't offer column-level support for persisting docs
-        columns: '{{ target.name != "databricks" and target.type != "sqlserver" }}'
-        relation: '{{ target.type != "sqlserver" }}'
+        columns: '{{ target.name != "databricks" and target.type != "sqlserver" and target.type != "athena" }}'
+        relation: '{{ target.type != "sqlserver" and target.type != "athena" }}'
       +as_columnstore: False

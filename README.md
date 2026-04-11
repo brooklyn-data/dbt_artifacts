@@ -14,6 +14,7 @@ Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) and [MA
 
 The package currently supports
 
+- AWS Athena :white_check_mark:
 - Databricks :white_check_mark:
 - Spark :white_check_mark:
 - Snowflake :white_check_mark:
