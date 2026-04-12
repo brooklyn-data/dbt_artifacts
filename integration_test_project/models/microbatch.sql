@@ -11,7 +11,8 @@
             'field': 'transaction_ts',
             'data_type': 'datetime',
             'granularity': 'day'
-        }
+        },
+        table_type = 'iceberg' if target.type == 'athena' else none,
     )
 }}
 
