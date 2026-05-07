@@ -74,3 +74,12 @@ dbt_artifacts:
       schema: default
       port: 8080
       threads: 8
+    athena:
+      type: athena
+      s3_staging_dir: "{{ env_var('DBT_ENV_SECRET_ATHENA_S3_STAGING_DIR') }}"
+      s3_data_dir: "{{ env_var('DBT_ENV_SECRET_ATHENA_S3_DATA_DIR') }}"
+      region_name: "{{ env_var('DBT_ENV_SECRET_ATHENA_REGION', 'us-east-1') }}"
+      database: "{{ env_var('DBT_ENV_SECRET_ATHENA_DATABASE') }}"
+      schema: dbt_artifacts_test_commit_{{ env_var('DBT_VERSION', '') }}_{{ env_var('GITHUB_SHA_OVERRIDE', '') if env_var('GITHUB_SHA_OVERRIDE', '') else env_var('GITHUB_SHA') }}
+      work_group: dbt
+      threads: 8

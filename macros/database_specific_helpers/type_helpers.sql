@@ -61,3 +61,11 @@
 {% macro trino__type_numeric() %}
    double
 {% endmacro %}
+
+{% macro athena__type_array() %}
+   array(varchar)
+{% endmacro %}
+
+{% macro athena__type_numeric() %}
+   double
+{% endmacro %}

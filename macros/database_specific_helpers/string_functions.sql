@@ -9,3 +9,7 @@
 {% macro trino__str_left(col, length) %}
     substring({{ col }}, 1, {{ length }})
 {% endmacro %}
+
+{% macro athena__str_left(col, length) %}
+    substring({{ col }}, 1, {{ length }})
+{% endmacro %}

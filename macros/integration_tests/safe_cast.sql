@@ -8,7 +8,8 @@
       'bigquery': 'STRING',
       'snowflake': 'VARCHAR',
       'databricks': 'STRING',
-      'trino': 'VARCHAR'
+      'trino': 'VARCHAR',
+      'athena': 'VARCHAR'
     },
     'integer': {
       'postgres': 'NUMERIC',
@@ -16,7 +17,8 @@
       'bigquery': 'FLOAT64',
       'snowflake': 'FLOAT',
       'databricks': 'DOUBLE',
-      'trino': 'DOUBLE'
+      'trino': 'DOUBLE',
+      'athena': 'DOUBLE'
     },
     'date': {
       'postgres': 'DATE',
@@ -24,7 +26,8 @@
       'bigquery': 'DATE',
       'snowflake': 'DATE',
       'databricks': 'DATE',
-      'trino': 'DATE'
+      'trino': 'DATE',
+      'athena': 'DATE'
     },
     'timestamp': {
       'postgres': 'TIMESTAMP',
@@ -32,7 +35,8 @@
       'bigquery': 'TIMESTAMP',
       'snowflake': 'TIMESTAMP',
       'databricks': 'TIMESTAMP',
-      'trino': 'TIMESTAMP'
+      'trino': 'TIMESTAMP',
+      'athena': 'TIMESTAMP'
     }
   } %}
 
