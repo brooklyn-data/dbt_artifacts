@@ -3,15 +3,15 @@ with
     model_executions as (select * from {{ ref("stg_dbt__model_executions") }}),
     latest_models as (
 
-        /* Retrieves the models present in the most recent run */
+        {# Retrieves the models present in the most recent run #}
         select * from base where run_started_at = (select max(run_started_at) from base)
 
     ),
 
     latest_models_runs as (
 
-        /* Retreives all successful run information for the models present in the most
-        recent run and ranks them based on query completion time */
+        {# Retreives all successful run information for the models present in the most
+        recent run and ranks them based on query completion time #}
         select
             model_executions.node_id,
             model_executions.was_full_refresh,
@@ -19,14 +19,14 @@ with
             model_executions.total_node_runtime,
             model_executions.rows_affected
             {% if target.type == "bigquery" %}, model_executions.bytes_processed {% endif %},
-            /* Row number by refresh and node ID */
+            {# Row number by refresh and node ID #}
             row_number() over (
                 partition by latest_models.node_id, model_executions.was_full_refresh
-                order by model_executions.query_completed_at desc  /* most recent ranked first */
+                order by model_executions.query_completed_at desc  {# most recent ranked first #}
             ) as run_idx,
-            /* Row number by node ID */
+            {# Row number by node ID #}
             row_number() over (
-                partition by latest_models.node_id order by model_executions.query_completed_at desc  /* most recent ranked first */
+                partition by latest_models.node_id order by model_executions.query_completed_at desc  {# most recent ranked first #}
             ) as run_idx_id_only
         from model_executions
         inner join latest_models on model_executions.node_id = latest_models.node_id
