@@ -1,0 +1,70 @@
+# Cut a release-candidate branch via `workflow_dispatch`.
+#
+# Auto-bumps the version in dbt_project.yml + README.md, creates a
+# `release-candidate/X.Y.Z` branch, commits, and pushes. The push then
+# triggers Tier 3 (release.yml) for the full warehouse × dbt-version
+# matrix.
+#
+# Auto-bump, but NOT auto-merge. The maintainer reviews Tier 3 results
+# and drives the tag (and any merge-back to main) manually. See
+# docs/dev-workflow.md Stage 3.
+#
+# This workflow is a thin shim over scripts/release/cut-candidate.py.
+# The same script can be run locally:
+#   ./scripts/release/cut-candidate.py --patch    # or --minor / --major
+#   ./scripts/release/cut-candidate.py --version 2.11.0
+
+name: Cut release-candidate
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: 'Version bump (ignored if explicit_version is set)'
+        required: true
+        type: choice
+        default: 'patch'
+        options:
+          - patch
+          - minor
+          - major
+      explicit_version:
+        description: '(optional) Explicit X.Y.Z; overrides bump'
+        required: false
+        type: string
+
+permissions:
+  contents: write  # needed to push the new branch
+
+concurrency:
+  # Prevent two cutters running simultaneously and racing on the version.
+  group: cut-release-candidate
+  cancel-in-progress: false
+
+jobs:
+  cut:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
+        with:
+          ref: main
+          # Need full history so `git checkout -b` and `git push` work.
+          fetch-depth: 0
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Cut release-candidate branch
+        env:
+          BUMP: ${{ inputs.bump }}
+          EXPLICIT: ${{ inputs.explicit_version }}
+        run: |
+          if [[ -n "${EXPLICIT}" ]]; then
+            ./scripts/release/cut-candidate.py --version "${EXPLICIT}"
+          else
+            ./scripts/release/cut-candidate.py "--${BUMP}"
+          fi
