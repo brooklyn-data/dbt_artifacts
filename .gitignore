@@ -25,6 +25,10 @@ env.sh
 .claude
 .agents
 
+# AI-assistant orientation files — kept local while the team decides
+# between tools. Remove this entry or `git add -f` to track.
+CLAUDE.md
+
 # Python bytecode cache (e.g. from running scripts/release/*.py)
 __pycache__/
 *.pyc

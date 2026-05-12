@@ -20,7 +20,7 @@
 # a maintainer pushing trusted code. Secrets are accessible because the code
 # has already cleared the human-review bar via PR-to-main + branch creation.
 #
-# Scope (per specs/ci-rework.md §5.3 / Tier 3):
+# Scope (per specs/ci-rework/README.md §5.3 / Tier 3):
 #   - Lint (same as Tier 2)
 #   - Full version matrix: every supported (warehouse, dbt_version) pair,
 #     including the unversioned "latest" env per warehouse (early warning
@@ -210,7 +210,7 @@ jobs:
   # -------- Databricks stub -----------------------------------------------
   # Visible in the workflow run so reviewers see Databricks has been
   # *considered* and *skipped on purpose*, not forgotten. When Databricks
-  # is reactivated (specs/ci-rework.md §12.3), replace this with a real
+  # is reactivated (specs/ci-rework/README.md §12.3), replace this with a real
   # matrix job following the same shape as `version-matrix`.
   integration-databricks-stub:
     name: integration (databricks) [STUB — skipped]
@@ -219,5 +219,5 @@ jobs:
     steps:
       - name: Announce skip
         run: |
-          echo "::warning title=Databricks tests skipped::Databricks integration is stubbed pending reactivation. See specs/ci-rework.md §12.3."
+          echo "::warning title=Databricks tests skipped::Databricks integration is stubbed pending reactivation. See specs/ci-rework/README.md §12.3."
           echo "This job exists so the Tier 3 release matrix visibly accounts for Databricks rather than silently omitting it."

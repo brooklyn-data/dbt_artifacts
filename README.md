@@ -2,13 +2,17 @@
 
 This package builds a mart of tables and views describing the project it is installed in. In pre V1 versions of the package, the artifacts dbt produces were uploaded to the warehouse, hence the name of the package. That's no longer the case, but the name has stuck!
 
-[![Main branch test package](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main_test_package.yml/badge.svg)](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main_test_package.yml)
-[![Main branch lint package](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main_lint_package.yml/badge.svg)](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main_lint_package.yml)
+[![Tier 2 — main](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main.yml/badge.svg)](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main.yml)
+[![Tier 3 — release validation](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/release.yml/badge.svg)](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/release.yml)
 [![Documentation](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/publish_docs_on_release.yml/badge.svg)](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/publish_docs_on_release.yml)
 
 ## Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) and [MAINTAINERS.md](docs/MAINTAINERS.md) for more information.
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for
+how to set up your environment and submit a PR, and
+[docs/dev-workflow.md](docs/dev-workflow.md) for the full
+feature-to-release flow. Maintainer-specific guidance lives in
+[docs/MAINTAINERS.md](docs/MAINTAINERS.md).
 
 ## Supported Data Warehouses
 

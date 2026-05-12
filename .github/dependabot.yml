@@ -6,7 +6,7 @@
 # SHAs from the action's latest stable tag. Each PR includes the action's
 # changelog, so the maintainer can review what changed before merging.
 #
-# See specs/ci-rework.md §9 (shared hardening) for the SHA-pin rationale.
+# See specs/ci-rework/README.md §9 (shared hardening) for the SHA-pin rationale.
 
 version: 2
 updates:

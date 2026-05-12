@@ -6,7 +6,7 @@ GitHub Actions workflows in `.github/workflows/` are thin shells that
 `checkout → setup → invoke a script here`. Local development invokes the
 **same scripts**. There is no second implementation that "almost matches" CI.
 
-See [`specs/ci-rework.md`](../../specs/ci-rework.md) for the design
+See [`specs/ci-rework/README.md`](../../specs/ci-rework/README.md) for the design
 rationale and the three-tier CI model these scripts feed into.
 
 ## Entry points

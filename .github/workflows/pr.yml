@@ -3,7 +3,7 @@
 # Runs on every pull_request targeting `main`, including PRs from forks.
 # Uses the `pull_request` event (NOT `pull_request_target`), so this workflow
 # runs in an environment where repository secrets are **structurally
-# unavailable**. That is the core security guarantee — see specs/ci-rework.md
+# unavailable**. That is the core security guarantee — see specs/ci-rework/README.md
 # §3 (threat model) for the full rationale.
 #
 # Scope:

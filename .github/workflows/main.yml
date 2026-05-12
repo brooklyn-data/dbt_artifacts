@@ -7,7 +7,7 @@
 # `main`**, which requires PR + approving review. By the time this workflow's
 # event fires, a human has signed off on the code.
 #
-# See specs/ci-rework.md §5 (CI tier design) and §3 (threat model).
+# See specs/ci-rework/README.md §5 (CI tier design) and §3 (threat model).
 #
 # Scope:
 #   - Everything Tier 1 runs (lint deferred from Tier 1 lands here)
@@ -57,7 +57,7 @@ jobs:
   # -------- Lint -----------------------------------------------------------
   # Lives here, not in Tier 1, because the package's models call adapter
   # methods at compile time. Removing that requirement would let lint move
-  # to Tier 1 — tracked in specs/ci-rework.md §12.2.
+  # to Tier 1 — tracked in specs/ci-rework/README.md §12.2.
   lint:
     name: lint (sqlfluff)
     runs-on: ubuntu-latest
