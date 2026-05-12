@@ -1,0 +1,71 @@
+# Tier 1 — PR smoke test.
+#
+# Runs on every pull_request targeting `main`, including PRs from forks.
+# Uses the `pull_request` event (NOT `pull_request_target`), so this workflow
+# runs in an environment where repository secrets are **structurally
+# unavailable**. That is the core security guarantee — see specs/ci-rework.md
+# §3 (threat model) for the full rationale.
+#
+# Scope:
+#   - Lint is intentionally NOT run here. The package's models require real
+#     Snowflake connectivity to compile (some macros call adapter methods at
+#     compile time), so the dbt templater cannot run in this no-secrets tier.
+#     Lint runs in Tier 2 (push to main, with secrets). Tracked in spec §13.
+#   - Tests run against Postgres, Trino, SQL Server only — every warehouse
+#     that can be containerized locally. Snowflake/BigQuery/Databricks are
+#     Tier 2/3.
+#   - Only the latest supported dbt version is tested here. The full
+#     version matrix runs in Tier 3.
+#
+# Hardening notes:
+#   - `permissions: contents: read` only. No `id-token`, no escalation.
+#   - Third-party actions pinned to commit SHAs (resolved from tags at
+#     time of writing — see comment after each `uses:` for the human tag).
+#     To re-resolve, run `gh api repos/<owner>/<repo>/commits/<tag>`.
+
+name: Tier 1 — PR smoke test
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+# Cancel in-progress runs when a PR receives a new push. Keyed on the PR
+# number so different PRs don't cancel each other.
+concurrency:
+  group: tier1-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  integration-local:
+    name: integration (${{ matrix.warehouse }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        warehouse: [postgres, trino, sqlserver]
+
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
+
+      - name: Install Microsoft ODBC Driver 18 (sqlserver only)
+        if: matrix.warehouse == 'sqlserver'
+        run: |
+          sudo apt-get update
+          sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@caf0cab7a618c569241d31dcd442f54681755d39  # v3
+        with:
+          enable-cache: true
+
+      - name: Install Python dependencies
+        run: ./scripts/ci/setup.sh
+
+      - name: Run integration tests against ${{ matrix.warehouse }}
+        run: ./scripts/ci/test.sh ${{ matrix.warehouse }}
