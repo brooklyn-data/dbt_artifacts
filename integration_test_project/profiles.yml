@@ -43,12 +43,15 @@ dbt_artifacts:
       timeout_seconds: 300
       priority: interactive
       retries: 1
+    # Ports for postgres/sqlserver/trino are deliberately non-standard so
+    # they don't collide with a developer's locally-running services. See
+    # the header of compose.yml at the repo root for the full rationale.
     postgres:
       type: postgres
       host: localhost
       user: postgres
       password: postgres
-      port: 5432
+      port: 55432
       dbname: postgres
       schema: public
       threads: 8
@@ -56,7 +59,7 @@ dbt_artifacts:
       type: sqlserver
       driver: 'ODBC Driver 18 for SQL Server'
       server: 127.0.0.1
-      port: 1433
+      port: 51433
       database: dbt_artifact_integrationtests
       schema: dbo
       windows_login: False
@@ -72,5 +75,5 @@ dbt_artifacts:
       host: localhost
       database: memory
       schema: default
-      port: 8080
+      port: 58080
       threads: 8
