@@ -1,0 +1,163 @@
+# Tier 2 — Post-merge integration.
+#
+# Runs on every push to `main` (after a maintainer-reviewed PR merge), and on
+# manual `workflow_dispatch`. This is the first workflow that touches
+# repository secrets — Snowflake credentials and GCP Workload Identity. The
+# trust boundary that protects those secrets is **branch protection on
+# `main`**, which requires PR + approving review. By the time this workflow's
+# event fires, a human has signed off on the code.
+#
+# See specs/ci-rework.md §5 (CI tier design) and §3 (threat model).
+#
+# Scope:
+#   - Everything Tier 1 runs (lint deferred from Tier 1 lands here)
+#   - Plus Snowflake + BigQuery on the latest supported dbt version
+#   - Full version matrix runs in Tier 3 (release.yml), not here
+#
+# Secret minimization:
+#   - The `integration-local` matrix declares no secrets at all — those jobs
+#     don't need them. Even though this workflow file has access to secrets,
+#     each job only sees the env vars it explicitly opts into.
+#   - Snowflake creds are scoped to `lint` and `integration-snowflake`.
+#   - GCP WIF only happens in `integration-bigquery`, gated on
+#     `id-token: write` at the job level.
+
+name: Tier 2 — Post-merge integration
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# On `main`, don't cancel in-progress runs — each merge represents a
+# distinct state that deserves its own full validation. Group still applies
+# to prevent two runs racing for the same ref.
+concurrency:
+  group: tier2-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  # Non-secret env vars consumed by the dbt invocations test model. These
+  # are the same values used pre-rework and are checked in to profiles.yml
+  # via env_var() — they need to be present, not secret.
+  DBT_CLOUD_PROJECT_ID: 123
+  DBT_CLOUD_JOB_ID: ABC
+  DBT_CLOUD_RUN_REASON: "String with 'quotes' !"
+  TEST_ENV_VAR_1: TEST_VALUE
+  TEST_ENV_VAR_NUMBER: 3
+  TEST_ENV_VAR_EMPTY: ""
+  TEST_ENV_VAR_WITH_QUOTE: "Triggered via Apache Airflow by task 'trigger_dbt_cloud_job_run' in the airtable_ingest DAG."
+  DBT_ENV_CUSTOM_ENV_FAVOURITE_DBT_PACKAGE: dbt_artifacts
+
+jobs:
+  # -------- Lint -----------------------------------------------------------
+  # Lives here, not in Tier 1, because the package's models call adapter
+  # methods at compile time. Removing that requirement would let lint move
+  # to Tier 1 — tracked in specs/ci-rework.md §12.2.
+  lint:
+    name: lint (sqlfluff)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_ACCOUNT: ${{ secrets.SNOWFLAKE_TEST_ACCOUNT }}
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_USER: ${{ secrets.SNOWFLAKE_TEST_USER }}
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_PASSWORD: ${{ secrets.SNOWFLAKE_TEST_PASSWORD }}
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_ROLE: ${{ secrets.SNOWFLAKE_TEST_ROLE }}
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_DATABASE: ${{ secrets.SNOWFLAKE_TEST_DATABASE }}
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_WAREHOUSE: ${{ secrets.SNOWFLAKE_TEST_WAREHOUSE }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
+      - name: Set up uv
+        uses: astral-sh/setup-uv@caf0cab7a618c569241d31dcd442f54681755d39  # v3
+        with:
+          enable-cache: true
+      - name: Install Python dependencies
+        run: ./scripts/ci/setup.sh
+      - name: Run sqlfluff lint
+        run: ./scripts/ci/lint.sh
+
+  # -------- Local-DWH integration -----------------------------------------
+  # Same matrix as Tier 1, run again post-merge on the merged code. Catches
+  # merge-resolution issues that PR-tier validation couldn't see.
+  integration-local:
+    name: integration (${{ matrix.warehouse }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        warehouse: [postgres, trino, sqlserver]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
+      - name: Install Microsoft ODBC Driver 18 (sqlserver only)
+        if: matrix.warehouse == 'sqlserver'
+        run: |
+          sudo apt-get update
+          sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18
+      - name: Set up uv
+        uses: astral-sh/setup-uv@caf0cab7a618c569241d31dcd442f54681755d39  # v3
+        with:
+          enable-cache: true
+      - name: Install Python dependencies
+        run: ./scripts/ci/setup.sh
+      - name: Run integration tests against ${{ matrix.warehouse }}
+        run: ./scripts/ci/test.sh ${{ matrix.warehouse }}
+
+  # -------- Snowflake (cloud) ---------------------------------------------
+  integration-snowflake:
+    name: integration (snowflake)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_ACCOUNT: ${{ secrets.SNOWFLAKE_TEST_ACCOUNT }}
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_USER: ${{ secrets.SNOWFLAKE_TEST_USER }}
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_PASSWORD: ${{ secrets.SNOWFLAKE_TEST_PASSWORD }}
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_ROLE: ${{ secrets.SNOWFLAKE_TEST_ROLE }}
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_DATABASE: ${{ secrets.SNOWFLAKE_TEST_DATABASE }}
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_WAREHOUSE: ${{ secrets.SNOWFLAKE_TEST_WAREHOUSE }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
+      - name: Set up uv
+        uses: astral-sh/setup-uv@caf0cab7a618c569241d31dcd442f54681755d39  # v3
+        with:
+          enable-cache: true
+      - name: Install Python dependencies
+        run: ./scripts/ci/setup.sh
+      - name: Run integration tests against snowflake
+        run: ./scripts/ci/test.sh snowflake
+
+  # -------- BigQuery (cloud, WIF auth) ------------------------------------
+  integration-bigquery:
+    name: integration (bigquery)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # WIF requires an OIDC token from the runner. Scoped to this job only —
+    # no other job in this workflow gets id-token: write.
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      DBT_ENV_SECRET_GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
+      - name: Authenticate to GCP via Workload Identity Federation
+        uses: google-github-actions/auth@c200f3691d83b41bf9bbd8638997a462592937ed  # v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+      - name: Set up uv
+        uses: astral-sh/setup-uv@caf0cab7a618c569241d31dcd442f54681755d39  # v3
+        with:
+          enable-cache: true
+      - name: Install Python dependencies
+        run: ./scripts/ci/setup.sh
+      - name: Run integration tests against bigquery
+        run: ./scripts/ci/test.sh bigquery
