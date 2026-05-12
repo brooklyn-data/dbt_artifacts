@@ -1,40 +1,18 @@
-# CODEOWNERS — defense-in-depth for sensitive plumbing.
-#
-# The primary security boundary for this repo is `pull_request` (no secrets)
-# + branch protection on `main` (PR + maintainer approval required to merge).
-# That alone closes the direct exfiltration path that motivated the CI rework.
-#
-# This file is the second layer: any change to the files listed below
-# requires explicit maintainer review on the PR — even from another
-# maintainer — before merge is permitted. The rationale is that mistakes
-# (or hostile contributions) in these files are the kind of thing that
-# could subvert the trust boundary itself.
-#
-# See specs/ci-rework.md §10.
-#
-# ───────────────────────────────────────────────────────────────────────────
-# ACTION REQUIRED before merge:
-#   The team handle below (`@brooklyn-data/dbt-artifacts-maintainers`) is a
-#   placeholder. Replace with the actual team slug (or list of individual
-#   usernames) responsible for maintaining this repo. Verify with the
-#   GitHub org admin if unsure.
-# ───────────────────────────────────────────────────────────────────────────
-
 # CI / build plumbing — changes here can subvert the security model.
-.github/                @brooklyn-data/dbt-artifacts-maintainers
-scripts/ci/             @brooklyn-data/dbt-artifacts-maintainers
-compose.yml             @brooklyn-data/dbt-artifacts-maintainers
-init-scripts/           @brooklyn-data/dbt-artifacts-maintainers
+.github/                @mtcarlone
+scripts/ci/             @mtcarlone
+compose.yml             @mtcarlone
+init-scripts/           @mtcarlone
 
 # Test runtime config — versions, deps, lock files.
-tox.ini                 @brooklyn-data/dbt-artifacts-maintainers
-pyproject.toml          @brooklyn-data/dbt-artifacts-maintainers
-uv.lock                 @brooklyn-data/dbt-artifacts-maintainers
+tox.ini                 @mtcarlone
+pyproject.toml          @mtcarlone
+uv.lock                 @mtcarlone
 
 # Package metadata — affects what consumers install.
-dbt_project.yml         @brooklyn-data/dbt-artifacts-maintainers
-packages.yml            @brooklyn-data/dbt-artifacts-maintainers
-package-lock.yml        @brooklyn-data/dbt-artifacts-maintainers
+dbt_project.yml         @mtcarlone
+packages.yml            @mtcarlone
+package-lock.yml        @mtcarlone
 
 # Spec docs — change history matters for future maintainers.
-specs/                  @brooklyn-data/dbt-artifacts-maintainers
+specs/                  @mtcarlone
