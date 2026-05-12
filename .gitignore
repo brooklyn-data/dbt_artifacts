@@ -17,8 +17,14 @@ env.sh
 .venv
 .env
 .secrets
-*.lock
 **/*/package-lock.yml
-pyproject.toml
 
 .DS_Store
+
+.codex
+.claude
+.agents
+
+# Python bytecode cache (e.g. from running scripts/release/*.py)
+__pycache__/
+*.pyc
