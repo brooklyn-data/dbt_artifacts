@@ -20,21 +20,21 @@ on:
   workflow_dispatch:
     inputs:
       bump:
-        description: 'Version bump (ignored if explicit_version is set)'
+        description: "Version bump (ignored if explicit_version is set)"
         required: true
         type: choice
-        default: 'patch'
+        default: "patch"
         options:
           - patch
           - minor
           - major
       explicit_version:
-        description: '(optional) Explicit X.Y.Z; overrides bump'
+        description: "(optional) Explicit X.Y.Z; overrides bump"
         required: false
         type: string
 
 permissions:
-  contents: write  # needed to push the new branch
+  contents: write # needed to push the new branch
 
 concurrency:
   # Prevent two cutters running simultaneously and racing on the version.
@@ -47,7 +47,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Checkout main
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           ref: main
           # Need full history so `git checkout -b` and `git push` work.
