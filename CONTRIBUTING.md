@@ -63,7 +63,7 @@ cp integration_test_project/example-env.sh env.sh
 ```
 
 `env.sh` is gitignored. You only need to source it for warehouses that
-need credentials — Postgres, Trino, and SQL Server don't.
+need credentials — Postgres, Trino, and SQL Server don't. You can also create a `.env` file in the root of the project.
 
 ---
 
