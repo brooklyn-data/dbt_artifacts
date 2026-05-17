@@ -26,6 +26,10 @@
    json
 {% endmacro %}
 
+{% macro fabric__type_json() %}
+   varchar(max)
+{% endmacro %}
+
 {#- ARRAY -#}
 
 {% macro type_array() %}
@@ -46,6 +50,10 @@
 
 {% macro trino__type_array() %}
    array(varchar)
+{% endmacro %}
+
+{% macro fabric__type_array() %}
+   varchar(max)
 {% endmacro %}
 
 {#- NUMERIC -#}%}
