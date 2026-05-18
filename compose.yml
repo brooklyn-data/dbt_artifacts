@@ -96,9 +96,13 @@ services:
       /opt/mssql-tools18/bin/sqlcmd -S sqlserver -U sa -P ${MSSQL_SA_PASSWORD:-123Administrator} -No -d master -i docker-entrypoint-initdb.d/init.sql
       && echo "SQL Server bootstrap complete.";
       '
-    # The configurator exits after init.sql completes; that exit is success.
-    # `docker compose up --wait` treats a service as healthy when it has no
-    # healthcheck and exits 0, so this satisfies the wait without a healthcheck.
+    # This is a run-to-completion init container: it runs init.sql, prints
+    # the success message, and exits. Crucially, it is NOT compatible with
+    # `docker compose up --wait` — `--wait` treats "not running" as a
+    # failure regardless of exit code, so a container that exits cleanly
+    # still makes `--wait` return non-zero. `scripts/ci/compose-up.sh`
+    # handles that by bringing init containers up separately and using
+    # `docker compose wait` (different command) to block on their exit.
 
 volumes:
   postgres_data:
