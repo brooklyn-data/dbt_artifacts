@@ -865,6 +865,27 @@ or dbt Slack #package-ecosystem channel.
 
 ### 12.5. Hardening debt — operational
 
+- **Node 20 → Node 24 action migration. ⚠ Has a hard deadline.**
+  All four workflow files currently set
+  `ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: "true"` at workflow scope
+  as a temporary mitigation. The SHA-pinned action versions we use
+  (`actions/checkout@34e1148...` v4, `astral-sh/setup-uv@caf0cab...`
+  v3, `google-github-actions/auth@c200f36...` v2) are Node 20-based.
+  GitHub Actions timeline:
+
+    - **2026-06-02**: Node 24 becomes the default runtime. Without
+      the env var, our pinned actions would fail. The env var keeps
+      Node 20 working.
+    - **2026-09-16**: Node 20 is **removed entirely** from the
+      runner. The env var stops working on this date. Workflows
+      will fail if action SHAs haven't been bumped.
+
+  Before **2026-09-16**, bump each action's SHA pin to a Node
+  24-compatible release, regression-test all four workflows
+  (Tier 1/2/3 + the cutter), then remove the
+  `ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION` env block from every
+  workflow file. Dependabot (already configured) should surface the
+  bumps automatically once Node 24-compatible versions are tagged.
 - **Pre-commit hooks for SQLFluff.** Catches lint issues before they
   reach CI. Optional, contributor convenience. Constraint inherited
   from §12.2: lint requires the dbt-snowflake adapter init, which

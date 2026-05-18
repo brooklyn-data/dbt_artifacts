@@ -41,6 +41,14 @@ concurrency:
   cancel-in-progress: false
 
 env:
+  # Temporary: keep Node 20 as the actions runtime so the currently
+  # SHA-pinned action versions (which are Node 20-based) keep working
+  # after the June 2, 2026 default flip to Node 24. HARD DEADLINE:
+  # September 16, 2026, when Node 20 is removed from the runner entirely.
+  # Remove this once the pinned actions are bumped to Node 24-compatible
+  # versions. Tracked in specs/ci-rework/README.md §12.5.
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: "true"
+
   # Non-secret env vars consumed by the dbt invocations test model. These
   # are the same values used pre-rework and are checked in to profiles.yml
   # via env_var() — they need to be present, not secret.
