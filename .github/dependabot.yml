@@ -1,0 +1,34 @@
+# Dependabot configuration.
+#
+# Why this exists: every action in `.github/workflows/*.yml` is pinned to a
+# commit SHA (not a tag) for supply-chain safety. That removes auto-updates,
+# so Dependabot fills the gap by opening grouped PRs that re-resolve those
+# SHAs from the action's latest stable tag. Each PR includes the action's
+# changelog, so the maintainer can review what changed before merging.
+#
+# See specs/ci-rework/README.md §9 (shared hardening) for the SHA-pin rationale.
+
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    # Group all action updates into a single PR per week. Avoids three
+    # tiny PRs that all need the same review attention.
+    groups:
+      github-actions:
+        patterns: ["*"]
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "github-actions"
+
+  # NOTE: Python dependency updates (uv.lock / pyproject.toml) are
+  # intentionally NOT managed by Dependabot. dbt and adapter versions are
+  # part of the test surface area — bumps deserve a deliberate `tox.ini`
+  # change and matrix update, not an automated PR. Revisit if this gets
+  # cumbersome in practice.

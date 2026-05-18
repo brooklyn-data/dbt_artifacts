@@ -1,0 +1,223 @@
+# Tier 3 — Release validation.
+#
+# Runs the full warehouse × dbt-version matrix. This is the gate on cutting
+# a release tag: if Tier 3 is green on a `release-candidate/X.Y.Z` branch,
+# the maintainer tags `X.Y.Z` from that branch's HEAD.
+#
+# Triggers:
+#   - push to `release-candidate/**` branches (the standard maintainer flow:
+#     create the branch, push a version bump, watch Tier 3 run, tag)
+#   - `workflow_dispatch` for manual re-runs or one-off validation
+#   - `schedule` weekly — regression run against `main` to detect drift
+#     from upstream dbt adapter releases. Same matrix, same secrets, same
+#     guarantees as a release-candidate run; just on a different cadence.
+#     Scheduled runs always execute against the default branch (`main`),
+#     so this validates the current state of `main` regardless of any
+#     in-flight release branches.
+#
+# Trust model: same as Tier 2 (`main.yml`). Branch protection on `main`
+# ensures `release-candidate/**` branches can only be created or updated by
+# a maintainer pushing trusted code. Secrets are accessible because the code
+# has already cleared the human-review bar via PR-to-main + branch creation.
+#
+# Scope (per specs/ci-rework/README.md §5.3 / Tier 3):
+#   - Lint (same as Tier 2)
+#   - Full version matrix: every supported (warehouse, dbt_version) pair,
+#     including the unversioned "latest" env per warehouse (early warning
+#     for upcoming adapter releases)
+#   - Databricks: stub job, intentionally skipped. See specs §12.3.
+
+name: Tier 3 — Release validation
+
+on:
+  push:
+    branches:
+      - "release-candidate/**"
+  workflow_dispatch:
+  schedule:
+    # Weekly regression: Mondays at 06:00 UTC. Aligned with the start of
+    # the workweek so failures get attention promptly. If this becomes too
+    # expensive, drop to monthly or trim `max-parallel` in the matrix job.
+    - cron: "0 6 * * 1"
+
+permissions:
+  contents: read
+
+# Release validations should not cancel each other — a maintainer pushing
+# follow-up commits to the same release branch wants every intermediate
+# state validated.
+concurrency:
+  group: tier3-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  # Non-secret env vars consumed by the invocations test model (see
+  # integration_test_project/profiles.yml).
+  DBT_CLOUD_PROJECT_ID: 123
+  DBT_CLOUD_JOB_ID: ABC
+  DBT_CLOUD_RUN_REASON: "String with 'quotes' !"
+  TEST_ENV_VAR_1: TEST_VALUE
+  TEST_ENV_VAR_NUMBER: 3
+  TEST_ENV_VAR_EMPTY: ""
+  TEST_ENV_VAR_WITH_QUOTE: "Triggered via Apache Airflow by task 'trigger_dbt_cloud_job_run' in the airtable_ingest DAG."
+  DBT_ENV_CUSTOM_ENV_FAVOURITE_DBT_PACKAGE: dbt_artifacts
+
+jobs:
+  # -------- Lint -----------------------------------------------------------
+  lint:
+    name: lint (sqlfluff)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_ACCOUNT: ${{ secrets.SNOWFLAKE_TEST_ACCOUNT }}
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_USER: ${{ secrets.SNOWFLAKE_TEST_USER }}
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_PASSWORD: ${{ secrets.SNOWFLAKE_TEST_PASSWORD }}
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_ROLE: ${{ secrets.SNOWFLAKE_TEST_ROLE }}
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_DATABASE: ${{ secrets.SNOWFLAKE_TEST_DATABASE }}
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_WAREHOUSE: ${{ secrets.SNOWFLAKE_TEST_WAREHOUSE }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+      - name: Set up uv
+        uses: astral-sh/setup-uv@caf0cab7a618c569241d31dcd442f54681755d39
+        with:
+          enable-cache: true
+      - name: Install Python dependencies
+        run: ./scripts/ci/setup.sh
+      - name: Run sqlfluff lint
+        run: ./scripts/ci/lint.sh
+
+  # -------- Full version matrix -------------------------------------------
+  # Single matrix that enumerates every supported (warehouse, dbt_version)
+  # combination. Includes an unversioned "latest" entry per warehouse to
+  # catch breakage from newly-released adapter minors before we add them to
+  # `tox.ini`. Empty `dbt_version` → `test.sh` uses the unversioned env.
+  #
+  # `id-token: write` is granted at the job level so the conditional WIF
+  # auth step works for bigquery slots. Other slots don't call the auth
+  # action, so they never mint an OIDC token.
+  version-matrix:
+    name: integration (${{ matrix.warehouse }}, ${{ matrix.dbt_version || 'latest' }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_ACCOUNT: ${{ secrets.SNOWFLAKE_TEST_ACCOUNT }}
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_USER: ${{ secrets.SNOWFLAKE_TEST_USER }}
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_PASSWORD: ${{ secrets.SNOWFLAKE_TEST_PASSWORD }}
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_ROLE: ${{ secrets.SNOWFLAKE_TEST_ROLE }}
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_DATABASE: ${{ secrets.SNOWFLAKE_TEST_DATABASE }}
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_WAREHOUSE: ${{ secrets.SNOWFLAKE_TEST_WAREHOUSE }}
+      DBT_ENV_SECRET_GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
+    strategy:
+      fail-fast: false
+      # Throttle parallelism — 42 slots × full cloud setup would hammer
+      # Snowflake and pile up runner billing. 8 in flight gives a release
+      # validation that completes in ~30–40 minutes.
+      max-parallel: 8
+      matrix:
+        include:
+          # "Latest" (unversioned env per warehouse) — picks up the
+          # highest adapter release at the time the workflow runs.
+          - warehouse: snowflake
+            dbt_version: ""
+          - warehouse: bigquery
+            dbt_version: ""
+          - warehouse: postgres
+            dbt_version: ""
+          - warehouse: trino
+            dbt_version: ""
+          - warehouse: sqlserver
+            dbt_version: ""
+
+          # Snowflake — pinned versions, newest first.
+          - { warehouse: snowflake, dbt_version: "1_11_0" }
+          - { warehouse: snowflake, dbt_version: "1_10_0" }
+          - { warehouse: snowflake, dbt_version: "1_9_0" }
+          - { warehouse: snowflake, dbt_version: "1_8_0" }
+          - { warehouse: snowflake, dbt_version: "1_7_0" }
+          - { warehouse: snowflake, dbt_version: "1_6_0" }
+          - { warehouse: snowflake, dbt_version: "1_5_0" }
+          - { warehouse: snowflake, dbt_version: "1_4_0" }
+          - { warehouse: snowflake, dbt_version: "1_3_0" }
+
+          # BigQuery
+          - { warehouse: bigquery, dbt_version: "1_11_0" }
+          - { warehouse: bigquery, dbt_version: "1_10_0" }
+          - { warehouse: bigquery, dbt_version: "1_9_0" }
+          - { warehouse: bigquery, dbt_version: "1_8_0" }
+          - { warehouse: bigquery, dbt_version: "1_7_0" }
+          - { warehouse: bigquery, dbt_version: "1_6_0" }
+          - { warehouse: bigquery, dbt_version: "1_5_0" }
+          - { warehouse: bigquery, dbt_version: "1_4_0" }
+          - { warehouse: bigquery, dbt_version: "1_3_0" }
+
+          # Postgres — no upstream 1.11 release as of 2026-05-12.
+          - { warehouse: postgres, dbt_version: "1_10_0" }
+          - { warehouse: postgres, dbt_version: "1_9_0" }
+          - { warehouse: postgres, dbt_version: "1_8_0" }
+          - { warehouse: postgres, dbt_version: "1_7_0" }
+          - { warehouse: postgres, dbt_version: "1_6_0" }
+          - { warehouse: postgres, dbt_version: "1_5_0" }
+          - { warehouse: postgres, dbt_version: "1_4_0" }
+          - { warehouse: postgres, dbt_version: "1_3_0" }
+
+          # Trino — no upstream 1.11 / 1.9 / 1.8 releases.
+          - { warehouse: trino, dbt_version: "1_10_0" }
+          - { warehouse: trino, dbt_version: "1_7_0" }
+          - { warehouse: trino, dbt_version: "1_6_0" }
+          - { warehouse: trino, dbt_version: "1_5_0" }
+          - { warehouse: trino, dbt_version: "1_4_0" }
+          - { warehouse: trino, dbt_version: "1_3_0" }
+
+          # SQL Server — adapter lags, only 1.9/1.8/1.7/1.4/1.3 published.
+          - { warehouse: sqlserver, dbt_version: "1_9_0" }
+          - { warehouse: sqlserver, dbt_version: "1_8_0" }
+          - { warehouse: sqlserver, dbt_version: "1_7_0" }
+          - { warehouse: sqlserver, dbt_version: "1_4_0" }
+          - { warehouse: sqlserver, dbt_version: "1_3_0" }
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+
+      - name: Install Microsoft ODBC Driver 18 (sqlserver only)
+        if: matrix.warehouse == 'sqlserver'
+        run: |
+          sudo apt-get update
+          sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18
+
+      - name: Authenticate to GCP via Workload Identity Federation (bigquery only)
+        if: matrix.warehouse == 'bigquery'
+        uses: google-github-actions/auth@c200f3691d83b41bf9bbd8638997a462592937ed
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@caf0cab7a618c569241d31dcd442f54681755d39
+        with:
+          enable-cache: true
+
+      - name: Install Python dependencies
+        run: ./scripts/ci/setup.sh
+
+      - name: Run integration tests
+        run: ./scripts/ci/test.sh ${{ matrix.warehouse }} ${{ matrix.dbt_version }}
+
+  # -------- Databricks stub -----------------------------------------------
+  # Visible in the workflow run so reviewers see Databricks has been
+  # *considered* and *skipped on purpose*, not forgotten. When Databricks
+  # is reactivated (specs/ci-rework/README.md §12.3), replace this with a real
+  # matrix job following the same shape as `version-matrix`.
+  integration-databricks-stub:
+    name: integration (databricks) [STUB — skipped]
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - name: Announce skip
+        run: |
+          echo "::warning title=Databricks tests skipped::Databricks integration is stubbed pending reactivation. See specs/ci-rework/README.md §12.3."
+          echo "This job exists so the Tier 3 release matrix visibly accounts for Databricks rather than silently omitting it."

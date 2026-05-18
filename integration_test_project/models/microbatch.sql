@@ -11,7 +11,9 @@
             'field': 'transaction_ts',
             'data_type': 'datetime',
             'granularity': 'day'
-        }
+        },
+
+        enabled = target.type != 'trino'
     )
 }}
 

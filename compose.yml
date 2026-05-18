@@ -1,0 +1,105 @@
+# Local-runnable data warehouses for dbt_artifacts integration tests.
+#
+# Used by both local development (`scripts/ci/compose-up.sh`) and GitHub Actions.
+# The contract: every service has a healthcheck, so `docker compose up --wait`
+# returns only when the stack is actually ready to accept connections.
+#
+# Ports reserved on the host (deliberately non-standard to avoid clashing
+# with anything a developer is already running — local Postgres on 5432,
+# whatever's on 8080, etc.). Containers internally still listen on stock
+# ports; only the host-side mapping is shifted. profiles.yml hardcodes
+# these shifted values so dbt connects to the test stack, not your laptop's
+# default services.
+#   55432  postgres   (container: 5432)
+#   58080  trino      (container: 8080)
+#   51433  sqlserver  (container: 1433)
+#
+# Host-side prerequisites (NOT installed by this file):
+#   - SQL Server: the Microsoft ODBC Driver 18 must be installed on the host
+#     because dbt-sqlserver runs on the host and connects into the container.
+#     macOS:  brew tap microsoft/mssql-release https://github.com/Microsoft/homebrew-mssql-release
+#             brew install msodbcsql18 mssql-tools18
+#     Linux:  sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18
+#
+# Image tags are pinned to specific versions, not floating `:latest`, to
+# guarantee local ↔ CI parity. Update tags deliberately, in a single PR.
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "55432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  trino:
+    image: trinodb/trino:476
+    ports:
+      - "58080:8080"
+    environment:
+      DBT_FILE_FORMAT: csv
+    volumes:
+      - ./integration_test_project/.trino-config:/etc/trino
+    healthcheck:
+      test:
+        - "CMD-SHELL"
+        - "curl -fsS http://localhost:8080/v1/info | grep -q '\"starting\":false'"
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    user: root
+    platform: linux/amd64
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "123Administrator"
+      MSSQL_PID: "DeveloperStandard"
+      DOCKER_DEFAULT_PLATFORM: "linux/amd64"
+    ports:
+      - "51433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+      - ./init-scripts/sqlserver:/setup
+    restart: always
+    healthcheck:
+      test:
+        - "CMD-SHELL"
+        - "/opt/mssql-tools18/bin/sqlcmd -S 127.0.0.1,1433 -U sa -P ${MSSQL_SA_PASSWORD:-123Administrator} -No -Q 'SELECT 1' || exit 1"
+      interval: 10s
+      retries: 10
+      start_period: 30s
+      timeout: 10s
+
+  sqlserver-configurator:
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    platform: linux/amd64
+    volumes:
+      - ./init-scripts/sqlserver:/docker-entrypoint-initdb.d
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    command: >
+      bash -c '
+      /opt/mssql-tools18/bin/sqlcmd -S sqlserver -U sa -P ${MSSQL_SA_PASSWORD:-123Administrator} -No -d master -i docker-entrypoint-initdb.d/init.sql
+      && echo "SQL Server bootstrap complete.";
+      '
+    # The configurator exits after init.sql completes; that exit is success.
+    # `docker compose up --wait` treats a service as healthy when it has no
+    # healthcheck and exits 0, so this satisfies the wait without a healthcheck.
+
+volumes:
+  postgres_data:
+  sqlserver_data:
