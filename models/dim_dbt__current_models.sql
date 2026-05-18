@@ -1,10 +1,12 @@
 with
     base as (select * from {{ ref("stg_dbt__models") }}),
+
     model_executions as (select * from {{ ref("stg_dbt__model_executions") }}),
+
     latest_models as (
 
         {# Retrieves the models present in the most recent run #}
-        select * from base where run_started_at = (select max(run_started_at) from base)
+        select * from base where run_started_at = (select max(b.run_started_at) from base as b)
 
     ),
 
@@ -132,4 +134,3 @@ with
 
 select *
 from final
-
