@@ -39,6 +39,7 @@
                 '{{ model_copy.checksum.checksum  | replace('\\', '\\\\') }}', {# checksum #}
                 '{{ model_copy.config.materialized }}', {# materialization #}
                 '{{ tojson(model_copy.tags) }}', {# tags #}
+                '{{ tojson(model_copy.group) }}', {# group #}
                 '{{ tojson(model_copy.config.meta) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}', {# meta #}
                 '{{ model_copy.alias }}', {# alias #}
                 {% if var('dbt_artifacts_exclude_all_results', false) %}
@@ -74,6 +75,7 @@
                     '{{ model_copy.checksum.checksum | replace('\\', '\\\\') }}', {# checksum #}
                     '{{ model_copy.config.materialized }}', {# materialization #}
                     {{ tojson(model_copy.tags) }}, {# tags #}
+                    {{ tojson(model_copy.group) }}, {# group #}
                     {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(model_copy.config.meta)) }}, {# meta #}
                     '{{ model_copy.alias }}', {# alias #}
                     {% if var('dbt_artifacts_exclude_all_results', false) %}
@@ -109,6 +111,7 @@
                     '{{ model_copy.checksum.checksum }}', {# checksum #}
                     '{{ model_copy.config.materialized }}', {# materialization #}
                     '{{ tojson(model_copy.tags) }}', {# tags #}
+                    '{{ tojson(model_copy.group) }}', {# group #}
                     $${{ model_copy.config.meta }}$$, {# meta #}
                     '{{ model_copy.alias }}', {# alias #}
                     {% if var('dbt_artifacts_exclude_all_results', false) %}
@@ -149,6 +152,7 @@
                 '{{ model_copy.checksum.checksum }}', {# checksum #}
                 '{{ model_copy.config.materialized }}', {# materialization #}
                 '{{ tojson(model_copy.tags) }}', {# tags #}
+                '{{ tojson(model_copy.group) }}', {# group #}
                 '{{ tojson(model_copy.config.meta) | replace("'","''") }}', {# meta #}
                 '{{ model_copy.alias }}', {# alias #}
                 {% if var('dbt_artifacts_exclude_all_results', false) %}
