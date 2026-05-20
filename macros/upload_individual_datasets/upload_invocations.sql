@@ -54,7 +54,8 @@
         '{{ target.profile_name }}', {# target_profile_name #}
         '{{ target.name }}', {# target_name #}
         '{{ target.schema }}', {# target_schema #}
-        {{ target.threads }}, {# target_threads #}
+        {# dbt-fusion sets target.threads to None — guard against it #}
+        {% if target.threads is not none %}{{ target.threads }}{% else %}cast(null as int){% endif %}, {# target_threads #}
 
         '{{ env_var('DBT_CLOUD_PROJECT_ID', '') }}', {# dbt_cloud_project_id #}
         '{{ env_var('DBT_CLOUD_JOB_ID', '') }}', {# dbt_cloud_job_id #}
