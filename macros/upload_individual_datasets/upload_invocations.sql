@@ -283,7 +283,7 @@
 {% endmacro -%}
 
 
-{% macro sqlserver__get_invocations_dml_sql(invocation_args=invocation_args_dict) -%}
+{% macro fabric__get_invocations_dml_sql(invocation_args=invocation_args_dict) -%}
     {% set invocation_values %}
     select
         "1",

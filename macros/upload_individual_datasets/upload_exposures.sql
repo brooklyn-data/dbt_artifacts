@@ -116,7 +116,7 @@
     {% endif %}
 {%- endmacro %}
 
-{% macro sqlserver__get_exposures_dml_sql(exposures) -%}
+{% macro fabric__get_exposures_dml_sql(exposures) -%}
 
     {% if exposures != [] %}
         {% set exposure_values %}

@@ -118,7 +118,7 @@
 {%- endmacro %}
 
 
-{% macro sqlserver__get_snapshots_dml_sql(snapshots) -%}
+{% macro fabric__get_snapshots_dml_sql(snapshots) -%}
 
     {% if snapshots != [] %}
         {% set snapshot_values %}

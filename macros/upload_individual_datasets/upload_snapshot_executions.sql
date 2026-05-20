@@ -214,7 +214,7 @@
     {% endif %}
 {% endmacro -%}
 
-{% macro sqlserver__get_snapshot_executions_dml_sql(snapshots) -%}
+{% macro fabric__get_snapshot_executions_dml_sql(snapshots) -%}
     {% if snapshots != [] %}
         {% set snapshot_execution_values %}
         select

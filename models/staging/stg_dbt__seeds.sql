@@ -9,10 +9,10 @@ with
             command_invocation_id,
             node_id,
             run_started_at,
-            {% if target.type == "sqlserver" %} "database"
+            {% if target.type == "sqlserver" or target.type == "synapse" or target.type == "fabric" %} "database"
             {% else %} database
             {% endif %},
-            {% if target.type == "sqlserver" %} "schema"
+            {% if target.type == "sqlserver" or target.type == "synapse" or target.type == "fabric" %} "schema"
             {% else %} schema
             {% endif %},
             name,
