@@ -81,7 +81,19 @@
                 null, {# rows_affected not available in Databricks #}
                 {{ 'null' if test.failures is none else test.failures }}, {# failures #}
                 '{{ test.message | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') | replace("\n", "\\n") }}', {# message #}
-                {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(test.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"')) }} {# adapter_response #}
+                {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(test.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"')) }}, {# adapter_response #}
+
+                {% if test.node.compiled_code %} {# compiled_code #}
+                    '{{ test.node.compiled_code | replace("\\", "\\\\") | replace("'", "\\'") | replace("\n", "\\n") }}'
+                {% else %} 
+                    null 
+                {% endif %}, {# compiled_sql #}
+                
+                {% if test.node.relation_name %} {# audit_table_name stores failure results #} 
+                    '{{ test.node.relation_name | replace("`", "") }}' 
+                {% else %} 
+                    null 
+                {% endif %} {# audit_table_name #}
             )
             {%- if not loop.last %},{%- endif %}
 

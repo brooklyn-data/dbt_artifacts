@@ -19,5 +19,7 @@ select
     , cast(null as {{ type_int() }}) as failures
     , cast(null as {{ type_string() }}) as message
     , cast(null as {{ type_json() }}) as adapter_response
+    , cast(null as {{type_string() }}) as compiled_sql           
+    , cast(null as {{type_string() }}) as audit_table_name   
 from dummy_cte
 where 1 = 0
