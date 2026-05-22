@@ -21,3 +21,6 @@ models:
         columns: '{{ target.name != "databricks" and target.type != "sqlserver" }}'
         relation: '{{ target.type != "sqlserver" }}'
       +as_columnstore: False
+    insert_batch_size:
+      models: "{{ 50 if target.type in ['bigquery', 'trino'] else 100 }}"
+      default: "{{ 300 if target.type in ['bigquery', 'trino'] else 5000 }}"
