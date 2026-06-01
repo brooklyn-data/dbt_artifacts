@@ -71,9 +71,3 @@ ensure_github_sha() {
     log "GITHUB_SHA not set; using ${GITHUB_SHA}"
   fi
 }
-
-# Set DBT_VERSION (used in schema names) if not set. Defaults to empty (which
-# is what the `integration_<warehouse>` envs use — no version suffix).
-ensure_dbt_version() {
-  export DBT_VERSION="${DBT_VERSION:-}"
-}

@@ -94,13 +94,20 @@ if (( needs_compose )); then
 fi
 
 ensure_github_sha
-ensure_dbt_version
+
+# Bridge the positional dbt_version arg into the DBT_VERSION env var so it
+# reaches dbt (via tox passenv) and lands in the schema/dataset name built in
+# integration_test_project/profiles.yml. Without this, DBT_VERSION stays empty
+# and every matrix job within a warehouse shares ONE schema
+# (dbt_artifacts_test_commit__<sha>). Parallel cloud-warehouse jobs then
+# collide on the same tables — on BigQuery this surfaces as 409 Already
+# Exists / 429 rate limits / "table not found in location". The positional
+# arg is the source of truth and wins over any inherited DBT_VERSION. An
+# empty value (the unversioned "latest" env) is intentional and safe: there
+# is exactly one such job per warehouse, so it can't collide with itself.
+export DBT_VERSION="${dbt_version}"
 
 banner "Running ${tox_env} (warehouse=${warehouse}, dbt_version=${dbt_version:-latest})"
-
-# Export DBT_VERSION so it reaches tox (which then passes it to dbt via
-# passenv). Already ensured non-empty default above.
-export DBT_VERSION
 
 uv run tox -e "${tox_env}"
 
