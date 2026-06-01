@@ -692,15 +692,72 @@ as a no-op after survey. See 12.2 introduction.)
 
 ### 12.3. Test matrix debt
 
-#### 12.3.1. Drop EOL dbt versions — **planned, not yet executed**
+#### 12.3.0. Update from the 2026-05-26 weekly regression — **executed**
 
-**Status:** Decision made (Option B below). Execution deferred to a
-separate branch + PR after a broad announcement. The next major
-release of `dbt_artifacts` (3.0.0) will land the removal. Update this
-section when execution begins.
+The first weekly Tier 3 regression against `main` failed broadly. Triage
+of all 43 matrix jobs found **two independent root causes**, and we acted
+on both. This update supersedes the original 12.3.1 plan below for the
+CI-coverage portion (we dropped 1.3–**1.8**, not just 1.3–1.6, and did it
+now rather than deferring to 3.0.0).
 
-**Decision: drop dbt 1.3, 1.4, 1.5, 1.6 from the test matrix.** Keep
-1.7, 1.8, 1.9, 1.10, 1.11 (where adapter releases exist).
+**Root cause 1 — `DBT_VERSION` schema collision (a real bug, now fixed).**
+`scripts/ci/test.sh` read the positional `dbt_version` arg into a local
+variable used only to pick the tox env name, but never assigned it to the
+`DBT_VERSION` environment variable that `integration_test_project/
+profiles.yml` interpolates into the schema/dataset name. `_lib.sh`'s
+`ensure_dbt_version()` then defaulted it to empty. Result: every matrix
+job within a warehouse wrote to the **same** schema
+(`dbt_artifacts_test_commit__<sha>`, note the empty version segment).
+Under `max-parallel: 8`, parallel jobs on the shared cloud warehouses
+collided — BigQuery surfaced it as `409 Already Exists` / `429 rate
+limit` / `table not found in location`, failing supported versions 1.9
+and 1.10. Container-isolated warehouses (postgres/trino/sqlserver) and
+Snowflake happened to survive, but Snowflake was equally at risk.
+**Fix:** `test.sh` now does `export DBT_VERSION="${dbt_version}"`; the
+misleading `ensure_dbt_version()` helper was removed from `_lib.sh`. Each
+pinned version now gets a distinct schema. This bug was invisible locally
+because we only ever ran one job at a time.
+
+**Root cause 2 — EOL versions can't run on the runner.** dbt 1.3–1.7
+import `distutils` (removed in Python 3.12) and die at `dbt clean`; dbt
+1.3–1.8 predate the `microbatch` incremental strategy (a 1.9 feature)
+that the test fixture uses. Making them green would need a legacy
+Python 3.11 lane plus per-version gates — tech debt for versions dbt
+Labs has already EOL'd.
+
+**Decision (revising 12.3.1): drop dbt 1.3–1.8 from the CI matrix now.**
+Keep 1.9 / 1.10 / 1.11 / latest. This is a **CI-coverage change, not a
+support drop**:
+
+- `require-dbt-version` in `dbt_project.yml` is **unchanged** (still
+  `>=1.3.0`), so older-dbt consumers can still install the package — it's
+  simply no longer verified each release.
+- The `tox.ini` envs for 1.3–1.8 are **kept** so a maintainer can run
+  e.g. `tox -e integration_snowflake_1_5_0` on a local Python 3.11 to
+  debug a consumer report.
+- A consumer-facing note was added to `README.md` ("Supported dbt
+  versions").
+- The **formal** support-floor bump (`require-dbt-version` → `>=1.9`,
+  removing the tox envs) remains a separate **3.0.0** decision with the
+  announcement drafted in 12.3.1. This update is Phase 1 (CI descope)
+  brought forward; it does not pre-empt that announcement.
+
+**Files changed:** `scripts/ci/test.sh`, `scripts/ci/_lib.sh`,
+`.github/workflows/release.yml` (matrix 42 → 15 slots), `README.md`.
+
+---
+
+#### 12.3.1. Drop EOL dbt versions — original plan (see 12.3.0 for what shipped)
+
+**Status:** The CI-coverage portion was executed early — see 12.3.0. The
+**formal support-floor bump** (require-dbt-version + tox env removal +
+public announcement) is still planned for 3.0.0; the data, options, and
+draft announcement below remain the reference for that. Note 12.3.0 went
+one version further than the original Option B (dropped 1.7 and 1.8 from
+CI too), because the Monday run proved they can't run on the CI runner.
+
+**Original decision: drop dbt 1.3, 1.4, 1.5, 1.6 from the test matrix.**
+Keep 1.7, 1.8, 1.9, 1.10, 1.11 (where adapter releases exist).
 
 ##### The data
 

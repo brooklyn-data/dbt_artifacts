@@ -45,6 +45,17 @@ fct_dbt__test_executions
 
 See the generated [dbt docs site](https://brooklyn-data.github.io/dbt_artifacts/#!/overview) for documentation on each model.
 
+## Supported dbt versions
+
+As of `2.11.0`, the package's CI verifies against **dbt 1.9 and newer**.
+Older versions (1.3–1.8) may continue to work but are **no longer verified
+in CI** — dbt Labs has marked them end-of-life and they cannot run on the
+Python 3.12 toolchain our CI uses. The package still *installs* on dbt
+≥1.3.0 (`require-dbt-version` is unchanged), so existing users are not
+blocked; we simply can no longer confirm new releases against those
+versions. If you rely on dbt < 1.9, pin a known-good `dbt_artifacts`
+release in your `packages.yml`.
+
 ## Quickstart
 
 1. Add this package to your `packages.yml`:
