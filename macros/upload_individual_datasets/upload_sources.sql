@@ -108,7 +108,7 @@
 {%- endmacro %}
 
 
-{% macro sqlserver__get_sources_dml_sql(sources) -%}
+{% macro fabric__get_sources_dml_sql(sources) -%}
 
     {% if sources != [] %}
         {% set source_values %}

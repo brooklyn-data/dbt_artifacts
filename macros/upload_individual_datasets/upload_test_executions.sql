@@ -198,7 +198,7 @@
     {% endif %}
 {% endmacro -%}
 
-{% macro sqlserver__get_test_executions_dml_sql(tests) -%}
+{% macro fabric__get_test_executions_dml_sql(tests) -%}
     {% if tests != [] %}
         {% set test_execution_values %}
         select

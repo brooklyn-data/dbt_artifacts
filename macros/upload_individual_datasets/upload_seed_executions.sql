@@ -214,7 +214,7 @@
     {% endif %}
 {% endmacro -%}
 
-{% macro sqlserver__get_seed_executions_dml_sql(seeds) -%}
+{% macro fabric__get_seed_executions_dml_sql(seeds) -%}
     {% if seeds != [] %}
         {% set seed_execution_values %}
         select

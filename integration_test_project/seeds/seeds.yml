@@ -5,4 +5,4 @@ seeds:
     config:
       column_types:
         id: integer
-        load_timestamp: "{{ 'datetime2' if target.type == 'sqlserver' else 'timestamp' }}"
+        load_timestamp: "{{ 'datetime2' if target.type == 'sqlserver' or target.type == 'synapse' or target.type == 'fabric' else 'timestamp' }}"
