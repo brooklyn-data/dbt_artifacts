@@ -52,7 +52,10 @@
     {%- if var('dbt_artifacts_count_all_invocations', false) -%}
         cast('deployment' as {{ dbt.type_string() }})
     {%- else -%}
-        {%- if var('dbt_artifacts_deployment_env_var', none) is not none -%}
+        {#- Raise only at run time (execute == true), never during parse, so a
+            non-Snowflake consumer's `dbt parse` is unaffected even with this var
+            set. The consumption models that call this are Snowflake-gated anyway. -#}
+        {%- if var('dbt_artifacts_deployment_env_var', none) is not none and execute -%}
             {{ exceptions.raise_compiler_error(
                 "dbt_artifacts_deployment_env_var (billing classification rule 3) requires adapter-specific JSON support and is only implemented for Snowflake in v1. Unset the var or run on Snowflake."
             ) }}
