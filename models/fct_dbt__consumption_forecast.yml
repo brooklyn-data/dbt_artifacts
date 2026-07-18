@@ -38,9 +38,11 @@ models:
     description: month_to_date_quantity + sum of expected quantity over the remaining calendar days.
   - name: forecast_exceeded_date
     description: >
-      First remaining day whose cumulative expected (added to MTD) reaches the
-      allowance; as_of when MTD already exceeds it; null when no allowance or the
-      meter is not smb or the projection never crosses.
+      The day the allowance is (or is projected to be) crossed: the actual day
+      the running total of elapsed daily quantity first reached the allowance if
+      it already has (historical), otherwise the first future day the projected
+      cumulative (MTD + weekday-aware expected) reaches it; null when there is no
+      allowance, the meter is not smb, or it never crosses.
   - name: pct_of_allowance_used
     description: month_to_date_quantity / allowance for the smb meter; null otherwise.
     tests:

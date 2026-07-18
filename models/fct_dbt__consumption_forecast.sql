@@ -147,7 +147,46 @@ with
     ),
 
     {%- if allowance is not none %}
+    elapsed_cumulative as (
+
+        {# Running total of ACTUAL daily quantity over elapsed days (<= as_of),
+           per meter x month, so we can find the real day the allowance was
+           first crossed rather than a month-end placeholder. #}
+        select
+            daily.meter
+            , date_trunc('month', daily.date_day) as billing_month
+            , daily.date_day
+            , sum(daily.quantity) over (
+                partition by daily.meter, date_trunc('month', daily.date_day)
+                order by daily.date_day
+                rows between unbounded preceding and current row
+            ) as cumulative_actual
+        from daily
+        inner join month_anchors as ma
+            on ma.meter = daily.meter
+            and ma.billing_month = date_trunc('month', daily.date_day)
+        where daily.date_day <= ma.as_of_date
+    ),
+
+    historical_breach as (
+
+        {# First elapsed day whose actual running total reaches the allowance --
+           the true historical crossing date (for fully-elapsed months and for
+           current months already over). #}
+        select
+            meter
+            , billing_month
+            , min(date_day) as historical_exceeded_date
+        from elapsed_cumulative
+        where meter = 'smb'
+            and cumulative_actual >= {{ allowance }}
+        group by meter, billing_month
+    ),
+
     breach as (
+
+        {# First FUTURE day the projected cumulative (MTD + expected) crosses the
+           allowance, for months not already over. #}
         select
             re.meter
             , re.billing_month
@@ -179,10 +218,11 @@ with
                 as forecast_month_end_quantity
             {%- if allowance is not none %}
             , case
-                when ma.meter = 'smb' and mtd.month_to_date_quantity >= {{ allowance }}
-                    then ma.as_of_date
                 when ma.meter = 'smb'
-                    then breach.forecast_exceeded_date
+                    then coalesce(
+                        historical_breach.historical_exceeded_date,
+                        breach.forecast_exceeded_date
+                    )
             end as forecast_exceeded_date
             , case
                 when ma.meter = 'smb'
@@ -210,6 +250,9 @@ with
         left join remaining_summary as rs
             on rs.meter = ma.meter and rs.billing_month = ma.billing_month
         {%- if allowance is not none %}
+        left join historical_breach
+            on historical_breach.meter = ma.meter
+            and historical_breach.billing_month = ma.billing_month
         left join breach
             on breach.meter = ma.meter and breach.billing_month = ma.billing_month
         {%- endif %}
