@@ -1,0 +1,52 @@
+version: 2
+
+models:
+- name: fct_dbt__consumption_forecast
+  description: >
+    Month-end consumption forecast: one row per billing_month x meter with
+    month-to-date usage, a weekday-aware projected month-end total, the projected
+    allowance-breach date, and % of allowance used. Projection averages the
+    trailing dbt_artifacts_run_rate_days (default 28) per ISO day-of-week
+    (including zero-build days) and sums the remaining calendar days' expected
+    values. Allowance resolves via get_smb_allowance() and applies to the 'smb'
+    meter only; with no plan/allowance var the breach columns are null but
+    projections still populate. Snowflake-only in v1 (uses Snowflake date
+    functions); multi-adapter is fast-follow C-11.
+  columns:
+  - name: consumption_forecast_id
+    description: Surrogate key of the grain (hash of meter, billing_month). BI join key.
+    tests:
+    - unique
+    - not_null
+  - name: billing_month
+    description: First day of the calendar month (UTC).
+    tests:
+    - not_null
+  - name: meter
+    description: "Consumption meter (e.g. 'smb', 'active_target_tables')."
+    tests:
+    - not_null
+  - name: month_to_date_quantity
+    description: Sum of the meter's quantity from month start through as_of (today, clamped to month end).
+    tests:
+    - not_null
+  - name: allowance
+    description: Monthly SMB allowance (get_smb_allowance()); null for non-smb meters or when unset.
+  - name: daily_run_rate
+    description: Average daily quantity over the trailing run_rate_days window (includes zero-build days).
+  - name: forecast_month_end_quantity
+    description: month_to_date_quantity + sum of expected quantity over the remaining calendar days.
+  - name: forecast_exceeded_date
+    description: >
+      First remaining day whose cumulative expected (added to MTD) reaches the
+      allowance; as_of when MTD already exceeds it; null when no allowance or the
+      meter is not smb or the projection never crosses.
+  - name: pct_of_allowance_used
+    description: month_to_date_quantity / allowance for the smb meter; null otherwise.
+    tests:
+    - dbt_artifacts.is_between:
+        min_value: 0
+  - name: days_remaining
+    description: Calendar days remaining in the month after as_of (0 for fully-elapsed months).
+  - name: is_on_pace_to_exceed
+    description: True when forecast_month_end_quantity > allowance (smb meter); null when no allowance.
