@@ -1,0 +1,34 @@
+version: 2
+
+models:
+- name: fct_dbt__flaky_tests_detail
+  description: >
+    One row per flip event: a test that went fail/error -> pass on the same UTC
+    day with no parent model rebuilt in between. parent_rebuilt_between is false
+    when the test has resolvable model parents and none rebuilt between, or null
+    when no model parents resolve (uncertainty is surfaced, not hidden).
+    Snowflake-only.
+  columns:
+  - name: flaky_test_flip_id
+    description: Surrogate key of the flip event (hash of test_node_id, failed_at, passed_at). BI join key.
+    tests:
+    - unique
+    - not_null
+  - name: test_node_id
+    description: The test's unique node id.
+    tests:
+    - not_null
+  - name: date_day
+    description: UTC calendar day the flip occurred (via cast_to_utc_date()).
+    tests:
+    - not_null
+  - name: failed_at
+    description: run_started_at of the fail/error execution.
+  - name: passed_at
+    description: run_started_at of the following pass execution.
+  - name: parent_rebuilt_between
+    description: >
+      false = the test has model parents and none had a successful build between
+      failed_at and passed_at (genuine flake); null = no model parents resolved.
+      (Candidates where a parent rebuilt between are legitimate fixes and are
+      excluded from this view entirely.)
