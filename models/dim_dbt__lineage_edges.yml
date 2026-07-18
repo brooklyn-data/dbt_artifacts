@@ -1,0 +1,38 @@
+version: 2
+
+models:
+- name: dim_dbt__lineage_edges
+  description: >
+    One row per parent_node_id x child_node_id dependency edge from the latest
+    graph state, built by exploding the depends_on_nodes arrays the package
+    already uploads for models, snapshots and tests. Unblocks stall-time and
+    flaky-test parentage. **Snowflake only in v1** (enabled = target.type ==
+    'snowflake'); the JSON-array explode uses the dispatched flatten_json_array()
+    helper, whose non-Snowflake overrides are fast-follow (O-12 / C-11). Latest
+    graph state = each node's most-recent appearance (row_number by run_started_at).
+  columns:
+  - name: lineage_edge_id
+    description: >
+      Surrogate key of the edge (hash of parent_node_id, child_node_id,
+      child_resource_type). Added so the grain can be tested without a dbt_utils
+      dependency; also a stable BI join key.
+    tests:
+    - unique
+    - not_null
+  - name: parent_node_id
+    description: >
+      node_id (or source id) the child depends on, i.e. the upstream end of the
+      edge. Sourced from the child's depends_on_nodes array; may reference a
+      source (source.*) as well as a model/snapshot/seed.
+    tests:
+    - not_null
+  - name: child_node_id
+    description: The downstream node_id that declares the dependency.
+    tests:
+    - not_null
+  - name: child_resource_type
+    description: "Resource type of the child node: 'model', 'snapshot' or 'test'."
+  - name: edge_source_invocation_id
+    description: >
+      command_invocation_id of the latest-graph-state row the edge was derived
+      from (the invocation in which the child most recently appeared).
