@@ -1,3 +1,5 @@
+{{ config(enabled = target.type == "snowflake") }}
+
 {#-
     Core consumption mart: one row per UTC day x meter.
 

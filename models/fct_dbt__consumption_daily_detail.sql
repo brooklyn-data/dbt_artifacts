@@ -1,3 +1,5 @@
+{{ config(enabled = target.type == "snowflake") }}
+
 {#-
     Detail grain for consumption: UTC day x meter x materialization x target_name.
     This is the BASE grain; fct_dbt__consumption_daily is a strict roll-up of

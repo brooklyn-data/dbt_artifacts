@@ -1,3 +1,5 @@
+{{ config(enabled = target.type == "snowflake") }}
+
 {#-
     "Where is the consumption going" mart: one row per billing_month x node_id
     (models only), with SMB burn, build cadence, runtime, and the dbt State ROI

@@ -1,3 +1,5 @@
+{{ config(enabled = target.type == "snowflake") }}
+
 {#-
     Run-health rollup: one row per UTC day across ALL invocations (no billing
     classification -- dev failures are still failures). Node counts span

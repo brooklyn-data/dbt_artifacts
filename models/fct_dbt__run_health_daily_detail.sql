@@ -1,3 +1,5 @@
+{{ config(enabled = target.type == "snowflake") }}
+
 {#-
     Run-health rollup at UTC day x target_name grain (companion to
     fct_dbt__run_health_daily). Same status mapping and definitions as the

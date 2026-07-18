@@ -1,3 +1,5 @@
+{{ config(enabled = target.type == "snowflake") }}
+
 {#-
     Runtime-regression detection: one row per UTC day x node_id (models).
 
