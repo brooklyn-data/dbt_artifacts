@@ -1,79 +1,88 @@
 # Contributing to the dbt Artifacts Package as a Maintainer
 
-> [!IMPORTANT]
-> This guide was written for Brooklyn Data engineers and contains details that are specific to the Brooklyn Data workplace (i.e., Slack channel names), but much of this
-> will be useful for all contributors, internal or external to Brooklyn Data. 
+> [!NOTE]
+> Replace the placeholder identifiers below (`<your-snowflake-account>`,
+> `<your-gcp-project>`, etc.) with your team's specifics. The package
+> CI uses these via environment variables — no values are baked into
+> the repo. Coordinate access to shared test accounts with your team
+> in whatever channel your team uses (the project does not assume any
+> particular Slack workspace or chat tool).
 
 ## General Guidance
-- You can create your own branches in the repo - no need to fork. Make sure to ask in the #_dbt_artifacts Slack channel
-  if you need to be given permissions to contribute.
-- If a contributor has a question about a PR, please try to answer it as soon as possible. If you are not sure, ask in 
-  the #_dbt_artifacts Slack channel.
-- If you review a PR from a contributor and request changes, please make sure to follow up with them to see if they have 
-  any questions or need help. If you do not receive a response within a few weeks, and you can fix the code and merge it - 
-  do it. If for whatever reasons permissions prevent you from doing so, add a short explanation that you’ve closed the PR
-  for that reason, copied their work into your branch, and pasted a link so they can follow progress.
+
+- Maintainers can create branches directly on the repo — no need to
+  fork. Ask your team for repo permissions if you don't already have
+  them.
+- If a contributor has a question on a PR, try to answer it promptly.
+- If you review a PR and request changes, follow up to see whether
+  the contributor needs help. If you don't hear back within a few
+  weeks and the fix is small, finish it yourself and merge — leave a
+  short note on the PR pointing the original contributor to where
+  their work ended up.
 
 ## Warehouse set-up for testing
-You can use the following warehouses for testing. The credentials are picked up in the `integration_test_project/profiles.yml`
-file via environment variables. So to be able to connect to the different sources, you should include the following in your
-`integration_test_project/env.sh` file (these are exported by running the `. ./env.sh` command mentioned below).
+
+Credentials are read from `integration_test_project/profiles.yml`
+via environment variables. Populate `env.sh` (gitignored) and source
+it before running tests: `. ./env.sh`.
 
 ### Snowflake
-This uses our partner Snowflake account. Temporarily, you can make use of the shared CI login credentials. See #_dbt_artifacts
-Slack channel for links.
+
+Coordinate access to your team's shared test Snowflake account through
+your team's normal access-request process.
 
 ````
 # integration_test_project/env.sh
-export DBT_ENV_SECRET_SNOWFLAKE_TEST_ACCOUNT=brooklyndatapartner
-export DBT_ENV_SECRET_SNOWFLAKE_TEST_USER=dbt_artifacts_ci
-export DBT_ENV_SECRET_SNOWFLAKE_TEST_PASSWORD=<see shared credentials>
-export DBT_ENV_SECRET_SNOWFLAKE_TEST_ROLE=public
-export DBT_ENV_SECRET_SNOWFLAKE_TEST_DATABASE=dev
-export DBT_ENV_SECRET_SNOWFLAKE_TEST_WAREHOUSE=developer
+export DBT_ENV_SECRET_SNOWFLAKE_TEST_ACCOUNT=<your-snowflake-account>
+export DBT_ENV_SECRET_SNOWFLAKE_TEST_USER=<your-test-user>
+export DBT_ENV_SECRET_SNOWFLAKE_TEST_PASSWORD=<see your team's secret store>
+export DBT_ENV_SECRET_SNOWFLAKE_TEST_ROLE=<role with create/usage on the test DB>
+export DBT_ENV_SECRET_SNOWFLAKE_TEST_DATABASE=<test database>
+export DBT_ENV_SECRET_SNOWFLAKE_TEST_WAREHOUSE=<test warehouse>
 ````
 
 ### Databricks
-This uses the dbt-artifacts project. Add a request in the #_sandbox_stewards Slack channel to be given permissions to use it.
-Follow the instructions in [here](https://docs.databricks.com/aws/en/integrations/compute-details) to get the following details
-(the Host and Http Path are placeholders to show what they might look like). You will need to get a [personal access token](https://docs.databricks.com/aws/en/dev-tools/auth#personal-access-tokens-for-users) too.
+
+Get host, HTTP path, and a [personal access token](https://docs.databricks.com/aws/en/dev-tools/auth#personal-access-tokens-for-users)
+from your team's Databricks workspace. The
+[compute details page](https://docs.databricks.com/aws/en/integrations/compute-details)
+shows where to find the host and HTTP path.
 
 ````
-export DBT_ENV_SECRET_DATABRICKS_HOST=<<value>>.cloud.databricks.com
-export DBT_ENV_SECRET_DATABRICKS_HTTP_PATH=/sql/1.0/warehouses/<<value>>
-export DBT_ENV_SECRET_DATABRICKS_TOKEN=abcdefghijklmnop1234567890
+export DBT_ENV_SECRET_DATABRICKS_HOST=<workspace-id>.cloud.databricks.com
+export DBT_ENV_SECRET_DATABRICKS_HTTP_PATH=/sql/1.0/warehouses/<warehouse-id>
+export DBT_ENV_SECRET_DATABRICKS_TOKEN=<personal-access-token>
 ````
 
 ### BigQuery
-This is set up in the dbt-artifacts-ci [project](https://console.cloud.google.com/welcome?project=dbt-artifacts-ci). Add
-a request in the #_sandbox_stewards Slack channel to be given permissions to use it. You will need to follow the instructions
-[here](https://cloud.google.com/docs/authentication/provide-credentials-adc#how-to) to authorise BigQuery locally.
+
+Coordinate access to your team's test GCP project. Authorise BigQuery
+locally per
+[Google's ADC guide](https://cloud.google.com/docs/authentication/provide-credentials-adc#how-to).
 
 ````
 # integration_test_project/env.sh
-export DBT_ENV_SECRET_GCP_PROJECT=dbt-artifacts-ci
+export DBT_ENV_SECRET_GCP_PROJECT=<your-gcp-project>
 ````
 
-### Postgres
-Make sure to download [Docker](https://hub.docker.com/_/postgres), then use the following to spin up a local postgres instance (Make sure that your Dremio
-container isn’t also running…).
+### Postgres, Trino, SQL Server (local)
 
-````
-docker pull postgres
-docker run --name dbt-artifacts-postgres -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e DB_HOST=localhost -d postgres
-````
+These run in containers via [`compose.yml`](../compose.yml). You don't
+need to `docker run` anything by hand — `scripts/ci/test.sh` brings the
+right container up, runs the tests, and tears it down:
 
-### Dremio
-Make sure to download [Docker](https://hub.docker.com/_/postgres), then use the following to spin up a local postgres instance (Make sure that your Postgres
-container isn’t also running…).
+```bash
+./scripts/ci/test.sh postgres
+./scripts/ci/test.sh trino
+./scripts/ci/test.sh sqlserver
+```
 
-````
-docker pull dremio/dremio-oss 
-docker run --name dbt-artifacts-dremio -p 9047:9047 -p 31010:31010 -p 45678:45678 dremio/dremio-oss
-# Stop this running using Ctrl + C
-docker start dbt-artifacts-dremio
-````
-Navigate to http://localhost:9047/signup and you should see a Dremio sign up screen. Sign up with your details (it’s just a local user).
+Note: the host-side ports are deliberately non-standard
+(`55432`/`58080`/`51433`) so the test stack never collides with a local
+Postgres / web app / SQL Server you might be running. See
+[`compose.yml`](../compose.yml) header for details. The SQL Server
+target also requires the Microsoft ODBC Driver 18 installed on your
+host — see [CONTRIBUTING.md](../CONTRIBUTING.md) for install commands.
 
 ## How the package works
 - The dbt project in the `integration_test_project` is used to test the work that is done in the main folder. If you are running
@@ -102,104 +111,128 @@ Navigate to http://localhost:9047/signup and you should see a Dremio sign up scr
   `upload_*.sql` macros to individually create the results.
 
 ## Integration Tests
-When you create a PR it will need to pass CI. To get the integration tests to run on your PR you need to approve them. Scroll to the bottom of the PR to find this section:
 
-![img_2.png](/docs/images/img_2.png)
+As of the 2026 CI rework, the previous "Approve Integration Tests"
+deployment-environment flow has been removed. PR-level CI now runs
+**automatically**, without any maintainer approval step, but is also
+**scoped to warehouses that don't need secrets** — Postgres, Trino,
+SQL Server. Snowflake / BigQuery validation happens automatically after
+you merge the PR.
 
-Click on “Show environments”:
+For the full end-to-end flow (what fires on a PR vs. on push to `main`
+vs. on a `release-candidate/X.Y.Z` branch), see
+[docs/dev-workflow.md](dev-workflow.md). For the underlying design and
+threat model, see [specs/ci-rework/README.md](../specs/ci-rework/README.md).
 
-![img_3.png](/docs/images/img_3.png)
+### What you'll see on a PR
 
-Click on the blue link (i.e. integration-snowflake #352) and it will open up the action. Look for this section:
+| | Where it runs | When |
+|---|---|---|
+| Postgres, Trino, SQL Server (Docker) | `pr.yml` (Tier 1) | Every PR push |
+| Lint, Snowflake, BigQuery | `main.yml` (Tier 2) | After merge to `main` |
+| Full warehouse × dbt-version matrix | `release.yml` (Tier 3) | Push to `release-candidate/X.Y.Z` |
 
-![img_4.png](/docs/images/img_4.png)
+### When a Tier 2 failure surfaces after merge
 
-Click on “Review deployments":
+You have two options:
 
-![img_5.png](/docs/images/img_5.png)
-
-Make sure to check “Approve Integration Tests” and then click “Approve and deploy”. If you head back to the PR you should see the tests are now running:
-
-![img_6.png](/docs/images/img_6.png)
-
-(If you notice the checks are still in status “Waiting” you may have to “Approve and deploy” again)
+1. Revert the merge commit on `main`.
+2. Push a follow-up fix through the normal PR flow (which will run
+   Tier 1 on the PR, then Tier 2 on the post-merge push).
 
 ## How to test / verify issues locally
-> [!NOTE]
-> If you want to test an existing PR opened by another contributor you will have to add their repo as a new remote
-> `````
-> git remote add their-username https://github.com/their-username/repo-name
-> git fetch their-username
-> `````
 
-- Following instructions in the [Contributing README](https://github.com/brooklyn-data/dbt_artifacts/blob/main/CONTRIBUTING.md#setting-up-your-development-environment) to
-  get the `integration_test_project/env.sh` file ready, and update using the credentials above, as well as updating the `GITHUB_SHA=<initials>_test` to
-  include your initials (e.g. `gd_test`), and setting the version number in `DBT_VERSION` to a version you want to use e.g. `1_5_0`.
-- Test you can run it with the commands included in the README:
-  ````
-  cd integration_test_project
-  . ./env.sh
-  dbt deps
-  tox -e integration_snowflake # For the Snowflake tests
-  tox -e integration_databricks # For the Databricks tests (if used)
-  tox -e integration_bigquery # For the BigQuery tests (if used)
-  tox -e integration_postgres # For the Postgres tests (if used)
-  ````
-- You can check results within the warehouse using:
-  ````
-  use database dev; -- For Snowflake
-  select * from dbt_artifacts_test_commit_<dbt_version>_<initials>_test.<table_name>;
-  ````
-- Before doing development it’s good to make sure the structure you are testing against is the same as main so drop the schema using:
-  ````
-  drop dbt_artifacts_test_commit_<dbt_version>_<initials>_test.<table_name> cascade;
-  ````
-  Then run against the latest version of main:
-  ````
-  git checkout main && git pull origin main
-  tox -e integration_<<warehouse_name>> # Run on any warehouses you are testing on
-  ````
-  Once the models have been built from what is on main, then you can checkout the branch you want to test and run them from there.
-- If you want to test specific tables, you might want to create different environment for the adapters. You could use dbtenv for
-  this, or pyenv if you are more comfortable with that. This is how I set it up with [pyenv virtualenv](https://github.com/pyenv/pyenv-virtualenv):
-  ````
-  # Install latest 3.8 release (matches the CI test version)
-  pyenv install 3.8.16
-  
-  # Snowflake environment
-  pyenv virtualenv 3.8.16 dbt-artifacts-snowflake
-  pyenv activate dbt-artifacts-snowflake
-  pip install dbt-snowflake~=1.6.0
-  pyenv local dbt-artifacts-snowflake # set as default - optional
-  
-  # Bigquery environment (if using)
-  pyenv virtualenv 3.8.16 dbt-artifacts-bigquery
-  pyenv activate dbt-artifacts-bigquery
-  pip install dbt-bigquery~=1.6.0
-  
-  # Databricks environment (if using)
-  pyenv virtualenv 3.8.16 dbt-artifacts-databricks
-  pyenv activate dbt-artifacts-databricks
-  pip install dbt-databricks~=1.6.0
-  
-  # Postgres environment (if using)
-  pyenv virtualenv 3.8.16 dbt-artifacts-postgres
-  pyenv activate dbt-artifacts-postgres
-  pip install dbt-postgres~=1.6.0
-  ````
-  To test on a specific environment, you will need to activate the environment first, then get dbt to run using the appropriate target
-  e.g. to test the `aliased` table with `bigquery`
-  ````
-  pyenv activate dbt-artifacts-bigquery
-  dbt run --select aliased --target bigquery
-  ````
 > [!NOTE]
-> If you don’t want to keep adding `--target bigquery` to your dbt commands, you can temporarily set it as the default in the `integration_test_project/profiles.yml` file by changing the target to `bigquery` at the top of the `dbt_artifacts` definition.
+> To test a PR opened by an external contributor, add their fork as a
+> remote:
+> ```
+> git remote add their-username https://github.com/their-username/dbt_artifacts
+> git fetch their-username
+> git checkout their-username/<their-branch>
+> ```
+
+### Quick path
+
+1. One-time setup per [CONTRIBUTING.md](../CONTRIBUTING.md): `uv` and
+   `docker` installed, `env.sh` populated for any cloud warehouses
+   you'll use.
+2. Source credentials and run:
+   ```bash
+   . ./env.sh
+   ./scripts/ci/test.sh snowflake        # or bigquery / postgres / trino / sqlserver
+   ```
+3. Optional: pin a specific dbt version:
+   ```bash
+   ./scripts/ci/test.sh snowflake 1_10_0
+   ```
+
+The script defaults `GITHUB_SHA` to your current git HEAD short SHA
+prefixed with `local_`, so your schemas won't collide with CI runs.
+You can override it: `export GITHUB_SHA=local_<your-initials>` before
+running if you want stable schema names across runs.
+
+### Checking results in the warehouse
+
+```sql
+-- Snowflake
+use database dev;
+select * from dbt_artifacts_test_commit__<github_sha>.<table_name>;
+
+-- (Note: the dbt_version segment of the schema is empty when running
+-- the unversioned env, populated when running a pinned env like 1_10_0.)
+```
+
+### Testing against `main` before your branch
+
+To verify the diff you're introducing rather than the cumulative state:
+
+```bash
+git checkout main && git pull
+./scripts/ci/test.sh <warehouse>
+# now switch to your branch
+git checkout <your-branch>
+./scripts/ci/test.sh <warehouse>
+```
+
+If you'd like a fully clean rebuild, drop the test schema first:
+
+```sql
+drop schema dbt_artifacts_test_commit__<github_sha> cascade;
+```
+
+### Testing against multiple dbt versions
+
+`tox` (invoked by `scripts/ci/test.sh`) creates an isolated venv per
+env automatically. You no longer need `pyenv virtualenv` or per-version
+manual setup — just pass the version:
+
+```bash
+./scripts/ci/test.sh snowflake 1_8_0
+./scripts/ci/test.sh snowflake 1_11_0
+```
+
+See `tox.ini` for the full list of pinned versions per adapter.
 
 ## How to release
-- Use [semantic versioning](https://semver.org/) to work out whether it’s a patch, minor or major change. If it contains breaking changes (including new fields), then it should be at least a minor change. 
-- Do a find and replace of the current version (e.g. `2.2.1`) with the new version (e.g. `2.2.2`)
-- Merge a PR which applies that change 
-- Make a new release: [Releases · brooklyn-data/dbt_artifacts](https://github.com/brooklyn-data/dbt_artifacts/releases)
-  - This will automatically update the documentation through a GH action 
-  - Per the [dbt guidance](https://docs.getdbt.com/guides/legacy/building-packages), the repo ([GitHub - dbt-labs/hubcap](https://github.com/dbt-labs/hubcap)) that adds releases to dbt Hub will run every hour and pick up any new versions. It will only pick up full versions, so use the guidance if you want to create a pre-release.
+
+The release procedure has changed as of the 2026 CI rework. See
+[docs/dev-workflow.md → Stage 3 & 4](dev-workflow.md) for the full
+walkthrough. Summary:
+
+1. From up-to-date `main`, create `release-candidate/X.Y.Z`.
+2. Bump the version on that branch in `dbt_project.yml` and the
+   `packages.yml` example in `README.md`. Push.
+3. Watch Tier 3 (`release.yml`) — the full warehouse × dbt-version
+   matrix runs. ~30–40 minutes.
+4. When green, [create a GitHub Release](https://github.com/brooklyn-data/dbt_artifacts/releases/new)
+   tagged `X.Y.Z`, targeting the candidate branch.
+5. The docs site rebuilds automatically via
+   `publish_docs_on_release.yml`. dbt Hub picks up the new tag within
+   an hour via [dbt-labs/hubcap](https://github.com/dbt-labs/hubcap)
+   (full releases only — see hubcap guidance for pre-releases).
+6. Delete the `release-candidate/X.Y.Z` branch unless you anticipate a
+   same-day hotfix on the same minor.
+
+Use [semantic versioning](https://semver.org/). New fields are always
+at least a minor bump (consumers must re-run `dbt run --select
+dbt_artifacts` after upgrading or the on-run-end hook errors).
