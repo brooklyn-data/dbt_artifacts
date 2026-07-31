@@ -1,0 +1,18 @@
+# CI / build plumbing — changes here can subvert the security model.
+.github/                @mtcarlone
+scripts/ci/             @mtcarlone
+compose.yml             @mtcarlone
+init-scripts/           @mtcarlone
+
+# Test runtime config — versions, deps, lock files.
+tox.ini                 @mtcarlone
+pyproject.toml          @mtcarlone
+uv.lock                 @mtcarlone
+
+# Package metadata — affects what consumers install.
+dbt_project.yml         @mtcarlone
+packages.yml            @mtcarlone
+package-lock.yml        @mtcarlone
+
+# Spec docs — change history matters for future maintainers.
+specs/                  @mtcarlone
