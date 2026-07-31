@@ -1,5 +1,5 @@
 {{ config(enabled = target.type == "snowflake") }}
--- C-06: monthly SMB totals must reconcile between consumption_by_model and
+-- Monthly SMB totals must reconcile between consumption_by_model and
 -- consumption_daily. Fails (returns rows) on any mismatched month.
 with by_model as (
     select

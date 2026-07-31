@@ -10,7 +10,7 @@
     (they are on stg_dbt__invocations). This macro does NOT modify any existing
     staging/source contract.
 
-    Precedence (first match wins), per specs/consumption/design.md:
+    Precedence (first match wins):
       1. dbt_cloud_job_id is not null                         -> deployment
       2. lower(target_name) in deployment_targets (lowered)   -> deployment
       3. optional: env var named by dbt_artifacts_deployment_env_var is
@@ -24,7 +24,7 @@
     (env_vars is stored via type_json() = OBJECT on Snowflake, accessed with
     the variant path env_vars:"NAME"). It is emitted only when the var is set,
     so the default path parses no JSON. default__ raises a clear compile error
-    if rule 3 is requested on an unsupported adapter (fast-follow C-11).
+    if rule 3 is requested on an adapter that does not implement it yet.
 -#}
 
 {% macro classify_invocation_billing() %}

@@ -11,7 +11,7 @@
     successful build with run_started_at strictly between the fail and the pass
     (that's a legitimate fix, excluded). If the test has no resolvable model
     parents, we still count the flip but set parent_rebuilt_between = null --
-    we don't hide the uncertainty. Depends on dim_dbt__lineage_edges (O-02);
+    we don't hide the uncertainty. Depends on dim_dbt__lineage_edges;
     Snowflake-only.
 -#}
 

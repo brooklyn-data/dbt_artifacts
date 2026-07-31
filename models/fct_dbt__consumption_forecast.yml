@@ -11,7 +11,7 @@ models:
     values. Allowance resolves via get_smb_allowance() and applies to the 'smb'
     meter only; with no plan/allowance var the breach columns are null but
     projections still populate. Snowflake-only in v1 (uses Snowflake date
-    functions); multi-adapter is fast-follow C-11.
+    functions); multi-adapter support is planned.
   columns:
   - name: consumption_forecast_id
     description: Surrogate key of the grain (hash of meter, billing_month). BI join key.

@@ -2,7 +2,7 @@
     get_smb_allowance()
 
     Resolves the monthly SMB allowance at compile time, returning a Python
-    number or none. Resolution order (per specs/consumption/design.md):
+    number or none. Resolution order:
       1. var('dbt_artifacts_smb_allowance')  -- explicit, wins
       2. plan default from var('dbt_artifacts_billing_plan')
          (developer: 3000, starter: 15000, enterprise: 100000)

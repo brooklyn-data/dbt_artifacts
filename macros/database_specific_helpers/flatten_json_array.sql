@@ -15,8 +15,7 @@
     Snowflake only in v1. Other adapters raise a clear compile error; the model
     that uses this helper is itself gated to Snowflake. Cross-adapter overrides
     (BigQuery unnest, Postgres jsonb_array_elements_text, Trino unnest, Spark
-    explode, SQL Server openjson) are fast-follow (O-12 / C-11) and coordinated
-    with specs/materialize-docs/design.md.
+    explode, SQL Server openjson) are planned.
 -#}
 
 {% macro flatten_json_array(array_column, alias) %}
@@ -34,7 +33,7 @@
         {{ exceptions.raise_compiler_error(
             "dbt_artifacts.flatten_json_array() is only implemented for Snowflake in v1 (adapter '"
             ~ target.type
-            ~ "' is unsupported for now). The models using it are Snowflake-gated; cross-adapter support is fast-follow O-12 / C-11."
+            ~ "' is not supported yet). The models that use it are Snowflake-gated, so this should not be reachable; cross-adapter support is planned."
         ) }}
     {%- endif -%}
     (select cast(null as {{ dbt.type_string() }}) as value) as {{ alias }}

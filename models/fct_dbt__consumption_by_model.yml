@@ -43,4 +43,4 @@ models:
     description: >
       dbt State ROI estimate = distinct_days_built x dbt_artifacts_datt_price
       (default 0.094). A directional upper-bound of what dbt State could meter
-      for this model; see specs/consumption/design.md.
+      for this model.

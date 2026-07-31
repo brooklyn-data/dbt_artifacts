@@ -1,5 +1,5 @@
 {{ config(enabled = target.type == "snowflake") }}
--- O-07: lineage_edges must be non-empty, and every model in the latest graph
+-- lineage_edges must be non-empty, and every model in the latest graph
 -- state that declares dependencies must appear as a child of >= 1 edge.
 -- Fails (returns rows) for any model-with-deps that has no edge.
 with latest_models as (

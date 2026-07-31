@@ -10,7 +10,7 @@
 
     This is *measured* wall-clock gating, not graph theory. Model parents only;
     seed/source parents are excluded (documented) -- seeds rarely gate and keep
-    the join simple. Depends on dim_dbt__lineage_edges (O-02); Snowflake-only.
+    the join simple. Depends on dim_dbt__lineage_edges; Snowflake-only.
 -#}
 
 with

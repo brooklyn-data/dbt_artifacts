@@ -6,7 +6,7 @@
     ANSI ordered-set aggregate percentile_cont(fraction) within group
     (order by ...), which Snowflake supports natively as an aggregate, so no
     snowflake__ override is required. Non-Snowflake overrides (SQL Server
-    window-only syntax, Spark approx_percentile) are fast-follow O-12.
+    window-only syntax, Spark approx_percentile) are planned.
 -#}
 
 {#- MEDIAN -#}

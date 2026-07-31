@@ -5,7 +5,7 @@
     waiting on it (measured stall). The "pinch point" mart. Roll-up of
     fct_dbt__dag_bottlenecks_detail over rows where the parent actually gated a
     child (stall_seconds > 0). Descendant counts / blocking scores are out of
-    scope for v1 (parked). Snowflake-only (inherits O-02 enablement).
+    scope for v1. Snowflake-only (inherits dim_dbt__lineage_edges' enablement).
 -#}
 
 with

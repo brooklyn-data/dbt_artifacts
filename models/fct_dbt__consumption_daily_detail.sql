@@ -12,8 +12,8 @@
       - 'active_target_tables' : distinct node_ids (models u seeds u snapshots u
                  tests) with >=1 successful deployment execution that day, counted
                  per deployment target (materialization is null). On single-
-                 deployment-target setups (the common case) this equals the
-                 per-day distinct-node count in specs/consumption/design.md; when
+                 deployment-target setups (the common case) this equals a plain
+                 per-day distinct-node count; when
                  a node runs under several deployment targets in one day it is
                  counted once per target, which keeps the roll-up additive.
 -#}

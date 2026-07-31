@@ -8,7 +8,7 @@ models:
     already uploads for models, snapshots and tests. Unblocks stall-time and
     flaky-test parentage. **Snowflake only in v1** (enabled = target.type ==
     'snowflake'); the JSON-array explode uses the dispatched flatten_json_array()
-    helper, whose non-Snowflake overrides are fast-follow (O-12 / C-11). Latest
+    helper, whose non-Snowflake overrides are planned. Latest
     graph state = each node's most-recent appearance (row_number by run_started_at).
   columns:
   - name: lineage_edge_id

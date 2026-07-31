@@ -1,5 +1,5 @@
 {{ config(enabled = target.type == "snowflake") }}
--- O-07: flaky_tests must be valid (possibly empty). Fails on any out-of-range
+-- flaky_tests must be valid (possibly empty). Fails on any out-of-range
 -- flake_rate or flips exceeding executions.
 select
     test_node_id

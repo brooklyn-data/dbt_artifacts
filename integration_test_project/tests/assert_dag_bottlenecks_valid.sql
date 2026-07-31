@@ -1,5 +1,5 @@
 {{ config(enabled = target.type == "snowflake") }}
--- O-07: dag_bottlenecks must be valid (possibly empty). Fails on any negative
+-- dag_bottlenecks must be valid (possibly empty). Fails on any negative
 -- stall time.
 select
     date_day

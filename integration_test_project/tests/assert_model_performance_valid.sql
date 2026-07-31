@@ -1,5 +1,5 @@
 {{ config(enabled = target.type == "snowflake") }}
--- O-07: model_performance must return rows and be internally consistent -- no
+-- model_performance must return rows and be internally consistent -- no
 -- median_runtime without a success, and the mart must not be empty. (A null
 -- median on a day whose only successes were full refreshes is CORRECT by
 -- design, so we assert consistency rather than blanket non-null.)

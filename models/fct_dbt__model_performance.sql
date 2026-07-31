@@ -5,7 +5,8 @@
 
     Runtime stats (median/p95/rows_affected) are computed over SUCCESSFUL,
     NON-full-refresh executions only -- a full refresh is not a regression, and
-    failures are O-03's job. full_refresh_executions is exposed as a count so
+    failures belong to fct_dbt__run_health_daily. full_refresh_executions is
+    exposed as a count so
     the signal isn't lost.
 
     baseline_runtime = median of the SAME node's SAME-day-of-week median_runtime
