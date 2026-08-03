@@ -1,0 +1,39 @@
+version: 2
+
+models:
+- name: fct_dbt__dag_bottlenecks_detail
+  description: >
+    One row per (invocation, child model), with the binding parent (the
+    latest-completing model-parent in that invocation) and the measured stall =
+    child.compile_started_at - binding parent.query_completed_at, clamped to >= 0.
+    Drill-down behind fct_dbt__dag_bottlenecks. Model parents only (seed/source
+    parents excluded). Snowflake-only.
+  columns:
+  - name: dag_bottleneck_detail_id
+    description: Surrogate key of the grain (hash of command_invocation_id, child_node_id). BI join key.
+    tests:
+    - unique
+    - not_null
+  - name: command_invocation_id
+    description: The invocation the child executed in.
+    tests:
+    - not_null
+  - name: date_day
+    description: UTC calendar day of the invocation (via cast_to_utc_date()).
+    tests:
+    - not_null
+  - name: child_node_id
+    description: The child model whose start was (potentially) gated.
+    tests:
+    - not_null
+  - name: binding_parent_node_id
+    description: The model-parent with the latest query_completed_at among the child's parents in the invocation.
+  - name: parent_query_completed_at
+    description: query_completed_at of the binding parent.
+  - name: child_compile_started_at
+    description: compile_started_at of the child.
+  - name: stall_seconds
+    description: max(child_compile_started_at - parent_query_completed_at, 0) in seconds.
+    tests:
+    - dbt_artifacts.is_between:
+        min_value: 0
