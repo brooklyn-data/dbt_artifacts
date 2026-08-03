@@ -1,0 +1,46 @@
+version: 2
+
+models:
+- name: fct_dbt__consumption_by_model
+  description: >
+    Consumption attributed per model: one row per billing_month x node_id
+    (models only). Same SMB definition as fct_dbt__consumption_daily
+    (deployment-classed successful model builds on run/build/retry), so monthly
+    SMB totals reconcile across the two marts. Includes build cadence, total
+    runtime, and a dbt State ROI estimate. Primary use case: "top 20 models by
+    SMB burn."
+  columns:
+  - name: consumption_by_model_id
+    description: Surrogate key of the grain (hash of billing_month, node_id). BI join key.
+    tests:
+    - unique
+    - not_null
+  - name: billing_month
+    description: First day of the calendar month (UTC) the SMB were built in.
+    tests:
+    - not_null
+  - name: node_id
+    description: The model's unique node id.
+    tests:
+    - not_null
+  - name: name
+    description: The model's name.
+  - name: smb_quantity
+    description: Successful Models Built for this model in the month (deployment, run/build/retry).
+  - name: pct_of_month_smb
+    description: This model's share of the month's total SMB (0..1), a window over billing_month.
+    tests:
+    - dbt_artifacts.is_between:
+        min_value: 0
+        max_value: 1
+  - name: builds_per_day_avg
+    description: Average successful builds per active build-day (smb_quantity / distinct_days_built).
+  - name: distinct_days_built
+    description: Number of distinct UTC days on which the model was successfully built (deployment).
+  - name: total_runtime_seconds
+    description: Sum of total_node_runtime over the model's SMB executions in the month.
+  - name: estimated_monthly_datt_cost_if_reused
+    description: >
+      dbt State ROI estimate = distinct_days_built x dbt_artifacts_datt_price
+      (default 0.094). A directional upper-bound of what dbt State could meter
+      for this model.
