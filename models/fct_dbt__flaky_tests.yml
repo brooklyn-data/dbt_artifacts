@@ -1,0 +1,38 @@
+version: 2
+
+models:
+- name: fct_dbt__flaky_tests
+  description: >
+    Flaky-test rollup: one row per test_node_id x month. flips are genuine
+    fail->pass transitions with no parent rebuild in between (from
+    fct_dbt__flaky_tests_detail); executions is all of the test's executions
+    that month. is_flaky = flips >= dbt_artifacts_flaky_min_flips (default 2).
+    Snowflake-only.
+  columns:
+  - name: flaky_test_id
+    description: Surrogate key of the grain (hash of test_node_id, month). BI join key.
+    tests:
+    - unique
+    - not_null
+  - name: test_node_id
+    description: The test's unique node id.
+    tests:
+    - not_null
+  - name: month
+    description: First day of the calendar month (UTC).
+    tests:
+    - not_null
+  - name: flips
+    description: Number of genuine flip events for the test that month.
+  - name: executions
+    description: Total executions of the test that month.
+  - name: flake_rate
+    description: flips / executions (0..1).
+    tests:
+    - dbt_artifacts.is_between:
+        min_value: 0
+        max_value: 1
+  - name: last_flip_at
+    description: run_started_at of the most recent flip's pass that month (null if no flips).
+  - name: is_flaky
+    description: True when flips >= dbt_artifacts_flaky_min_flips (default 2).
