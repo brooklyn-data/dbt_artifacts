@@ -32,3 +32,4 @@ CLAUDE.md
 # Python bytecode cache (e.g. from running scripts/release/*.py)
 __pycache__/
 *.pyc
+specs/

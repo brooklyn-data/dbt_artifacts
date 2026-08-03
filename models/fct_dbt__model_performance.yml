@@ -1,0 +1,55 @@
+version: 2
+
+models:
+- name: fct_dbt__model_performance
+  description: >
+    Per-model daily runtime stats vs a trailing weekday-aware baseline: the
+    "why is the 6am job slow since Tuesday" mart. One row per UTC day x node_id
+    (models). Runtime stats use successful, non-full-refresh executions only.
+    baseline_runtime is the median of the same node's same-day-of-week
+    median_runtime over the trailing dbt_artifacts_run_rate_days (default 28)
+    days, excluding the current day. is_regressed requires ratio >
+    dbt_artifacts_regression_threshold (default 1.5) and a baseline of at least
+    dbt_artifacts_regression_min_samples (default 3) same-DOW days.
+  columns:
+  - name: model_performance_id
+    description: Surrogate key of the grain (hash of date_day, node_id). BI join key.
+    tests:
+    - unique
+    - not_null
+  - name: date_day
+    description: UTC calendar day (via cast_to_utc_date()).
+    tests:
+    - not_null
+  - name: node_id
+    description: The model's unique node id.
+    tests:
+    - not_null
+  - name: executions
+    description: Total executions of the model that day (all statuses).
+  - name: success_count
+    description: Successful executions that day.
+  - name: full_refresh_executions
+    description: Executions that were full refreshes (excluded from runtime stats and baseline).
+  - name: median_runtime
+    description: Median total_node_runtime over successful non-full-refresh executions that day.
+  - name: p95_runtime
+    description: 95th-percentile total_node_runtime over successful non-full-refresh executions that day.
+  - name: rows_affected_sum
+    description: Sum of rows_affected over successful non-full-refresh executions that day.
+  - name: baseline_runtime
+    description: >
+      Trailing weekday-aware baseline: median of the same node's same-DOW
+      median_runtime over the prior dbt_artifacts_run_rate_days days (excludes
+      today). Null until enough same-DOW history exists.
+  - name: baseline_sample_days
+    description: Number of same-DOW prior days contributing to the baseline.
+  - name: runtime_regression_ratio
+    description: median_runtime / baseline_runtime; null when baseline is null or 0.
+    tests:
+    - dbt_artifacts.is_between:
+        min_value: 0
+  - name: is_regressed
+    description: >
+      True when runtime_regression_ratio > regression_threshold and
+      baseline_sample_days >= regression_min_samples; else false.

@@ -1,0 +1,39 @@
+version: 2
+
+models:
+- name: fct_dbt__consumption_daily_detail
+  description: >
+    Detail (base) grain for consumption: UTC day x meter x materialization x
+    target_name. fct_dbt__consumption_daily is a strict roll-up of this model.
+    For 'smb' rows, materialization is the model's materialization; for
+    'active_target_tables' rows materialization is null and the count is
+    distinct nodes per deployment target that day. Only deployment-classed
+    invocations are counted.
+  columns:
+  - name: consumption_daily_detail_id
+    description: >
+      Surrogate key of the grain (hash of date_day, meter, materialization,
+      target_name). Stable BI join key.
+    tests:
+    - unique
+    - not_null
+  - name: date_day
+    description: UTC calendar day of the executions (via cast_to_utc_date()).
+    tests:
+    - not_null
+  - name: meter
+    description: "Consumption meter: 'smb' or 'active_target_tables'."
+    tests:
+    - not_null
+    - accepted_values:
+        values: ['smb', 'active_target_tables']
+  - name: materialization
+    description: >
+      Model materialization for 'smb' rows; null for 'active_target_tables'
+      (a cross-resource distinct count with no single materialization).
+  - name: target_name
+    description: dbt target name (target.name) of the invocations contributing the rows.
+  - name: quantity
+    description: Metered quantity for this detail cell.
+    tests:
+    - not_null

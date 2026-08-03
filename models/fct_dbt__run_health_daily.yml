@@ -1,0 +1,45 @@
+version: 2
+
+models:
+- name: fct_dbt__run_health_daily
+  description: >
+    Run-health rollup: one row per UTC day across all invocations (no billing
+    classification). Node counts span models + seeds + snapshots + tests.
+    success = status in (success, pass); failure = (fail, failure);
+    error = (error); skip = (skipped, skip). success_rate =
+    successes / (successes + failures + errors). A failed invocation has >=1
+    node in error or failure.
+  columns:
+  - name: date_day
+    description: UTC calendar day (via cast_to_utc_date() on invocation run_started_at).
+    tests:
+    - not_null
+    - unique
+  - name: invocations
+    description: Distinct command_invocation_ids that day.
+  - name: distinct_commands
+    description: Distinct dbt_command values that day.
+  - name: node_successes
+    description: Successful node executions (models + seeds + snapshots + tests).
+  - name: node_failures
+    description: Failed node executions (test fails).
+  - name: node_errors
+    description: Errored node executions.
+  - name: node_skips
+    description: Skipped node executions.
+  - name: failed_invocations
+    description: Invocations with >=1 node in error or failure.
+  - name: success_rate
+    description: successes / (successes + failures + errors); null on days with no such executions.
+    tests:
+    - dbt_artifacts.is_between:
+        min_value: 0
+        max_value: 1
+  - name: total_runtime_seconds
+    description: Sum of total_node_runtime across all node executions that day.
+  - name: max_node_runtime_seconds
+    description: Longest single node execution that day.
+  - name: first_run_started_at
+    description: Earliest node run_started_at that day.
+  - name: last_run_started_at
+    description: Latest node run_started_at that day.
