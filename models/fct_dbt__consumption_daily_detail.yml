@@ -26,7 +26,8 @@ models:
     tests:
     - not_null
     - accepted_values:
-        values: ['smb', 'active_target_tables']
+        arguments:
+          values: ['smb', 'active_target_tables']
   - name: materialization
     description: >
       Model materialization for 'smb' rows; null for 'active_target_tables'

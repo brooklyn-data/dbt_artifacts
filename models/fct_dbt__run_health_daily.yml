@@ -33,8 +33,9 @@ models:
     description: successes / (successes + failures + errors); null on days with no such executions.
     tests:
     - dbt_artifacts.is_between:
-        min_value: 0
-        max_value: 1
+        arguments:
+          min_value: 0
+          max_value: 1
   - name: total_runtime_seconds
     description: Sum of total_node_runtime across all node executions that day.
   - name: max_node_runtime_seconds

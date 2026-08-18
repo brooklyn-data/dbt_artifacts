@@ -30,8 +30,9 @@ models:
     description: flips / executions (0..1).
     tests:
     - dbt_artifacts.is_between:
-        min_value: 0
-        max_value: 1
+        arguments:
+          min_value: 0
+          max_value: 1
   - name: last_flip_at
     description: run_started_at of the most recent flip's pass that month (null if no flips).
   - name: is_flaky
