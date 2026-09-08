@@ -15,7 +15,6 @@ exposures:
     maturity: high
     description: "ceo's favourite dashboard"
     url: https://bi.tool/dashboards/1
-    tags: ["ceo", "data"]
 
     depends_on:
       - ref('non_incremental')
@@ -24,12 +23,13 @@ exposures:
       name: Claire from Data
       email: data@jaffleshop.com
 
+    config:
+      tags: ["ceo", "data"]
   - name: cio_dashboard
     type: dashboard
     maturity: high
     description: '{{ doc("clickstream") }}'
     url: https://bi.tool/dashboards/1
-    tags: ["cio", "it"]
 
     depends_on:
       - ref('incremental')
@@ -37,3 +37,5 @@ exposures:
     owner:
       name: Henry from IT
       email: henry@jaffleshop.com
+    config:
+      tags: ["cio", "it"]

@@ -1,0 +1,32 @@
+# Python toolchain manifest for the dbt_artifacts package.
+#
+# Everything here is consumed by `uv sync` (invoked from
+# `scripts/ci/setup.sh` both locally and in CI). This file and the
+# accompanying `uv.lock` are tracked so fresh clones reproduce the
+# exact same dependency tree on every machine and runner.
+#
+# Per-dbt-version adapter installs are handled separately by `tox`
+# (`tox.ini`) — those deliberately are NOT pinned at the top level
+# here, so individual `tox -e integration_<warehouse>_X_Y_Z` envs
+# can install their own pinned adapter version in an isolated venv.
+
+[project]
+name = "dbt-artifacts"
+version = "0.1.0"
+description = "Multi-adapter dbt package that builds a mart of artifacts about your dbt project."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dbt-bigquery>=1.9.1",
+    "dbt-postgres>=1.9.0",
+    "dbt-snowflake>=1.9.2",
+    "tox>=4.25.0",
+    # pyarrow is pulled in transitively by google-cloud-bigquery / db-dtypes /
+    # pandas-gbq. We don't use it directly — the explicit cap here exists only
+    # to protect against a too-new pyarrow that would break those BigQuery
+    # transitive deps. The `[pandas]` extra previously declared here doesn't
+    # exist on pyarrow and emitted a uv warning; dropped.
+    "pyarrow<19.0.0",
+    "dbt-trino>=1.9.1",
+    "dbt-sqlserver>=1.8.7",
+]

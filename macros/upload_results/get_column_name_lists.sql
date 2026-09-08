@@ -229,7 +229,7 @@
 
     {% else %}
 
-    /* No column list available */
+    {# No column list available #}
     {% endif %}
 
 {%- endmacro %}

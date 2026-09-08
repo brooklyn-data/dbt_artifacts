@@ -2,13 +2,17 @@
 
 This package builds a mart of tables and views describing the project it is installed in. In pre V1 versions of the package, the artifacts dbt produces were uploaded to the warehouse, hence the name of the package. That's no longer the case, but the name has stuck!
 
-[![Main branch test package](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main_test_package.yml/badge.svg)](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main_test_package.yml)
-[![Main branch lint package](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main_lint_package.yml/badge.svg)](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main_lint_package.yml)
+[![Tier 2 — main](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main.yml/badge.svg)](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main.yml)
+[![Tier 3 — release validation](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/release.yml/badge.svg)](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/release.yml)
 [![Documentation](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/publish_docs_on_release.yml/badge.svg)](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/publish_docs_on_release.yml)
 
 ## Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) and [MAINTAINERS.md](docs/MAINTAINERS.md) for more information.
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for
+how to set up your environment and submit a PR, and
+[docs/dev-workflow.md](docs/dev-workflow.md) for the full
+feature-to-release flow. Maintainer-specific guidance lives in
+[docs/MAINTAINERS.md](docs/MAINTAINERS.md).
 
 ## Supported Data Warehouses
 
@@ -42,6 +46,17 @@ fct_dbt__test_executions
 
 See the generated [dbt docs site](https://brooklyn-data.github.io/dbt_artifacts/#!/overview) for documentation on each model.
 
+## Supported dbt versions
+
+As of `2.11.0`, the package's CI verifies against **dbt 1.9 and newer**.
+Older versions (1.3–1.8) may continue to work but are **no longer verified
+in CI** — dbt Labs has marked them end-of-life and they cannot run on the
+Python 3.12 toolchain our CI uses. The package still *installs* on dbt
+≥1.3.0 (`require-dbt-version` is unchanged), so existing users are not
+blocked; we simply can no longer confirm new releases against those
+versions. If you rely on dbt < 1.9, pin a known-good `dbt_artifacts`
+release in your `packages.yml`.
+
 ## Quickstart
 
 1. Add this package to your `packages.yml`:
@@ -49,7 +64,7 @@ See the generated [dbt docs site](https://brooklyn-data.github.io/dbt_artifacts/
 ```
 packages:
   - package: brooklyn-data/dbt_artifacts
-    version: 2.9.3
+    version: 2.11.0
 ```
 
 :construction_worker: Make sure to fix at least the **minor** version, to avoid issues when a new release is open. See the notes on upgrading below for more detail.
