@@ -1,0 +1,42 @@
+version: 2
+
+models:
+- name: dim_dbt__current_relations
+  description: |
+    One row per refable node (model, seed, snapshot) describing the relation
+    that the most recent successful execution wrote. Intended as deferral
+    state for CI: see "Using dbt_artifacts as deferral state" in the README.
+  columns:
+  - name: node_id
+    description: '{{ doc("node_id") }}'
+    tests:
+    - unique
+    - not_null
+  - name: resource_type
+    description: One of model, seed or snapshot.
+  - name: name
+    description: '{{ doc("name") }}'
+  - name: package_name
+    description: '{{ doc("package_name") }}'
+  - name: database
+    description: '{{ doc("database") }}'
+  - name: schema
+    description: '{{ doc("schema") }}'
+  - name: alias
+    description: '{{ doc("alias") }}'
+  - name: materialization
+    description: '{{ doc("materialization") }}'
+  - name: checksum
+    description: '{{ doc("checksum") }}'
+  - name: last_success_at
+    description: Completion time of the most recent successful execution of this node.
+  - name: command_invocation_id
+    description: '{{ doc("command_invocation_id") }}'
+  - name: run_started_at
+    description: '{{ doc("run_started_at") }}'
+  - name: target_name
+    description: '{{ doc("target_name") }}'
+  - name: in_latest_graph
+    description: |
+      True when the node is present in the most recent graph. False marks a
+      relation that still exists in the warehouse but has left the project.
