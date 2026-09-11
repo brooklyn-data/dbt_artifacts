@@ -239,6 +239,49 @@ An example operation is as follows:
 dbt run-operation migrate_from_v0_to_v1 --args '{old_database: analytics, old_schema: dbt_artifacts, new_database: analytics, new_schema: artifact_sources}'
 ```
 
+## Using dbt_artifacts as deferral state
+
+`dbt build --defer --state` reads a `manifest.json` from disk, and the only
+thing it takes from that manifest for unselected nodes is where each relation
+lives. `dim_dbt__current_relations` knows that from your production runs, so a
+CI job can parse its own project for a structurally complete manifest and then
+correct the relation coordinates from the warehouse, instead of shipping a
+manifest between jobs.
+
+```bash
+dbt --quiet run-operation dbt_artifacts.export_state \
+  --args '{schema: dbt_artifacts, target_name: prod}' > export.json
+```
+
+The document is versioned; refuse a `dbt_artifacts_state_version` whose major
+differs from the one you support.
+
+```json
+{
+  "dbt_artifacts_state_version": 1,
+  "generated_at": "2026-09-11T09:00:00+00:00",
+  "source": {"database": "analytics", "schema": "dbt_artifacts", "target_name": "prod"},
+  "nodes": {
+    "model.my_project.dim_customer": {
+      "resource_type": "model",
+      "name": "dim_customer",
+      "package_name": "my_project",
+      "database": "analytics",
+      "schema": "marts",
+      "alias": "dim_customer",
+      "materialization": "table",
+      "checksum": "9f2c…",
+      "last_success_at": "2026-09-10T02:14:09+00:00",
+      "command_invocation_id": "0f0a…"
+    }
+  }
+}
+```
+
+A node appears when production executed it successfully at least once; the row
+shown is the most recent success. An empty `nodes` object is a valid document
+and means the tables hold no successful executions yet.
+
 ## Acknowledgements
 
 Thank you to [Tails.com](https://tails.com/gb/careers/) for initial development and maintenance of this package. On 2021/12/20, the repository was transferred from the Tails.com GitHub organization to Brooklyn Data Co.
