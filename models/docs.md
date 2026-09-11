@@ -412,3 +412,9 @@ Response provided by the adapter as JSON.
 All results as a JSON blob
 
 {% enddocs %}
+
+{% docs last_success_at %}
+
+Completion time of the most recent successful execution of this node.
+
+{% enddocs %}

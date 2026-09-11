@@ -1,0 +1,52 @@
+version: 2
+
+models:
+- name: dim_dbt__current_relations
+  description: |
+    One row per (node_id, target_name) describing the relation that target's
+    most recent successful execution wrote. Several targets (e.g. prod and
+    staging) can write to the same artifacts tables, so the grain is per
+    target, not per node: dbt_artifacts.export_state is what collapses this
+    to one row per node, picking the freshest target, when its own
+    target_name argument isn't given. Intended as deferral state for CI: see
+    "Using dbt_artifacts as deferral state" in the README.
+  columns:
+  - name: current_relation_id
+    description: >
+      Surrogate key of (node_id, target_name), the grain of this view. Added
+      so the grain can be tested without a dbt_utils dependency.
+    tests:
+    - unique
+    - not_null
+  - name: node_id
+    description: '{{ doc("node_id") }}'
+    tests:
+    - not_null
+  - name: resource_type
+    description: One of model, seed or snapshot.
+  - name: name
+    description: '{{ doc("name") }}'
+  - name: package_name
+    description: '{{ doc("package_name") }}'
+  - name: database
+    description: '{{ doc("database") }}'
+  - name: schema
+    description: '{{ doc("schema") }}'
+  - name: alias
+    description: '{{ doc("alias") }}'
+  - name: materialization
+    description: '{{ doc("materialization") }}'
+  - name: checksum
+    description: '{{ doc("checksum") }}'
+  - name: last_success_at
+    description: Completion time of the most recent successful execution of this node.
+  - name: command_invocation_id
+    description: '{{ doc("command_invocation_id") }}'
+  - name: run_started_at
+    description: '{{ doc("run_started_at") }}'
+  - name: target_name
+    description: '{{ doc("target_name") }}'
+  - name: in_latest_graph
+    description: |
+      True when the node is present in the most recent graph. False marks a
+      relation that still exists in the warehouse but has left the project.
