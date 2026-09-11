@@ -314,5 +314,6 @@ macros:
       - name: target_name
         type: string
         description: |
-          When set, exports only rows whose invocation ran with this target
-          name. Use it when several targets write to the same artifacts tables.
+          When set, exports each node's latest success on this target only.
+          Use it when several targets write to the same artifacts tables.
+          When unset, exports each node's latest success across all targets.

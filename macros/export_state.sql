@@ -7,6 +7,13 @@
     invalid arguments (an unknown resource_type, or a database/schema value
     that isn't a safe identifier).
 
+    Emits one node per node_id. dim_dbt__current_relations is grained on
+    (node_id, target_name), since several targets can write to the same
+    artifacts tables; when target_name is given, each node's row for that
+    target is used, and when it isn't, each node's most recently completed
+    success across all targets is used, matching the single-target-project
+    behaviour where there is only ever one target to pick from.
+
     Usage:
       dbt --quiet run-operation dbt_artifacts.export_state \
         --args '{schema: dbt_artifacts, target_name: betterdata_prod}' > export.json
@@ -92,6 +99,24 @@
 
             {% set results = run_query(query) %}
 
+            {# dim_dbt__current_relations is grained on (node_id,
+               target_name): several targets writing to the same artifacts
+               tables can each have their own latest success for the same
+               node. Two cases:
+                 - target_name given: at most one row per node_id already
+                   matches it, so filtering is a straight lookup.
+                 - target_name not given: more than one row per node_id can
+                   come back (one per target that has ever built the node).
+                   Collapse to one, keeping the most recently completed
+                   success, so the single-target-project default behaviour
+                   (one row per node) is unchanged and the multi-target case
+                   picks the truly freshest relation instead of an arbitrary
+                   target's.
+               `last_success_at_sort_keys` holds the raw (pre-formatting)
+               completion time used only for that comparison; it never
+               reaches the emitted document. #}
+            {% set last_success_at_sort_keys = {} %}
+
             {# target_name is project-specific — not a closed set like
                resource_types — so it isn't validated or interpolated into
                SQL at all. Quote-doubling would not be a safe escape on
@@ -104,20 +129,56 @@
                question entirely. #}
             {% for row in results.rows %}
                 {% if target_name is none or row["target_name"] == target_name %}
-                    {% do nodes.update({
-                        row["node_id"]: {
-                            "resource_type": row["resource_type"],
-                            "name": row["name"],
-                            "package_name": row["package_name"],
-                            "database": row["database"],
-                            "schema": row["schema"],
-                            "alias": row["alias"],
-                            "materialization": row["materialization"],
-                            "checksum": row["checksum"],
-                            "last_success_at": row["last_success_at"] | string,
-                            "command_invocation_id": row["command_invocation_id"],
-                        }
-                    }) %}
+                    {% set completed_at = row["last_success_at"] %}
+                    {% set current_best = last_success_at_sort_keys.get(row["node_id"]) %}
+                    {# A specific target_name already guarantees at most one
+                       matching row per node_id, so every match wins
+                       outright. With no target_name, only overwrite the
+                       node's current winner when this row is strictly more
+                       recent; a null completion time never displaces an
+                       existing real one, but still seeds the entry the
+                       first time a node is seen. #}
+                    {% set wins = target_name is not none
+                        or row["node_id"] not in nodes
+                        or (completed_at is not none and (current_best is none or completed_at > current_best)) %}
+                    {% if wins %}
+                        {% set last_success_at = none %}
+                        {% if completed_at is not none %}
+                            {% set last_success_at = completed_at %}
+                            {# Every adapter this package writes to records
+                               query_completed_at from dbt's own UTC
+                               run-results timing. A value that comes back
+                               with no tzinfo (e.g. Postgres/Redshift's
+                               timestamp-without-time-zone) is UTC wall-clock
+                               time, not an unknown offset, so attaching it
+                               explicitly turns the naive value into a real
+                               instant. A value that already carries tzinfo
+                               (e.g. Snowflake's TIMESTAMP_TZ) is left as-is.
+                               isoformat() then gives the `T` separator and
+                               explicit offset the README documents, instead
+                               of the space-separated, offset-less string
+                               `| string` produced. #}
+                            {% if last_success_at.tzinfo is none %}
+                                {% set last_success_at = last_success_at.replace(tzinfo=modules.pytz.utc) %}
+                            {% endif %}
+                            {% set last_success_at = last_success_at.isoformat() %}
+                        {% endif %}
+                        {% do nodes.update({
+                            row["node_id"]: {
+                                "resource_type": row["resource_type"],
+                                "name": row["name"],
+                                "package_name": row["package_name"],
+                                "database": row["database"],
+                                "schema": row["schema"],
+                                "alias": row["alias"],
+                                "materialization": row["materialization"],
+                                "checksum": row["checksum"],
+                                "last_success_at": last_success_at,
+                                "command_invocation_id": row["command_invocation_id"],
+                            }
+                        }) %}
+                        {% do last_success_at_sort_keys.update({row["node_id"]: completed_at}) %}
+                    {% endif %}
                 {% endif %}
             {% endfor %}
 
