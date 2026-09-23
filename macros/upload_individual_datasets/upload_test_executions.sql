@@ -79,7 +79,7 @@
 
                 {{ test.execution_time }}, {# total_node_runtime #}
                 null, {# rows_affected not available in Databricks #}
-                {{ 'null' if test.failures is none else test.failures }}, {# failures #}
+                {{ test.failures if test.failures is not none and test.failures != '' else 'null' }}, {# failures #}
                 '{{ test.message | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') | replace("\n", "\\n") }}', {# message #}
                 {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(test.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"')) }} {# adapter_response #}
             )
@@ -133,7 +133,7 @@
 
                 {{ test.execution_time }}, {# total_node_runtime #}
                 null, {# rows_affected not available in Databricks #}
-                {{ 'null' if test.failures is none else test.failures }}, {# failures #}
+                {{ test.failures if test.failures is not none and test.failures != '' else 'null' }}, {# failures #}
                 $${{ test.message  }}$$, {# message #}
                 $${{ tojson(test.adapter_response) }}$$ {# adapter_response #}
             )
@@ -186,7 +186,7 @@
 
                 {{ test.execution_time }}, {# total_node_runtime #}
                 try_cast('{{ test.adapter_response.rows_affected }}' as int), {# rows_affected #}
-                {{ 'null' if test.failures is none else test.failures }}, {# failures #}
+                {{ test.failures if test.failures is not none and test.failures != '' else 'null' }}, {# failures #}
                 '{{ test.message | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}', {# message #}
                 '{{ tojson(test.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}' {# adapter_response #}
             )
@@ -226,7 +226,7 @@
 
                 {{ test.execution_time }}, {# total_node_runtime #}
                 null, {# rows_affected not available in Databricks #}
-                {{ 'null' if test.failures is none else test.failures }}, {# failures #}
+                {{ test.failures if test.failures is not none and test.failures != '' else 'null' }}, {# failures #}
                 '{{ test.message | replace("'", "''") }}', {# message #}
                 '{{ tojson(test.adapter_response) | replace("'", "''") }}' {# adapter_response #}
             )
@@ -276,7 +276,7 @@
                 {% endif %}
                 , {# rows_affected #}
 
-                {{ 'null' if test.failures is none else test.failures }}, {# failures #}
+                {{ test.failures if test.failures is not none and test.failures != '' else 'null' }}, {# failures #}
                 '{{ test.message | replace("'", "''") }}', {# message #}
                 '{{ tojson(test.adapter_response) | replace("'", "''") }}' {# adapter_response #}
             )
