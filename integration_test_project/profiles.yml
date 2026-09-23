@@ -12,7 +12,7 @@ dbt_artifacts:
       type: snowflake
       account: "{{ env_var('DBT_ENV_SECRET_SNOWFLAKE_TEST_ACCOUNT') }}"
       user: "{{ env_var('DBT_ENV_SECRET_SNOWFLAKE_TEST_USER') }}"
-      password: "{{ env_var('DBT_ENV_SECRET_SNOWFLAKE_TEST_PASSWORD') }}"
+      private_key: "{{ env_var('DBT_ENV_SECRET_SNOWFLAKE_TEST_PRIVATE_KEY') }}"
       role: "{{ env_var('DBT_ENV_SECRET_SNOWFLAKE_TEST_ROLE') }}"
       database: "{{ env_var('DBT_ENV_SECRET_SNOWFLAKE_TEST_DATABASE') }}"
       warehouse: "{{ env_var('DBT_ENV_SECRET_SNOWFLAKE_TEST_WAREHOUSE') }}"
