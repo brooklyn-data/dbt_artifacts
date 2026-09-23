@@ -35,7 +35,7 @@ your team's normal access-request process.
 # integration_test_project/env.sh
 export DBT_ENV_SECRET_SNOWFLAKE_TEST_ACCOUNT=<your-snowflake-account>
 export DBT_ENV_SECRET_SNOWFLAKE_TEST_USER=<your-test-user>
-export DBT_ENV_SECRET_SNOWFLAKE_TEST_PASSWORD=<see your team's secret store>
+export DBT_ENV_SECRET_SNOWFLAKE_TEST_PRIVATE_KEY="$(cat ~/.ssh/<your-key>.p8)"  # PKCS#8 PEM, unencrypted
 export DBT_ENV_SECRET_SNOWFLAKE_TEST_ROLE=<role with create/usage on the test DB>
 export DBT_ENV_SECRET_SNOWFLAKE_TEST_DATABASE=<test database>
 export DBT_ENV_SECRET_SNOWFLAKE_TEST_WAREHOUSE=<test warehouse>
