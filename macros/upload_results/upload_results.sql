@@ -4,7 +4,14 @@
 
     {% if execute %}
 
-        {% set datasets_to_load = ['exposures', 'seeds', 'snapshots', 'invocations', 'sources', 'tests', 'models'] %}
+        {% set upload_manifest = var('dbt_artifacts_upload_manifest', true) %}
+
+        {% set datasets_to_load = ['invocations'] %}
+
+        {% if upload_manifest %}
+            {% set datasets_to_load = ['exposures', 'seeds', 'snapshots', 'sources', 'tests', 'models'] + datasets_to_load %}
+        {% endif %}
+
         {% if results != [] %}
             {# When executing, and results are available, then upload the results #}
             {% set datasets_to_load = ['model_executions', 'seed_executions', 'test_executions', 'snapshot_executions'] + datasets_to_load %}
