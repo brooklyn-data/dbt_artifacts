@@ -25,6 +25,9 @@
                 {% set upload_limit = 300 if target.type == 'bigquery' else 5000 %}
             {% endif %}
 
+            {# Wrap the chunked inserts in a transaction, where the dialect supports it #}
+            {{ dbt_artifacts.begin_transaction() }}
+
             {# Loop through each chunk in turn #}
             {% for i in range(0, objects | length, upload_limit) -%}
 
@@ -41,6 +44,8 @@
 
             {# Loop the next 'chunk' #}
             {% endfor %}
+
+            {{ dbt_artifacts.end_transaction() }}
 
         {# Loop the next 'dataset' #}
         {% endfor %}
