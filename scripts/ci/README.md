@@ -24,7 +24,7 @@ Supported `<warehouse>` values: `postgres`, `trino`, `sqlserver`, `snowflake`,
 `bigquery`, `databricks`, `spark`. The first three run locally via
 `compose.yml`; the rest require credentials in env vars.
 
-`<dbt_version>` follows the tox-env naming convention, e.g. `1_9_0`, `1_8_0`.
+`<dbt_version>` follows the tox-env naming convention, e.g. `1_11_0`, `1_10_0`.
 Omit for the latest supported adapter version.
 
 ## Quick start

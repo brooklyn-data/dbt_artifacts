@@ -36,4 +36,5 @@ models:
     description: max(child_compile_started_at - parent_query_completed_at, 0) in seconds.
     tests:
     - dbt_artifacts.is_between:
-        min_value: 0
+        arguments:
+          min_value: 0

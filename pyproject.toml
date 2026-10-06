@@ -17,9 +17,12 @@ description = "Multi-adapter dbt package that builds a mart of artifacts about y
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "dbt-bigquery>=1.9.1",
-    "dbt-postgres>=1.9.0",
-    "dbt-snowflake>=1.9.2",
+    # Matches require-dbt-version in dbt_project.yml. The upper bound keeps
+    # dbt-core 2.0 prereleases out (see tox.ini on pinning dbt-core).
+    "dbt-core>=1.10.0,<2.0.0",
+    "dbt-bigquery>=1.10.0",
+    "dbt-postgres>=1.10.0",
+    "dbt-snowflake>=1.10.0",
     "tox>=4.25.0",
     # pyarrow is pulled in transitively by google-cloud-bigquery / db-dtypes /
     # pandas-gbq. We don't use it directly — the explicit cap here exists only
@@ -27,6 +30,6 @@ dependencies = [
     # transitive deps. The `[pandas]` extra previously declared here doesn't
     # exist on pyarrow and emitted a uv warning; dropped.
     "pyarrow<19.0.0",
-    "dbt-trino>=1.9.1",
-    "dbt-sqlserver>=1.8.7",
+    "dbt-trino>=1.10.0",
+    "dbt-sqlserver>=1.10.0",
 ]
