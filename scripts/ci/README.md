@@ -27,6 +27,22 @@ Supported `<warehouse>` values: `postgres`, `trino`, `sqlserver`, `snowflake`,
 `<dbt_version>` follows the tox-env naming convention, e.g. `1_11_0`, `1_10_0`.
 Omit for the latest supported adapter version.
 
+### dbt Fusion engine (`scripts/fusion/`)
+
+Fusion is a standalone binary, not a Python package, so it runs in a pinned
+Docker image (`scripts/fusion/Dockerfile`) instead of through uv/tox. Nothing
+is installed on the host.
+
+| Script | Purpose |
+|---|---|
+| `fusion/check.sh` | Parse with Fusion, fail on any warning. No secrets needed (Tier 1+). |
+| `fusion/test.sh <warehouse>` | Two-pass Fusion build, same as the tox envs. `snowflake` only (Tier 2+). |
+| `fusion/dbtf.sh [--rebuild] <dbt args>` | Run any Fusion command against `integration_test_project/`. |
+
+`dbtf.sh` sources the repo-root `.env` if present and writes to a separate
+`..._fusion_...` schema so it never collides with dbt Core runs. Bump the
+Fusion version via `FUSION_VERSION` in the Dockerfile, then `--rebuild`.
+
 ## Quick start
 
 ```bash
