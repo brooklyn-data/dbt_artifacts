@@ -31,5 +31,6 @@ dependencies = [
     # exist on pyarrow and emitted a uv warning; dropped.
     "pyarrow<19.0.0",
     "dbt-trino>=1.10.0",
-    "dbt-sqlserver>=1.10.0",
+    # [pyodbc]: optional from dbt-sqlserver 1.12; the test profile uses ODBC.
+    "dbt-sqlserver[pyodbc]>=1.10.0",
 ]
