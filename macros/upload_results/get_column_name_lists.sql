@@ -210,7 +210,9 @@
             rows_affected,
             failures,
             message,
-            adapter_response
+            adapter_response,
+            compiled_sql,
+            audit_table_name
         )
 
     {% elif dataset == "tests" %}

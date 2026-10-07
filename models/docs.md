@@ -412,3 +412,15 @@ Response provided by the adapter as JSON.
 All results as a JSON blob
 
 {% enddocs %}
+
+{% docs compiled_sql %}
+
+The compiled SQL for the test execution
+
+{% enddocs %}
+
+{% docs audit_table_name %}
+
+The name of the audit table created for failing tests
+
+{% enddocs %}
