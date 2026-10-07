@@ -57,6 +57,10 @@ macros:
     description: |
       Dependent on the adapter type, returns the native type for storing JSON.
 
+  - name: type_string
+    description: |
+      Dependent on the adapter type, returns the native type for storing a string.
+
   ## MIGRATION ##
   - name: migrate_from_v0_to_v1
     description: |
@@ -285,3 +289,31 @@ macros:
         type: list[any]
         description: |
           The results object from dbt.
+
+  ## DEFERRAL STATE ##
+  - name: export_state
+    description: |
+      Prints dim_dbt__current_relations as a versioned JSON document for use as
+      dbt deferral state. See "Using dbt_artifacts as deferral state" in the
+      README for the contract.
+    arguments:
+      - name: resource_types
+        type: list[string]
+        description: |
+          Which resource types to export. Defaults to model, seed and snapshot;
+          deferral resolves refable nodes only.
+      - name: database
+        type: string
+        description: |
+          Overrides the database of dim_dbt__current_relations. Needed when the
+          session runs on a target whose ref() would resolve elsewhere.
+      - name: schema
+        type: string
+        description: |
+          Overrides the schema of dim_dbt__current_relations.
+      - name: target_name
+        type: string
+        description: |
+          When set, exports each node's latest success on this target only.
+          Use it when several targets write to the same artifacts tables.
+          When unset, exports each node's latest success across all targets.

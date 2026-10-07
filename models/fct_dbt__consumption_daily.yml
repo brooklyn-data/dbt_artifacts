@@ -1,31 +1,32 @@
 version: 2
 
 models:
-- name: fct_dbt__consumption_daily
-  description: >
-    Core consumption mart: one row per UTC day x meter. A strict roll-up of
-    fct_dbt__consumption_daily_detail (sum of quantity), so daily totals always
-    reconcile exactly to the detail grain. v1 meters: 'smb' (Successful Models
-    Built, mirroring dbt's published rules) and 'active_target_tables' (distinct
-    deployment-active nodes, the DATT upper-bound proxy). Consumption metrics
-    only count deployment-classed invocations (see classify_invocation_billing).
-  columns:
-  - name: consumption_daily_id
-    description: Surrogate key of the grain (hash of date_day, meter). Stable BI join key.
-    tests:
-    - unique
-    - not_null
-  - name: date_day
-    description: UTC calendar day of the executions (via cast_to_utc_date()).
-    tests:
-    - not_null
-  - name: meter
-    description: "Consumption meter: 'smb' or 'active_target_tables'."
-    tests:
-    - not_null
-    - accepted_values:
-        values: ['smb', 'active_target_tables']
-  - name: quantity
-    description: Metered quantity for the day x meter (sum of the detail rows).
-    tests:
-    - not_null
+  - name: fct_dbt__consumption_daily
+    description: >
+      Core consumption mart: one row per UTC day x meter. A strict roll-up of
+      fct_dbt__consumption_daily_detail (sum of quantity), so daily totals always
+      reconcile exactly to the detail grain. v1 meters: 'smb' (Successful Models
+      Built, mirroring dbt's published rules) and 'active_target_tables' (distinct
+      deployment-active nodes, the DATT upper-bound proxy). Consumption metrics
+      only count deployment-classed invocations (see classify_invocation_billing).
+    columns:
+      - name: consumption_daily_id
+        description: Surrogate key of the grain (hash of date_day, meter). Stable BI join key.
+        tests:
+          - unique
+          - not_null
+      - name: date_day
+        description: UTC calendar day of the executions (via cast_to_utc_date()).
+        tests:
+          - not_null
+      - name: meter
+        description: "Consumption meter: 'smb' or 'active_target_tables'."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['smb', 'active_target_tables']
+      - name: quantity
+        description: Metered quantity for the day x meter (sum of the detail rows).
+        tests:
+          - not_null

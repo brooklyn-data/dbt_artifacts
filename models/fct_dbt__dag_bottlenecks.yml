@@ -1,38 +1,40 @@
 version: 2
 
 models:
-- name: fct_dbt__dag_bottlenecks
-  description: >
-    Pinch-point mart: per parent model x UTC day, the measured wall-clock time
-    its children spent waiting on it. Roll-up of fct_dbt__dag_bottlenecks_detail
-    over rows where the parent was the binding constraint and actually gated a
-    child (stall_seconds > 0). Measured gating, not graph theory; descendant
-    counts / blocking scores are out of scope for v1. Snowflake-only.
-  columns:
-  - name: dag_bottleneck_id
-    description: Surrogate key of the grain (hash of date_day, parent_node_id). BI join key.
-    tests:
-    - unique
-    - not_null
-  - name: date_day
-    description: UTC calendar day (via cast_to_utc_date()).
-    tests:
-    - not_null
-  - name: parent_node_id
-    description: The parent model node id that gated its children.
-    tests:
-    - not_null
-  - name: blocked_children
-    description: Distinct child models for which this parent was the binding (latest-completing) parent that day.
-  - name: total_stall_seconds
-    description: Sum of measured stall seconds attributed to this parent that day.
-    tests:
-    - dbt_artifacts.is_between:
-        min_value: 0
-  - name: max_stall_seconds
-    description: Largest single measured stall attributed to this parent that day.
-    tests:
-    - dbt_artifacts.is_between:
-        min_value: 0
-  - name: invocations_observed
-    description: Distinct invocations in which this parent gated at least one child that day.
+  - name: fct_dbt__dag_bottlenecks
+    description: >
+      Pinch-point mart: per parent model x UTC day, the measured wall-clock time
+      its children spent waiting on it. Roll-up of fct_dbt__dag_bottlenecks_detail
+      over rows where the parent was the binding constraint and actually gated a
+      child (stall_seconds > 0). Measured gating, not graph theory; descendant
+      counts / blocking scores are out of scope for v1. Snowflake-only.
+    columns:
+      - name: dag_bottleneck_id
+        description: Surrogate key of the grain (hash of date_day, parent_node_id). BI join key.
+        tests:
+          - unique
+          - not_null
+      - name: date_day
+        description: UTC calendar day (via cast_to_utc_date()).
+        tests:
+          - not_null
+      - name: parent_node_id
+        description: The parent model node id that gated its children.
+        tests:
+          - not_null
+      - name: blocked_children
+        description: Distinct child models for which this parent was the binding (latest-completing) parent that day.
+      - name: total_stall_seconds
+        description: Sum of measured stall seconds attributed to this parent that day.
+        tests:
+          - dbt_artifacts.is_between:
+              arguments:
+                min_value: 0
+      - name: max_stall_seconds
+        description: Largest single measured stall attributed to this parent that day.
+        tests:
+          - dbt_artifacts.is_between:
+              arguments:
+                min_value: 0
+      - name: invocations_observed
+        description: Distinct invocations in which this parent gated at least one child that day.

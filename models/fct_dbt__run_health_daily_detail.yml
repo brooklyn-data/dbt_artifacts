@@ -1,48 +1,49 @@
 version: 2
 
 models:
-- name: fct_dbt__run_health_daily_detail
-  description: >
-    Run-health rollup at UTC day x target_name grain (companion to
-    fct_dbt__run_health_daily). Same status mapping and definitions; additive
-    count columns sum to the daily model across targets.
-  columns:
-  - name: run_health_daily_detail_id
-    description: Surrogate key of the grain (hash of date_day, target_name). BI join key.
-    tests:
-    - unique
-    - not_null
-  - name: date_day
-    description: UTC calendar day (via cast_to_utc_date()).
-    tests:
-    - not_null
-  - name: target_name
-    description: dbt target name (target.name) of the invocations.
-  - name: invocations
-    description: Distinct command_invocation_ids that day for the target.
-  - name: distinct_commands
-    description: Distinct dbt_command values that day for the target.
-  - name: node_successes
-    description: Successful node executions for the target.
-  - name: node_failures
-    description: Failed node executions for the target.
-  - name: node_errors
-    description: Errored node executions for the target.
-  - name: node_skips
-    description: Skipped node executions for the target.
-  - name: failed_invocations
-    description: Invocations with >=1 node in error or failure for the target.
-  - name: success_rate
-    description: successes / (successes + failures + errors) for the target.
-    tests:
-    - dbt_artifacts.is_between:
-        min_value: 0
-        max_value: 1
-  - name: total_runtime_seconds
-    description: Sum of total_node_runtime for the target that day.
-  - name: max_node_runtime_seconds
-    description: Longest single node execution for the target that day.
-  - name: first_run_started_at
-    description: Earliest node run_started_at for the target that day.
-  - name: last_run_started_at
-    description: Latest node run_started_at for the target that day.
+  - name: fct_dbt__run_health_daily_detail
+    description: >
+      Run-health rollup at UTC day x target_name grain (companion to
+      fct_dbt__run_health_daily). Same status mapping and definitions; additive
+      count columns sum to the daily model across targets.
+    columns:
+      - name: run_health_daily_detail_id
+        description: Surrogate key of the grain (hash of date_day, target_name). BI join key.
+        tests:
+          - unique
+          - not_null
+      - name: date_day
+        description: UTC calendar day (via cast_to_utc_date()).
+        tests:
+          - not_null
+      - name: target_name
+        description: dbt target name (target.name) of the invocations.
+      - name: invocations
+        description: Distinct command_invocation_ids that day for the target.
+      - name: distinct_commands
+        description: Distinct dbt_command values that day for the target.
+      - name: node_successes
+        description: Successful node executions for the target.
+      - name: node_failures
+        description: Failed node executions for the target.
+      - name: node_errors
+        description: Errored node executions for the target.
+      - name: node_skips
+        description: Skipped node executions for the target.
+      - name: failed_invocations
+        description: Invocations with >=1 node in error or failure for the target.
+      - name: success_rate
+        description: successes / (successes + failures + errors) for the target.
+        tests:
+          - dbt_artifacts.is_between:
+              arguments:
+                min_value: 0
+                max_value: 1
+      - name: total_runtime_seconds
+        description: Sum of total_node_runtime for the target that day.
+      - name: max_node_runtime_seconds
+        description: Longest single node execution for the target that day.
+      - name: first_run_started_at
+        description: Earliest node run_started_at for the target that day.
+      - name: last_run_started_at
+        description: Latest node run_started_at for the target that day.

@@ -26,10 +26,14 @@
    json
 {% endmacro %}
 
+{% macro redshift__type_json() %}
+   super
+{% endmacro %}
+
 {#- ARRAY -#}
 
 {% macro type_array() %}
-    {{ return(adapter.dispatch('type_array', 'dbt_artifacts')()) }}
+   {{ return(adapter.dispatch('type_array', 'dbt_artifacts')()) }}
 {% endmacro %}
 
 {% macro default__type_array() %}
@@ -44,6 +48,22 @@
    array<string>
 {% endmacro %}
 
+{% macro redshift__type_array() %}
+   super
+{% endmacro %}
+
+{% macro type_string() %}
+   {{ return(adapter.dispatch('type_string', 'dbt_artifacts')()) }}
+{% endmacro %}
+
+{% macro default__type_string() %}
+   {{ return(api.Column.translate_type("string")) }}
+{% endmacro %}
+
+{% macro redshift__type_string() %}
+   varchar(max)
+{% endmacro %}
+    
 {% macro trino__type_array() %}
    array(varchar)
 {% endmacro %}
