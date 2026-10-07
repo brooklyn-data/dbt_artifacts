@@ -63,7 +63,7 @@ release in your `packages.yml`.
 ```
 packages:
   - package: brooklyn-data/dbt_artifacts
-    version: 2.11.0
+    version: 2.11.1
 ```
 
 :construction_worker: Make sure to fix at least the **minor** version, to avoid issues when a new release is open. See the notes on upgrading below for more detail.
