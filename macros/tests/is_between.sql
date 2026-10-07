@@ -9,10 +9,12 @@
         columns:
           - name: pct_of_month_smb
             tests:
-              - dbt_artifacts.is_between: {min_value: 0, max_value: 1}
+              - dbt_artifacts.is_between:
+                  arguments: {min_value: 0, max_value: 1}
           - name: runtime_regression_ratio
             tests:
-              - dbt_artifacts.is_between: {min_value: 0}   # >= 0, no upper bound
+              - dbt_artifacts.is_between:
+                  arguments: {min_value: 0}   # >= 0, no upper bound
 -#}
 
 {% test is_between(model, column_name, min_value=none, max_value=none) %}

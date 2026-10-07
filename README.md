@@ -47,14 +47,31 @@ See the generated [dbt docs site](https://brooklyn-data.github.io/dbt_artifacts/
 
 ## Supported dbt versions
 
-As of `2.11.0`, the package's CI verifies against **dbt 1.9 and newer**.
-Older versions (1.3–1.8) may continue to work but are **no longer verified
-in CI** — dbt Labs has marked them end-of-life and they cannot run on the
-Python 3.12 toolchain our CI uses. The package still *installs* on dbt
-≥1.3.0 (`require-dbt-version` is unchanged), so existing users are not
-blocked; we simply can no longer confirm new releases against those
-versions. If you rely on dbt < 1.9, pin a known-good `dbt_artifacts`
-release in your `packages.yml`.
+As of `3.0.0`, the package requires **dbt 1.10 or newer** (dbt Core 1.10+
+or the dbt Fusion engine). The package's generic tests pass their arguments
+under `arguments:`, which Fusion requires and dbt Core only understands from
+1.10. If you're on an older dbt version, pin `dbt_artifacts` to `2.11.1` in
+your `packages.yml`:
+
+```yml
+packages:
+  - package: brooklyn-data/dbt_artifacts
+    version: 2.11.1
+```
+
+### dbt Fusion engine (dbt 2.x)
+
+The package is compatible with the [dbt Fusion engine](https://docs.getdbt.com/docs/fusion).
+CI parses it with Fusion on every pull request (failing on any deprecation
+warning) and runs the full Snowflake integration suite on Fusion before
+release. Fusion also supports BigQuery and Databricks; the package parses
+cleanly against both, but they are not yet integration-tested on Fusion.
+Postgres and Trino are experimental in Fusion, and SQL Server and Spark are
+not supported by Fusion, so on those warehouses keep using dbt Core.
+
+Fusion runs `on-run-end` hooks for `dbt compile` and `dbt show`, which dbt
+Core does not. `upload_results` skips those commands, so the same invocations
+are recorded on both engines.
 
 ## Quickstart
 
