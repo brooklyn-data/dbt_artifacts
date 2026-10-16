@@ -17,7 +17,7 @@ with
             rows_affected
             {% if target.type == "bigquery" %}, bytes_processed {% endif %},
             materialization,
-            {% if target.type == "sqlserver" %} "schema"
+            {% if target.type in ["sqlserver", "fabric"] %} "schema"
             {% else %} schema
             {% endif %},
             name,
