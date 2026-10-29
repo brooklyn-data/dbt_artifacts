@@ -24,7 +24,8 @@ models:
     tests:
     - not_null
     - accepted_values:
-        values: ['smb', 'active_target_tables']
+        arguments:
+          values: ['smb', 'active_target_tables']
   - name: quantity
     description: Metered quantity for the day x meter (sum of the detail rows).
     tests:

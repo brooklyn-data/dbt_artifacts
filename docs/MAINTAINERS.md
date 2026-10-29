@@ -207,7 +207,7 @@ env automatically. You no longer need `pyenv virtualenv` or per-version
 manual setup — just pass the version:
 
 ```bash
-./scripts/ci/test.sh snowflake 1_8_0
+./scripts/ci/test.sh snowflake 1_10_0
 ./scripts/ci/test.sh snowflake 1_11_0
 ```
 

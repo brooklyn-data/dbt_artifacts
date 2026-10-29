@@ -9,7 +9,7 @@
 #
 # Examples:
 #   scripts/ci/test.sh postgres              # latest supported dbt-postgres
-#   scripts/ci/test.sh postgres 1_9_0        # pinned dbt-postgres 1.9.x
+#   scripts/ci/test.sh postgres 1_10_0       # pinned dbt-postgres 1.10.x
 #   scripts/ci/test.sh snowflake             # requires Snowflake env vars
 #
 # Local warehouses (postgres, trino, sqlserver) are started via docker compose

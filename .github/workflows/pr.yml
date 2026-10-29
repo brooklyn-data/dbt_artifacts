@@ -16,6 +16,9 @@
 #     Tier 2/3.
 #   - Only the latest supported dbt version is tested here. The full
 #     version matrix runs in Tier 3.
+#   - The package is also parsed with the dbt Fusion engine (dbt 2.x),
+#     failing on any warning. Fusion's parse doesn't connect to a warehouse,
+#     so it runs on dummy credentials. Fusion builds run in Tier 2/3.
 #
 # Hardening notes:
 #   - `permissions: contents: read` only. No `id-token`, no escalation.
@@ -78,3 +81,18 @@ jobs:
 
       - name: Run integration tests against ${{ matrix.warehouse }}
         run: ./scripts/ci/test.sh ${{ matrix.warehouse }}
+
+  # -------- Fusion parse (dbt 2.x) ------------------------------------------
+  # Parses the package with the dbt Fusion engine and fails on any warning,
+  # so Fusion deprecations ("will error post preview") are caught before they
+  # become hard errors. Fusion's parse never connects to the warehouse, so it
+  # runs with dummy credentials and needs no secrets.
+  fusion-parse:
+    name: fusion (parse)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+      - name: Parse with dbt Fusion
+        run: ./scripts/fusion/check.sh

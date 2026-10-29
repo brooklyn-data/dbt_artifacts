@@ -141,6 +141,42 @@ jobs:
       - name: Run integration tests against snowflake
         run: ./scripts/ci/test.sh snowflake
 
+  # -------- Fusion parse (dbt 2.x) ------------------------------------------
+  # Parses the package with the dbt Fusion engine and fails on any warning,
+  # so Fusion deprecations ("will error post preview") are caught before they
+  # become hard errors. Fusion's parse never connects to the warehouse, so it
+  # runs with dummy credentials and needs no secrets.
+  fusion-parse:
+    name: fusion (parse)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+      - name: Parse with dbt Fusion
+        run: ./scripts/fusion/check.sh
+
+  # -------- Snowflake on Fusion (dbt 2.x) ----------------------------------
+  # Same two-pass build as `integration-snowflake`, on the dbt Fusion engine.
+  # Snowflake is the only CI warehouse that Fusion supports and this package
+  # tests in CI; see scripts/fusion/test.sh.
+  integration-snowflake-fusion:
+    name: integration (snowflake, fusion)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_ACCOUNT: ${{ secrets.SNOWFLAKE_TEST_ACCOUNT }}
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_USER: ${{ secrets.SNOWFLAKE_TEST_USER }}
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_ROLE: ${{ secrets.SNOWFLAKE_TEST_ROLE }}
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_DATABASE: ${{ secrets.SNOWFLAKE_TEST_DATABASE }}
+      DBT_ENV_SECRET_SNOWFLAKE_TEST_WAREHOUSE: ${{ secrets.SNOWFLAKE_TEST_WAREHOUSE }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+      - name: Run integration tests against snowflake on Fusion
+        run: ./scripts/fusion/test.sh snowflake
+
   # -------- BigQuery (cloud, WIF auth) ------------------------------------
   integration-bigquery:
     name: integration (bigquery)

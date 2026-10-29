@@ -31,8 +31,9 @@ models:
     description: This model's share of the month's total SMB (0..1), a window over billing_month.
     tests:
     - dbt_artifacts.is_between:
-        min_value: 0
-        max_value: 1
+        arguments:
+          min_value: 0
+          max_value: 1
   - name: builds_per_day_avg
     description: Average successful builds per active build-day (smb_quantity / distinct_days_built).
   - name: distinct_days_built
