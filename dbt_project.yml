@@ -17,7 +17,7 @@ models:
       +materialized: incremental
       +full_refresh: false
       +persist_docs:
-        # Databricks and SQL Server don't offer column-level support for persisting docs
-        columns: '{{ target.type != "databricks" and target.type != "sqlserver" }}'
-        relation: '{{ target.type != "sqlserver" }}'
+        # These adapters don't offer column-level support for persisting docs.
+        columns: '{{ target.type not in ["databricks", "sqlserver", "fabric"] }}'
+        relation: '{{ target.type not in ["sqlserver", "fabric"] }}'
       +as_columnstore: False
