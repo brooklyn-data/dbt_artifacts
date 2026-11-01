@@ -1,10 +1,6 @@
 # HEY! This file is used in the dbt-artifacts integrations tests with GitHub Actions.
 # You should __NEVER__ check credentials into version control. Thanks for reading :)
 
-config:
-  send_anonymous_usage_stats: False
-  use_colors: True
-
 dbt_artifacts:
   target: snowflake
   outputs:
@@ -12,7 +8,7 @@ dbt_artifacts:
       type: snowflake
       account: "{{ env_var('DBT_ENV_SECRET_SNOWFLAKE_TEST_ACCOUNT') }}"
       user: "{{ env_var('DBT_ENV_SECRET_SNOWFLAKE_TEST_USER') }}"
-      password: "{{ env_var('DBT_ENV_SECRET_SNOWFLAKE_TEST_PASSWORD') }}"
+      private_key: "{{ env_var('DBT_ENV_SECRET_SNOWFLAKE_TEST_PRIVATE_KEY') }}"
       role: "{{ env_var('DBT_ENV_SECRET_SNOWFLAKE_TEST_ROLE') }}"
       database: "{{ env_var('DBT_ENV_SECRET_SNOWFLAKE_TEST_DATABASE') }}"
       warehouse: "{{ env_var('DBT_ENV_SECRET_SNOWFLAKE_TEST_WAREHOUSE') }}"
@@ -43,27 +39,30 @@ dbt_artifacts:
       timeout_seconds: 300
       priority: interactive
       retries: 1
+    # Ports for postgres/sqlserver/trino are deliberately non-standard so
+    # they don't collide with a developer's locally-running services. See
+    # the header of compose.yml at the repo root for the full rationale.
     postgres:
       type: postgres
       host: localhost
       user: postgres
       password: postgres
-      port: 5432
+      port: 55432
       dbname: postgres
       schema: public
       threads: 8
     sqlserver:
       type: sqlserver
       driver: 'ODBC Driver 18 for SQL Server'
-      server: localhost
-      port: 1433
+      server: 127.0.0.1
+      port: 51433
       database: dbt_artifact_integrationtests
       schema: dbo
       windows_login: False
       trust_cert: True
       Encrypt: False
       user: dbt
-      password: "123"
+      password: "123Administrator"
     clickhouse:
       type: clickhouse
       host: "{{ env_var('DBT_ENV_SECRET_CLICKHOUSE_HOST') }}"
@@ -71,4 +70,14 @@ dbt_artifacts:
       user: "{{ env_var('DBT_ENV_SECRET_CLICKHOUSE_USER') }}"
       password: "{{ env_var('DBT_ENV_SECRET_CLICKHOUSE_PASSWORD') }}"
       schema: dbt_artifacts_test_commit_{{ env_var('DBT_VERSION', '') }}_{{ env_var('GITHUB_SHA_OVERRIDE', '') if env_var('GITHUB_SHA_OVERRIDE', '') else env_var('GITHUB_SHA') }}
+      threads: 8
+    trino:
+      type: trino
+      method: none
+      user: trino
+      password: password
+      host: localhost
+      database: memory
+      schema: default
+      port: 58080
       threads: 8

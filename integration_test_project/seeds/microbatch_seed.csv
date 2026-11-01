@@ -1,0 +1,37 @@
+transaction_id,transaction_date,transaction_time,transaction_ts,transaction_qty,store_id,store_location,product_id,unit_price,product_category,product_type,product_detail
+1,2023-01-01,07:06:11,2023-01-01 07:06:11,2,5,Lower Manhattan,32,3.0,Coffee,Gourmet brewed coffee,Ethiopia Rg
+2,2023-01-01,07:08:56,2023-01-01 07:08:56,2,5,Lower Manhattan,57,3.1,Tea,Brewed Chai tea,Spicy Eye Opener Chai Lg
+3,2023-01-01,07:14:04,2023-01-01 07:14:04,2,5,Lower Manhattan,59,4.5,Drinking Chocolate,Hot chocolate,Dark chocolate Lg
+4,2023-01-01,07:20:24,2023-01-01 07:20:24,1,5,Lower Manhattan,22,2.0,Coffee,Drip coffee,Our Old Time Diner Blend Sm
+5,2023-01-01,07:22:41,2023-01-01 07:22:41,2,5,Lower Manhattan,57,3.1,Tea,Brewed Chai tea,Spicy Eye Opener Chai Lg
+6,2023-01-01,07:22:41,2023-01-01 07:22:41,1,5,Lower Manhattan,77,3.0,Bakery,Scone,Oatmeal Scone
+7,2023-01-01,07:25:49,2023-01-01 07:25:49,1,5,Lower Manhattan,22,2.0,Coffee,Drip coffee,Our Old Time Diner Blend Sm
+8,2023-01-01,07:33:34,2023-01-01 07:33:34,2,5,Lower Manhattan,28,2.0,Coffee,Gourmet brewed coffee,Columbian Medium Roast Sm
+9,2023-01-01,07:39:13,2023-01-01 07:39:13,1,5,Lower Manhattan,39,4.25,Coffee,Barista Espresso,Latte Rg
+10,2023-01-01,07:39:34,2023-01-01 07:39:34,2,5,Lower Manhattan,58,3.5,Drinking Chocolate,Hot chocolate,Dark chocolate Rg
+11,2023-01-01,07:43:05,2023-01-01 07:43:05,1,5,Lower Manhattan,56,2.55,Tea,Brewed Chai tea,Spicy Eye Opener Chai Rg
+12,2023-01-01,07:44:35,2023-01-01 07:44:35,2,5,Lower Manhattan,33,3.5,Coffee,Gourmet brewed coffee,Ethiopia Lg
+13,2023-01-01,07:45:51,2023-01-01 07:45:51,1,5,Lower Manhattan,51,3.0,Tea,Brewed Black tea,Earl Grey Lg
+14,2023-01-01,07:48:19,2023-01-01 07:48:19,1,5,Lower Manhattan,57,3.1,Tea,Brewed Chai tea,Spicy Eye Opener Chai Lg
+15,2023-01-01,07:52:36,2023-01-01 07:52:36,2,5,Lower Manhattan,87,3.0,Coffee,Barista Espresso,Ouro Brasileiro shot
+16,2023-01-01,07:59:58,2023-01-01 07:59:58,2,5,Lower Manhattan,47,3.0,Tea,Brewed Green tea,Serenity Green Tea Lg
+17,2023-01-01,07:59:58,2023-01-01 07:59:58,1,5,Lower Manhattan,79,3.75,Bakery,Scone,Jumbo Savory Scone
+18,2023-01-01,08:00:18,2023-01-01 08:00:18,1,8,Hells Kitchen,42,2.5,Tea,Brewed herbal tea,Lemon Grass Rg
+19,2023-01-01,08:00:39,2023-01-01 08:00:39,2,8,Hells Kitchen,59,4.5,Drinking Chocolate,Hot chocolate,Dark chocolate Lg
+20,2023-01-01,08:11:45,2023-01-01 08:11:45,1,8,Hells Kitchen,61,4.75,Drinking Chocolate,Hot chocolate,Sustainably Grown Organic Lg
+21,2023-01-01,08:17:27,2023-01-01 08:17:27,2,8,Hells Kitchen,33,3.5,Coffee,Gourmet brewed coffee,Ethiopia Lg
+22,2023-01-01,08:24:26,2023-01-01 08:24:26,2,5,Lower Manhattan,56,2.55,Tea,Brewed Chai tea,Spicy Eye Opener Chai Rg
+23,2023-01-01,08:24:26,2023-01-01 08:24:26,1,5,Lower Manhattan,69,3.25,Bakery,Biscotti,Hazelnut Biscotti
+24,2023-01-01,08:29:38,2023-01-01 08:29:38,1,8,Hells Kitchen,56,2.55,Tea,Brewed Chai tea,Spicy Eye Opener Chai Rg
+25,2023-01-01,08:31:23,2023-01-01 08:31:23,1,8,Hells Kitchen,40,3.75,Coffee,Barista Espresso,Cappuccino
+26,2023-01-01,08:33:08,2023-01-01 08:33:08,1,5,Lower Manhattan,43,3.0,Tea,Brewed herbal tea,Lemon Grass Lg
+27,2023-01-01,08:33:08,2023-01-01 08:33:08,1,5,Lower Manhattan,76,3.5,Bakery,Biscotti,Chocolate Chip Biscotti
+28,2023-01-01,08:35:03,2023-01-01 08:35:03,2,5,Lower Manhattan,45,3.0,Tea,Brewed herbal tea,Peppermint Lg
+29,2023-01-01,08:35:03,2023-01-01 08:35:03,1,5,Lower Manhattan,71,3.75,Bakery,Pastry,Chocolate Croissant
+30,2023-01-01,08:41:57,2023-01-01 08:41:57,2,8,Hells Kitchen,40,3.75,Coffee,Barista Espresso,Cappuccino
+31,2023-01-01,08:52:03,2023-01-01 08:52:03,1,8,Hells Kitchen,38,3.75,Coffee,Barista Espresso,Latte
+32,2023-01-01,08:52:32,2023-01-01 08:52:32,1,5,Lower Manhattan,26,3.0,Coffee,Organic brewed coffee,Brazilian Rg
+33,2023-01-01,08:54:33,2023-01-01 08:54:33,2,5,Lower Manhattan,27,3.5,Coffee,Organic brewed coffee,Brazilian Lg
+34,2023-01-01,08:56:27,2023-01-01 08:56:27,2,5,Lower Manhattan,29,2.5,Coffee,Gourmet brewed coffee,Columbian Medium Roast Rg
+35,2023-01-01,08:57:46,2023-01-01 08:57:46,1,8,Hells Kitchen,54,2.5,Tea,Brewed Chai tea,Morning Sunrise Chai Rg
+36,2023-01-01,08:58:55,2023-01-01 08:58:55,1,5,Lower Manhattan,26,3.0,Coffee,Organic brewed coffee,Brazilian Rg

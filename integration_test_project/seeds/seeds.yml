@@ -1,0 +1,8 @@
+version: 2
+
+seeds:
+  - name: freshness
+    config:
+      column_types:
+        id: integer
+        load_timestamp: "{{ 'datetime2' if target.type == 'sqlserver' else 'timestamp' }}"

@@ -112,3 +112,20 @@
   Nullable(Float32)
 {% endmacro %}
 
+{% macro trino__type_array() %}
+   array(varchar)
+{% endmacro %}
+
+{#- NUMERIC -#}%}
+
+{% macro type_numeric() %}
+    {{ return(adapter.dispatch('type_numeric', 'dbt_artifacts')()) }}
+{% endmacro %}
+
+{% macro default__type_numeric() %}
+   {{ return(api.Column.translate_type("numeric")) }}
+{% endmacro %}
+
+{% macro trino__type_numeric() %}
+   double
+{% endmacro %}
