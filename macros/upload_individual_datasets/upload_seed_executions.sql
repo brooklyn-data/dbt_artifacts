@@ -260,6 +260,9 @@
     {% endif %}
 {% endmacro -%}
 
+{% macro clickhouse__get_seed_executions_dml_sql(seeds) -%}
+{{ return(dbt_artifacts.postgres__get_seed_executions_dml_sql(seeds)) }}
+{%- endmacro %}
 
 {% macro trino__get_seed_executions_dml_sql(seeds) -%}
     {% if seeds != [] %}

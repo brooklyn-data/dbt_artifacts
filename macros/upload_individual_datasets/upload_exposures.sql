@@ -154,6 +154,10 @@
     {% endif %}
 {% endmacro -%}
 
+{% macro clickhouse__get_exposures_dml_sql(exposures) -%}
+{{ return(dbt_artifacts.postgres__get_exposures_dml_sql(exposures)) }}
+{%- endmacro %}
+
 
 
 {% macro trino__get_exposures_dml_sql(exposures) -%}

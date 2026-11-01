@@ -363,3 +363,6 @@
 
 {% endmacro -%}
 
+{% macro clickhouse__get_invocations_dml_sql(invocation_args=invocation_args_dict) -%}
+{{ return(dbt_artifacts.postgres__get_invocations_dml_sql(invocation_args)) }}
+{% endmacro -%}

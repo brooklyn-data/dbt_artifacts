@@ -260,6 +260,9 @@
     {% endif %}
 {% endmacro -%}
 
+{% macro clickhouse__get_snapshot_executions_dml_sql(snapshots) -%}
+{{ return(dbt_artifacts.postgres__get_snapshot_executions_dml_sql(snapshots)) }}
+{%- endmacro %}
 {% macro trino__get_snapshot_executions_dml_sql(snapshots) -%}
     {% if snapshots != [] %}
         {% set snapshot_execution_values %}

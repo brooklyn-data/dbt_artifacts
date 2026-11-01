@@ -95,6 +95,9 @@
     {% endif %}
 {%- endmacro %}
 
+{% macro clickhouse__get_tests_dml_sql(tests) -%}
+{{ return(dbt_artifacts.postgres__get_tests_dml_sql(tests)) }}
+{%- endmacro %}
 
 {% macro sqlserver__get_tests_dml_sql(tests) -%}
 

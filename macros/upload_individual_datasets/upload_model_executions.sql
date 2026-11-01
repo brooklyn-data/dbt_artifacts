@@ -250,6 +250,9 @@
     {% endif %}
 {% endmacro -%}
 
+{% macro clickhouse__get_model_executions_dml_sql(models) -%}
+{{ return(dbt_artifacts.postgres__get_model_executions_dml_sql(models)) }}
+{% endmacro -%}
 
 {% macro trino__get_model_executions_dml_sql(models) -%}
     {% if models != [] %}

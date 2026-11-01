@@ -13,6 +13,7 @@
 #   55432  postgres   (container: 5432)
 #   58080  trino      (container: 8080)
 #   51433  sqlserver  (container: 1433)
+#   58123  clickhouse (container: 8123, HTTP)
 #
 # Host-side prerequisites (NOT installed by this file):
 #   - SQL Server: the Microsoft ODBC Driver 18 must be installed on the host
@@ -82,6 +83,20 @@ services:
       retries: 10
       start_period: 30s
       timeout: 10s
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:25.8
+    environment:
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: clickhouse
+    ports:
+      - "58123:8123"
+    healthcheck:
+      test: ["CMD", "clickhouse-client", "--user", "default", "--password", "clickhouse", "--query", "SELECT 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 15s
 
   sqlserver-configurator:
     image: mcr.microsoft.com/mssql/server:2025-latest

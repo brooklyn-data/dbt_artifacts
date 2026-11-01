@@ -11,9 +11,9 @@
 #     Snowflake connectivity to compile (some macros call adapter methods at
 #     compile time), so the dbt templater cannot run in this no-secrets tier.
 #     Lint runs in Tier 2 (push to main, with secrets). Tracked in spec §13.
-#   - Tests run against Postgres, Trino, SQL Server only — every warehouse
-#     that can be containerized locally. Snowflake/BigQuery/Databricks are
-#     Tier 2/3.
+#   - Tests run against Postgres, Trino, SQL Server, and ClickHouse — every
+#     warehouse that can be containerized locally. Snowflake/BigQuery/Databricks
+#     are Tier 2/3.
 #   - Only the latest supported dbt version is tested here. The full
 #     version matrix runs in Tier 3.
 #   - The package is also parsed with the dbt Fusion engine (dbt 2.x),
@@ -59,7 +59,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        warehouse: [postgres, trino, sqlserver]
+        warehouse: [postgres, trino, sqlserver, clickhouse]
 
     steps:
       - name: Checkout PR code

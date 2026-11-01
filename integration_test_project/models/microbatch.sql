@@ -13,7 +13,7 @@
             'granularity': 'day'
         },
 
-        enabled = target.type != 'trino'
+        enabled = target.type not in ('trino', 'clickhouse')
     )
 }}
 
