@@ -8,7 +8,7 @@
 #
 # "Ready" means two different things depending on the service type:
 #
-#   - Long-running services (postgres, trino, sqlserver): brought up with
+#   - Long-running services (postgres, trino, sqlserver, clickhouse): brought up with
 #     `docker compose up --wait`, which blocks until each service's
 #     healthcheck reports healthy.
 #
@@ -34,18 +34,18 @@ require_cmd docker
 # sidecar that runs `init.sql`.
 services=()
 if (( $# == 0 )); then
-  services=(postgres trino sqlserver sqlserver-configurator)
+  services=(postgres trino sqlserver clickhouse sqlserver-configurator)
 else
   for svc in "$@"; do
     case "${svc}" in
       sqlserver)
         services+=(sqlserver sqlserver-configurator)
         ;;
-      postgres|trino|sqlserver-configurator)
+      postgres|trino|clickhouse|sqlserver-configurator)
         services+=("${svc}")
         ;;
       *)
-        die "unknown service: ${svc} (valid: postgres, trino, sqlserver)"
+        die "unknown service: ${svc} (valid: postgres, trino, sqlserver, clickhouse)"
         ;;
     esac
   done

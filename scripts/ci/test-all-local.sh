@@ -14,7 +14,7 @@ cd "${repo_root}"
 
 dbt_version="${1:-}"
 
-warehouses=(postgres trino sqlserver)
+warehouses=(postgres trino sqlserver clickhouse)
 failed=()
 
 for warehouse in "${warehouses[@]}"; do

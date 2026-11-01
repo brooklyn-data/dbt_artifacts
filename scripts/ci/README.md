@@ -20,8 +20,8 @@ rationale and the three-tier CI model these scripts feed into.
 | `test.sh <warehouse> [<dbt_version>]` | Run integration tests against one warehouse. |
 | `test-all-local.sh [<dbt_version>]` | Run `test.sh` for every local-runnable warehouse. |
 
-Supported `<warehouse>` values: `postgres`, `trino`, `sqlserver`, `snowflake`,
-`bigquery`, `databricks`, `spark`. The first three run locally via
+Supported `<warehouse>` values: `postgres`, `trino`, `sqlserver`, `clickhouse`,
+`snowflake`, `bigquery`, `databricks`, `spark`. The first four run locally via
 `compose.yml`; the rest require credentials in env vars.
 
 `<dbt_version>` follows the tox-env naming convention, e.g. `1_11_0`, `1_10_0`.
@@ -73,6 +73,7 @@ with services a developer is already running locally:
 | postgres  | `55432` | `5432`  |
 | trino     | `58080` | `8080`  |
 | sqlserver | `51433` | `1433`  |
+| clickhouse | `58123` | `8123` |
 
 `integration_test_project/profiles.yml` is wired to these shifted ports.
 You don't need to remember them — every test path is already configured.
@@ -82,7 +83,7 @@ Postgres, not the test container; that's intentional.
 ## Host-side prerequisites
 
 - **`uv`** — Python toolchain. See https://docs.astral.sh/uv/.
-- **`docker`** — required for `postgres`, `trino`, `sqlserver` paths.
+- **`docker`** — required for `postgres`, `trino`, `sqlserver`, `clickhouse` paths.
 - **Microsoft ODBC Driver 18** — required on the host (not in the SQL Server
   container) for the `sqlserver` warehouse. The dbt-sqlserver adapter runs on
   the host and connects into the container.

@@ -12,9 +12,10 @@
 #   scripts/ci/test.sh postgres 1_10_0       # pinned dbt-postgres 1.10.x
 #   scripts/ci/test.sh snowflake             # requires Snowflake env vars
 #
-# Local warehouses (postgres, trino, sqlserver) are started via docker compose
-# automatically and torn down on exit. Cloud warehouses (snowflake, bigquery,
-# databricks) require env vars to be set; the script validates them up front.
+# Local warehouses (postgres, trino, sqlserver, clickhouse) are started via
+# docker compose automatically and torn down on exit. Cloud warehouses
+# (snowflake, bigquery, databricks) require env vars to be set; the script
+# validates them up front.
 #
 # Optional env vars:
 #   KEEP_COMPOSE=1   skip the teardown trap (useful for debugging a failed run)
@@ -34,7 +35,7 @@ warehouse="$1"
 dbt_version="${2:-}"
 
 case "${warehouse}" in
-  postgres|trino|sqlserver|snowflake|bigquery|databricks|spark)
+  postgres|trino|sqlserver|clickhouse|snowflake|bigquery|databricks|spark)
     ;;
   *)
     die "unknown warehouse: ${warehouse}"
@@ -72,14 +73,14 @@ case "${warehouse}" in
       DBT_ENV_SECRET_DATABRICKS_HTTP_PATH \
       DBT_ENV_SECRET_DATABRICKS_TOKEN
     ;;
-  postgres|trino|sqlserver|spark)
+  postgres|trino|sqlserver|clickhouse|spark)
     ;;
 esac
 
 # Local warehouses: bring up compose, register teardown.
 needs_compose=0
 case "${warehouse}" in
-  postgres|trino|sqlserver)
+  postgres|trino|sqlserver|clickhouse)
     needs_compose=1
     ;;
 esac

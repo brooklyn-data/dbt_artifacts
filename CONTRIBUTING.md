@@ -28,7 +28,7 @@ and describe the desired behavior. Pull requests welcome.
 
 - **`uv`** — Python toolchain. Installs everything Python from
   `pyproject.toml` and `uv.lock`. See https://docs.astral.sh/uv/.
-- **`docker`** — required for the Postgres / Trino / SQL Server
+- **`docker`** — required for the Postgres / Trino / SQL Server / ClickHouse
   integration tests (they run in containers).
 - **Microsoft ODBC Driver 18** — required on the host (not in the
   container) for the SQL Server tests:
@@ -94,6 +94,7 @@ scripts CI uses are the ones you run locally — there is no separate
 ./scripts/ci/test.sh postgres                 # Postgres in Docker
 ./scripts/ci/test.sh trino                    # Trino in Docker
 ./scripts/ci/test.sh sqlserver                # SQL Server in Docker
+./scripts/ci/test.sh clickhouse               # ClickHouse in Docker
 ./scripts/ci/test.sh snowflake                # cloud — needs creds
 ./scripts/ci/test.sh bigquery                 # cloud — needs creds
 ./scripts/ci/test.sh postgres 1_10_0          # pinned dbt version
@@ -110,7 +111,7 @@ failure for debugging.
 ./scripts/ci/test-all-local.sh
 ```
 
-Loops Postgres + Trino + SQL Server. Continues past individual failures
+Loops Postgres + Trino + SQL Server + ClickHouse. Continues past individual failures
 and prints a summary.
 
 ### A subset of dbt models manually
@@ -133,7 +134,7 @@ to pass `--target` on every command.
 | You see on the PR | You see after merge |
 |---|---|
 | Lint: **not run** (needs Snowflake creds) | Lint |
-| Postgres, Trino, SQL Server integration | Same, re-run on merged code |
+| Postgres, Trino, SQL Server, ClickHouse integration | Same, re-run on merged code |
 | Snowflake, BigQuery: **not run** (no fork secrets) | Snowflake + BigQuery |
 
 This is intentional. PRs from forks cannot have access to the
