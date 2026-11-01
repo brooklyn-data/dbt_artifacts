@@ -60,7 +60,22 @@ with
     )
 
 select
+    {% if target.type == 'clickhouse' %}
+    t.transaction_id as transaction_id,
+    t.transaction_date as transaction_date,
+    t.transaction_time as transaction_time,
+    t.transaction_ts as transaction_ts,
+    t.transaction_qty as transaction_qty,
+    t.store_id as store_id,
+    t.store_location as store_location,
+    t.product_id as product_id,
+    t.unit_price as unit_price,
+    t.product_category as product_category,
+    t.product_type as product_type,
+    t.product_detail as product_detail,
+    {% else %}
     t.*,
+    {% endif %}
     {{ dbt_artifacts.safe_cast('tt.transaction_time__ts', 'timestamp') }} as transaction_ts__hourly,
 
     {{ dbt.dateadd(

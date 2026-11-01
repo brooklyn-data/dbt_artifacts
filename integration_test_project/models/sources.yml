@@ -14,7 +14,7 @@ sources:
         filter: dayname(updatedat) not in ('Sunday', 'Monday')
       loaded_at_field: convert_timezone('UTC', load_timestamp)
   - name: freshness_check
-    database: "{% if target.type not in ('spark', 'databricks') %}{{ var('dbt_artifacts_database', target.database) }}{% endif %}"
+    database: "{% if target.type not in ('spark', 'databricks', 'clickhouse') %}{{ var('dbt_artifacts_database', target.database) }}{% endif %}"
     schema: "{{ target.schema }}"
     tables:
       - name: freshness
