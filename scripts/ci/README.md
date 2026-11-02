@@ -20,9 +20,10 @@ rationale and the three-tier CI model these scripts feed into.
 | `test.sh <warehouse> [<dbt_version>]` | Run integration tests against one warehouse. |
 | `test-all-local.sh [<dbt_version>]` | Run `test.sh` for every local-runnable warehouse. |
 
-Supported `<warehouse>` values: `postgres`, `trino`, `sqlserver`, `snowflake`,
-`bigquery`, `databricks`, `spark`. The first three run locally via
-`compose.yml`; the rest require credentials in env vars.
+Supported `<warehouse>` values: `postgres`, `trino`, `sqlserver`, `duckdb`,
+`snowflake`, `bigquery`, `databricks`, `spark`. The first three run locally via
+`compose.yml`, `duckdb` runs in-process against a local file with no Docker or
+credentials, and the rest require credentials in env vars.
 
 `<dbt_version>` follows the tox-env naming convention, e.g. `1_11_0`, `1_10_0`.
 Omit for the latest supported adapter version.

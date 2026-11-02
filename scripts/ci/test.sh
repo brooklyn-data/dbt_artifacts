@@ -13,7 +13,8 @@
 #   scripts/ci/test.sh snowflake             # requires Snowflake env vars
 #
 # Local warehouses (postgres, trino, sqlserver) are started via docker compose
-# automatically and torn down on exit. Cloud warehouses (snowflake, bigquery,
+# automatically and torn down on exit. DuckDB runs in-process against a local
+# file and needs neither Docker nor credentials. Cloud warehouses (snowflake, bigquery,
 # databricks) require env vars to be set; the script validates them up front.
 #
 # Optional env vars:
@@ -34,7 +35,7 @@ warehouse="$1"
 dbt_version="${2:-}"
 
 case "${warehouse}" in
-  postgres|trino|sqlserver|snowflake|bigquery|databricks|spark)
+  postgres|trino|sqlserver|duckdb|snowflake|bigquery|databricks|spark)
     ;;
   *)
     die "unknown warehouse: ${warehouse}"
@@ -72,7 +73,7 @@ case "${warehouse}" in
       DBT_ENV_SECRET_DATABRICKS_HTTP_PATH \
       DBT_ENV_SECRET_DATABRICKS_TOKEN
     ;;
-  postgres|trino|sqlserver|spark)
+  postgres|trino|sqlserver|duckdb|spark)
     ;;
 esac
 
