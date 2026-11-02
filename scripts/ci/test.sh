@@ -25,7 +25,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/_lib.sh"
 
 cd "${repo_root}"
 
-require_cmd uv docker
+require_cmd uv
 
 if (( $# < 1 )); then
   die "usage: scripts/ci/test.sh <warehouse> [<dbt_version>]"
@@ -86,6 +86,7 @@ case "${warehouse}" in
 esac
 
 if (( needs_compose )); then
+  require_cmd docker
   "${repo_root}/scripts/ci/compose-up.sh" "${warehouse}"
   if [[ -z "${KEEP_COMPOSE:-}" ]]; then
     # Tear down whether the test passes or fails. KEEP_COMPOSE=1 disables this
