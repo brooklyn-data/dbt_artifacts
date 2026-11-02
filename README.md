@@ -210,7 +210,7 @@ vars:
 
 ### Skipping manifest dataset upload
 
-By default, every invocation uploads both the execution results (`model_execution`, `seed_executions`, `test_executions`, `snapshot_executions`) and project's manifest datasets (`models`, `seeds`, `snapshots`, `sources`, `tests`, `exposures`). Because manifest datasets are re-inserted on every run, the underlying tables can grow quickly on routine or scheduled runs.
+By default, every invocation uploads both the execution results (`model_executions`, `seed_executions`, `test_executions`, `snapshot_executions`) and project's manifest datasets (`models`, `seeds`, `snapshots`, `sources`, `tests`, `exposures`). Because manifest datasets are re-inserted on every run, the underlying tables can grow quickly on routine or scheduled runs.
 
 The manifest datasets usually change only when the project code changes, so you can skip uploading them on routine runs and upload them only when code is merged, for example during the build step in CI.
 
@@ -223,6 +223,16 @@ vars:
 ```
 
 When `false`, only `invocations` and the execution datasets are uploaded. `invocations` is always uploaded regardless of this setting, as it is the parent record that execution rows reference.
+
+The string values `"false"` and `"0"` also turn it off, so the variable can be set from an environment variable:
+
+```yml
+# dbt_project.yml
+vars:
+  dbt_artifacts_upload_manifest: "{{ env_var('DBT_ARTIFACTS_UPLOAD_MANIFEST', 'true') }}"
+```
+
+The `dim_` models (for example `dim_dbt__models` and `dim_dbt__current_models`) describe the project as of the most recent run that uploaded the manifest datasets. A model added since then still appears in `fct_dbt__model_executions`, but not in the `dim_` models until the next run with `dbt_artifacts_upload_manifest` set to `true`. Make sure at least one run uploads them, for example the first run after installing or upgrading the package, and every deployment.
 
 Override it to `true` on runs where you want the full project metadata refreshed:
 
