@@ -28,11 +28,13 @@ models:
     description: Sum of measured stall seconds attributed to this parent that day.
     tests:
     - dbt_artifacts.is_between:
-        min_value: 0
+        arguments:
+          min_value: 0
   - name: max_stall_seconds
     description: Largest single measured stall attributed to this parent that day.
     tests:
     - dbt_artifacts.is_between:
-        min_value: 0
+        arguments:
+          min_value: 0
   - name: invocations_observed
     description: Distinct invocations in which this parent gated at least one child that day.

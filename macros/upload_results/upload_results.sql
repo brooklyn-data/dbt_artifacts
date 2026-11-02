@@ -2,7 +2,15 @@
 
 {% macro upload_results(results) -%}
 
-    {% if execute %}
+    {#
+        dbt Core only fires on-run-end for commands that execute nodes. Fusion
+        also fires it for `compile` and `show` (including editor previews),
+        which would upload a phantom `inline` model and an invocation on every
+        call. Skip those so both engines record the same invocations.
+    #}
+    {% set skipped_commands = ['compile', 'show'] %}
+
+    {% if execute and invocation_args_dict.get('which') not in skipped_commands %}
 
         {% set datasets_to_load = ['exposures', 'seeds', 'snapshots', 'invocations', 'sources', 'tests', 'models'] %}
         {% if results != [] %}
