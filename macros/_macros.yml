@@ -281,8 +281,8 @@ macros:
     description: |
       Opens an explicit transaction before `upload_results` inserts a dataset's chunks, so the dataset's rows become
       visible together when `end_transaction` commits. If an insert fails partway through, the dataset's earlier
-      chunks are rolled back instead of being left as a partial upload. Implemented for Snowflake, Postgres and
-      SQL Server; on every other adapter it does nothing and each insert commits on its own.
+      chunks are rolled back instead of being left as a partial upload. Implemented for Snowflake, Postgres,
+      SQL Server and DuckDB; on every other adapter it does nothing and each insert commits on its own.
 
   - name: end_transaction
     description: |

@@ -19,6 +19,12 @@
 
 {%- endmacro %}
 
+{% macro duckdb__end_transaction() -%}
+
+    {{ dbt_artifacts.postgres__end_transaction() }}
+
+{%- endmacro %}
+
 {% macro sqlserver__end_transaction() -%}
 
     {% do run_query('commit transaction') %}
