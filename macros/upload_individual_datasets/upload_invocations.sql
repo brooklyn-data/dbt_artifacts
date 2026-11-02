@@ -224,6 +224,10 @@
 
 {% endmacro -%}
 
+{% macro duckdb__get_invocations_dml_sql(invocation_args=invocation_args_dict) -%}
+    {{ dbt_artifacts.postgres__get_invocations_dml_sql(invocation_args) }}
+{%- endmacro %}
+
 {% macro trino__get_invocations_dml_sql(invocation_args=invocation_args_dict) -%}
     {% set invocation_values %}
         (
