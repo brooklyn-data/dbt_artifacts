@@ -122,7 +122,7 @@ jobs:
     strategy:
       fail-fast: false
       # Throttle parallelism to be a good neighbour to the shared cloud
-      # warehouses and to bound runner billing. The matrix is 12 slots, so
+      # warehouses and to bound runner billing. The matrix is 14 slots, so
       # 8 in flight completes a release validation quickly.
       max-parallel: 8
       matrix:
@@ -143,6 +143,8 @@ jobs:
             dbt_version: ""
           - warehouse: sqlserver
             dbt_version: ""
+          - warehouse: duckdb
+            dbt_version: ""
 
           # Snowflake — pinned versions, newest first.
           - { warehouse: snowflake, dbt_version: "1_11_0" }
@@ -160,6 +162,9 @@ jobs:
 
           # SQL Server — floor version; "latest" covers newer minors.
           - { warehouse: sqlserver, dbt_version: "1_10_0" }
+
+          # DuckDB — floor version; "latest" covers newer minors.
+          - { warehouse: duckdb, dbt_version: "1_10_0" }
 
     steps:
       - name: Checkout

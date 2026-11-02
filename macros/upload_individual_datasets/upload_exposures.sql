@@ -116,6 +116,11 @@
     {% endif %}
 {%- endmacro %}
 
+{% macro duckdb__get_exposures_dml_sql(exposures) -%}
+    {{ dbt_artifacts.postgres__get_exposures_dml_sql(exposures) }}
+{%- endmacro %}
+
+
 {% macro sqlserver__get_exposures_dml_sql(exposures) -%}
 
     {% if exposures != [] %}

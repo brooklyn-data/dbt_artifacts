@@ -77,6 +77,14 @@ right container up, runs the tests, and tears it down:
 ./scripts/ci/test.sh sqlserver
 ```
 
+DuckDB needs no container: it runs in-process against
+`integration_test_project/test.duckdb`, which each run deletes and rebuilds
+twice so the second build's tests check the rows the first build uploaded.
+
+```bash
+./scripts/ci/test.sh duckdb
+```
+
 Note: the host-side ports are deliberately non-standard
 (`55432`/`58080`/`51433`) so the test stack never collides with a local
 Postgres / web app / SQL Server you might be running. See
@@ -116,7 +124,7 @@ As of the 2026 CI rework, the previous "Approve Integration Tests"
 deployment-environment flow has been removed. PR-level CI now runs
 **automatically**, without any maintainer approval step, but is also
 **scoped to warehouses that don't need secrets** — Postgres, Trino,
-SQL Server. Snowflake / BigQuery validation happens automatically after
+SQL Server, DuckDB. Snowflake / BigQuery validation happens automatically after
 you merge the PR.
 
 For the full end-to-end flow (what fires on a PR vs. on push to `main`
@@ -128,7 +136,7 @@ threat model, see [specs/ci-rework/README.md](../specs/ci-rework/README.md).
 
 | | Where it runs | When |
 |---|---|---|
-| Postgres, Trino, SQL Server (Docker) | `pr.yml` (Tier 1) | Every PR push |
+| Postgres, Trino, SQL Server (Docker), DuckDB (in-process) | `pr.yml` (Tier 1) | Every PR push |
 | Lint, Snowflake, BigQuery | `main.yml` (Tier 2) | After merge to `main` |
 | Full warehouse × dbt-version matrix | `release.yml` (Tier 3) | Push to `release-candidate/X.Y.Z` |
 

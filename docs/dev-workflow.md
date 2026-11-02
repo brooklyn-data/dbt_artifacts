@@ -41,8 +41,9 @@ Tracked for fix in [specs §12.2](../specs/ci-rework/README.md).
 **What you'll see on your PR:**
 
 - **Tier 1 CI runs** ([`pr.yml`](../.github/workflows/pr.yml)). One job
-  per local-runnable warehouse (Postgres, Trino, SQL Server). Each
-  spins up a container, runs the integration tests, tears down.
+  per local-runnable warehouse (Postgres, Trino, SQL Server, DuckDB).
+  Each runs the integration tests; the Docker-backed ones spin up a
+  container first and tear it down after.
 - **No lint, no Snowflake / BigQuery / Databricks signal on your PR.**
   This is deliberate — those require secrets, which forks cannot
   access by design. A maintainer will run the higher-tier checks for
