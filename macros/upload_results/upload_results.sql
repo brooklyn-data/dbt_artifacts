@@ -12,7 +12,18 @@
 
     {% if execute and invocation_args_dict.get('which') not in skipped_commands %}
 
-        {% set datasets_to_load = ['exposures', 'seeds', 'snapshots', 'invocations', 'sources', 'tests', 'models'] %}
+        {% set upload_manifest = var('dbt_artifacts_upload_manifest', true) %}
+        {# A var set from env_var() arrives as a string, and the string 'false' is truthy in Jinja #}
+        {% if upload_manifest is string %}
+            {% set upload_manifest = upload_manifest | trim | lower not in ['false', '0'] %}
+        {% endif %}
+
+        {% set datasets_to_load = ['invocations'] %}
+
+        {% if upload_manifest %}
+            {% set datasets_to_load = ['exposures', 'seeds', 'snapshots', 'sources', 'tests', 'models'] + datasets_to_load %}
+        {% endif %}
+
         {% if results != [] %}
             {# When executing, and results are available, then upload the results #}
             {% set datasets_to_load = ['model_executions', 'seed_executions', 'test_executions', 'snapshot_executions'] + datasets_to_load %}
