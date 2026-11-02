@@ -2,13 +2,17 @@
 
 This package builds a mart of tables and views describing the project it is installed in. In pre V1 versions of the package, the artifacts dbt produces were uploaded to the warehouse, hence the name of the package. That's no longer the case, but the name has stuck!
 
-[![Main branch test package](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main_test_package.yml/badge.svg)](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main_test_package.yml)
-[![Main branch lint package](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main_lint_package.yml/badge.svg)](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main_lint_package.yml)
+[![Tier 2 — main](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main.yml/badge.svg)](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main.yml)
+[![Tier 3 — release validation](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/release.yml/badge.svg)](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/release.yml)
 [![Documentation](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/publish_docs_on_release.yml/badge.svg)](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/publish_docs_on_release.yml)
 
 ## Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) and [MAINTAINERS.md](docs/MAINTAINERS.md) for more information.
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for
+how to set up your environment and submit a PR, and
+[docs/dev-workflow.md](docs/dev-workflow.md) for the full
+feature-to-release flow. Maintainer-specific guidance lives in
+[docs/MAINTAINERS.md](docs/MAINTAINERS.md).
 
 ## Supported Data Warehouses
 
@@ -41,6 +45,34 @@ fct_dbt__test_executions
 
 See the generated [dbt docs site](https://brooklyn-data.github.io/dbt_artifacts/#!/overview) for documentation on each model.
 
+## Supported dbt versions
+
+As of `3.0.0`, the package requires **dbt 1.10 or newer** (dbt Core 1.10+
+or the dbt Fusion engine). The package's generic tests pass their arguments
+under `arguments:`, which Fusion requires and dbt Core only understands from
+1.10. If you're on an older dbt version, pin `dbt_artifacts` to `2.11.1` in
+your `packages.yml`:
+
+```yml
+packages:
+  - package: brooklyn-data/dbt_artifacts
+    version: 2.11.1
+```
+
+### dbt Fusion engine (dbt 2.x)
+
+The package is compatible with the [dbt Fusion engine](https://docs.getdbt.com/docs/fusion).
+CI parses it with Fusion on every pull request (failing on any deprecation
+warning) and runs the full Snowflake integration suite on Fusion before
+release. Fusion also supports BigQuery and Databricks; the package parses
+cleanly against both, but they are not yet integration-tested on Fusion.
+Postgres and Trino are experimental in Fusion, and SQL Server and Spark are
+not supported by Fusion, so on those warehouses keep using dbt Core.
+
+Fusion runs `on-run-end` hooks for `dbt compile` and `dbt show`, which dbt
+Core does not. `upload_results` skips those commands, so the same invocations
+are recorded on both engines.
+
 ## Quickstart
 
 1. Add this package to your `packages.yml`:
@@ -48,7 +80,7 @@ See the generated [dbt docs site](https://brooklyn-data.github.io/dbt_artifacts/
 ```
 packages:
   - package: brooklyn-data/dbt_artifacts
-    version: 2.9.3
+    version: 2.11.1
 ```
 
 :construction_worker: Make sure to fix at least the **minor** version, to avoid issues when a new release is open. See the notes on upgrading below for more detail.

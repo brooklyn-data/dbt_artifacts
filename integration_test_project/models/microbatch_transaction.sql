@@ -1,8 +1,7 @@
 {{
   config(
     materialized = 'table',
-    event_time = 'transaction_ts__hourly',
-    tags = ['microbatch']
+    event_time = 'transaction_ts__hourly'
     )
 }}
 

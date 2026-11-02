@@ -1,5 +1,6 @@
 with
     base as (select * from {{ ref("models") }}),
+
     enhanced as (
 
         select
@@ -29,4 +30,3 @@ with
 
 select *
 from enhanced
-

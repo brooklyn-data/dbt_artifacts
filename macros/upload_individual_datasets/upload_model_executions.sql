@@ -184,7 +184,11 @@
                 {% if query_completed_at %}'{{ query_completed_at }}'{% else %}null{% endif %}, {# query_completed_at #}
 
                 {{ model.execution_time }}, {# total_node_runtime #}
-                null, {# rows_affected #}
+                {% if model.adapter_response.rows_affected is none or model.adapter_response.rows_affected is not defined %}  
+                    null,
+                {% else %}  
+                    {{ model.adapter_response.rows_affected }},
+                {% endif %} {# rows_affected #}
                 '{{ model.node.config.materialized }}', {# materialization #}
                 '{{ model.node.schema }}', {# schema #}
                 '{{ model.node.name }}', {# name #}

@@ -8,10 +8,12 @@
 
         unique_key = 'transaction_id',
         partition_by = {
-            'field': 'store_name',
-            'data_type': 'text',
+            'field': 'transaction_ts',
+            'data_type': 'datetime',
+            'granularity': 'day'
         },
-        tags = ['microbatch']
+
+        enabled = target.type != 'trino'
     )
 }}
 
