@@ -277,6 +277,18 @@ macros:
         description: |
           The data content to insert into the relation
 
+  - name: begin_transaction
+    description: |
+      Opens an explicit transaction before `upload_results` inserts a dataset's chunks, so the dataset's rows become
+      visible together when `end_transaction` commits. If an insert fails partway through, the dataset's earlier
+      chunks are rolled back instead of being left as a partial upload. Implemented for Snowflake, Postgres,
+      SQL Server and DuckDB; on every other adapter it does nothing and each insert commits on its own.
+
+  - name: end_transaction
+    description: |
+      Commits the transaction opened by `begin_transaction` once all of a dataset's chunks are inserted. Implemented
+      for the same adapters as `begin_transaction`; a no-op elsewhere.
+
   - name: upload_results
     description: |
       The main macro called to upload the metadata into each of the source tables.
