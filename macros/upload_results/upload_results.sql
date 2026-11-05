@@ -29,6 +29,26 @@
             {% set datasets_to_load = ['model_executions', 'seed_executions', 'test_executions', 'snapshot_executions'] + datasets_to_load %}
         {% endif %}
 
+        {#
+            Rows per insert statement. BigQuery and Trino get smaller chunks because their query-text limits
+            (Trino's query.max-length, for example) reject large inserts. dbt_artifacts_insert_batch_size
+            overrides these per dataset: its keys are 'models', 'default' (every other dataset) or a dataset
+            name, and any key it leaves out keeps the value below.
+        #}
+        {% set small_batches = target.type in ['bigquery', 'trino'] %}
+        {% set batch_sizes = {
+            'models': 50 if small_batches else 100,
+            'default': 300 if small_batches else 5000
+        } %}
+        {% set configured_batch_sizes = var('dbt_artifacts_insert_batch_size', {}) %}
+        {% if configured_batch_sizes is not mapping %}
+            {% do exceptions.raise_compiler_error(
+                "dbt_artifacts_insert_batch_size must be a mapping of dataset name (or 'models' / 'default') to rows per insert, got: "
+                ~ configured_batch_sizes
+            ) %}
+        {% endif %}
+        {% do batch_sizes.update(configured_batch_sizes) %}
+
         {# Upload each data set in turn #}
         {% for dataset in datasets_to_load %}
 
@@ -38,7 +58,13 @@
             {% set objects = dbt_artifacts.get_dataset_content(dataset) %}
 
             {# Upload in chunks to reduce the query size #}
-            {% set upload_limit = var('insert_batch_size')[dataset if dataset == 'models' else 'default'] %}
+            {% set upload_limit = batch_sizes.get(dataset, batch_sizes['default']) | int %}
+            {% if upload_limit < 1 %}
+                {% do exceptions.raise_compiler_error(
+                    "dbt_artifacts_insert_batch_size for '" ~ dataset ~ "' must be a whole number of at least 1, got: "
+                    ~ batch_sizes.get(dataset, batch_sizes['default'])
+                ) %}
+            {% endif %}
 
             {# Wrap the chunked inserts in a transaction, where the dialect supports it #}
             {{ dbt_artifacts.begin_transaction() }}
