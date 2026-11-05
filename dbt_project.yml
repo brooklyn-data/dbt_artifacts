@@ -15,6 +15,9 @@ models:
     +file_format: '{{ "delta" if target.type == "databricks" else "" }}'
     sources:
       +materialized: incremental
+      # Existing consumers' tables gain new columns when they re-run the package after upgrading;
+      # full_refresh is off, so this is the only way new columns reach them.
+      +on_schema_change: append_new_columns
       +full_refresh: false
       +persist_docs:
         # Databricks and SQL Server don't offer column-level support for persisting docs
