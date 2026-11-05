@@ -2,9 +2,28 @@
 
 {% macro upload_results(results) -%}
 
-    {% if execute %}
+    {#
+        dbt Core only fires on-run-end for commands that execute nodes. Fusion
+        also fires it for `compile` and `show` (including editor previews),
+        which would upload a phantom `inline` model and an invocation on every
+        call. Skip those so both engines record the same invocations.
+    #}
+    {% set skipped_commands = ['compile', 'show'] %}
 
-        {% set datasets_to_load = ['exposures', 'seeds', 'snapshots', 'invocations', 'sources', 'tests', 'models'] %}
+    {% if execute and invocation_args_dict.get('which') not in skipped_commands %}
+
+        {% set upload_manifest = var('dbt_artifacts_upload_manifest', true) %}
+        {# A var set from env_var() arrives as a string, and the string 'false' is truthy in Jinja #}
+        {% if upload_manifest is string %}
+            {% set upload_manifest = upload_manifest | trim | lower not in ['false', '0'] %}
+        {% endif %}
+
+        {% set datasets_to_load = ['invocations'] %}
+
+        {% if upload_manifest %}
+            {% set datasets_to_load = ['exposures', 'seeds', 'snapshots', 'sources', 'tests', 'models'] + datasets_to_load %}
+        {% endif %}
+
         {% if results != [] %}
             {# When executing, and results are available, then upload the results #}
             {% set datasets_to_load = ['model_executions', 'seed_executions', 'test_executions', 'snapshot_executions'] + datasets_to_load %}
@@ -25,6 +44,9 @@
                 {% set upload_limit = 300 if target.type == 'bigquery' else 5000 %}
             {% endif %}
 
+            {# Wrap the chunked inserts in a transaction, where the dialect supports it #}
+            {{ dbt_artifacts.begin_transaction() }}
+
             {# Loop through each chunk in turn #}
             {% for i in range(0, objects | length, upload_limit) -%}
 
@@ -41,6 +63,8 @@
 
             {# Loop the next 'chunk' #}
             {% endfor %}
+
+            {{ dbt_artifacts.end_transaction() }}
 
         {# Loop the next 'dataset' #}
         {% endfor %}

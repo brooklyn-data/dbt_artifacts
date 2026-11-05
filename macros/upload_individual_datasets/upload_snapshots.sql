@@ -117,6 +117,9 @@
     {% endif %}
 {%- endmacro %}
 
+{% macro duckdb__get_snapshots_dml_sql(snapshots) -%}
+    {{ dbt_artifacts.postgres__get_snapshots_dml_sql(snapshots) }}
+{%- endmacro %}
 
 {% macro sqlserver__get_snapshots_dml_sql(snapshots) -%}
 
