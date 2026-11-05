@@ -37,7 +37,7 @@ is installed on the host.
 | Script | Purpose |
 |---|---|
 | `fusion/check.sh` | Parse with Fusion, fail on any warning. No secrets needed (Tier 1+). |
-| `fusion/test.sh <warehouse>` | Two-pass Fusion build, same as the tox envs. `snowflake` only (Tier 2+). |
+| `fusion/test.sh <warehouse>` | Two-pass Fusion build, same as the tox envs. `duckdb` needs no secrets (Tier 1+); `snowflake` needs credentials (Tier 2+). |
 | `fusion/dbtf.sh [--rebuild] <dbt args>` | Run any Fusion command against `integration_test_project/`. |
 
 `dbtf.sh` sources the repo-root `.env` if present and writes to a separate

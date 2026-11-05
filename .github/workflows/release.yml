@@ -209,6 +209,19 @@ jobs:
       - name: Parse with dbt Fusion
         run: ./scripts/fusion/check.sh
 
+  fusion-duckdb:
+    # Builds the integration project on the Fusion engine against DuckDB, twice,
+    # so the upload hook and the completeness tests run on Fusion without any
+    # secrets. Catches Fusion-only upload failures before merge.
+    name: fusion (duckdb)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+      - name: Build on dbt Fusion against DuckDB
+        run: ./scripts/fusion/test.sh duckdb
+
   # -------- Snowflake on Fusion (dbt 2.x) ----------------------------------
   # Same two-pass build as `integration-snowflake`, on the dbt Fusion engine.
   # Snowflake is the only CI warehouse that Fusion supports and this package

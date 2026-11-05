@@ -39,8 +39,13 @@ case "${warehouse}" in
       DBT_ENV_SECRET_SNOWFLAKE_TEST_DATABASE \
       DBT_ENV_SECRET_SNOWFLAKE_TEST_WAREHOUSE
     ;;
+  duckdb)
+    # In-process, no credentials. Start from a fresh database file; the Fusion
+    # engine's bundled DuckDB can't read files written by dbt-duckdb either.
+    rm -f integration_test_project/test.duckdb
+    ;;
   *)
-    die "unsupported warehouse for Fusion: ${warehouse} (supported: snowflake)"
+    die "unsupported warehouse for Fusion: ${warehouse} (supported: snowflake, duckdb)"
     ;;
 esac
 
