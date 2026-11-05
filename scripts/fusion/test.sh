@@ -47,6 +47,8 @@ esac
 banner "Fusion integration tests (warehouse=${warehouse})"
 scripts/fusion/dbtf.sh deps --target "${warehouse}"
 scripts/fusion/dbtf.sh build --target "${warehouse}" --exclude-resource-type test
-scripts/fusion/dbtf.sh build --target "${warehouse}"
+# The first build ran no tests, so the upload-completeness test mustn't expect
+# test executions from it.
+scripts/fusion/dbtf.sh build --target "${warehouse}" --vars '{"artifacts_test_previous_build_excluded_tests": true}'
 
 log "fusion test.sh complete: ${warehouse}"
