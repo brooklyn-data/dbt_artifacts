@@ -1,5 +1,10 @@
 {% macro end_transaction() -%}
 
+    {#- Skipped on the dbt Fusion engine, like begin_transaction. -#}
+    {% if dbt_version.startswith('2.') %}
+        {{ return('') }}
+    {% endif %}
+
     {{ return(adapter.dispatch('end_transaction', 'dbt_artifacts')()) }}
 
 {%- endmacro %}
