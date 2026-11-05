@@ -88,10 +88,10 @@
             checksum,
             materialization,
             tags,
-            owner_group,
             meta,
             alias,
-            all_results
+            all_results,
+            owner_group
         )
 
     {% elif dataset == "seed_executions" %}
