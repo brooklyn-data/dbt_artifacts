@@ -36,6 +36,8 @@ models:
     description: '{{ doc("name") }}'
   - name: node_id
     description: '{{ doc("node_id") }}'
+  - name: owner_group
+    description: '{{ doc("owner_group") }}'
   - name: package_name
     description: '{{ doc("package_name") }}'
   - name: path
