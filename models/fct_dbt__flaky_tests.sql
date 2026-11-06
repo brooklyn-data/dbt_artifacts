@@ -5,7 +5,13 @@
     fct_dbt__flaky_tests_detail (genuine fail->pass-without-parent-rebuild
     events); executions counts all of the test's executions that month.
     is_flaky = flips >= dbt_artifacts_flaky_min_flips (default 2). Snowflake-only.
+
+    Covers whole months, from the first of the month that contains the start
+    of the dbt_artifacts_mart_lookback_days window (the same start as
+    fct_dbt__flaky_tests_detail).
 -#}
+
+{%- set lookback_start = dbt_artifacts.mart_lookback_start(align_to_month=true) -%}
 
 with
     test_executions as (
@@ -14,6 +20,7 @@ with
             , date_trunc('month', {{ dbt_artifacts.cast_to_utc_date("run_started_at") }})
                 as month
         from {{ ref("stg_dbt__test_executions") }}
+        where {{ dbt_artifacts.mart_lookback_filter("run_started_at", lookback_start) }}
     ),
 
     executions_monthly as (

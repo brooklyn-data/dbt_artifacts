@@ -11,7 +11,13 @@
       error = ('error'); skip = ('skipped','skip').
     success_rate = successes / (successes + failures + errors) (skips excluded).
     A "failed invocation" is any invocation with >=1 node in error or failure.
+
+    Covers invocations started in the last dbt_artifacts_mart_lookback_days
+    days. Every execution starts after its invocation, so executions are
+    filtered on the same start.
 -#}
+
+{%- set lookback_start = dbt_artifacts.mart_lookback_start() -%}
 
 with
     invocations as (
@@ -22,6 +28,7 @@ with
             , run_started_at
             , {{ dbt_artifacts.cast_to_utc_date("run_started_at") }} as date_day
         from {{ ref("stg_dbt__invocations") }}
+        where {{ dbt_artifacts.mart_lookback_filter("run_started_at", lookback_start) }}
     ),
 
     executions as (
@@ -32,6 +39,7 @@ with
             , total_node_runtime
             , run_started_at
         from {{ ref("stg_dbt__model_executions") }}
+        where {{ dbt_artifacts.mart_lookback_filter("run_started_at", lookback_start) }}
         union all
         select
             command_invocation_id
@@ -40,6 +48,7 @@ with
             , total_node_runtime
             , run_started_at
         from {{ ref("stg_dbt__seed_executions") }}
+        where {{ dbt_artifacts.mart_lookback_filter("run_started_at", lookback_start) }}
         union all
         select
             command_invocation_id
@@ -48,6 +57,7 @@ with
             , total_node_runtime
             , run_started_at
         from {{ ref("stg_dbt__snapshot_executions") }}
+        where {{ dbt_artifacts.mart_lookback_filter("run_started_at", lookback_start) }}
         union all
         select
             command_invocation_id
@@ -56,6 +66,7 @@ with
             , total_node_runtime
             , run_started_at
         from {{ ref("stg_dbt__test_executions") }}
+        where {{ dbt_artifacts.mart_lookback_filter("run_started_at", lookback_start) }}
     ),
 
     exec_classified as (

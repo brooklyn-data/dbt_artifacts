@@ -15,7 +15,14 @@
     only when the ratio exceeds dbt_artifacts_regression_threshold (default 1.5)
     AND the baseline was built from at least dbt_artifacts_regression_min_samples
     (default 3) same-DOW days -- so a thin baseline never cries wolf.
+
+    Reports days in the last dbt_artifacts_mart_lookback_days days. Executions
+    are read from dbt_artifacts_run_rate_days earlier so the first reported day
+    has a full baseline.
 -#}
+
+{%- set run_rate_days = var("dbt_artifacts_run_rate_days", 28) -%}
+{%- set lookback_start = dbt_artifacts.mart_lookback_start() -%}
 
 with
     executions as (
@@ -27,6 +34,7 @@ with
             , rows_affected
             , was_full_refresh
         from {{ ref("stg_dbt__model_executions") }}
+        where {{ dbt_artifacts.mart_lookback_filter("run_started_at", lookback_start, pad_days=run_rate_days) }}
     ),
 
     daily as (
@@ -61,8 +69,9 @@ with
             and dayofweekiso(hist.date_day) = dayofweekiso(cur.date_day)
             and hist.date_day < cur.date_day
             and hist.date_day
-                >= dateadd('day', -{{ var("dbt_artifacts_run_rate_days", 28) }}, cur.date_day)
+                >= dateadd('day', -{{ run_rate_days }}, cur.date_day)
             and hist.median_runtime is not null
+        where {{ dbt_artifacts.mart_lookback_filter("cur.date_day", lookback_start) }}
         group by cur.date_day, cur.node_id
     ),
 
@@ -97,6 +106,7 @@ with
         left join baseline
             on daily.date_day = baseline.date_day
             and daily.node_id = baseline.node_id
+        where {{ dbt_artifacts.mart_lookback_filter("daily.date_day", lookback_start) }}
     )
 
 select *

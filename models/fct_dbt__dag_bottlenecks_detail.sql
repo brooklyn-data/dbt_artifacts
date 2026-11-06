@@ -11,7 +11,13 @@
     This is *measured* wall-clock gating, not graph theory. Model parents only;
     seed/source parents are excluded (documented) -- seeds rarely gate and keep
     the join simple. Depends on dim_dbt__lineage_edges; Snowflake-only.
+
+    Covers child executions in the last dbt_artifacts_mart_lookback_days days;
+    parents are read from one day earlier so an invocation that spans the
+    start of the window keeps its binding parent.
 -#}
+
+{%- set lookback_start = dbt_artifacts.mart_lookback_start() -%}
 
 with
     edges as (
@@ -32,6 +38,7 @@ with
             , query_completed_at
         from {{ ref("stg_dbt__model_executions") }}
         where status = 'success'
+            and {{ dbt_artifacts.mart_lookback_filter("run_started_at", lookback_start, pad_days=1) }}
     ),
 
     child_parent as (
@@ -47,6 +54,7 @@ with
         inner join model_executions as parent
             on parent.node_id = edges.parent_node_id
             and parent.command_invocation_id = child.command_invocation_id
+        where {{ dbt_artifacts.mart_lookback_filter("child.run_started_at", lookback_start) }}
     ),
 
     binding_parent as (
