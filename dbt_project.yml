@@ -24,3 +24,11 @@ models:
         columns: '{{ target.type != "databricks" and target.type != "sqlserver" }}'
         relation: '{{ target.type != "sqlserver" }}'
       +as_columnstore: False
+
+data_tests:
+  dbt_artifacts:
+    # The package's tests check its own SQL, not the consumer's data, and each one re-reads the views it
+    # tests, so they are off by default. A project turns them on with `data_tests: dbt_artifacts: +enabled: true`
+    # in its own dbt_project.yml, as the integration test project does. This must stay a literal: dbt doesn't
+    # render Jinja in a package's `enabled` config for tests, and a templated value disables them.
+    +enabled: false

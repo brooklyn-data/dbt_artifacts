@@ -274,6 +274,61 @@ vars:
 
 Values must be whole numbers of at least 1. Strings such as `"25"` also work, so the values can come from environment variables.
 
+## Consumption and observability marts (Snowflake)
+
+On Snowflake the package also builds these views over the uploaded history:
+
+| Model | One row per | Answers |
+|---|---|---|
+| `dim_dbt__lineage_edges` | parent → child edge in the current graph | What does each model, snapshot and test depend on? Used by the bottleneck and flaky-test marts. |
+| `fct_dbt__consumption_daily_detail` | UTC day × meter × materialization × target | How many successful models built (SMB) and active target tables per day, by deployment target? |
+| `fct_dbt__consumption_daily` | UTC day × meter | The same, per day. |
+| `fct_dbt__consumption_by_model` | month × model | Which models use the most SMB, how often they build, and what reusing them could save. |
+| `fct_dbt__consumption_forecast` | month × meter | Month-to-date usage, the projected month-end total, and the day the plan allowance is projected to run out. |
+| `fct_dbt__run_health_daily` (and `_detail`, by target) | UTC day | Invocations, node successes, failures, errors and skips, and the success rate. |
+| `fct_dbt__model_performance` | UTC day × model | Median and p95 runtime against the same weekday's baseline, flagging regressions. |
+| `fct_dbt__dag_bottlenecks_detail` | invocation × model | How long each model waited on the last of its parents to finish. |
+| `fct_dbt__dag_bottlenecks` | UTC day × parent model | Which models hold up the most children, and for how long. |
+| `fct_dbt__flaky_tests_detail` | flip | A test that failed and then passed the same day with no parent model rebuilt between. |
+| `fct_dbt__flaky_tests` | month × test | Flips, executions and flake rate per test. |
+
+### Lookback window
+
+These views read only recent history: by default the last 30 days. Monthly marts start on the first of the month that contains the start of the window, so they never show a partial month. The consumption marts read at least `dbt_artifacts_run_rate_days` (default 28) for the forecast. `fct_dbt__model_performance` reads that many extra days so its first day has a full baseline. `dim_dbt__lineage_edges` is the current graph, built from the manifest uploads in the window; it is empty if no run has uploaded the manifest within it, so with `dbt_artifacts_upload_manifest: false` make sure a run uploads the manifest at least once per window.
+
+Large projects should use a shorter window. To read all history, set the variable to `null`:
+
+```yml
+# dbt_project.yml
+vars:
+  dbt_artifacts_mart_lookback_days: 7    # or null for all history
+```
+
+The value must be a whole number greater than 0. Strings such as `"7"` and `"null"` also work, so it can come from an environment variable.
+
+To turn off marts you don't use, disable them by name. Disable each `_detail` model together with its roll-up:
+
+```yml
+# dbt_project.yml
+models:
+  dbt_artifacts:
+    fct_dbt__dag_bottlenecks_detail:
+      +enabled: false
+    fct_dbt__dag_bottlenecks:
+      +enabled: false
+```
+
+### Package tests
+
+The package's generic tests (`unique`, `not_null` and range checks on these marts) check the package's own SQL, not your data, and each one re-reads the views it tests, so they ship disabled. To run them, turn them on in your `dbt_project.yml`. The value must be a literal `true`, not a Jinja expression:
+
+```yml
+# dbt_project.yml
+data_tests:
+  dbt_artifacts:
+    +enabled: true
+```
+
 ## Upgrading from 1.x to >=2.0.0
 
 If you were using the following variables:

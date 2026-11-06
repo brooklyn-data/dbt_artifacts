@@ -9,7 +9,15 @@
     invocation, status = 'success', dbt_command in run/build/retry) so the two
     marts reconcile. billing_month is the calendar month (date_trunc) of the
     UTC execution day. v1 excludes attached-test DATT counting (design's v2).
+
+    Covers whole months from the same start as fct_dbt__consumption_daily_detail
+    (the dbt_artifacts_mart_lookback_days window, widened to at least
+    dbt_artifacts_run_rate_days and moved back to the first of its month).
 -#}
+
+{%- set lookback_start = dbt_artifacts.mart_lookback_start(
+    align_to_month=true, min_days=var("dbt_artifacts_run_rate_days", 28)
+) -%}
 
 with
     model_executions as (
@@ -24,6 +32,8 @@ with
         from {{ ref("stg_dbt__model_executions") }} as me
         inner join {{ ref("stg_dbt__invocations") }} as i
             on me.command_invocation_id = i.command_invocation_id
+        where {{ dbt_artifacts.mart_lookback_filter("me.run_started_at", lookback_start) }}
+            and {{ dbt_artifacts.mart_lookback_filter("i.run_started_at", lookback_start, pad_days=1) }}
     ),
 
     smb_executions as (

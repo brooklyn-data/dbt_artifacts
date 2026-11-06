@@ -16,7 +16,18 @@
                  per-day distinct-node count; when
                  a node runs under several deployment targets in one day it is
                  counted once per target, which keeps the roll-up additive.
+
+    Covers whole months, from the first of the month that contains the start
+    of the dbt_artifacts_mart_lookback_days window, widened to at least
+    dbt_artifacts_run_rate_days so fct_dbt__consumption_forecast has its run
+    rate. fct_dbt__consumption_by_model uses the same start, so the two
+    reconcile. Invocations are read from one day earlier so an invocation
+    that spans the start keeps its executions.
 -#}
+
+{%- set lookback_start = dbt_artifacts.mart_lookback_start(
+    align_to_month=true, min_days=var("dbt_artifacts_run_rate_days", 28)
+) -%}
 
 with
     model_executions as (
@@ -31,6 +42,8 @@ with
         from {{ ref("stg_dbt__model_executions") }} as me
         inner join {{ ref("stg_dbt__invocations") }} as i
             on me.command_invocation_id = i.command_invocation_id
+        where {{ dbt_artifacts.mart_lookback_filter("me.run_started_at", lookback_start) }}
+            and {{ dbt_artifacts.mart_lookback_filter("i.run_started_at", lookback_start, pad_days=1) }}
     ),
 
     smb_detail as (
@@ -87,6 +100,8 @@ with
         from all_executions as ae
         inner join {{ ref("stg_dbt__invocations") }} as i
             on ae.command_invocation_id = i.command_invocation_id
+        where {{ dbt_artifacts.mart_lookback_filter("ae.run_started_at", lookback_start) }}
+            and {{ dbt_artifacts.mart_lookback_filter("i.run_started_at", lookback_start, pad_days=1) }}
     ),
 
     active_target_tables_detail as (

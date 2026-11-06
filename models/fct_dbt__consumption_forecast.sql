@@ -13,10 +13,18 @@
     remaining day whose cumulative expected (added to MTD) reaches the allowance
     (or as_of when MTD already exceeds it). Allowance applies to the 'smb' meter
     only. Pure SQL + Jinja day series -- no seed, no dbt_utils.
+
+    fct_dbt__consumption_daily covers whole months from the start of the
+    dbt_artifacts_mart_lookback_days window (widened to at least the run-rate
+    days). A month is reported only when its trailing run-rate window falls
+    inside that range, which always includes the current month.
 -#}
 
 {%- set run_rate_days = var("dbt_artifacts_run_rate_days", 28) -%}
 {%- set allowance = dbt_artifacts.get_smb_allowance() -%}
+{%- set lookback_start = dbt_artifacts.mart_lookback_start(
+    align_to_month=true, min_days=run_rate_days
+) -%}
 
 with
     daily as (
@@ -27,7 +35,7 @@ with
         from {{ ref("fct_dbt__consumption_daily") }}
     ),
 
-    month_anchors as (
+    month_anchors_all as (
         select
             meter
             , date_trunc('month', date_day) as billing_month
@@ -39,6 +47,14 @@ with
             ) as days_remaining
         from daily
         group by meter, date_trunc('month', date_day)
+    ),
+
+    month_anchors as (
+        select *
+        from month_anchors_all
+        where {{ dbt_artifacts.mart_lookback_filter(
+            "dateadd('day', -" ~ (run_rate_days - 1) ~ ", as_of_date)", lookback_start
+        ) }}
     ),
 
     month_to_date as (

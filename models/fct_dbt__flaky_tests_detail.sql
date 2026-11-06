@@ -13,7 +13,14 @@
     parents, we still count the flip but set parent_rebuilt_between = null --
     we don't hide the uncertainty. Depends on dim_dbt__lineage_edges;
     Snowflake-only.
+
+    Covers flips from the first of the month that contains the start of the
+    dbt_artifacts_mart_lookback_days window, so fct_dbt__flaky_tests only
+    reports whole months. Executions are read from one day earlier so the
+    first flip in the window still sees the failure before it.
 -#}
+
+{%- set lookback_start = dbt_artifacts.mart_lookback_start(align_to_month=true) -%}
 
 with
     test_executions as (
@@ -23,6 +30,7 @@ with
             , status
             , {{ dbt_artifacts.cast_to_utc_date("run_started_at") }} as date_day
         from {{ ref("stg_dbt__test_executions") }}
+        where {{ dbt_artifacts.mart_lookback_filter("run_started_at", lookback_start, pad_days=1) }}
     ),
 
     sequenced as (
@@ -53,6 +61,7 @@ with
         where status = 'pass'
             and prev_status in ('fail', 'error')
             and prev_date_day = date_day
+            and {{ dbt_artifacts.mart_lookback_filter("date_day", lookback_start) }}
     ),
 
     test_model_parents as (
@@ -84,6 +93,7 @@ with
             and me.status = 'success'
             and me.run_started_at > fc.failed_at
             and me.run_started_at < fc.passed_at
+            and {{ dbt_artifacts.mart_lookback_filter("me.run_started_at", lookback_start, pad_days=1) }}
         group by fc.test_node_id, fc.date_day, fc.failed_at, fc.passed_at
     ),
 
