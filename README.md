@@ -240,6 +240,22 @@ Override it to `true` on runs where you want the full project metadata refreshed
 dbt build --vars '{"dbt_artifacts_upload_manifest": true}'
 ```
 
+### Upload batch size
+
+The on-run-end hook inserts each dataset in chunks, one `insert` statement per chunk. By default a chunk holds 100 rows for `models` and 5,000 rows for every other dataset. On BigQuery and Trino the defaults are 50 and 300, because their limits on query text length reject larger inserts. On Trino the limit is the `query.max-length` setting, and an insert over it fails with `QUERY_TEXT_TOO_LARGE`.
+
+If an insert still fails because it is too large, or you want fewer statements, set `dbt_artifacts_insert_batch_size`. Its keys are `models`, `default` (every other dataset), or any dataset name, such as `test_executions`. Keys you leave out keep their defaults:
+
+```yml
+# dbt_project.yml
+vars:
+  dbt_artifacts_insert_batch_size:
+    models: 25
+    default: 1000
+```
+
+Values must be whole numbers of at least 1. Strings such as `"25"` also work, so the values can come from environment variables.
+
 ## Upgrading from 1.x to >=2.0.0
 
 If you were using the following variables:
