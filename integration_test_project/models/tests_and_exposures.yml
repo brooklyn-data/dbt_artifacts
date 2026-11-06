@@ -7,7 +7,9 @@ models:
       - name: id
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                store_failures: true # gives test_executions.audit_table_name a value to check
 
 exposures:
   - name: ceo_imaginary_dashboard

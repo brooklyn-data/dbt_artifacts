@@ -20,6 +20,12 @@ vars:
   dbt_vars: ["test_dbt_vars_1", "test_dbt_vars_2", "test_dbt_vars_3"]
   dbt_artifacts_exclude_all_results: true
   is_development: '{{ env_var("IS_DEVELOPMENT", false) | as_bool }}'
+  # Consumption/observability marts: classify this project's snowflake
+  # invocations as deployment so the consumption marts have SMB to aggregate,
+  # and give the forecast a plan allowance. Only consumed by the Snowflake-gated
+  # v1 marts; inert on other targets.
+  dbt_artifacts_billing_plan: developer
+  dbt_artifacts_deployment_targets: ['snowflake']
 
 models:
   +persist_docs:

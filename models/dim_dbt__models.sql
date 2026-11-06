@@ -22,7 +22,8 @@ with
             materialization,
             tags,
             meta,
-            alias
+            alias,
+            owner_group
         from base
 
     )

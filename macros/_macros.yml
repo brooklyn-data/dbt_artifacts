@@ -23,7 +23,7 @@ macros:
       Date: 2023-04-28
     arguments:
       - name: field_list
-        type: list
+        type: list[any]
         description: |
           A list of fields to concatenate together to form the surrogate key
 
@@ -31,7 +31,7 @@ macros:
     description: |
       Identify a relation in the graph from a relation name
     arguments:
-      - name: get_relation_name
+      - name: relation_name
         type: string
         description: |
           The name of the relation to return from the graph
@@ -56,6 +56,11 @@ macros:
   - name: type_json
     description: |
       Dependent on the adapter type, returns the native type for storing JSON.
+
+  - name: type_long_string
+    description: |
+      Dependent on the adapter type, returns a string type for text that can run past 8,000 characters, such as compiled SQL.
+      Same as the adapter's string type, except on SQL Server, where that is varchar(8000) and this is varchar(max).
 
   ## MIGRATION ##
   - name: migrate_from_v0_to_v1
@@ -87,7 +92,7 @@ macros:
       contract for the graph nodes is prone to change without warning. This macro makes handling for these changes easier and more DRY.
     arguments:
       - name: model
-        type: Node
+        type: relation
         description: A node object from the dbt graph
   - name: update_nested_dict
     description: |
@@ -95,14 +100,14 @@ macros:
       something that can be JSON serialized.
     arguments:
       - name: dictionary
-        type: mapping
+        type: dict[str, any]
         description: A mapping object to walk through
   - name: safe_copy_mapping
     description: |
       A macro that safely copies a mapping object (dictionary), using the `update_nested_dict` macro to ensure that the types are JSON serializable.
     arguments:
       - name: dictionary
-        type: mapping
+        type: dict[str, any]
         description: A mapping object to copy
   - name: type_handler
     description: |
@@ -127,7 +132,7 @@ macros:
       pre/post conversion values.
     arguments:
       - name: dictionary
-        type: mapping
+        type: dict[str, any]
         description: A mapping object to validate
 
   ## UPLOAD INDIVIDUAL DATASETS ##
@@ -136,7 +141,7 @@ macros:
       The macro to support upload of the data to the exposures table.
     arguments:
       - name: exposures
-        type: list
+        type: list[any]
         description: |
           A list of exposure objects extracted from the dbt graph
 
@@ -149,7 +154,7 @@ macros:
       The macro to support upload of the data to the model_executions table.
     arguments:
       - name: models
-        type: list
+        type: list[any]
         description: |
           A list of model execution results objects extracted from the dbt result object
 
@@ -158,7 +163,7 @@ macros:
       The macro to support upload of the data to the models table.
     arguments:
       - name: models
-        type: list
+        type: list[any]
         description: |
           A list of test objects extracted from the dbt graph
 
@@ -167,7 +172,7 @@ macros:
       The macro to support upload of the data to the seed_executions table.
     arguments:
       - name: seeds
-        type: list
+        type: list[any]
         description: |
           A list of seed execution results objects extracted from the dbt result object
 
@@ -176,7 +181,7 @@ macros:
       The macro to support upload of the data to the seeds table.
     arguments:
       - name: seeds
-        type: list
+        type: list[any]
         description: |
           A list of seeds objects extracted from the dbt graph
 
@@ -185,7 +190,7 @@ macros:
       The macro to support upload of the data to the snapshot_executions table.
     arguments:
       - name: snapshots
-        type: list
+        type: list[any]
         description: |
           A list of snapshot execution results objects extracted from the dbt result object
 
@@ -194,7 +199,7 @@ macros:
       The macro to support upload of the data to the snapshots table.
     arguments:
       - name: snapshots
-        type: list
+        type: list[any]
         description: |
           A list of snapshots objects extracted from the dbt graph
 
@@ -203,7 +208,7 @@ macros:
       The macro to support upload of the data to the sources table.
     arguments:
       - name: sources
-        type: list
+        type: list[any]
         description: |
           A list of sources objects extracted from the dbt graph
 
@@ -212,7 +217,7 @@ macros:
       The macro to support upload of the data to the test_executions table.
     arguments:
       - name: tests
-        type: list
+        type: list[any]
         description: |
           A list of test execution results objects extracted from the dbt result object
 
@@ -221,7 +226,7 @@ macros:
       The macro to support upload of the data to the tests table.
     arguments:
       - name: tests
-        type: list
+        type: list[any]
         description: |
           A list of test objects extracted from the dbt graph
 
@@ -254,7 +259,7 @@ macros:
         description: |
           The name of the dataset to return the column names for e.g. `models`
       - name: objects_to_upload
-        type: list
+        type: list[any]
         description: |
           The objects to be used to generate the insert statement values - extracted from `get_dataset_content`
 
@@ -264,18 +269,10 @@ macros:
       `upload_results` macro, alongside the `get_column_lists` macro to generate the column names and the
       `upload_dataset` macros to generate the data to be inserted.
     arguments:
-      - name: database_name
+      - name: dataset
         type: string
         description: |
-          The database name for the relation that the data is to be inserted into
-      - name: schema_name
-        type: string
-        description: |
-          The schema name for the relation that the data is to be inserted into
-      - name: table_name
-        type: string
-        description: |
-          The table name for the relation that the data is to be inserted into
+          The name of the dataset to return the data for e.g. `models`
       - name: fields
         type: string
         description: |
@@ -285,11 +282,24 @@ macros:
         description: |
           The data content to insert into the relation
 
+  - name: begin_transaction
+    description: |
+      Opens an explicit transaction before `upload_results` inserts a dataset's chunks, so the dataset's rows become
+      visible together when `end_transaction` commits. If an insert fails partway through, the dataset's earlier
+      chunks are rolled back instead of being left as a partial upload. Implemented for Snowflake, Postgres,
+      SQL Server and DuckDB on dbt Core. On every other adapter, and on the dbt Fusion engine on any adapter, it
+      does nothing and each insert commits on its own.
+
+  - name: end_transaction
+    description: |
+      Commits the transaction opened by `begin_transaction` once all of a dataset's chunks are inserted. Implemented
+      for the same adapters as `begin_transaction`; a no-op elsewhere.
+
   - name: upload_results
     description: |
       The main macro called to upload the metadata into each of the source tables.
     arguments:
       - name: results
-        type: list
+        type: list[any]
         description: |
           The results object from dbt.

@@ -214,6 +214,10 @@
     {% endif %}
 {% endmacro -%}
 
+{% macro duckdb__get_seed_executions_dml_sql(seeds) -%}
+    {{ dbt_artifacts.postgres__get_seed_executions_dml_sql(seeds) }}
+{% endmacro %}
+
 {% macro sqlserver__get_seed_executions_dml_sql(seeds) -%}
     {% if seeds != [] %}
         {% set seed_execution_values %}

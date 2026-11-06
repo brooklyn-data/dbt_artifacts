@@ -389,6 +389,12 @@ Key-value pairs of environment variables passed to invocation that have the pref
 
 {% enddocs %}
 
+{% docs owner_group %}
+
+Name of the dbt group the model belongs to (the model's `group` config), or null if it isn't in a group.
+
+{% enddocs %}
+
 {% docs alias %}
 
 Alias of the node.
@@ -410,5 +416,17 @@ Response provided by the adapter as JSON.
 {% docs all_results %}
 
 All results as a JSON blob
+
+{% enddocs %}
+
+{% docs compiled_sql %}
+
+The test's compiled SQL as it ran. Null when `dbt_artifacts_exclude_compiled_sql` is true, or when the test didn't compile (for example, when it was skipped).
+
+{% enddocs %}
+
+{% docs audit_table_name %}
+
+The table the test writes its failing rows to. Set only when the test stores failures (`store_failures: true` or `--store-failures`); null otherwise.
 
 {% enddocs %}

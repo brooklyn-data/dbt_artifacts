@@ -18,7 +18,9 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }},
-            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(13)) }}
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(13)) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(15) }}
         from values
         {% for test in tests -%}
             (
@@ -42,9 +44,17 @@
 
                 {{ test.execution_time }}, {# total_node_runtime #}
                 null, {# rows_affected not available in Databricks #}
-                {{ 'null' if test.failures is none else test.failures }}, {# failures #}
+                {{ test.failures if test.failures is not none and test.failures != '' else 'null' }}, {# failures #}
                 '{{ test.message | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}', {# message #}
-                '{{ tojson(test.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}' {# adapter_response #}
+                '{{ tojson(test.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}', {# adapter_response #}
+                {#- dbt Core puts compiled SQL on the result's node; the Fusion engine puts it on the result. -#}
+                {% set compiled_code = test.node.compiled_code or test.compiled_code %}
+                {% if compiled_code and not var('dbt_artifacts_exclude_compiled_sql', false) %}
+                    '{{ compiled_code | replace("\\", "\\\\") | replace("'", "\\'") | replace("\n", "\\n") }}'
+                {% else %}
+                    null
+                {% endif %}, {# compiled_sql #}
+                {{ "'" ~ test.node.relation_name | replace("\\", "\\\\") | replace("'", "\\'") ~ "'" if test.node.relation_name else 'null' }} {# audit_table_name: set when the test stores failures #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -79,9 +89,18 @@
 
                 {{ test.execution_time }}, {# total_node_runtime #}
                 null, {# rows_affected not available in Databricks #}
-                {{ 'null' if test.failures is none else test.failures }}, {# failures #}
+                {{ test.failures if test.failures is not none and test.failures != '' else 'null' }}, {# failures #}
                 '{{ test.message | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') | replace("\n", "\\n") }}', {# message #}
-                {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(test.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"')) }} {# adapter_response #}
+                {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(test.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"')) }}, {# adapter_response #}
+
+                {#- dbt Core puts compiled SQL on the result's node; the Fusion engine puts it on the result. -#}
+                {% set compiled_code = test.node.compiled_code or test.compiled_code %}
+                {% if compiled_code and not var('dbt_artifacts_exclude_compiled_sql', false) %}
+                    '{{ compiled_code | replace("\\", "\\\\") | replace("'", "\\'") | replace("\n", "\\n") }}'
+                {% else %}
+                    null
+                {% endif %}, {# compiled_sql #}
+                {{ "'" ~ test.node.relation_name | replace("`", "") ~ "'" if test.node.relation_name else 'null' }} {# audit_table_name: set when the test stores failures; backticks removed #}
             )
             {%- if not loop.last %},{%- endif %}
 
@@ -133,9 +152,17 @@
 
                 {{ test.execution_time }}, {# total_node_runtime #}
                 null, {# rows_affected not available in Databricks #}
-                {{ 'null' if test.failures is none else test.failures }}, {# failures #}
+                {{ test.failures if test.failures is not none and test.failures != '' else 'null' }}, {# failures #}
                 $${{ test.message  }}$$, {# message #}
-                $${{ tojson(test.adapter_response) }}$$ {# adapter_response #}
+                $${{ tojson(test.adapter_response) }}$$, {# adapter_response #}
+                {#- dbt Core puts compiled SQL on the result's node; the Fusion engine puts it on the result. -#}
+                {% set compiled_code = test.node.compiled_code or test.compiled_code %}
+                {% if compiled_code and not var('dbt_artifacts_exclude_compiled_sql', false) %}
+                    '{{ compiled_code | replace("'", "''") }}'
+                {% else %}
+                    null
+                {% endif %}, {# compiled_sql #}
+                {{ "'" ~ test.node.relation_name | replace("'", "''") ~ "'" if test.node.relation_name else 'null' }} {# audit_table_name: set when the test stores failures #}
             )
             {%- if not loop.last %},{%- endif %}
 
@@ -145,6 +172,11 @@
     {% else %} {{ return("") }}
     {% endif %}
 {% endmacro -%}
+
+{% macro duckdb__get_test_executions_dml_sql(tests) -%}
+    {{ dbt_artifacts.postgres__get_test_executions_dml_sql(tests) }}
+{% endmacro -%}
+
 
 {% macro snowflake__get_test_executions_dml_sql(tests) -%}
     {% if tests != [] %}
@@ -162,7 +194,9 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }},
-            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(13)) }}
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(13)) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(15) }}
         from values
         {% for test in tests -%}
             (
@@ -186,9 +220,17 @@
 
                 {{ test.execution_time }}, {# total_node_runtime #}
                 try_cast('{{ test.adapter_response.rows_affected }}' as int), {# rows_affected #}
-                {{ 'null' if test.failures is none else test.failures }}, {# failures #}
+                {{ test.failures if test.failures is not none and test.failures != '' else 'null' }}, {# failures #}
                 '{{ test.message | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}', {# message #}
-                '{{ tojson(test.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}' {# adapter_response #}
+                '{{ tojson(test.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}', {# adapter_response #}
+                {#- dbt Core puts compiled SQL on the result's node; the Fusion engine puts it on the result. -#}
+                {% set compiled_code = test.node.compiled_code or test.compiled_code %}
+                {% if compiled_code and not var('dbt_artifacts_exclude_compiled_sql', false) %}
+                    '{{ compiled_code | replace("\\", "\\\\") | replace("'", "\\'") | replace("\n", "\\n") }}'
+                {% else %}
+                    null
+                {% endif %}, {# compiled_sql #}
+                {{ "'" ~ test.node.relation_name | replace("\\", "\\\\") | replace("'", "\\'") ~ "'" if test.node.relation_name else 'null' }} {# audit_table_name: set when the test stores failures #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -202,7 +244,7 @@
     {% if tests != [] %}
         {% set test_execution_values %}
         select
-            "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"
+            "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"
         from ( values
         {% for test in tests -%}
             (
@@ -226,14 +268,22 @@
 
                 {{ test.execution_time }}, {# total_node_runtime #}
                 null, {# rows_affected not available in Databricks #}
-                {{ 'null' if test.failures is none else test.failures }}, {# failures #}
+                {{ test.failures if test.failures is not none and test.failures != '' else 'null' }}, {# failures #}
                 '{{ test.message | replace("'", "''") }}', {# message #}
-                '{{ tojson(test.adapter_response) | replace("'", "''") }}' {# adapter_response #}
+                '{{ tojson(test.adapter_response) | replace("'", "''") }}', {# adapter_response #}
+                {#- dbt Core puts compiled SQL on the result's node; the Fusion engine puts it on the result. -#}
+                {% set compiled_code = test.node.compiled_code or test.compiled_code %}
+                {% if compiled_code and not var('dbt_artifacts_exclude_compiled_sql', false) %}
+                    '{{ compiled_code | replace("'", "''") }}'
+                {% else %}
+                    null
+                {% endif %}, {# compiled_sql #}
+                {{ "'" ~ test.node.relation_name | replace("'", "''") ~ "'" if test.node.relation_name else 'null' }} {# audit_table_name: set when the test stores failures #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
 
-        ) AS v ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13")
+        ) AS v ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15")
 
         {% endset %}
         {{ test_execution_values }}
@@ -276,9 +326,17 @@
                 {% endif %}
                 , {# rows_affected #}
 
-                {{ 'null' if test.failures is none else test.failures }}, {# failures #}
+                {{ test.failures if test.failures is not none and test.failures != '' else 'null' }}, {# failures #}
                 '{{ test.message | replace("'", "''") }}', {# message #}
-                '{{ tojson(test.adapter_response) | replace("'", "''") }}' {# adapter_response #}
+                '{{ tojson(test.adapter_response) | replace("'", "''") }}', {# adapter_response #}
+                {#- dbt Core puts compiled SQL on the result's node; the Fusion engine puts it on the result. -#}
+                {% set compiled_code = test.node.compiled_code or test.compiled_code %}
+                {% if compiled_code and not var('dbt_artifacts_exclude_compiled_sql', false) %}
+                    '{{ compiled_code | replace("'", "''") }}'
+                {% else %}
+                    cast(null as varchar)
+                {% endif %}, {# compiled_sql #}
+                {{ "'" ~ test.node.relation_name | replace("'", "''") ~ "'" if test.node.relation_name else 'cast(null as varchar)' }} {# audit_table_name: set when the test stores failures #}
             )
             {%- if not loop.last %},{%- endif %}
 

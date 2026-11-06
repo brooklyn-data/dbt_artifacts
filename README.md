@@ -2,13 +2,17 @@
 
 This package builds a mart of tables and views describing the project it is installed in. In pre V1 versions of the package, the artifacts dbt produces were uploaded to the warehouse, hence the name of the package. That's no longer the case, but the name has stuck!
 
-[![Main branch test package](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main_test_package.yml/badge.svg)](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main_test_package.yml)
-[![Main branch lint package](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main_lint_package.yml/badge.svg)](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main_lint_package.yml)
+[![Tier 2 — main](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main.yml/badge.svg)](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/main.yml)
+[![Tier 3 — release validation](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/release.yml/badge.svg)](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/release.yml)
 [![Documentation](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/publish_docs_on_release.yml/badge.svg)](https://github.com/brooklyn-data/dbt_artifacts/actions/workflows/publish_docs_on_release.yml)
 
 ## Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) and [MAINTAINERS.md](docs/MAINTAINERS.md) for more information.
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for
+how to set up your environment and submit a PR, and
+[docs/dev-workflow.md](docs/dev-workflow.md) for the full
+feature-to-release flow. Maintainer-specific guidance lives in
+[docs/MAINTAINERS.md](docs/MAINTAINERS.md).
 
 ## Supported Data Warehouses
 
@@ -21,6 +25,7 @@ The package currently supports
 - Postgres :white_check_mark:
 - SQL Server :white_check_mark:
 - Trino :white_check_mark:
+- DuckDB :white_check_mark:
 
 Models included:
 
@@ -41,6 +46,40 @@ fct_dbt__test_executions
 
 See the generated [dbt docs site](https://brooklyn-data.github.io/dbt_artifacts/#!/overview) for documentation on each model.
 
+## Supported dbt versions
+
+As of `3.0.0`, the package requires **dbt 1.10 or newer** (dbt Core 1.10+
+or the dbt Fusion engine). The package's generic tests pass their arguments
+under `arguments:`, which Fusion requires and dbt Core only understands from
+1.10. If you're on an older dbt version, pin `dbt_artifacts` to `2.11.1` in
+your `packages.yml`:
+
+```yml
+packages:
+  - package: brooklyn-data/dbt_artifacts
+    version: 2.11.1
+```
+
+### dbt Fusion engine (dbt 2.x)
+
+The package is compatible with the [dbt Fusion engine](https://docs.getdbt.com/docs/fusion).
+CI parses it with Fusion on every pull request (failing on any deprecation
+warning), builds the integration project on Fusion against DuckDB on every
+pull request, and runs the full Snowflake integration suite on Fusion before
+release. Fusion also supports BigQuery and Databricks; the package parses
+cleanly against both, but they are not yet integration-tested on Fusion.
+Postgres and Trino are experimental in Fusion, and SQL Server and Spark are
+not supported by Fusion, so on those warehouses keep using dbt Core.
+
+Fusion runs `on-run-end` hooks for `dbt compile` and `dbt show`, which dbt
+Core does not. `upload_results` skips those commands, so the same invocations
+are recorded on both engines.
+
+On dbt Core, `upload_results` inserts each dataset inside one transaction on
+Snowflake, Postgres, SQL Server and DuckDB, so a dataset's rows appear
+together. On Fusion each insert commits on its own, because Fusion doesn't
+keep an explicit transaction across the hook's separate queries.
+
 ## Quickstart
 
 1. Add this package to your `packages.yml`:
@@ -48,7 +87,7 @@ See the generated [dbt docs site](https://brooklyn-data.github.io/dbt_artifacts/
 ```
 packages:
   - package: brooklyn-data/dbt_artifacts
-    version: 2.10.0
+    version: 2.11.1
 ```
 
 :construction_worker: Make sure to fix at least the **minor** version, to avoid issues when a new release is open. See the notes on upgrading below for more detail.
@@ -174,6 +213,66 @@ This column can cause queries to become too long - particularly in BigQuery. The
 vars:
   dbt_artifacts_exclude_all_results: true
 ```
+
+### Compiled SQL in test executions
+
+`test_executions` stores each test's compiled SQL in `compiled_sql`, so you can rerun a failing test's query without recompiling the project. It adds the length of that SQL to every test execution row, every run. To leave it out (the column stays, with nulls), set `dbt_artifacts_exclude_compiled_sql` to `true`:
+
+```yml
+# dbt_project.yml
+vars:
+  dbt_artifacts_exclude_compiled_sql: true
+```
+
+`audit_table_name` holds the table a test writes its failing rows to. It's set only for tests that store failures (`store_failures: true` or `--store-failures`), and null otherwise.
+
+### Skipping manifest dataset upload
+
+By default, every invocation uploads both the execution results (`model_executions`, `seed_executions`, `test_executions`, `snapshot_executions`) and project's manifest datasets (`models`, `seeds`, `snapshots`, `sources`, `tests`, `exposures`). Because manifest datasets are re-inserted on every run, the underlying tables can grow quickly on routine or scheduled runs.
+
+The manifest datasets usually change only when the project code changes, so you can skip uploading them on routine runs and upload them only when code is merged, for example during the build step in CI.
+
+To skip manifest dataset upload, set the `dbt_artifacts_upload_manifest` variable to `false`:
+
+```yml
+# dbt_project.yml
+vars:
+  dbt_artifacts_upload_manifest: false
+```
+
+When `false`, only `invocations` and the execution datasets are uploaded. `invocations` is always uploaded regardless of this setting, as it is the parent record that execution rows reference.
+
+The string values `"false"` and `"0"` also turn it off, so the variable can be set from an environment variable:
+
+```yml
+# dbt_project.yml
+vars:
+  dbt_artifacts_upload_manifest: "{{ env_var('DBT_ARTIFACTS_UPLOAD_MANIFEST', 'true') }}"
+```
+
+The `dim_` models (for example `dim_dbt__models` and `dim_dbt__current_models`) describe the project as of the most recent run that uploaded the manifest datasets. A model added since then still appears in `fct_dbt__model_executions`, but not in the `dim_` models until the next run with `dbt_artifacts_upload_manifest` set to `true`. Make sure at least one run uploads them, for example the first run after installing or upgrading the package, and every deployment.
+
+Override it to `true` on runs where you want the full project metadata refreshed:
+
+```sh
+dbt build --vars '{"dbt_artifacts_upload_manifest": true}'
+```
+
+### Upload batch size
+
+The on-run-end hook inserts each dataset in chunks, one `insert` statement per chunk. By default a chunk holds 100 rows for `models` and 5,000 rows for every other dataset. On BigQuery and Trino the defaults are 50 and 300, and 100 for `test_executions`, whose rows include each test's compiled SQL, because their limits on query text length reject larger inserts. On Trino the limit is the `query.max-length` setting, and an insert over it fails with `QUERY_TEXT_TOO_LARGE`.
+
+If an insert still fails because it is too large, or you want fewer statements, set `dbt_artifacts_insert_batch_size`. Its keys are `models`, `default` (every other dataset), or any dataset name, such as `test_executions`. Keys you leave out keep their defaults:
+
+```yml
+# dbt_project.yml
+vars:
+  dbt_artifacts_insert_batch_size:
+    models: 25
+    default: 1000
+```
+
+Values must be whole numbers of at least 1. Strings such as `"25"` also work, so the values can come from environment variables.
 
 ## Upgrading from 1.x to >=2.0.0
 

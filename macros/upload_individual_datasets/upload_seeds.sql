@@ -107,6 +107,10 @@
     {% endif %}
 {%- endmacro %}
 
+{% macro duckdb__get_seeds_dml_sql(seeds) -%}
+    {{ dbt_artifacts.postgres__get_seeds_dml_sql(seeds) }}
+{% endmacro %}
+
 {% macro sqlserver__get_seeds_dml_sql(seeds) -%}
 
     {% if seeds != [] %}

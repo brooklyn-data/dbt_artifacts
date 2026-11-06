@@ -1,0 +1,12 @@
+version: 2
+
+# A dbt group so the package's owner_group column has a real value to upload.
+groups:
+  - name: artifacts_test_group
+    owner:
+      name: dbt_artifacts maintainers
+
+models:
+  - name: incremental
+    config:
+      group: artifacts_test_group

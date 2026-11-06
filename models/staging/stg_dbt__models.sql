@@ -1,5 +1,6 @@
 with
     base as (select * from {{ ref("models") }}),
+
     enhanced as (
 
         select
@@ -22,11 +23,11 @@ with
             materialization,
             tags,
             meta,
-            alias
+            alias,
+            owner_group
         from base
 
     )
 
 select *
 from enhanced
-

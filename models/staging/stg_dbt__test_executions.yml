@@ -30,3 +30,7 @@ models:
         description: '{{ doc("was_full_refresh") }}'
       - name: message
         description: '{{ doc("message") }}'
+      - name: compiled_sql
+        description: '{{ doc("compiled_sql") }}'
+      - name: audit_table_name
+        description: '{{ doc("audit_table_name") }}'
