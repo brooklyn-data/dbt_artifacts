@@ -208,6 +208,18 @@ vars:
   dbt_artifacts_exclude_all_results: true
 ```
 
+### Compiled SQL in test executions
+
+`test_executions` stores each test's compiled SQL in `compiled_sql`, so you can rerun a failing test's query without recompiling the project. It adds the length of that SQL to every test execution row, every run. To leave it out (the column stays, with nulls), set `dbt_artifacts_exclude_compiled_sql` to `true`:
+
+```yml
+# dbt_project.yml
+vars:
+  dbt_artifacts_exclude_compiled_sql: true
+```
+
+`audit_table_name` holds the table a test writes its failing rows to. It's set only for tests that store failures (`store_failures: true` or `--store-failures`), and null otherwise.
+
 ### Skipping manifest dataset upload
 
 By default, every invocation uploads both the execution results (`model_executions`, `seed_executions`, `test_executions`, `snapshot_executions`) and project's manifest datasets (`models`, `seeds`, `snapshots`, `sources`, `tests`, `exposures`). Because manifest datasets are re-inserted on every run, the underlying tables can grow quickly on routine or scheduled runs.
@@ -242,7 +254,7 @@ dbt build --vars '{"dbt_artifacts_upload_manifest": true}'
 
 ### Upload batch size
 
-The on-run-end hook inserts each dataset in chunks, one `insert` statement per chunk. By default a chunk holds 100 rows for `models` and 5,000 rows for every other dataset. On BigQuery and Trino the defaults are 50 and 300, because their limits on query text length reject larger inserts. On Trino the limit is the `query.max-length` setting, and an insert over it fails with `QUERY_TEXT_TOO_LARGE`.
+The on-run-end hook inserts each dataset in chunks, one `insert` statement per chunk. By default a chunk holds 100 rows for `models` and 5,000 rows for every other dataset. On BigQuery and Trino the defaults are 50 and 300, and 100 for `test_executions`, whose rows include each test's compiled SQL, because their limits on query text length reject larger inserts. On Trino the limit is the `query.max-length` setting, and an insert over it fails with `QUERY_TEXT_TOO_LARGE`.
 
 If an insert still fails because it is too large, or you want fewer statements, set `dbt_artifacts_insert_batch_size`. Its keys are `models`, `default` (every other dataset), or any dataset name, such as `test_executions`. Keys you leave out keep their defaults:
 

@@ -418,3 +418,15 @@ Response provided by the adapter as JSON.
 All results as a JSON blob
 
 {% enddocs %}
+
+{% docs compiled_sql %}
+
+The test's compiled SQL as it ran. Null when `dbt_artifacts_exclude_compiled_sql` is true, or when the test didn't compile (for example, when it was skipped).
+
+{% enddocs %}
+
+{% docs audit_table_name %}
+
+The table the test writes its failing rows to. Set only when the test stores failures (`store_failures: true` or `--store-failures`); null otherwise.
+
+{% enddocs %}

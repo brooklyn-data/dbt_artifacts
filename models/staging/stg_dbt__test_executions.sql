@@ -22,6 +22,8 @@ with
             , rows_affected
             , failures
             , message
+            , compiled_sql
+            , audit_table_name
         from base
 
     )
