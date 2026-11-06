@@ -28,21 +28,28 @@ credentials, and the rest require credentials in env vars.
 `<dbt_version>` follows the tox-env naming convention, e.g. `1_11_0`, `1_10_0`.
 Omit for the latest supported adapter version.
 
-### dbt Fusion engine (`scripts/fusion/`)
+### dbt Fusion engine (dbt 2.x)
 
-Fusion is a standalone binary, not a Python package, so it runs in a pinned
-Docker image (`scripts/fusion/Dockerfile`) instead of through uv/tox. Nothing
-is installed on the host.
+Fusion runs from PyPI through uv, like everything else here. The `dbt` 2.x
+package on PyPI is a small installer that downloads the prebuilt Fusion
+wheel for your platform from dbt's CDN and checks its sha256. The version is
+pinned once, in `tox.ini` (`[testenv:fusion]`). Fusion's `dbt` command clashes
+with dbt-core's, so it only lives in its own tox envs.
 
-| Script | Purpose |
+| Command | Purpose |
 |---|---|
-| `fusion/check.sh` | Parse with Fusion, fail on any warning. No secrets needed (Tier 1+). |
-| `fusion/test.sh <warehouse>` | Two-pass Fusion build, same as the tox envs. `snowflake` only (Tier 2+). |
-| `fusion/dbtf.sh [--rebuild] <dbt args>` | Run any Fusion command against `integration_test_project/`. |
+| `fusion-parse.sh` | Parse with Fusion, fail on any warning. No secrets needed (Tier 1+). |
+| `test.sh duckdb fusion` | Fusion build against DuckDB, same steps as `test.sh duckdb`. No secrets (Tier 1+). |
+| `test.sh snowflake fusion` | Two-pass Fusion build against Snowflake, same as `test.sh snowflake`. Needs credentials (Tier 2+). |
+| `uv run tox -e fusion -- <dbt args>` | Run any Fusion command against `integration_test_project/`. |
 
-`dbtf.sh` sources the repo-root `.env` if present and writes to a separate
-`..._fusion_...` schema so it never collides with dbt Core runs. Bump the
-Fusion version via `FUSION_VERSION` in the Dockerfile, then `--rebuild`.
+`test.sh <warehouse> fusion` sets `DBT_VERSION=fusion`, so Fusion runs write to
+a separate `..._fusion_...` schema and never collide with dbt Core runs. To
+bump Fusion, change the pin in `tox.ini` and rerun the commands above.
+
+Fusion resolves the profile's default target (`snowflake`) even for `dbt
+clean` and `dbt deps`, and exits 1 when its env vars are missing. Pass
+`--target duckdb` for ad-hoc DuckDB commands without Snowflake credentials.
 
 ## Quick start
 

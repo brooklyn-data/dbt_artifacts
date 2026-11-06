@@ -7,6 +7,12 @@
     On a fresh schema (the first build) there is no earlier invocation and the
     test passes without checking anything. It becomes a real check from the
     second build onward, which is why the DuckDB tox envs build twice.
+
+    Some flows warm up with `dbt build --exclude-resource-type test` (the
+    Snowflake tox envs, Core and Fusion), so that earlier build has
+    no test executions. They pass
+    artifacts_test_previous_build_excluded_tests: true on the following build,
+    and test_executions is then not required.
 */
 
 with last_build as (
@@ -27,6 +33,9 @@ with last_build as (
     'models', 'model_executions', 'seeds', 'seed_executions', 'tests', 'test_executions',
     'snapshots', 'snapshot_executions', 'sources', 'exposures'
 ] %}
+{%- if var('artifacts_test_previous_build_excluded_tests', false) %}
+    {%- do datasets.remove('test_executions') %}
+{%- endif %}
 
 , uploaded as (
     {%- for dataset in datasets %}

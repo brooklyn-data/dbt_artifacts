@@ -64,7 +64,8 @@ packages:
 
 The package is compatible with the [dbt Fusion engine](https://docs.getdbt.com/docs/fusion).
 CI parses it with Fusion on every pull request (failing on any deprecation
-warning) and runs the full Snowflake integration suite on Fusion before
+warning), builds the integration project on Fusion against DuckDB on every
+pull request, and runs the full Snowflake integration suite on Fusion before
 release. Fusion also supports BigQuery and Databricks; the package parses
 cleanly against both, but they are not yet integration-tested on Fusion.
 Postgres and Trino are experimental in Fusion, and SQL Server and Spark are
@@ -73,6 +74,11 @@ not supported by Fusion, so on those warehouses keep using dbt Core.
 Fusion runs `on-run-end` hooks for `dbt compile` and `dbt show`, which dbt
 Core does not. `upload_results` skips those commands, so the same invocations
 are recorded on both engines.
+
+On dbt Core, `upload_results` inserts each dataset inside one transaction on
+Snowflake, Postgres, SQL Server and DuckDB, so a dataset's rows appear
+together. On Fusion each insert commits on its own, because Fusion doesn't
+keep an explicit transaction across the hook's separate queries.
 
 ## Quickstart
 
