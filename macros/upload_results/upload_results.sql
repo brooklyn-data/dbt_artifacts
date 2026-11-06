@@ -40,6 +40,10 @@
             'models': 50 if small_batches else 100,
             'default': 300 if small_batches else 5000
         } %}
+        {#- test_executions rows carry each test's compiled SQL, so they get a smaller batch where size is limited. -#}
+        {% if small_batches %}
+            {% do batch_sizes.update({'test_executions': 100}) %}
+        {% endif %}
         {% set configured_batch_sizes = var('dbt_artifacts_insert_batch_size', {}) %}
         {% if configured_batch_sizes is not mapping %}
             {% do exceptions.raise_compiler_error(

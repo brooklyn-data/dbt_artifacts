@@ -61,3 +61,19 @@
 {% macro trino__type_numeric() %}
    double
 {% endmacro %}
+
+{#- LONG STRING -#}
+{#- For text that can run past 8,000 characters, such as compiled SQL. SQL Server's
+    string type is varchar(8000), and a longer value fails the whole insert. -#}
+
+{% macro type_long_string() %}
+    {{ return(adapter.dispatch('type_long_string', 'dbt_artifacts')()) }}
+{% endmacro %}
+
+{% macro default__type_long_string() %}
+   {{ return(api.Column.translate_type("string")) }}
+{% endmacro %}
+
+{% macro sqlserver__type_long_string() %}
+   varchar(max)
+{% endmacro %}

@@ -18,7 +18,9 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }},
-            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(13)) }}
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(13)) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(15) }}
         from values
         {% for test in tests -%}
             (
@@ -44,7 +46,13 @@
                 null, {# rows_affected not available in Databricks #}
                 {{ test.failures if test.failures is not none and test.failures != '' else 'null' }}, {# failures #}
                 '{{ test.message | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}', {# message #}
-                '{{ tojson(test.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}' {# adapter_response #}
+                '{{ tojson(test.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}', {# adapter_response #}
+                {% if test.node.compiled_code and not var('dbt_artifacts_exclude_compiled_sql', false) %}
+                    '{{ test.node.compiled_code | replace("\\", "\\\\") | replace("'", "\\'") | replace("\n", "\\n") }}'
+                {% else %}
+                    null
+                {% endif %}, {# compiled_sql #}
+                {{ "'" ~ test.node.relation_name | replace("\\", "\\\\") | replace("'", "\\'") ~ "'" if test.node.relation_name else 'null' }} {# audit_table_name: set when the test stores failures #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -83,17 +91,12 @@
                 '{{ test.message | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') | replace("\n", "\\n") }}', {# message #}
                 {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(test.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"')) }}, {# adapter_response #}
 
-                {% if test.node.compiled_code %} {# compiled_code #}
+                {% if test.node.compiled_code and not var('dbt_artifacts_exclude_compiled_sql', false) %}
                     '{{ test.node.compiled_code | replace("\\", "\\\\") | replace("'", "\\'") | replace("\n", "\\n") }}'
-                {% else %} 
-                    null 
+                {% else %}
+                    null
                 {% endif %}, {# compiled_sql #}
-                
-                {% if test.node.relation_name %} {# audit_table_name stores failure results #} 
-                    '{{ test.node.relation_name | replace("`", "") }}' 
-                {% else %} 
-                    null 
-                {% endif %} {# audit_table_name #}
+                {{ "'" ~ test.node.relation_name | replace("`", "") ~ "'" if test.node.relation_name else 'null' }} {# audit_table_name: set when the test stores failures; backticks removed #}
             )
             {%- if not loop.last %},{%- endif %}
 
@@ -147,7 +150,13 @@
                 null, {# rows_affected not available in Databricks #}
                 {{ test.failures if test.failures is not none and test.failures != '' else 'null' }}, {# failures #}
                 $${{ test.message  }}$$, {# message #}
-                $${{ tojson(test.adapter_response) }}$$ {# adapter_response #}
+                $${{ tojson(test.adapter_response) }}$$, {# adapter_response #}
+                {% if test.node.compiled_code and not var('dbt_artifacts_exclude_compiled_sql', false) %}
+                    '{{ test.node.compiled_code | replace("'", "''") }}'
+                {% else %}
+                    null
+                {% endif %}, {# compiled_sql #}
+                {{ "'" ~ test.node.relation_name | replace("'", "''") ~ "'" if test.node.relation_name else 'null' }} {# audit_table_name: set when the test stores failures #}
             )
             {%- if not loop.last %},{%- endif %}
 
@@ -179,7 +188,9 @@
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(10) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(11) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(12) }},
-            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(13)) }}
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(13)) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(15) }}
         from values
         {% for test in tests -%}
             (
@@ -205,7 +216,13 @@
                 try_cast('{{ test.adapter_response.rows_affected }}' as int), {# rows_affected #}
                 {{ test.failures if test.failures is not none and test.failures != '' else 'null' }}, {# failures #}
                 '{{ test.message | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}', {# message #}
-                '{{ tojson(test.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}' {# adapter_response #}
+                '{{ tojson(test.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}', {# adapter_response #}
+                {% if test.node.compiled_code and not var('dbt_artifacts_exclude_compiled_sql', false) %}
+                    '{{ test.node.compiled_code | replace("\\", "\\\\") | replace("'", "\\'") | replace("\n", "\\n") }}'
+                {% else %}
+                    null
+                {% endif %}, {# compiled_sql #}
+                {{ "'" ~ test.node.relation_name | replace("\\", "\\\\") | replace("'", "\\'") ~ "'" if test.node.relation_name else 'null' }} {# audit_table_name: set when the test stores failures #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -219,7 +236,7 @@
     {% if tests != [] %}
         {% set test_execution_values %}
         select
-            "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"
+            "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"
         from ( values
         {% for test in tests -%}
             (
@@ -245,12 +262,18 @@
                 null, {# rows_affected not available in Databricks #}
                 {{ test.failures if test.failures is not none and test.failures != '' else 'null' }}, {# failures #}
                 '{{ test.message | replace("'", "''") }}', {# message #}
-                '{{ tojson(test.adapter_response) | replace("'", "''") }}' {# adapter_response #}
+                '{{ tojson(test.adapter_response) | replace("'", "''") }}', {# adapter_response #}
+                {% if test.node.compiled_code and not var('dbt_artifacts_exclude_compiled_sql', false) %}
+                    '{{ test.node.compiled_code | replace("'", "''") }}'
+                {% else %}
+                    null
+                {% endif %}, {# compiled_sql #}
+                {{ "'" ~ test.node.relation_name | replace("'", "''") ~ "'" if test.node.relation_name else 'null' }} {# audit_table_name: set when the test stores failures #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
 
-        ) AS v ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13")
+        ) AS v ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15")
 
         {% endset %}
         {{ test_execution_values }}
@@ -295,7 +318,13 @@
 
                 {{ test.failures if test.failures is not none and test.failures != '' else 'null' }}, {# failures #}
                 '{{ test.message | replace("'", "''") }}', {# message #}
-                '{{ tojson(test.adapter_response) | replace("'", "''") }}' {# adapter_response #}
+                '{{ tojson(test.adapter_response) | replace("'", "''") }}', {# adapter_response #}
+                {% if test.node.compiled_code and not var('dbt_artifacts_exclude_compiled_sql', false) %}
+                    '{{ test.node.compiled_code | replace("'", "''") }}'
+                {% else %}
+                    cast(null as varchar)
+                {% endif %}, {# compiled_sql #}
+                {{ "'" ~ test.node.relation_name | replace("'", "''") ~ "'" if test.node.relation_name else 'cast(null as varchar)' }} {# audit_table_name: set when the test stores failures #}
             )
             {%- if not loop.last %},{%- endif %}
 
