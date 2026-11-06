@@ -47,8 +47,10 @@
                 {{ test.failures if test.failures is not none and test.failures != '' else 'null' }}, {# failures #}
                 '{{ test.message | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}', {# message #}
                 '{{ tojson(test.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}', {# adapter_response #}
-                {% if test.node.compiled_code and not var('dbt_artifacts_exclude_compiled_sql', false) %}
-                    '{{ test.node.compiled_code | replace("\\", "\\\\") | replace("'", "\\'") | replace("\n", "\\n") }}'
+                {#- dbt Core puts compiled SQL on the result's node; the Fusion engine puts it on the result. -#}
+                {% set compiled_code = test.node.compiled_code or test.compiled_code %}
+                {% if compiled_code and not var('dbt_artifacts_exclude_compiled_sql', false) %}
+                    '{{ compiled_code | replace("\\", "\\\\") | replace("'", "\\'") | replace("\n", "\\n") }}'
                 {% else %}
                     null
                 {% endif %}, {# compiled_sql #}
@@ -91,8 +93,10 @@
                 '{{ test.message | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') | replace("\n", "\\n") }}', {# message #}
                 {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(test.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"')) }}, {# adapter_response #}
 
-                {% if test.node.compiled_code and not var('dbt_artifacts_exclude_compiled_sql', false) %}
-                    '{{ test.node.compiled_code | replace("\\", "\\\\") | replace("'", "\\'") | replace("\n", "\\n") }}'
+                {#- dbt Core puts compiled SQL on the result's node; the Fusion engine puts it on the result. -#}
+                {% set compiled_code = test.node.compiled_code or test.compiled_code %}
+                {% if compiled_code and not var('dbt_artifacts_exclude_compiled_sql', false) %}
+                    '{{ compiled_code | replace("\\", "\\\\") | replace("'", "\\'") | replace("\n", "\\n") }}'
                 {% else %}
                     null
                 {% endif %}, {# compiled_sql #}
@@ -151,8 +155,10 @@
                 {{ test.failures if test.failures is not none and test.failures != '' else 'null' }}, {# failures #}
                 $${{ test.message  }}$$, {# message #}
                 $${{ tojson(test.adapter_response) }}$$, {# adapter_response #}
-                {% if test.node.compiled_code and not var('dbt_artifacts_exclude_compiled_sql', false) %}
-                    '{{ test.node.compiled_code | replace("'", "''") }}'
+                {#- dbt Core puts compiled SQL on the result's node; the Fusion engine puts it on the result. -#}
+                {% set compiled_code = test.node.compiled_code or test.compiled_code %}
+                {% if compiled_code and not var('dbt_artifacts_exclude_compiled_sql', false) %}
+                    '{{ compiled_code | replace("'", "''") }}'
                 {% else %}
                     null
                 {% endif %}, {# compiled_sql #}
@@ -217,8 +223,10 @@
                 {{ test.failures if test.failures is not none and test.failures != '' else 'null' }}, {# failures #}
                 '{{ test.message | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}', {# message #}
                 '{{ tojson(test.adapter_response) | replace("\\", "\\\\") | replace("'", "\\'") | replace('"', '\\"') }}', {# adapter_response #}
-                {% if test.node.compiled_code and not var('dbt_artifacts_exclude_compiled_sql', false) %}
-                    '{{ test.node.compiled_code | replace("\\", "\\\\") | replace("'", "\\'") | replace("\n", "\\n") }}'
+                {#- dbt Core puts compiled SQL on the result's node; the Fusion engine puts it on the result. -#}
+                {% set compiled_code = test.node.compiled_code or test.compiled_code %}
+                {% if compiled_code and not var('dbt_artifacts_exclude_compiled_sql', false) %}
+                    '{{ compiled_code | replace("\\", "\\\\") | replace("'", "\\'") | replace("\n", "\\n") }}'
                 {% else %}
                     null
                 {% endif %}, {# compiled_sql #}
@@ -263,8 +271,10 @@
                 {{ test.failures if test.failures is not none and test.failures != '' else 'null' }}, {# failures #}
                 '{{ test.message | replace("'", "''") }}', {# message #}
                 '{{ tojson(test.adapter_response) | replace("'", "''") }}', {# adapter_response #}
-                {% if test.node.compiled_code and not var('dbt_artifacts_exclude_compiled_sql', false) %}
-                    '{{ test.node.compiled_code | replace("'", "''") }}'
+                {#- dbt Core puts compiled SQL on the result's node; the Fusion engine puts it on the result. -#}
+                {% set compiled_code = test.node.compiled_code or test.compiled_code %}
+                {% if compiled_code and not var('dbt_artifacts_exclude_compiled_sql', false) %}
+                    '{{ compiled_code | replace("'", "''") }}'
                 {% else %}
                     null
                 {% endif %}, {# compiled_sql #}
@@ -319,8 +329,10 @@
                 {{ test.failures if test.failures is not none and test.failures != '' else 'null' }}, {# failures #}
                 '{{ test.message | replace("'", "''") }}', {# message #}
                 '{{ tojson(test.adapter_response) | replace("'", "''") }}', {# adapter_response #}
-                {% if test.node.compiled_code and not var('dbt_artifacts_exclude_compiled_sql', false) %}
-                    '{{ test.node.compiled_code | replace("'", "''") }}'
+                {#- dbt Core puts compiled SQL on the result's node; the Fusion engine puts it on the result. -#}
+                {% set compiled_code = test.node.compiled_code or test.compiled_code %}
+                {% if compiled_code and not var('dbt_artifacts_exclude_compiled_sql', false) %}
+                    '{{ compiled_code | replace("'", "''") }}'
                 {% else %}
                     cast(null as varchar)
                 {% endif %}, {# compiled_sql #}
