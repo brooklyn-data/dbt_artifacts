@@ -57,7 +57,7 @@ your `packages.yml`:
 ```yml
 packages:
   - package: brooklyn-data/dbt_artifacts
-    version: 2.11.1
+    version: 3.0.0
 ```
 
 ### dbt Fusion engine (dbt 2.x)
