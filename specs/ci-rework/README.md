@@ -310,6 +310,12 @@ Other changes:
   was added at the bottom of `tox.ini` showing the intended naming
   convention (`integration_fusion_<warehouse>`), so when Fusion becomes
   installable we wire it without re-debating the layout.
+  *Update 2026-11-06:* Fusion is now installable as `dbt` 2.x from PyPI (an
+  installer that downloads the sha256-pinned Fusion wheel), and the Docker
+  image used in the meantime is retired. The envs are named
+  `integration_<warehouse>_fusion` rather than the convention above, so
+  `scripts/ci/test.sh <warehouse> fusion` resolves them the same way it
+  resolves a version suffix. See `[testenv:fusion]` in `tox.ini`.
 
 Old-version envs (`_1_3_0` through `_1_8_0`) were **not** removed. Whether
 to drop EOL versions is a separate consumer-impact decision tracked in §13.
@@ -915,8 +921,9 @@ or dbt Slack #package-ecosystem channel.
 
 - **Databricks reactivation.** Stubbed in `tox.ini` and Tier 3 as
   skipped-by-design. Needs its own design pass to wire up safely.
-- **dbt Fusion.** Placeholder section in `tox.ini`. Wire up when
-  Fusion becomes pip-installable (it isn't today).
+- **dbt Fusion.** Done 2026-11-06: Fusion runs from PyPI through uv in
+  every tier (`fusion_parse`, `integration_duckdb_fusion`,
+  `integration_snowflake_fusion` in `tox.ini`).
 
 ### 12.4. Cleanup debt
 

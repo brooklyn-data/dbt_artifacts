@@ -98,7 +98,14 @@ scripts CI uses are the ones you run locally — there is no separate
 ./scripts/ci/test.sh snowflake                # cloud — needs creds
 ./scripts/ci/test.sh bigquery                 # cloud — needs creds
 ./scripts/ci/test.sh postgres 1_10_0          # pinned dbt version
+./scripts/ci/test.sh duckdb fusion            # dbt v2 (Fusion engine), no creds
+./scripts/ci/test.sh snowflake fusion         # dbt v2 on Snowflake — needs creds
+./scripts/ci/fusion-parse.sh                  # Fusion parse, fails on any warning
 ```
+
+dbt v2 (the Fusion engine) installs from PyPI through uv, pinned in
+`tox.ini`; no Docker needed. For ad-hoc Fusion commands, use
+`uv run tox -e fusion -- <dbt args>`.
 
 The script handles `docker compose` lifecycle automatically — brings up
 containers, waits for healthy, runs the tests, tears down on exit. Pass

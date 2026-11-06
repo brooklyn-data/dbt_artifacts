@@ -9,7 +9,7 @@
     second build onward, which is why the DuckDB tox envs build twice.
 
     Some flows warm up with `dbt build --exclude-resource-type test` (the
-    Snowflake tox envs and scripts/fusion/test.sh), so that earlier build has
+    Snowflake tox envs, Core and Fusion), so that earlier build has
     no test executions. They pass
     artifacts_test_previous_build_excluded_tests: true on the following build,
     and test_executions is then not required.
