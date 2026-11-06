@@ -421,12 +421,12 @@ All results as a JSON blob
 
 {% docs compiled_sql %}
 
-The compiled SQL for the test execution
+The test's compiled SQL as it ran. Null when `dbt_artifacts_exclude_compiled_sql` is true, or when the test didn't compile (for example, when it was skipped).
 
 {% enddocs %}
 
 {% docs audit_table_name %}
 
-The name of the audit table created for failing tests
+The table the test writes its failing rows to. Set only when the test stores failures (`store_failures: true` or `--store-failures`); null otherwise.
 
 {% enddocs %}
