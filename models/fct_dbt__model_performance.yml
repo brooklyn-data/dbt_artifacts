@@ -48,7 +48,8 @@ models:
     description: median_runtime / baseline_runtime; null when baseline is null or 0.
     tests:
     - dbt_artifacts.is_between:
-        min_value: 0
+        arguments:
+          min_value: 0
   - name: is_regressed
     description: >
       True when runtime_regression_ratio > regression_threshold and

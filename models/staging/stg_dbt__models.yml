@@ -34,3 +34,5 @@ models:
     description: '{{ doc("tags") }}'
   - name: meta
     description: '{{ doc("meta") }}'
+  - name: owner_group
+    description: '{{ doc("owner_group") }}'

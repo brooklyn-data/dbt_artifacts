@@ -389,6 +389,12 @@ Key-value pairs of environment variables passed to invocation that have the pref
 
 {% enddocs %}
 
+{% docs owner_group %}
+
+Name of the dbt group the model belongs to (the model's `group` config), or null if it isn't in a group.
+
+{% enddocs %}
+
 {% docs alias %}
 
 Alias of the node.

@@ -33,3 +33,6 @@ CLAUDE.md
 __pycache__/
 *.pyc
 specs/
+
+# Local DuckDB database files created by the duckdb integration-test target
+*.duckdb

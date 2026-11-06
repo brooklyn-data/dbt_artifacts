@@ -25,6 +25,7 @@ The package currently supports
 - Postgres :white_check_mark:
 - SQL Server :white_check_mark:
 - Trino :white_check_mark:
+- DuckDB :white_check_mark:
 
 Models included:
 
@@ -47,14 +48,31 @@ See the generated [dbt docs site](https://brooklyn-data.github.io/dbt_artifacts/
 
 ## Supported dbt versions
 
-As of `2.11.0`, the package's CI verifies against **dbt 1.9 and newer**.
-Older versions (1.3–1.8) may continue to work but are **no longer verified
-in CI** — dbt Labs has marked them end-of-life and they cannot run on the
-Python 3.12 toolchain our CI uses. The package still *installs* on dbt
-≥1.3.0 (`require-dbt-version` is unchanged), so existing users are not
-blocked; we simply can no longer confirm new releases against those
-versions. If you rely on dbt < 1.9, pin a known-good `dbt_artifacts`
-release in your `packages.yml`.
+As of `3.0.0`, the package requires **dbt 1.10 or newer** (dbt Core 1.10+
+or the dbt Fusion engine). The package's generic tests pass their arguments
+under `arguments:`, which Fusion requires and dbt Core only understands from
+1.10. If you're on an older dbt version, pin `dbt_artifacts` to `2.11.1` in
+your `packages.yml`:
+
+```yml
+packages:
+  - package: brooklyn-data/dbt_artifacts
+    version: 2.11.1
+```
+
+### dbt Fusion engine (dbt 2.x)
+
+The package is compatible with the [dbt Fusion engine](https://docs.getdbt.com/docs/fusion).
+CI parses it with Fusion on every pull request (failing on any deprecation
+warning) and runs the full Snowflake integration suite on Fusion before
+release. Fusion also supports BigQuery and Databricks; the package parses
+cleanly against both, but they are not yet integration-tested on Fusion.
+Postgres and Trino are experimental in Fusion, and SQL Server and Spark are
+not supported by Fusion, so on those warehouses keep using dbt Core.
+
+Fusion runs `on-run-end` hooks for `dbt compile` and `dbt show`, which dbt
+Core does not. `upload_results` skips those commands, so the same invocations
+are recorded on both engines.
 
 ## Quickstart
 
@@ -189,6 +207,54 @@ This column can cause queries to become too long - particularly in BigQuery. The
 vars:
   dbt_artifacts_exclude_all_results: true
 ```
+
+### Skipping manifest dataset upload
+
+By default, every invocation uploads both the execution results (`model_executions`, `seed_executions`, `test_executions`, `snapshot_executions`) and project's manifest datasets (`models`, `seeds`, `snapshots`, `sources`, `tests`, `exposures`). Because manifest datasets are re-inserted on every run, the underlying tables can grow quickly on routine or scheduled runs.
+
+The manifest datasets usually change only when the project code changes, so you can skip uploading them on routine runs and upload them only when code is merged, for example during the build step in CI.
+
+To skip manifest dataset upload, set the `dbt_artifacts_upload_manifest` variable to `false`:
+
+```yml
+# dbt_project.yml
+vars:
+  dbt_artifacts_upload_manifest: false
+```
+
+When `false`, only `invocations` and the execution datasets are uploaded. `invocations` is always uploaded regardless of this setting, as it is the parent record that execution rows reference.
+
+The string values `"false"` and `"0"` also turn it off, so the variable can be set from an environment variable:
+
+```yml
+# dbt_project.yml
+vars:
+  dbt_artifacts_upload_manifest: "{{ env_var('DBT_ARTIFACTS_UPLOAD_MANIFEST', 'true') }}"
+```
+
+The `dim_` models (for example `dim_dbt__models` and `dim_dbt__current_models`) describe the project as of the most recent run that uploaded the manifest datasets. A model added since then still appears in `fct_dbt__model_executions`, but not in the `dim_` models until the next run with `dbt_artifacts_upload_manifest` set to `true`. Make sure at least one run uploads them, for example the first run after installing or upgrading the package, and every deployment.
+
+Override it to `true` on runs where you want the full project metadata refreshed:
+
+```sh
+dbt build --vars '{"dbt_artifacts_upload_manifest": true}'
+```
+
+### Upload batch size
+
+The on-run-end hook inserts each dataset in chunks, one `insert` statement per chunk. By default a chunk holds 100 rows for `models` and 5,000 rows for every other dataset. On BigQuery and Trino the defaults are 50 and 300, because their limits on query text length reject larger inserts. On Trino the limit is the `query.max-length` setting, and an insert over it fails with `QUERY_TEXT_TOO_LARGE`.
+
+If an insert still fails because it is too large, or you want fewer statements, set `dbt_artifacts_insert_batch_size`. Its keys are `models`, `default` (every other dataset), or any dataset name, such as `test_executions`. Keys you leave out keep their defaults:
+
+```yml
+# dbt_project.yml
+vars:
+  dbt_artifacts_insert_batch_size:
+    models: 25
+    default: 1000
+```
+
+Values must be whole numbers of at least 1. Strings such as `"25"` also work, so the values can come from environment variables.
 
 ## Upgrading from 1.x to >=2.0.0
 

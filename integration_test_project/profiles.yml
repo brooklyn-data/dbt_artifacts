@@ -1,10 +1,6 @@
 # HEY! This file is used in the dbt-artifacts integrations tests with GitHub Actions.
 # You should __NEVER__ check credentials into version control. Thanks for reading :)
 
-config:
-  send_anonymous_usage_stats: False
-  use_colors: True
-
 dbt_artifacts:
   target: snowflake
   outputs:
@@ -55,6 +51,10 @@ dbt_artifacts:
       dbname: postgres
       schema: public
       threads: 8
+    duckdb:
+      type: duckdb
+      path: "test.duckdb"
+      threads: 1
     sqlserver:
       type: sqlserver
       driver: 'ODBC Driver 18 for SQL Server'

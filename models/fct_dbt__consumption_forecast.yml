@@ -47,7 +47,8 @@ models:
     description: month_to_date_quantity / allowance for the smb meter; null otherwise.
     tests:
     - dbt_artifacts.is_between:
-        min_value: 0
+        arguments:
+          min_value: 0
   - name: days_remaining
     description: Calendar days remaining in the month after as_of (0 for fully-elapsed months).
   - name: is_on_pace_to_exceed

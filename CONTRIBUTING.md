@@ -63,7 +63,7 @@ cp integration_test_project/example-env.sh env.sh
 ```
 
 `env.sh` is gitignored. You only need to source it for warehouses that
-need credentials — Postgres, Trino, and SQL Server don't. You can also create a `.env` file in the root of the project.
+need credentials — Postgres, Trino, SQL Server and DuckDB don't. You can also create a `.env` file in the root of the project.
 
 ---
 
@@ -94,6 +94,7 @@ scripts CI uses are the ones you run locally — there is no separate
 ./scripts/ci/test.sh postgres                 # Postgres in Docker
 ./scripts/ci/test.sh trino                    # Trino in Docker
 ./scripts/ci/test.sh sqlserver                # SQL Server in Docker
+./scripts/ci/test.sh duckdb                   # DuckDB in-process, no Docker
 ./scripts/ci/test.sh snowflake                # cloud — needs creds
 ./scripts/ci/test.sh bigquery                 # cloud — needs creds
 ./scripts/ci/test.sh postgres 1_10_0          # pinned dbt version
@@ -133,7 +134,7 @@ to pass `--target` on every command.
 | You see on the PR | You see after merge |
 |---|---|
 | Lint: **not run** (needs Snowflake creds) | Lint |
-| Postgres, Trino, SQL Server integration | Same, re-run on merged code |
+| Postgres, Trino, SQL Server, DuckDB integration | Same, re-run on merged code |
 | Snowflake, BigQuery: **not run** (no fork secrets) | Snowflake + BigQuery |
 
 This is intentional. PRs from forks cannot have access to the

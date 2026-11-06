@@ -9,11 +9,12 @@
 #
 # Examples:
 #   scripts/ci/test.sh postgres              # latest supported dbt-postgres
-#   scripts/ci/test.sh postgres 1_9_0        # pinned dbt-postgres 1.9.x
+#   scripts/ci/test.sh postgres 1_10_0       # pinned dbt-postgres 1.10.x
 #   scripts/ci/test.sh snowflake             # requires Snowflake env vars
 #
 # Local warehouses (postgres, trino, sqlserver) are started via docker compose
-# automatically and torn down on exit. Cloud warehouses (snowflake, bigquery,
+# automatically and torn down on exit. DuckDB runs in-process against a local
+# file and needs neither Docker nor credentials. Cloud warehouses (snowflake, bigquery,
 # databricks) require env vars to be set; the script validates them up front.
 #
 # Optional env vars:
@@ -24,7 +25,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/_lib.sh"
 
 cd "${repo_root}"
 
-require_cmd uv docker
+require_cmd uv
 
 if (( $# < 1 )); then
   die "usage: scripts/ci/test.sh <warehouse> [<dbt_version>]"
@@ -34,7 +35,7 @@ warehouse="$1"
 dbt_version="${2:-}"
 
 case "${warehouse}" in
-  postgres|trino|sqlserver|snowflake|bigquery|databricks|spark)
+  postgres|trino|sqlserver|duckdb|snowflake|bigquery|databricks|spark)
     ;;
   *)
     die "unknown warehouse: ${warehouse}"
@@ -72,7 +73,7 @@ case "${warehouse}" in
       DBT_ENV_SECRET_DATABRICKS_HTTP_PATH \
       DBT_ENV_SECRET_DATABRICKS_TOKEN
     ;;
-  postgres|trino|sqlserver|spark)
+  postgres|trino|sqlserver|duckdb|spark)
     ;;
 esac
 
@@ -85,6 +86,7 @@ case "${warehouse}" in
 esac
 
 if (( needs_compose )); then
+  require_cmd docker
   "${repo_root}/scripts/ci/compose-up.sh" "${warehouse}"
   if [[ -z "${KEEP_COMPOSE:-}" ]]; then
     # Tear down whether the test passes or fails. KEEP_COMPOSE=1 disables this
