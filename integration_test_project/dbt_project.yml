@@ -33,6 +33,10 @@ models:
     columns: '{{ target.name != "sqlserver" }}' # sqlserver-adapter doesn't support this
 seeds:
   +quote_columns: false
+data_tests:
+  # The package ships its generic tests disabled; CI runs them.
+  dbt_artifacts:
+    +enabled: true
 
 on-run-end:
   - "{{ dbt_artifacts.upload_results(results) }}"
