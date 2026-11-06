@@ -63,7 +63,7 @@
             {% if target.type == "bigquery" %} bytes_processed,
             {% endif %}
             materialization,
-            {% if target.type == "sqlserver" %} "schema",
+            {% if target.type in ["sqlserver", "fabric"] %} "schema",
             {% else %} schema,
             {% endif %}
             name,
@@ -78,7 +78,7 @@
             command_invocation_id,
             node_id,
             run_started_at,
-            {% if target.type == "sqlserver" %} "database", "schema",
+            {% if target.type in ["sqlserver", "fabric"] %} "database", "schema",
             {% else %} database, schema,
             {% endif %}
             name,
@@ -108,7 +108,7 @@
             total_node_runtime,
             rows_affected,
             materialization,
-            {% if target.type == "sqlserver" %} "schema",
+            {% if target.type in ["sqlserver", "fabric"] %} "schema",
             {% else %} schema,
             {% endif %}
             name,
@@ -123,7 +123,7 @@
             command_invocation_id,
             node_id,
             run_started_at,
-            {% if target.type == "sqlserver" %} "database", "schema",
+            {% if target.type in ["sqlserver", "fabric"] %} "database", "schema",
             {% else %} database, schema,
             {% endif %}
             name,
@@ -149,7 +149,7 @@
             total_node_runtime,
             rows_affected,
             materialization,
-            {% if target.type == "sqlserver" %} "schema",
+            {% if target.type in ["sqlserver", "fabric"] %} "schema",
             {% else %} schema,
             {% endif %}
             name,
@@ -164,7 +164,7 @@
             command_invocation_id,
             node_id,
             run_started_at,
-            {% if target.type == "sqlserver" %} "database", "schema",
+            {% if target.type in ["sqlserver", "fabric"] %} "database", "schema",
             {% else %} database, schema,
             {% endif %}
             name,
@@ -184,7 +184,7 @@
             command_invocation_id,
             node_id,
             run_started_at,
-            {% if target.type == "sqlserver" %} "database", "schema",
+            {% if target.type in ["sqlserver", "fabric"] %} "database", "schema",
             {% else %} database, schema,
             {% endif %}
             source_name,

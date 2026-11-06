@@ -9,10 +9,10 @@ with
             node_id,
             run_started_at,
             name,
-            {% if target.type == "sqlserver" %} "database"
+            {% if target.type in ["sqlserver", "fabric"] %} "database"
             {% else %} database
             {% endif %},
-            {% if target.type == "sqlserver" %} "schema"
+            {% if target.type in ["sqlserver", "fabric"] %} "schema"
             {% else %} schema
             {% endif %},
             depends_on_nodes,
