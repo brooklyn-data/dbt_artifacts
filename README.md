@@ -294,7 +294,7 @@ On Snowflake the package also builds these views over the uploaded history:
 
 ### Lookback window
 
-These views read only recent history: by default the last 30 days. Monthly marts start on the first of the month that contains the start of the window, so they never show a partial month. The consumption marts read at least `dbt_artifacts_run_rate_days` (default 28) for the forecast. `fct_dbt__model_performance` reads that many extra days so its first day has a full baseline. `dim_dbt__lineage_edges` reads the window before the latest manifest upload rather than before today, so a project that uploads the manifest rarely still gets its whole graph.
+These views read only recent history: by default the last 30 days. Monthly marts start on the first of the month that contains the start of the window, so they never show a partial month. The consumption marts read at least `dbt_artifacts_run_rate_days` (default 28) for the forecast. `fct_dbt__model_performance` reads that many extra days so its first day has a full baseline. `dim_dbt__lineage_edges` is the current graph, built from the manifest uploads in the window; it is empty if no run has uploaded the manifest within it, so with `dbt_artifacts_upload_manifest: false` make sure a run uploads the manifest at least once per window.
 
 Large projects should use a shorter window. To read all history, set the variable to `null`:
 
