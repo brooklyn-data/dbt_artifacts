@@ -21,7 +21,8 @@
             {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(12)) }},
             {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(13)) }},
             {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(14) }},
-            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(15)) }}
+            {{ adapter.dispatch('parse_json', 'dbt_artifacts')(adapter.dispatch('column_identifier', 'dbt_artifacts')(15)) }},
+            {{ adapter.dispatch('column_identifier', 'dbt_artifacts')(16) }}
         from values
         {% for model in models -%}
                 {# {% set model_copy = dbt_artifacts.copy_model(model) -%} #}
@@ -45,7 +46,8 @@
                     null
                 {% else %}
                     '{{ tojson(model_copy) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"') }}' {# all_results #}
-                {% endif %}
+                {% endif %},
+                {{ "'" ~ model_copy.group | replace("'", "\\'") ~ "'" if model_copy.group else 'null' }} {# owner_group #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
@@ -80,7 +82,8 @@
                         null
                     {% else %}
                         {{ adapter.dispatch('parse_json', 'dbt_artifacts')(tojson(model_copy) | replace("\\", "\\\\") | replace("'","\\'") | replace('"', '\\"')) }} {# all_results #}
-                    {% endif %}
+                    {% endif %},
+                    {{ "'" ~ model_copy.group | replace("'", "\\'") ~ "'" if model_copy.group else 'null' }} {# owner_group #}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}
@@ -115,7 +118,8 @@
                         null
                     {% else %}
                         $${{ tojson(model_copy) }}$$ {# all_results #}
-                    {% endif %}
+                    {% endif %},
+                    {{ "'" ~ model_copy.group | replace("'", "''") ~ "'" if model_copy.group else 'null' }} {# owner_group #}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}
@@ -134,7 +138,7 @@
     {% if models != [] %}
         {% set model_values %}
         select
-            "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"
+            "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"
         from ( values
         {% for model in models -%}
                 {# {% set model_copy = dbt_artifacts.copy_model(model) -%} #}
@@ -158,12 +162,13 @@
                     null
                 {% else %}
                     '{{ tojson(model_copy) | replace("'","''") }}' {# all_results #}
-                {% endif %}
+                {% endif %},
+                {{ "'" ~ model_copy.group | replace("'", "''") ~ "'" if model_copy.group else 'null' }} {# owner_group #}
             )
             {%- if not loop.last %},{%- endif %}
         {%- endfor %}
 
-        ) v ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15")
+        ) v ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16")
 
         {% endset %}
         {{ model_values }}
@@ -196,7 +201,8 @@
                         null
                     {% else %}
                         '{{ tojson(model) | replace("'", "''") }}' {# all_results #}
-                    {% endif %}
+                    {% endif %},
+                    {{ "'" ~ model.group | replace("'", "''") ~ "'" if model.group else 'cast(null as varchar)' }} {# owner_group #}
                 )
                 {%- if not loop.last %},{%- endif %}
             {%- endfor %}

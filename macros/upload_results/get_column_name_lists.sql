@@ -90,7 +90,8 @@
             tags,
             meta,
             alias,
-            all_results
+            all_results,
+            owner_group
         )
 
     {% elif dataset == "seed_executions" %}
