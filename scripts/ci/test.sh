@@ -11,6 +11,11 @@
 #   scripts/ci/test.sh postgres              # latest supported dbt-postgres
 #   scripts/ci/test.sh postgres 1_10_0       # pinned dbt-postgres 1.10.x
 #   scripts/ci/test.sh snowflake             # requires Snowflake env vars
+#   scripts/ci/test.sh duckdb fusion         # dbt v2 (the Fusion engine)
+#
+# `fusion` as the version runs dbt v2 from PyPI through uv (tox env
+# integration_<warehouse>_fusion; the version is pinned in tox.ini). It's
+# supported for duckdb and snowflake, the warehouses CI tests on Fusion.
 #
 # Local warehouses (postgres, trino, sqlserver) are started via docker compose
 # automatically and torn down on exit. DuckDB runs in-process against a local
@@ -41,6 +46,10 @@ case "${warehouse}" in
     die "unknown warehouse: ${warehouse}"
     ;;
 esac
+
+if [[ "${dbt_version}" == "fusion" && "${warehouse}" != "duckdb" && "${warehouse}" != "snowflake" ]]; then
+  die "fusion is tested on duckdb and snowflake only, not ${warehouse}"
+fi
 
 # Resolve the tox env name. Empty dbt_version → no suffix → use the
 # `integration_<warehouse>` env, which pulls the highest supported adapter.

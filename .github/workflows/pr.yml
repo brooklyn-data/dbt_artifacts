@@ -18,7 +18,9 @@
 #     version matrix runs in Tier 3.
 #   - The package is also parsed with the dbt Fusion engine (dbt 2.x),
 #     failing on any warning. Fusion's parse doesn't connect to a warehouse,
-#     so it runs on dummy credentials. Fusion builds run in Tier 2/3.
+#     so it runs on dummy credentials. The integration project is also built
+#     on Fusion against DuckDB. Fusion runs from PyPI through uv (pinned in
+#     tox.ini). The Fusion Snowflake build runs in Tier 2/3.
 #
 # Hardening notes:
 #   - `permissions: contents: read` only. No `id-token`, no escalation.
@@ -94,8 +96,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+      - name: Set up uv
+        uses: astral-sh/setup-uv@caf0cab7a618c569241d31dcd442f54681755d39
+        with:
+          enable-cache: true
+      - name: Install Python dependencies
+        run: ./scripts/ci/setup.sh
       - name: Parse with dbt Fusion
-        run: ./scripts/fusion/check.sh
+        run: ./scripts/ci/fusion-parse.sh
 
   fusion-duckdb:
     # Builds the integration project on the Fusion engine against DuckDB, twice,
@@ -107,5 +115,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+      - name: Set up uv
+        uses: astral-sh/setup-uv@caf0cab7a618c569241d31dcd442f54681755d39
+        with:
+          enable-cache: true
+      - name: Install Python dependencies
+        run: ./scripts/ci/setup.sh
       - name: Build on dbt Fusion against DuckDB
-        run: ./scripts/fusion/test.sh duckdb
+        run: ./scripts/ci/test.sh duckdb fusion

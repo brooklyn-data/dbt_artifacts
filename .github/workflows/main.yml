@@ -153,8 +153,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+      - name: Set up uv
+        uses: astral-sh/setup-uv@caf0cab7a618c569241d31dcd442f54681755d39
+        with:
+          enable-cache: true
+      - name: Install Python dependencies
+        run: ./scripts/ci/setup.sh
       - name: Parse with dbt Fusion
-        run: ./scripts/fusion/check.sh
+        run: ./scripts/ci/fusion-parse.sh
 
   fusion-duckdb:
     # Builds the integration project on the Fusion engine against DuckDB, twice,
@@ -166,13 +172,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+      - name: Set up uv
+        uses: astral-sh/setup-uv@caf0cab7a618c569241d31dcd442f54681755d39
+        with:
+          enable-cache: true
+      - name: Install Python dependencies
+        run: ./scripts/ci/setup.sh
       - name: Build on dbt Fusion against DuckDB
-        run: ./scripts/fusion/test.sh duckdb
+        run: ./scripts/ci/test.sh duckdb fusion
 
   # -------- Snowflake on Fusion (dbt 2.x) ----------------------------------
-  # Same two-pass build as `integration-snowflake`, on the dbt Fusion engine.
-  # Snowflake is the only CI warehouse that Fusion supports and this package
-  # tests in CI; see scripts/fusion/test.sh.
+  # Same two-pass build as `integration-snowflake`, on the dbt Fusion engine
+  # (tox env integration_snowflake_fusion). Fusion runs from PyPI through uv.
   integration-snowflake-fusion:
     name: integration (snowflake, fusion)
     runs-on: ubuntu-latest
@@ -187,8 +198,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+      - name: Set up uv
+        uses: astral-sh/setup-uv@caf0cab7a618c569241d31dcd442f54681755d39
+        with:
+          enable-cache: true
+      - name: Install Python dependencies
+        run: ./scripts/ci/setup.sh
       - name: Run integration tests against snowflake on Fusion
-        run: ./scripts/fusion/test.sh snowflake
+        run: ./scripts/ci/test.sh snowflake fusion
 
   # -------- BigQuery (cloud, WIF auth) ------------------------------------
   integration-bigquery:
