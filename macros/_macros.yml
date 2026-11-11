@@ -74,7 +74,7 @@ macros:
       or none when the window is turned off.
     arguments:
       - name: align_to_month
-        type: boolean
+        type: bool
         description: |
           Move the start back to the first of its month, so monthly marts never report a partial month. Default false.
       - name: min_days
